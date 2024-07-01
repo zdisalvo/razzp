@@ -1,7 +1,6 @@
 {
   "projects": {
-    "default": "razzp-com",
-    "building": "razzp-com"
+    "default": "razzp-com"
   },
   "targets": {},
   "etags": {},
