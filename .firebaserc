@@ -1,0 +1,9 @@
+{
+  "projects": {
+    "default": "razzp-com",
+    "building": "razzp-com"
+  },
+  "targets": {},
+  "etags": {},
+  "dataconnectEmulatorConfig": {}
+}
