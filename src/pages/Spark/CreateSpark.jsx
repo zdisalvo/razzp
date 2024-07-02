@@ -698,6 +698,22 @@ const handlePronounsClick = (pronouns) => {
 
   
   const sortedImages = sparkImages.sort((a, b) => b.createdAt - a.createdAt);
+
+
+  const textBoxStyle = {
+    backgroundColor: 'black',
+    color: 'grey',
+    border: '1px solid grey',
+    boxShadow: 'none',
+    padding: '8px', // Adjust padding as needed
+    outline: 'none', // Remove default outline
+    transition: 'border-color 0.2s ease',
+    // Define the event handlers
+    onFocus: (e) => e.target.style.borderColor = 'sandybrown',
+    onBlur: (e) => e.target.style.borderColor = 'grey',
+    onMouseEnter: (e) => e.target.style.borderColor = 'sandybrown',
+    onMouseLeave: (e) => e.target.style.borderColor = 'grey'
+  };
   
   
   return (
@@ -712,29 +728,45 @@ const handlePronounsClick = (pronouns) => {
             <Input
               type="text"
               name="name"
+              style={{...textBoxStyle}}
+              onFocus={textBoxStyle.onFocus}
+              onBlur={textBoxStyle.onBlur}
+              onMouseEnter={textBoxStyle.onMouseEnter}
+              onMouseLeave={textBoxStyle.onMouseLeave}
               //value={formData.name || "" || (sparkProfile ? sparkProfile.name : "")}
               value={formData.name}
               onChange={handleChange}
             />
           </FormControl>
 
-          <FormControl id="profile-pic">
+          {/* <FormControl id="profile-pic">
             <FormLabel>Profile Picture</FormLabel>
             <Input type="file" accept="image/*" onChange={handleFileChange} />
             {preview && (
               <Image src={preview} alt="Profile Picture Preview" boxSize="150px" mt={2} />
             )}
-            </FormControl>
+            </FormControl> */}
 
             <FormControl id="uploadedImages">
-            <FormLabel>Uploaded Images</FormLabel>
+            <Stack direction="row" align="baseline">
+            <FormLabel>Upload Pictures</FormLabel>
+            <Text fontSize="sm" color="gray.500">
+            (Select up to 7)
+          </Text>
+          </Stack>
             <Box
         mt={4}
         position="relative"
         overflow="hidden"
         //height="310x" // Ensure this height accommodates exactly 2 rows
-        border="1px solid #ccc"
-        borderRadius="md"
+        //border="1px solid #ccc"
+        //borderRadius="md"
+
+        style={{...textBoxStyle}}
+              onFocus={textBoxStyle.onFocus}
+              onBlur={textBoxStyle.onBlur}
+              onMouseEnter={textBoxStyle.onMouseEnter}
+              onMouseLeave={textBoxStyle.onMouseLeave}
       >
         {!isMobile &&
         <Button
@@ -750,27 +782,33 @@ const handlePronounsClick = (pronouns) => {
         <Box
           ref={scrollContainerRefUploads}
           display="flex"
-          flexWrap={2}
+          flexWrap="nowrap"
           //display="grid"
           //gridTemplateColumns="repeat(auto-fill, minmax(150px, 1fr))"
           //gridTemplateRows="repeat(2, 110px)"
           //maxHeight={{base: "23vw", md: "300px"}}
-          scrollBehavior="smooth"
+
+
+          //scrollBehavior="smooth"
           height="100%"
           gap={2}
-
-          overflowX="auto"
+          style={{
+          WebkitOverflowScrolling: 'touch'
+          }}
+          overflowX="scroll"
           overflowY="hidden"
           //whiteSpace="nowrap"
           p={2}
           px={2}
           mx={{base: 0, md: 10}}
-          border="1px solid #ccc"
+          border="none"
           borderRadius="md"
          
         >
           
-          <Flex p={0} m={0}>
+          <Flex p={0} m={0}
+          
+          >
             {sparkImages.length < 7 &&
             <Box 
             cursor="pointer" 
@@ -780,8 +818,8 @@ const handlePronounsClick = (pronouns) => {
             alignItems="center"
             justifyContent="center"
             //mx={0}
-            px="25px"
-            mx="25px"
+            px={{base: "18px", md: "25px"}}
+            mx={{base: "18px", md: "25px"}}
             >
           <CreateSparkPic onUpload={handleImageUpload}/>
           </Box>}
@@ -793,18 +831,25 @@ const handlePronounsClick = (pronouns) => {
             <Box
               key={pic.id}
               //onClick={() => handleImageClick(post.id)}
-              cursor="pointer"
+              //cursor="pointer"
               mx={2}
               display="inline-block"
+              //alignItems="baseline"
               position="relative"
+              
             >
               
               <Image
                 src={pic.imageURL}
                 //alt={`Post ${index + 1}`}
-                maxWidth={{base: "10vw", md: "100px"}}
-                maxHeight={{base: "auto", md: "auto"}}
+                maxWidth={{base: "40vw", md: "150px"}}
+                maxHeight={{base: "40vh", md: "auto"}}
+                width={{base: "40vw", md: "auto"}}
+                aspectRatio={1}
                 borderRadius="md"
+                //objectFit="cover"
+
+
                 //border={formData.selectedImages.includes(post.id) ? "2px solid orange" : "none"}
               />
               {/* <CloseButton
@@ -820,6 +865,7 @@ const handlePronounsClick = (pronouns) => {
           ))}
           </Flex>
         </Box>
+        {!isMobile &&
         <Button
           position="absolute"
           top="50%"
@@ -829,22 +875,35 @@ const handlePronounsClick = (pronouns) => {
           zIndex="1"
         >
           <ChevronRightIcon />
-        </Button>
+        </Button> }
       </Box>
             
             </FormControl>
             
           
           <FormControl id="selectedImages">
-            <FormLabel>Select profile pictures</FormLabel>
+          <Stack direction="row" align="baseline">
+            <FormLabel>Select from Razzp Profile</FormLabel>
+            <Text fontSize="sm" color="gray.500">
+            (Select up to 5)
+          </Text>
+          </Stack>
             <Box
         mt={4}
         position="relative"
         overflow="hidden"
         //height="310x" // Ensure this height accommodates exactly 2 rows
-        border="1px solid #ccc"
-        borderRadius="md"
+        // border="1px solid #ccc"
+        // borderRadius="md"
+
+        style={{...textBoxStyle}}
+              onFocus={textBoxStyle.onFocus}
+              onBlur={textBoxStyle.onBlur}
+              onMouseEnter={textBoxStyle.onMouseEnter}
+              onMouseLeave={textBoxStyle.onMouseLeave}
       >
+      
+        {!isMobile &&
         <Button
           position="absolute"
           top="50%"
@@ -854,11 +913,11 @@ const handlePronounsClick = (pronouns) => {
           zIndex="1"
         >
           <ChevronLeftIcon />
-        </Button>
+        </Button> }
         <Box
           ref={scrollContainerRef}
           display="flex"
-          flexWrap={2}
+          flexWrap="nowrap"
           //display="grid"
           //gridTemplateColumns="repeat(auto-fill, minmax(150px, 1fr))"
           //gridTemplateRows="repeat(2, 110px)"
@@ -867,13 +926,16 @@ const handlePronounsClick = (pronouns) => {
           height="100%"
           gap={2}
 
-          overflowX="auto"
+          style={{
+          WebkitOverflowScrolling: 'touch'
+          }}
+          overflowX="scroll"
           overflowY="hidden"
           //whiteSpace="nowrap"
           p={2}
           px={2}
-          mx={10}
-          border="1px solid #ccc"
+          mx={{base: 0, md: 10}}
+          border="none"
           borderRadius="md"
          
         >
@@ -888,12 +950,15 @@ const handlePronounsClick = (pronouns) => {
               cursor="pointer"
               mx={2}
               display="inline-block"
+              //alignItems="baseline"
             >
               <Image
                 src={post.imageURL}
                 //alt={`Post ${index + 1}`}
-                maxWidth={{base: "10vw", md: "100px"}}
-                maxHeight={{base: "auto", md: "auto"}}
+                maxWidth={{base: "40vw", md: "150px"}}
+                maxHeight={{base: "40vh", md: "auto"}}
+                width={{base: "40vw", md: "auto"}}
+                aspectRatio={1}
                 borderRadius="md"
                 border={formData.selectedImages.includes(post.id) ? "2px solid orange" : "none"}
               />
@@ -901,6 +966,7 @@ const handlePronounsClick = (pronouns) => {
             //</Button>
           ))}
         </Box>
+        {!isMobile &&
         <Button
           position="absolute"
           top="50%"
@@ -910,7 +976,7 @@ const handlePronounsClick = (pronouns) => {
           zIndex="1"
         >
           <ChevronRightIcon />
-        </Button>
+        </Button> }
       </Box>
           </FormControl>
 
@@ -921,6 +987,11 @@ const handlePronounsClick = (pronouns) => {
               name="birthday"
               value={formData.birthday}
               onChange={handleChange}
+              style={{...textBoxStyle}}
+              onFocus={textBoxStyle.onFocus}
+              onBlur={textBoxStyle.onBlur}
+              onMouseEnter={textBoxStyle.onMouseEnter}
+              onMouseLeave={textBoxStyle.onMouseLeave}
             />
           </FormControl>
 
@@ -931,6 +1002,11 @@ const handlePronounsClick = (pronouns) => {
               name="work"
               value={formData.work}
               onChange={handleChange}
+              style={{...textBoxStyle}}
+              onFocus={textBoxStyle.onFocus}
+              onBlur={textBoxStyle.onBlur}
+              onMouseEnter={textBoxStyle.onMouseEnter}
+              onMouseLeave={textBoxStyle.onMouseLeave}
             />
           </FormControl>
 
@@ -941,6 +1017,11 @@ const handlePronounsClick = (pronouns) => {
               name="school"
               value={formData.school}
               onChange={handleChange}
+              style={{...textBoxStyle}}
+              onFocus={textBoxStyle.onFocus}
+              onBlur={textBoxStyle.onBlur}
+              onMouseEnter={textBoxStyle.onMouseEnter}
+              onMouseLeave={textBoxStyle.onMouseLeave}
             />
           </FormControl>
 
@@ -955,8 +1036,15 @@ const handlePronounsClick = (pronouns) => {
               bg={formData.gender === gender ? "darkorange" : "#1B2328"}
               color={formData.gender === gender ? "black" : "white"}
               _hover={{
-                bg: formData.gender === gender ? "orange" : "orange",
+                bg: {base: formData.gender === gender ? "darkorange" : "#1B2328", md: formData.gender === gender ? "orange" : "orange"},
               }}
+              // sx={{
+              //   '@media (max-width: 48em)': { // Mobile breakpoint
+              //     _hover: {
+              //       bg: 'initial', // No hover effect on mobile
+              //     },
+              //   },
+              // }}
               size="sm"
               m={1}
             >
@@ -982,7 +1070,7 @@ const handlePronounsClick = (pronouns) => {
                   bg={formData.interested_in.includes(interestedIn) ? "darkorange" : "#1B2328"}
                   color={formData.interested_in.includes(interestedIn) ? "black" : "white"}
                   _hover={{
-                    bg: formData.interested_in.includes(interestedIn) ? "orange" : "orange",
+                    bg: {base: formData.interested_in.includes(interestedIn) ? "darkorange" : "#1B2328", md: formData.interested_in.includes(interestedIn) ? "orange" : "orange"},
                   }}
                   size="sm"
                   m={1}
@@ -1117,7 +1205,7 @@ const handlePronounsClick = (pronouns) => {
                   bg={formData.ethnicity.includes(ethnicitySelection) ? "darkorange" : "#1B2328"}
                   color={formData.ethnicity.includes(ethnicitySelection) ? "black" : "white"}
                   _hover={{
-                    bg: formData.ethnicity.includes(ethnicitySelection) ? "orange" : "orange",
+                    bg: {base: formData.ethnicity.includes(ethnicitySelection) ? "darkorange" : "#1B2328", md: formData.ethnicity.includes(ethnicitySelection) ? "orange" : "orange"}, 
                   }}
                   size="sm"
                   m={1}
@@ -1211,7 +1299,7 @@ const handlePronounsClick = (pronouns) => {
               bg={formData.exercise === exercise ? "darkorange" : "#1B2328"}
               color={formData.exercise === exercise ? "black" : "white"}
               _hover={{
-                bg: formData.exercise === exercise ? "orange" : "orange",
+                bg: {base: formData.exercise === exercise ? "darkorange" : "#1B2328", md: formData.exercise === exercise ? "orange" : "orange"},
               }}
               size="sm"
               m={1}
@@ -1233,7 +1321,7 @@ const handlePronounsClick = (pronouns) => {
               bg={formData.education_level === education_level ? "darkorange" : "#1B2328"}
               color={formData.education_level === education_level ? "black" : "white"}
               _hover={{
-                bg: formData.education_level === education_level ? "orange" : "orange",
+                bg: {base: formData.education_level === education_level ? "darkorange" : "#1B2328", md: formData.education_level === education_level ? "orange" : "orange"},
               }}
               size="sm"
               m={1}
@@ -1255,7 +1343,7 @@ const handlePronounsClick = (pronouns) => {
               bg={formData.drinking === drinking ? "darkorange" : "#1B2328"}
               color={formData.drinking === drinking ? "black" : "white"}
               _hover={{
-                bg: formData.drinking === drinking ? "orange" : "orange",
+                bg: {base: formData.drinking === drinking ? "darkorange" : "#1B2328", md: formData.drinking === drinking ? "orange" : "orange"},
               }}
               size="sm"
               m={1}
@@ -1277,7 +1365,7 @@ const handlePronounsClick = (pronouns) => {
               bg={formData.smoking === smoking ? "darkorange" : "#1B2328"}
               color={formData.smoking === smoking ? "black" : "white"}
               _hover={{
-                bg: formData.smoking === smoking ? "orange" : "orange",
+                bg: {base: formData.smoking === smoking ? "darkorange" : "#1B2328", md: formData.smoking === smoking ? "orange" : "orange"},
               }}
               size="sm"
               m={1}
@@ -1299,7 +1387,7 @@ const handlePronounsClick = (pronouns) => {
               bg={formData.cannabis === cannabis ? "darkorange" : "#1B2328"}
               color={formData.cannabis === cannabis ? "black" : "white"}
               _hover={{
-                bg: formData.cannabis === cannabis ? "orange" : "orange",
+                bg: {base: formData.cannabis === cannabis ? "darkorange" : "#1B2328", md: formData.cannabis === cannabis ? "orange" : "orange"},
               }}
               size="sm"
               m={1}
@@ -1326,7 +1414,7 @@ const handlePronounsClick = (pronouns) => {
                   bg={formData.looking_for.includes(lookingForSelection) ? "darkorange" : "#1B2328"}
                   color={formData.looking_for.includes(lookingForSelection) ? "black" : "white"}
                   _hover={{
-                    bg: formData.looking_for.includes(lookingForSelection) ? "orange" : "orange",
+                    bg: {base: formData.looking_for.includes(lookingForSelection) ? "darkorange" : "#1B2328", md: formData.looking_for.includes(lookingForSelection) ? "orange" : "orange"},
                   }}
                   size="sm"
                   m={1}
@@ -1348,7 +1436,7 @@ const handlePronounsClick = (pronouns) => {
               bg={formData.family_plans === family_plans ? "darkorange" : "#1B2328"}
               color={formData.family_plans === family_plans ? "black" : "white"}
               _hover={{
-                bg: formData.family_plans === family_plans ? "orange" : "orange",
+                bg: {base: formData.family_plans === family_plans ? "darkorange" : "#1B2328", md: formData.family_plans === family_plans ? "orange" : "orange"},
               }}
               size="sm"
               m={1}
@@ -1370,7 +1458,7 @@ const handlePronounsClick = (pronouns) => {
               bg={formData.have_kids === have_kids ? "darkorange" : "#1B2328"}
               color={formData.have_kids === have_kids ? "black" : "white"}
               _hover={{
-                bg: formData.have_kids === have_kids ? "orange" : "orange",
+                bg: {base: formData.have_kids === have_kids ? "darkorange" : "#1B2328", md: formData.have_kids === have_kids ? "orange" : "orange"},
               }}
               size="sm"
               m={1}
@@ -1392,7 +1480,7 @@ const handlePronounsClick = (pronouns) => {
               bg={formData.star_sign === star_sign ? "darkorange" : "#1B2328"}
               color={formData.star_sign === star_sign ? "black" : "white"}
               _hover={{
-                bg: formData.star_sign === star_sign ? "orange" : "orange",
+                bg: {base: formData.star_sign === star_sign ? "darkorange" : "#1B2328", md: formData.star_sign === star_sign ? "orange" : "orange"},
               }}
               size="sm"
               m={1}
@@ -1414,7 +1502,7 @@ const handlePronounsClick = (pronouns) => {
               bg={formData.politics === politics ? "darkorange" : "#1B2328"}
               color={formData.politics === politics ? "black" : "white"}
               _hover={{
-                bg: formData.politics === politics ? "orange" : "orange",
+                bg: {base: formData.politics === politics ? "darkorange" : "#1B2328", md: formData.politics === politics ? "orange" : "orange"},
               }}
               size="sm"
               m={1}
@@ -1436,7 +1524,7 @@ const handlePronounsClick = (pronouns) => {
               bg={formData.religion === religion ? "darkorange" : "#1B2328"}
               color={formData.religion === religion ? "black" : "white"}
               _hover={{
-                bg: formData.religion === religion ? "orange" : "orange",
+                bg: {base: formData.religion === religion ? "darkorange" : "#1B2328", md: formData.religion === religion ? "orange" : "orange"},
               }}
               size="sm"
               m={1}
@@ -1458,7 +1546,7 @@ const handlePronounsClick = (pronouns) => {
               bg={formData.pronouns === pronouns ? "darkorange" : "#1B2328"}
               color={formData.pronouns === pronouns ? "black" : "white"}
               _hover={{
-                bg: formData.pronouns === pronouns ? "orange" : "orange",
+                bg: {base: formData.pronouns === pronouns ? "darkorange" : "#1B2328", md: formData.pronouns === pronouns ? "orange" : "orange"},
               }}
               size="sm"
               m={1}
@@ -1494,7 +1582,7 @@ const handlePronounsClick = (pronouns) => {
                 bg={formData.interests.includes(emoji) ? "darkorange" : "#1B2328"}
                 color={formData.interests.includes(emoji) ? "black" : "white"}
                 _hover={{
-                  bg: formData.interests.includes(emoji) ? "orange" : "orange",
+                  bg: {base: formData.interests.includes(emoji) ? "darkorange" : "#1B2328", md: formData.interests.includes(emoji) ? "orange" : "orange"},
                 }}
                 size="sm"
                 m={1}
