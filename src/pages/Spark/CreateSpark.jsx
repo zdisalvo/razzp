@@ -723,7 +723,7 @@ const handlePronounsClick = (pronouns) => {
       </Heading>
       <Box as="form" onSubmit={handleSubmit} p={4} boxShadow="md" borderRadius="md">
         <Stack spacing={4}>
-          <FormControl id="name">
+          <FormControl id="name" mb={4}>
             <FormLabel>Name</FormLabel>
             <Input
               type="text"
@@ -747,7 +747,7 @@ const handlePronounsClick = (pronouns) => {
             )}
             </FormControl> */}
 
-            <FormControl id="uploadedImages">
+            <FormControl id="uploadedImages" mb={4}>
             <Stack direction="row" align="baseline">
             <FormLabel>Upload Pictures</FormLabel>
             <Text fontSize="sm" color="gray.500">
@@ -755,7 +755,6 @@ const handlePronounsClick = (pronouns) => {
           </Text>
           </Stack>
             <Box
-        mt={4}
         position="relative"
         overflow="hidden"
         //height="310x" // Ensure this height accommodates exactly 2 rows
@@ -881,7 +880,7 @@ const handlePronounsClick = (pronouns) => {
             </FormControl>
             
           
-          <FormControl id="selectedImages">
+          <FormControl id="selectedImages" mb={4}>
           <Stack direction="row" align="baseline">
             <FormLabel>Select from Razzp Profile</FormLabel>
             <Text fontSize="sm" color="gray.500">
@@ -889,7 +888,6 @@ const handlePronounsClick = (pronouns) => {
           </Text>
           </Stack>
             <Box
-        mt={4}
         position="relative"
         overflow="hidden"
         //height="310x" // Ensure this height accommodates exactly 2 rows
@@ -995,7 +993,7 @@ const handlePronounsClick = (pronouns) => {
             />
           </FormControl>
 
-          <FormControl id="work">
+          <FormControl id="work" >
             <FormLabel>Work</FormLabel>
             <Input
               type="text"
