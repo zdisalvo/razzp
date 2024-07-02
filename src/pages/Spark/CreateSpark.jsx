@@ -740,6 +740,11 @@ const handlePronounsClick = (pronouns) => {
           transform="translateY(-50%)"
           onClick={() => scrollUploads('left')}
           zIndex="1"
+          sx={{
+            '@media (max-width: 768px)': {
+              display: 'none',
+            },
+          }}
         >
           <ChevronLeftIcon />
         </Button>
@@ -760,7 +765,7 @@ const handlePronounsClick = (pronouns) => {
           //whiteSpace="nowrap"
           p={2}
           px={2}
-          mx={10}
+          mx={{base: 0, md: 10}}
           border="1px solid #ccc"
           borderRadius="md"
          
