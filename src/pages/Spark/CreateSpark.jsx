@@ -717,9 +717,9 @@ const handlePronounsClick = (pronouns) => {
   
   
   return (
-    <Container maxW="container.md" mb={{ base: "10vh", md: "60px" }}>
-      <Heading as="h1" textAlign="center" mb={6}>
-        Create Your Spark Profile
+    <Container maxW="container.md" mt={{ base: "5vh", md: "30px" }} mb={{ base: "10vh", md: "60px" }}>
+      <Heading as="h1" textAlign="center" mb={4} >
+        Spark Dating Profile
       </Heading>
       <Box as="form" onSubmit={handleSubmit} p={4} boxShadow="md" borderRadius="md">
         <Stack spacing={4}>
@@ -1056,7 +1056,7 @@ const handlePronounsClick = (pronouns) => {
           <Stack direction="row" align="baseline">
           <FormLabel>Interested In</FormLabel>
           <Text fontSize="sm" color="gray.500">
-            (This will not show on your profile)
+            (Won't show on profile)
           </Text>
           </Stack>
             <Box display="flex" flexWrap="wrap">
