@@ -15,6 +15,7 @@ import {
   Spinner,
   Flex,
   CloseButton,
+  useBreakpointValue
 } from "@chakra-ui/react";
 import useAuthStore from "../../store/authStore";
 import useCreateSparkProfile from "../../hooks/useCreateSparkProfile";
@@ -55,6 +56,8 @@ const CreateSpark = () => {
   const { sparkImages: fetchedImages, isLoading: imagesLoadingFromHook } = useGetSparkImagesById(authUser.uid);
 
   //const{ sparkImages, isLoading: imagesLoading } = useGetSparkImagesById(authUser.uid);
+
+  const isMobile = useBreakpointValue({ base: true, md: false });
   
   useEffect(() => {
     if (fetchedImages) {
@@ -733,6 +736,7 @@ const handlePronounsClick = (pronouns) => {
         border="1px solid #ccc"
         borderRadius="md"
       >
+        {!isMobile &&
         <Button
           position="absolute"
           top="50%"
@@ -740,14 +744,9 @@ const handlePronounsClick = (pronouns) => {
           transform="translateY(-50%)"
           onClick={() => scrollUploads('left')}
           zIndex="1"
-          sx={{
-            '@media (max-width: 768px)': {
-              display: 'none',
-            },
-          }}
         >
           <ChevronLeftIcon />
-        </Button>
+        </Button> }
         <Box
           ref={scrollContainerRefUploads}
           display="flex"
