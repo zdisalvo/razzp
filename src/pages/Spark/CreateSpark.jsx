@@ -31,6 +31,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons';
 import CreateSparkPic from "./CreateSparkPic";
 import useGetSparkImagesById from "../../hooks/useGetSparkImagesById";
 import DeleteSparkPic from "./DeleteSparkPic";
+import DragAndDropGrid from "./DragAndDropGrid";
 
 
 
@@ -53,7 +54,11 @@ const CreateSpark = () => {
 
   const [sparkImages, setSparkImages] = useState([]);
   const [imagesLoading, setImagesLoading] = useState(false);
+  const [profilePics, setProfilePics] = useState([]);
   const { sparkImages: fetchedImages, isLoading: imagesLoadingFromHook } = useGetSparkImagesById(authUser.uid);
+ // const { profilePics: fetchedProfilePics, isLoading: profilePicsLoadingFromHook } = useGetSparkImagesById(authUser.uid);
+
+  
 
   //const{ sparkImages, isLoading: imagesLoading } = useGetSparkImagesById(authUser.uid);
 
@@ -62,8 +67,21 @@ const CreateSpark = () => {
   useEffect(() => {
     if (fetchedImages) {
       setSparkImages(fetchedImages);
+    if (fetchedImages.length !== profilePics.length)
+      setProfilePics(profilePics, fetchedImages[fetchedImages.length - 1]);
     }
   }, [fetchedImages]);
+
+  
+
+  
+
+  // useEffect(() => {
+  //   if (fetchedProfilePics) {
+  //     setProfilePics(fetchedProfilePics); // Initialize profilePics with sparkImages
+  //     console.log("test");
+  //   }
+  // }, [fetchedProfilePics]);
 
   const handleImageUpload = (newImage) => {
     setSparkImages([...sparkImages, newImage]);
@@ -71,6 +89,10 @@ const CreateSpark = () => {
 
   const handleDeleteImage = (imageId) => {
     setSparkImages(sparkImages.filter(image => image.id !== imageId));
+  };
+
+  const handleDragEnd = (reorderedImages) => {
+    setProfilePics(reorderedImages);
   };
   
   //if (postsLoading) return <Spinner size="xl" />; // Adjust this based on your needs
@@ -977,6 +999,16 @@ const handlePronounsClick = (pronouns) => {
         </Button> }
       </Box>
           </FormControl>
+
+          
+          <FormControl id="profilePics">
+            <FormLabel>Profile Pics</FormLabel>
+            {!imagesLoadingFromHook && (
+            <DragAndDropGrid images={profilePics} onDragEnd={handleDragEnd}/>
+            )}
+            </FormControl>
+          
+          
 
           <FormControl id="birthday">
             <FormLabel>Birthday</FormLabel>
