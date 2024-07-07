@@ -30,7 +30,7 @@ const DragAndDropGrid = ({ images, onDragEnd }) => {
       <Droppable droppableId="droppable-images" direction="horizontal">
         {(provided) => (
           <SimpleGrid
-            columns={3}
+            columns={4}
             spacing={4}
             ref={provided.innerRef}          // Attach the provided.innerRef to the container
             {...provided.droppableProps}     // Spread the provided.droppableProps

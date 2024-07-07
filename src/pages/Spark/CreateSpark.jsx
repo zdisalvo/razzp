@@ -175,26 +175,26 @@ const CreateSpark = () => {
   //stripping images from posts
 
   useEffect(() => {
-    if (sparkProfile && formData) {
-      const selectedImagesRaw = formData.selectedImages.map((post) => ({ id: post.id, imageURL: post.imageURL }));
-      const allImages = [...sparkImages, ...selectedImagesRaw];
-      
-      // Only update if the profilePics are different
-      if (JSON.stringify(formData.profilePics) !== JSON.stringify(allImages)) {
-        setFormData((prevState) => {
-          const updatedFormData = {
-            ...prevState,
-            profilePics: allImages,
-          };
-  
-          // Call editSparkProfile to update the profile
-          editSparkProfile(updatedFormData);
-          return updatedFormData;
-        });
-      }
+  if (sparkProfile && formData) {
+    const selectedImagesRaw = formData.selectedImages.map((post) => ({ id: post.id, imageURL: post.imageURL }));
+    const allImages = [...sparkImages, ...selectedImagesRaw];
+    
+    // Only update if the profilePics are different
+    if (JSON.stringify(formData.profilePics) !== JSON.stringify(allImages)) {
+      setFormData((prevState) => {
+        const updatedFormData = {
+          ...prevState,
+          profilePics: allImages,
+        };
+
+        // Call editSparkProfile to update the profile
+        editSparkProfile(updatedFormData);
+        return updatedFormData;
+      });
     }
-  }, [sparkImages, formData.selectedImages, sparkProfile, editSparkProfile]);
-  
+  }
+}, [sparkImages, formData.selectedImages, sparkProfile, editSparkProfile]);
+
 
 
 const handleDragEnd = (reorderedImages) => {
