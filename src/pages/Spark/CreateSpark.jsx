@@ -54,7 +54,9 @@ const CreateSpark = () => {
 
   const [sparkImages, setSparkImages] = useState([]);
   const [imagesLoading, setImagesLoading] = useState(false);
-  const [profilePics, setProfilePics] = useState([]);
+  
+  //333333
+  //const [profilePics, setProfilePics] = useState([]);
   const { sparkImages: fetchedImages, isLoading: imagesLoadingFromHook } = useGetSparkImagesById(authUser.uid);
  // const { profilePics: fetchedProfilePics, isLoading: profilePicsLoadingFromHook } = useGetSparkImagesById(authUser.uid);
 
@@ -92,9 +94,7 @@ const CreateSpark = () => {
     setSparkImages(sparkImages.filter(image => image.id !== imageId));
   };
 
-  const handleDragEnd = (reorderedImages) => {
-    setProfilePics(reorderedImages);
-  };
+  
   
   //if (postsLoading) return <Spinner size="xl" />; // Adjust this based on your needs
 
@@ -127,7 +127,7 @@ const CreateSpark = () => {
         pronouns: [],
         languages: [],
         interests: [],
-        profilePic: null,
+        profilePics: [],
         selectedImages: [],
         uploadedImages: [],
       });
@@ -161,7 +161,7 @@ const CreateSpark = () => {
             pronouns: sparkProfile.pronouns || [],
             languages: sparkProfile.languages || [],
             interests: sparkProfile.interests || [],
-            profilePic: sparkProfile.profilePic || null,
+            profilePics: sparkProfile.profilePics || [],
             selectedImages: sparkProfile.selectedImages || [],
             uploadedImages: sparkProfile.uploadedImages || [],
           }));
@@ -172,14 +172,50 @@ const CreateSpark = () => {
   const [preview, setPreview] = useState(null);
 
 
+  //stripping images from posts
+
   useEffect(() => {
-    if(sparkProfile && formData) {
-    const selectedImagesRaw = formData.selectedImages.map((post) => ({ id: post.id, imageURL: post.imageURL }));
-    //console.log(selectedImagesRaw);
-    const allImages = [...sparkImages, ...selectedImagesRaw];
-    setProfilePics(allImages);
+    if (sparkProfile && formData) {
+      const selectedImagesRaw = formData.selectedImages.map((post) => ({ id: post.id, imageURL: post.imageURL }));
+      const allImages = [...sparkImages, ...selectedImagesRaw];
+      
+      // Only update if the profilePics are different
+      if (JSON.stringify(formData.profilePics) !== JSON.stringify(allImages)) {
+        setFormData((prevState) => {
+          const updatedFormData = {
+            ...prevState,
+            profilePics: allImages,
+          };
+  
+          // Call editSparkProfile to update the profile
+          editSparkProfile(updatedFormData);
+          return updatedFormData;
+        });
+      }
     }
-  }, [sparkImages, formData.selectedImages]);
+  }, [sparkImages, formData.selectedImages, sparkProfile, editSparkProfile]);
+  
+
+
+const handleDragEnd = (reorderedImages) => {
+  // Ensure reorderedImages is an array of images
+  if (Array.isArray(reorderedImages)) {
+    // Update formData with the reordered images
+    setFormData((prevState) => {
+      const updatedFormData = {
+        ...prevState,
+        profilePics: reorderedImages, // Set profilePics to the reordered list
+      };
+
+      // Call editSparkProfile to persist the changes
+      editSparkProfile(updatedFormData);
+
+      return updatedFormData;
+    });
+  } else {
+    console.error("Invalid reordered images data.");
+  }
+};
 
   ///HANDLE SUBMIT
 
@@ -1053,7 +1089,7 @@ const handlePronounsClick = (pronouns) => {
           <FormControl id="profilePics">
             <FormLabel>Profile Pics</FormLabel>
             {!imagesLoadingFromHook && (
-            <DragAndDropGrid images={profilePics} onDragEnd={handleDragEnd}/>
+            <DragAndDropGrid images={formData.profilePics} onDragEnd={handleDragEnd}/>
             )}
             </FormControl>
           
