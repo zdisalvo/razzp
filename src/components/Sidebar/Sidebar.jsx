@@ -1,6 +1,5 @@
 import { Box, Button, Flex, Link, Tooltip, useColorModeValue, Image } from "@chakra-ui/react";
 import { Link as RouterLink, useLocation } from "react-router-dom";
-//import {Logo} from "../../assets/Logo";
 
 import { BiLogOut } from "react-icons/bi";
 import useLogout from "../../hooks/useLogout";
