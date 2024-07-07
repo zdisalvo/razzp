@@ -62,6 +62,7 @@ const useCreateSparkProfile = () => {
 				pronouns: inputs.pronouns || sparkProfile?.pronouns || [],
 				languages: inputs.languages || sparkProfile?.languages || [],
 				interests: inputs.interests || sparkProfile?.interests || [],
+				profilePics: inputs.profilePics || sparkProfile?.profilePics || [],
 				uploadedImages: inputs.uploadedImages || sparkProfile?.uploadedImages || [],
 				selectedImages: inputs.selectedImages || sparkProfile?.selectedImages || [],
 			};
