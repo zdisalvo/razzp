@@ -131,6 +131,8 @@ const CreateSpark = () => {
         selectedImages: [],
         uploadedImages: [],
       });
+
+      const [isInitialized, setIsInitialized] = useState(false);
     
       // useEffect to update formData when sparkProfile changes
       useEffect(() => {
@@ -175,7 +177,7 @@ const CreateSpark = () => {
   //stripping images from posts
 
   useEffect(() => {
-  if (sparkProfile && formData) {
+  if (sparkProfile && formData&& !isInitialized) {
     const selectedImagesRaw = formData.selectedImages.map((post) => ({ id: post.id, imageURL: post.imageURL }));
     const allImages = [...sparkImages, ...selectedImagesRaw];
     
@@ -191,6 +193,8 @@ const CreateSpark = () => {
         editSparkProfile(updatedFormData);
         return updatedFormData;
       });
+
+      setIsInitialized(true);
     }
   }
 }, [sparkImages, formData.selectedImages, sparkProfile, editSparkProfile]);
