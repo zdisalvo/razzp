@@ -1,6 +1,6 @@
-import { Box, Button, Flex, Link, Tooltip, useColorModeValue } from "@chakra-ui/react";
+import { Box, Button, Flex, Link, Tooltip, useColorModeValue, Image } from "@chakra-ui/react";
 import { Link as RouterLink, useLocation } from "react-router-dom";
-import {logo} from 'logo.png';
+//import {Logo} from "../../assets/Logo";
 
 import { BiLogOut } from "react-icons/bi";
 import useLogout from "../../hooks/useLogout";
@@ -42,7 +42,7 @@ const Sidebar = () => {
     >
       <Flex direction={"row"} justifyContent={"center"} alignItems={"center"} w='full' height="100%" gap={4}>
         <Link ml={2} to={"/"} as={RouterLink} pl={2} display={{ base: "none", md: "flex" }} cursor='pointer' >
-          <Image src={logo}/>
+          <Image src="../../../dist/logo.png" />
         </Link>
         <Link
           to={"/"}
@@ -56,7 +56,7 @@ const Sidebar = () => {
           w={10}
           cursor='pointer'
         >
-          <Image src="/razzp-mobile-logo.png" />
+          <Image src="../../../dist/razzp-mobile-logo.png" />
         </Link>
         <Flex direction={"row"} gap={5} cursor={"pointer"} justifyContent={"center"}>
           <SidebarItems />
