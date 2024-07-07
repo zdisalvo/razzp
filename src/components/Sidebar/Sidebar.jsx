@@ -41,7 +41,7 @@ const Sidebar = () => {
     >
       <Flex direction={"row"} justifyContent={"center"} alignItems={"center"} w='full' height="100%" gap={4}>
         <Link ml={2} to={"/"} as={RouterLink} pl={2} display={{ base: "none", md: "flex" }} cursor='pointer' >
-          <Image src="../../../dist/logo.png" />
+          <Image src="/logo.png" />
         </Link>
         <Link
           to={"/"}
