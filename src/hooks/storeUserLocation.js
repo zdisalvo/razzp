@@ -20,7 +20,7 @@ const storeUserLocation = (userId, latitude, longitude) => {
     location: [latitude, longitude] // Optionally store location for easier querying or display
   })
   .then(() => {
-    console.log("Geohash and location stored successfully.");
+    //console.log("Geohash and location stored successfully.");
     return geohash; // Optionally return geohash for further processing
   })
   .catch((error) => {

@@ -8,7 +8,7 @@ const queryNearbyUsers = async (latitude, longitude, radiusInMeters) => {
   const center = [latitude, longitude];
   const radiusInKm = radiusInMeters / 1000; // Convert radius to kilometers
 
-  console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
+  //console.log(`Latitude: ${latitude}, Longitude: ${longitude}`);
 
 
   // Calculate geohashes for querying
