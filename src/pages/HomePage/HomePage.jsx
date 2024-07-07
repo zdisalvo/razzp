@@ -77,7 +77,7 @@ const HomePage = () => {
           colorScheme="teal"
           mt={4}
         >
-          Get Current Location
+          Get Current Location to find matches near you
         </Button>
 
         <Flex gap={20} px={0} mx={0} justifyContent="center" mt={4}>
