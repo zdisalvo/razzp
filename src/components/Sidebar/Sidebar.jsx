@@ -1,6 +1,6 @@
 import { Box, Button, Flex, Link, Tooltip, useColorModeValue } from "@chakra-ui/react";
 import { Link as RouterLink, useLocation } from "react-router-dom";
-import { InstagramLogo, InstagramMobileLogo } from "../../assets/constants";
+import {logo} from 'logo.png';
 
 import { BiLogOut } from "react-icons/bi";
 import useLogout from "../../hooks/useLogout";
@@ -42,7 +42,7 @@ const Sidebar = () => {
     >
       <Flex direction={"row"} justifyContent={"center"} alignItems={"center"} w='full' height="100%" gap={4}>
         <Link ml={2} to={"/"} as={RouterLink} pl={2} display={{ base: "none", md: "flex" }} cursor='pointer' >
-          <InstagramLogo />
+          <Image src={logo}/>
         </Link>
         <Link
           to={"/"}
@@ -56,7 +56,7 @@ const Sidebar = () => {
           w={10}
           cursor='pointer'
         >
-          <InstagramMobileLogo />
+          <Image src="/razzp-mobile-logo.png" />
         </Link>
         <Flex direction={"row"} gap={5} cursor={"pointer"} justifyContent={"center"}>
           <SidebarItems />
