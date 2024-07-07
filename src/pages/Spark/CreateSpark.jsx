@@ -173,24 +173,39 @@ const CreateSpark = () => {
 
   const [preview, setPreview] = useState(null);
 
+  const sanitizeProfilePics = (pics) => {
+    return pics.map(pic => ({
+      id: String(pic.id),         // Ensure `id` is a string
+      imageURL: pic.imageURL      // Ensure `imageURL` is a string
+    }));
+  };
 
   //stripping images from posts
 
   useEffect(() => {
-  if (sparkProfile && formData&& !isInitialized) {
+  if (sparkProfile && formData && !isInitialized ) {
     const selectedImagesRaw = formData.selectedImages.map((post) => ({ id: post.id, imageURL: post.imageURL }));
-    const allImages = [...sparkImages, ...selectedImagesRaw];
+    const sparkImagesRaw = sparkImages.map((image) => ({ id: image.id, imageURL: image.imageURL }));
+    const allImages = [...sparkImagesRaw, ...selectedImagesRaw];
     
     // Only update if the profilePics are different
     if (JSON.stringify(formData.profilePics) !== JSON.stringify(allImages)) {
-      setFormData((prevState) => {
+      const sanitizedAllImages = sanitizeProfilePics(allImages); // Sanitize images
+
+      setFormData(prevState => {
         const updatedFormData = {
           ...prevState,
-          profilePics: allImages,
+          profilePics: sanitizedAllImages // Ensure no numeric keys are included
         };
+
+        console.log(updatedFormData);
 
         // Call editSparkProfile to update the profile
         editSparkProfile(updatedFormData);
+
+        console.log("FormData profilePics:", sparkProfile.profilePics);
+        console.log("All images:", allImages);
+
         return updatedFormData;
       });
 
@@ -203,13 +218,14 @@ const CreateSpark = () => {
 
 const handleDragEnd = (reorderedImages) => {
   // Ensure reorderedImages is an array of images
-  if (Array.isArray(reorderedImages)) {
+  if (Array.isArray(reorderedImages) && isInitialized) {
     // Update formData with the reordered images
-    setFormData((prevState) => {
-      const updatedFormData = {
-        ...prevState,
-        profilePics: reorderedImages, // Set profilePics to the reordered list
-      };
+    const sanitizedImages = sanitizeProfilePics(reorderedImages); // Sanitize images
+
+    const updatedFormData = {
+      ...formData,
+      profilePics: sanitizedImages // Ensure no numeric keys are included
+    };
 
       // Call editSparkProfile to persist the changes
       editSparkProfile(updatedFormData);
