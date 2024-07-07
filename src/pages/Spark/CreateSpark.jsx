@@ -194,9 +194,7 @@ const CreateSpark = () => {
 
         return updatedFormData;
       });
-    } else {
-      // Update profilePics by adding new images if needed
-      if (formData.profilePics.length < allImages.length) {
+    } else if (formData.profilePics.length < allImages.length) {
         const newImages = allImages.filter(image => !formData.profilePics.some(pic => pic.id === image.id));
         setFormData((prevState) => {
           const updatedFormData = {
@@ -209,9 +207,23 @@ const CreateSpark = () => {
 
           return updatedFormData;
         });
+      } else if (formData.profilePics.length > allImages.length) {
+        const removedImages = formData.profilePics.filter(pic => !allImages.some(img => img.id === pic.id));
+
+        setFormData((prevState) => {
+          const updatedFormData = {
+            ...prevState,
+            profilePics: prevState.profilePics.filter(pic => !removedImages.some(removed => removed.id === pic.id)),
+          };
+
+          // Call editSparkProfile to update the profile
+          editSparkProfile(updatedFormData);
+
+          return updatedFormData;
+        });
       }
 
-    }
+    
   }
 }, [sparkImages, formData.selectedImages, sparkProfile, editSparkProfile]);
 
