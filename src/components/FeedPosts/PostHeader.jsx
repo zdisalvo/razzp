@@ -12,6 +12,10 @@ import usePostStore from "../../store/postStore";
 import useUserProfileStore from "../../store/userProfileStore"; 
 import useShowToast from "../../hooks/useShowToast"; 
 import { firestore, storage } from "../../firebase/firebase"; 
+import useSparkProfileStore from "../../store/sparkProfileStore";
+//import useDeleteSelectedImage from "../../hooks/useDeleteSelectedImage";
+
+
 
 
 const PostHeader = ({ post, creatorProfile }) => {
@@ -22,10 +26,19 @@ const PostHeader = ({ post, creatorProfile }) => {
   const showToast = useShowToast();
   const [isDeleting, setIsDeleting] = useState(false);
   const deletePost = usePostStore((state) => state.deletePost);
-  const decrementPostsCount = useUserProfileStore((state) => state.decrementPostsCount);
+  const decrementPostsCount = useUserProfileStore((state) => state.deletePost);
+  //const deleteSelectedImage = useSparkProfileStore((state) => state.deleteSelectedImage);
+
+  const { deleteSelectedImage } = useSparkProfileStore((state) => ({
+    deleteSelectedImage: state.deleteSelectedImage
+  }));
+  
+
 
 //   console.log(userProfile.uid);
 //   console.log(authUser.uid);
+
+
 
   const handleDeletePost = async () => {
     if (!window.confirm("Are you sure you want to delete this post?")) return;
@@ -42,6 +55,7 @@ const PostHeader = ({ post, creatorProfile }) => {
       });
 
       deletePost(post.id);
+      deleteSelectedImage(post.id);
       decrementPostsCount();
       showToast("Success", "Post deleted successfully", "success");
     } catch (error) {

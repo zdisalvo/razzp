@@ -67,12 +67,12 @@ const CreateSpark = () => {
   useEffect(() => {
     if (fetchedImages) {
       setSparkImages(fetchedImages);
-    if (fetchedImages.length !== profilePics.length)
-      setProfilePics(profilePics, fetchedImages[fetchedImages.length - 1]);
+    // if (fetchedImages)
+    //   setProfilePics([...fetchedImages, ...formData.selectedImages]);
     }
   }, [fetchedImages]);
 
-  
+
 
   
 
@@ -88,6 +88,7 @@ const CreateSpark = () => {
   };
 
   const handleDeleteImage = (imageId) => {
+
     setSparkImages(sparkImages.filter(image => image.id !== imageId));
   };
 
@@ -170,6 +171,16 @@ const CreateSpark = () => {
 
   const [preview, setPreview] = useState(null);
 
+
+  useEffect(() => {
+    if(sparkProfile && formData) {
+    const selectedImagesRaw = formData.selectedImages.map((post) => ({ id: post.id, imageURL: post.imageURL }));
+    //console.log(selectedImagesRaw);
+    const allImages = [...sparkImages, ...selectedImagesRaw];
+    setProfilePics(allImages);
+    }
+  }, [sparkImages, formData.selectedImages]);
+
   ///HANDLE SUBMIT
 
   const handleSubmit = async (e) => {
@@ -192,23 +203,61 @@ const CreateSpark = () => {
 
   
   
+//PREVIOUS HANDLE IMAGE CLICK WITHOUT AUTO RENDERING
 
+  // const handleImageClick = (id) => {
+  //   setFormData((prevState) => {
+      
+  //     const currentSelectedImages = [...prevState.selectedImages];
+  //     if (currentSelectedImages.includes(id)) {
 
-  const handleImageClick = (id) => {
+  //       return { ...prevState, selectedImages: currentSelectedImages.filter((p) => p !== id) };
+  //     } else if (currentSelectedImages.length < 5) {
+        
+  //       return { ...prevState, selectedImages: [...currentSelectedImages, id] };
+  //     } else {
+  //       return prevState; 
+  //     }
+  //   });
+  // };
+
+  //handling selectedImages update on change
+
+  const handleImageClick = (id, imageURL) => {
     setFormData((prevState) => {
-      //console.log(prevState.selectedImages);
       const currentSelectedImages = [...prevState.selectedImages];
-      if (currentSelectedImages.includes(id)) {
-        // Remove the emoji if it's already selected
-        return { ...prevState, selectedImages: currentSelectedImages.filter((p) => p !== id) };
+      
+      // Check if the id already exists in the selectedImages
+      const imageIndex = currentSelectedImages.findIndex((image) => image.id === id);
+      
+      let newSelectedImages;
+      
+      if (imageIndex > -1) {
+        // If the image is already selected, remove it
+        newSelectedImages = currentSelectedImages.filter((image) => image.id !== id);
       } else if (currentSelectedImages.length < 5) {
-        // Add the emoji if less than 7 are selected
-        return { ...prevState, selectedImages: [...currentSelectedImages, id] };
+        // If the image is not selected and we have less than 5 images, add it
+        newSelectedImages = [...currentSelectedImages, { id, imageURL }];
       } else {
-        return prevState; // Do nothing if already 7 are selected
+        // If 5 images are already selected, do nothing
+        return prevState;
       }
+      
+      // Update the formData
+      const updatedFormData = {
+        ...prevState,
+        selectedImages: newSelectedImages,
+      };
+      
+      // Call editSparkProfile to update the profile
+      editSparkProfile(updatedFormData);
+      
+      return updatedFormData;
     });
   };
+  
+
+
 
   
   //const [selectedImages, setSelectedImages] = useState([]);
@@ -966,7 +1015,7 @@ const handlePronounsClick = (pronouns) => {
             // >
             <Box
               key={post.id}
-              onClick={() => handleImageClick(post.id)}
+              onClick={() => handleImageClick(post.id, post.imageURL)}
               cursor="pointer"
               mx={2}
               display="inline-block"
@@ -980,7 +1029,7 @@ const handlePronounsClick = (pronouns) => {
                 width={{base: "40vw", md: "auto"}}
                 aspectRatio={1}
                 borderRadius="md"
-                border={formData.selectedImages.includes(post.id) ? "2px solid orange" : "none"}
+                border={formData.selectedImages.some((image) => image.id === post.id ) ? "2px solid orange" : "none"}
               />
             </Box>
             //</Button>
