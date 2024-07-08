@@ -32,7 +32,6 @@ const useSparkProfileStore = create((set, get) => ({
             set({ error: error.message, isLoading: false });
         }
     },
-
     setSparkProfile: (sparkProfile) => set({ sparkProfile }),
     addPic: (pic) =>
         set((state) => ({

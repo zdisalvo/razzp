@@ -2,10 +2,16 @@ import { Box, Container, Flex, Skeleton, SkeletonCircle, Text, VStack } from "@c
 import useGetSparkProfiles from "../../hooks/useGetSparkProfiles";
 import SparkProfile from "./SparkProfile";
 import useSparkProfileStore from "../../store/sparkProfileStore";
+import useAuthStore from "../../store/authStore";
+import useGetSparkProfileById from "../../hooks/useGetSparkProfileById";
 
 const Spark = () => {
-  const {sparkProfile} = useSparkProfileStore((state) => state.fetchSparkProfile);
+    const authUser = useAuthStore((state) => state.user);
+    const sparkProfile = useGetSparkProfileById(authUser.uid);
+  //const sparkProfile = useSparkProfileStore((state) => state.setSparkProfile);
   const { isLoading, sparkProfiles } = useGetSparkProfiles(sparkProfile);
+
+  //console.log(sparkProfile);
 
   return (
     <Container py={6}   px={0} w={['100vw', null, '60vh']} >

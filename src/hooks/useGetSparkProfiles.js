@@ -1,14 +1,33 @@
 import { useEffect, useState } from "react";
 import useShowToast from "./useShowToast";
 import useSparkProfileStore from "../store/sparkProfileStore";
+
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { firestore } from "../firebase/firebase";
+import useSparkStore from "../store/sparkStore";
+import useAuthStore from "../store/authStore";
+import useGetSparkProfileById from "./useGetSparkProfileById";
 
 const useGetSparkProfiles = () => {
+    const authUser = useAuthStore((state) => state.user);
 	const [isLoading, setIsLoading] = useState(true);
-	const { sparkProfiles, setSparkProfiles } = useSparkProfileStore();
+	//const { sparkProfiles, setSparkProfiles } = useSparkProfileStore();
 	const showToast = useShowToast();
-	const sparkProfile = useSparkProfileStore((state) => state.userProfile);
+	const {sparkProfile} = useGetSparkProfileById(authUser.uid);
+
+    
+    const { sparkProfiles, setSparkProfiles, isLoading: profilesLoading, error } = useSparkStore((state) => ({
+        sparkProfiles: state.sparkProfiles,
+        setSparkProfiles: state.setSparkProfiles,
+        isLoading: state.isLoading,
+        error: state.error,
+      }));
+      
+        // useEffect(() => {
+        //   fetchAllSparkProfiles();
+        // }, [fetchAllSparkProfiles]);
+
+    //console.log(sparkProfile);
 
 	useEffect(() => {
 		const getSparkProfiles = async () => {
@@ -25,11 +44,14 @@ const useGetSparkProfiles = () => {
 
                 const filteredDocs = allDocs.filter(
                     doc => !sparkProfile.blocked.includes(doc.uid) && !sparkProfile.viewed2x.includes(doc.uid)
+
+                    ///REPLACE SO IT DOESN'T SHOW USER'S OWN PROFILE
+                            //&& sparkProfile.uid !== doc.uid
                   );
 
 				const sparkProfiles = [];
                 filteredDocs.forEach((doc) => {
-					sparkProfiles.push({ ...doc.data(), id: doc.id });
+					sparkProfiles.push({ ...doc, id: doc.id });
 				});
 
                 //const randomizedProfiles = sparkProfiles.sort(() => Math.random() - 0.5);
