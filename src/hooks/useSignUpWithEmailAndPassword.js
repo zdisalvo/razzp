@@ -73,7 +73,7 @@ const useSignUpWithEmailAndPassword = () => {
 					matched: [],
 					blocked: [],
 					ratings: [],
-					totalScore: [],
+					totalScore: 0,
 				}
 
 				const userDoc = {

@@ -15,7 +15,8 @@ import {
   Spinner,
   Flex,
   CloseButton,
-  useBreakpointValue
+  useBreakpointValue,
+  Textarea,
 } from "@chakra-ui/react";
 import useAuthStore from "../../store/authStore";
 import useCreateSparkProfile from "../../hooks/useCreateSparkProfile";
@@ -104,6 +105,7 @@ const CreateSpark = () => {
   
     const [formData, setFormData] = useState({
         name: "",
+        bio: "",
         birthday: "",
         work: "",
         school: "",
@@ -139,6 +141,7 @@ const CreateSpark = () => {
           setFormData((prevFormData) => ({
             ...prevFormData,
             name: sparkProfile.name || "",
+            bio: sparkProfile.bio || "",
             birthday: sparkProfile.birthday || "",
             work: sparkProfile.work || "",
             school: sparkProfile.school || "",
@@ -874,6 +877,23 @@ const handlePronounsClick = (pronouns) => {
               onMouseLeave={textBoxStyle.onMouseLeave}
               //value={formData.name || "" || (sparkProfile ? sparkProfile.name : "")}
               value={formData.name}
+              onChange={handleChange}
+            />
+          </FormControl>
+
+          <FormControl id="bio" mb={4}>
+            <FormLabel>Bio</FormLabel>
+            <Textarea
+              name="bio"
+              rows={5}
+              maxLength={150}
+              style={{ ...textBoxStyle }}
+              onFocus={textBoxStyle.onFocus}
+              onBlur={textBoxStyle.onBlur}
+              onMouseEnter={textBoxStyle.onMouseEnter}
+              onMouseLeave={textBoxStyle.onMouseLeave}
+              //value={formData.name || "" || (sparkProfile ? sparkProfile.name : "")}
+              value={formData.bio}
               onChange={handleChange}
             />
           </FormControl>

@@ -20,6 +20,10 @@ const useLogin = () => {
 				const docRef = doc(firestore, "users", userCred.user.uid);
 				const docSnap = await getDoc(docRef);
 				localStorage.setItem("user-info", JSON.stringify(docSnap.data()));
+
+				const sparkDocRef = doc(firestore, "spark", userCred.user.uid);
+				const docSnap = await getDoc(docRef);
+				localStorage.setItem("spark-info", )
 				loginUser(docSnap.data());
 			}
 		} catch (error) {
