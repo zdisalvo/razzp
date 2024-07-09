@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Image, Text, SimpleGrid, VStack } from '@chakra-ui/react';
+import { Box, Image, Text, SimpleGrid, VStack, Container } from '@chakra-ui/react';
 import { Carousel } from 'react-responsive-carousel';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 
@@ -35,7 +35,6 @@ const SparkProfile = ({ sparkProfile }) => {
 
   const profileData = [
     { label: 'Bio', value: bio },
-    { label: 'Birthday', value: birthday },
     { label: 'Work', value: work },
     { label: 'School', value: school },
     { label: 'Gender', value: gender },
@@ -61,6 +60,7 @@ const SparkProfile = ({ sparkProfile }) => {
   ];
 
   return (
+    <Container width={{base: "100vw", md: "auto"}} height={{base: "auto", md: "100%"}} mb={{base: "60px", md: "100px"}} >
     <Box>
       <Carousel showThumbs={false}>
         {profilePics.map((pic, index) => (
@@ -87,6 +87,7 @@ const SparkProfile = ({ sparkProfile }) => {
         <Text fontSize="xl" fontWeight="bold">{name}</Text>
       </Box>
     </Box>
+    </Container>
   );
 };
 
