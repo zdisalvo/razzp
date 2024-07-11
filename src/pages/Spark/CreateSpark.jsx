@@ -478,9 +478,13 @@ const handleDragEnd = (reorderedImages) => {
 
 
     const handleLocationChange = (selectedOption) => {
-        setSelectedLocation(selectedOption);
-        setFormData({ ...formData, location: selectedOption ? selectedOption.value : '' });
+      setFormData((prevState) => ({
+        ...prevState,
+        location: selectedOption !== null ? selectedOption.value : "", // Single value
+        
+      }));
     };
+  
 
     const filterCitiesLocation = (candidate, input) => {
       if (isTyping && input.length > 2) {
