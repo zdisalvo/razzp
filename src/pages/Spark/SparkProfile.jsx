@@ -6,7 +6,7 @@ import WineBarRoundedIcon from '@mui/icons-material/WineBarRounded';
 //import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCannabis, faBriefcase, faWineGlass, faRuler, faDumbbell, faGraduationCap, 
-  faSmoking, faSchool, faHouseChimney, faBaby, faChildren, faStarAndCrescent, faScaleBalanced } from '@fortawesome/free-solid-svg-icons'; 
+  faSmoking, faSchool, faHouseChimney, faBaby, faChildren, faStarAndCrescent, faScaleBalanced, faBook, faGlobe } from '@fortawesome/free-solid-svg-icons'; 
 
 
 const calculateAge = (birthday) => {
@@ -98,9 +98,12 @@ const SparkProfile = ({ sparkProfile }) => {
 
   const filteredEssentialsData = essentialsData.filter(item => isNotEmpty(item.value));
 
+
+
   //About Me
 
   const aboutMeData = [
+    gender && { value: gender },
     height && { value: (
         <Flex align="center">
           <FontAwesomeIcon icon={faRuler} style={{ marginRight: '8px' }} /> {height}
@@ -147,8 +150,16 @@ const SparkProfile = ({ sparkProfile }) => {
         <FontAwesomeIcon icon={faStarAndCrescent} style={{ marginRight: '8px' }} /> {star_sign}
       </Flex>
     )},
-    politics && { value: politics },
-    religion &&{ value: religion },
+    politics && { value: (
+      <Flex align="center">
+        <FontAwesomeIcon icon={faScaleBalanced} style={{ marginRight: '8px' }} /> {politics}
+      </Flex>
+    )},
+    religion && { value: (
+      <Flex align="center">
+        <FontAwesomeIcon icon={faBook} style={{ marginRight: '8px' }} /> {religion}
+      </Flex>
+    )},
     //languages && { value: languages },
   ];
 
@@ -164,6 +175,21 @@ const SparkProfile = ({ sparkProfile }) => {
     const filteredOpenToData = openToData.filter(item => isNotEmpty(item.value));
   
     //LANGUAGES
+
+    const languagesData = [
+      languages && { value: languages },
+    ]
+
+    const filteredLanguagesData = languagesData.filter(item => isNotEmpty(item.value));
+
+
+    //INTERESTS
+
+    const interestsData = [
+      interests && { value: interests},
+    ]
+
+    const filteredInterestsData = interestsData.filter(item => isNotEmpty(item.value));
 
   const rawProfileData = [
     { label: 'Age', value: calculateAge(birthday) },
@@ -237,9 +263,15 @@ const SparkProfile = ({ sparkProfile }) => {
 
   const profileData = [
     filteredAboutMeData.length > 0 && { label: 'About Me', data: filteredAboutMeData },
-    filteredOpenToData.length > 0 && { label: 'Open to', data: filteredOpenToData },
-    { label: 'Profile Details', data: filteredProfileData },
+    //{ label: 'Profile Details', data: filteredProfileData },
   ].filter(Boolean); // Filter out any falsy values
+
+  const lastPage = [
+    filteredOpenToData.length > 0 && { label: 'Open to', data: filteredOpenToData },
+    filteredLanguagesData.length > 0 && { label: 'Languages', data: filteredLanguagesData },
+    filteredInterestsData.length > 0 && { label: 'Interests', data: filteredInterestsData },
+  ].filter(Boolean); // Filter out any falsy values
+  
 
   //profilePics.map((pic, index) => (
 
@@ -248,7 +280,7 @@ const SparkProfile = ({ sparkProfile }) => {
       <Box>
         <Carousel showThumbs={false}>
           {profilePics.length > 0  &&
-            <Box key={0}>
+            <Box key={0} mx={1}>
               <Image src={profilePics[0].imageURL} alt={`Profile picture ${1}`} />
             </Box>
           }
@@ -295,40 +327,35 @@ const SparkProfile = ({ sparkProfile }) => {
           ))}
         </Box>
           {profilePics.length > 1 && profilePics.map((pic, index) => (
-            <Box key={index}>
+            <Box key={index} mx={1}>
             <Image src={pic.imageURL} alt={`Profile picture ${index + 1}`} />
           </Box>
           ))}
           <Box p={4}>
-            <VStack spacing={4} align="left">
-              {profileData.slice(Math.ceil(profileData.length / 2)).map((data, index) => (
-                <Box key={index} align="left">
-                  <Text><strong>{data.label}</strong></Text>
-                  {Array.isArray(data.value) ? (
-                    data.value.map((item, subIndex) => (
-                      <Button key={subIndex} size="sm" style={buttonStyle} m={1} display="flex"
-                      alignItems="center"
-                      justifyContent="center">
-                        {item}
-                      </Button>
-                    ))
-                  ) : (
-                    <Button size="sm" style={buttonStyle} m={1} display="flex"
-                      alignItems="center"
-                      justifyContent="center"> 
-                        {data.value}
-                      </Button>
-                  )}
-                </Box>
-              ))}
-            </VStack>
+          {lastPage.map((section, index) => (
+            <Box key={index} mb={4}>
+              <Text fontWeight="bold" fontSize='sm' textAlign="left" ml={3} mb={2}>{section.label}</Text>
+              <Flex wrap="wrap">
+                {section.data.map((dataItem, idx) => ( 
+                  <Button key={idx} size="sm" style={buttonStyle} m={1} display="flex" alignItems="center" justifyContent="center">
+                    {dataItem.icon && <FontAwesomeIcon icon={dataItem.icon} style={{ marginRight: '8px' }} />}
+                    <Text>{dataItem.value}</Text>
+                  </Button>
+                
+                ))}
+              </Flex>
+            </Box>
+          ))}
           </Box>
         </Carousel>
-        <Box bg="#1B2328" p={4} textAlign="center">
+        <Box bg="#1B2328" p={4} textAlign="center" mx={1}>
         <Flex align="center" justify="center" direction="row" wrap="wrap">
           <Text fontSize="xl" fontWeight="bold" mr={5}>{name}</Text>
           {filteredProfileData.find(item => item.label === 'Age') &&
-          <Text fontSize="xl" fontWeight="bold">{filteredProfileData.find(item => item.label === 'Age').value}</Text>
+          <Text fontSize="xl" fontWeight="bold" mr={5} >{filteredProfileData.find(item => item.label === 'Age').value}</Text>
+            }
+            {filteredProfileData.find(item => item.label === 'Pronouns') &&
+          <Text fontSize="xl" fontWeight="bold">({filteredProfileData.find(item => item.label === 'Pronouns').value})</Text>
             }
           </Flex>
         </Box>
