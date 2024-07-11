@@ -83,9 +83,9 @@ const useCreateSparkProfile = () => {
 				spark: true,
 			};
 
-			await updateDoc(sparkDocRef, updatedSpark);
-			localStorage.setItem("spark-info", JSON.stringify(updatedSpark));
-			setSparkProfile(updatedSpark);
+			// await updateDoc(sparkDocRef, updatedSpark);
+			// localStorage.setItem("spark-info", JSON.stringify(updatedSpark));
+			// setSparkProfile(updatedSpark);
 
 			await updateDoc(userDocRef, updatedUser);
 			localStorage.setItem("user-info", JSON.stringify(updatedUser));
