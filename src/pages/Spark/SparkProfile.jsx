@@ -349,12 +349,12 @@ const SparkProfile = ({ sparkProfile }) => {
           }
          
             
-          <Box p={4}>
+          <Box p={3}>
               {filteredBioData && filteredBioData.map((item, index) => (
-                <Box key={index} mb={4}>
+                <Box key={index} mb={3}>
                 <Text fontWeight="bold" fontSize='sm' textAlign="left" ml={3} mb={2}>Bio</Text>
-                <Box key={index} mb={4}>
-                  <Text fontSize="sm" fontWeight="medium" margin='4px 2px' padding="10px" borderRadius='10px' textAlign="left" justifyContent="center" fontFamily="system-ui"  backgroundColor="#1B2328" lineHeight="tall" whiteSpace="pre-wrap" overflowWrap="break-word">
+                <Box key={index} mb={3}>
+                  <Text fontSize="sm" fontWeight="medium" margin='4px 2px' padding="3px 10px" borderRadius='10px' textAlign="left" justifyContent="center" fontFamily="system-ui"  backgroundColor="#1B2328" lineHeight="tall" whiteSpace="pre-wrap" overflowWrap="break-word">
                     {item.value}
                   </Text>
                 </Box>
@@ -375,7 +375,7 @@ const SparkProfile = ({ sparkProfile }) => {
             </Box>
           
           {profileData.map((section, index) => (
-            <Box key={index} mb={4}>
+            <Box key={index} mb={3}>
               <Text fontWeight="bold" fontSize='sm' textAlign="left" ml={3} mb={2}>{section.label}</Text>
               <Flex wrap="wrap">
                 {section.data.map((dataItem, idx) => ( 
@@ -395,9 +395,9 @@ const SparkProfile = ({ sparkProfile }) => {
           </Box>
           ))}
           {lastPage.length > 0 &&
-          <Box p={4}>
+          <Box p={3}>
           {lastPage.map((section, index) => (
-            <Box key={index} mb={4}>
+            <Box key={index} mb={3}>
               <Text fontWeight="bold" fontSize='sm' textAlign="left" ml={3} mb={2}>{section.label}</Text>
               <Flex wrap="wrap">
                 {section.data.map((dataItem, idx) => ( 
