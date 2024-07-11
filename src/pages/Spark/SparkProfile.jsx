@@ -361,7 +361,7 @@ const SparkProfile = ({ sparkProfile }) => {
                 </Box>
               ))}
             
-            <Box mb={4}>
+            <Box mb={3}>
               
               <Flex wrap="wrap">
                 {filteredEssentialsData.map((dataItem, idx) => ( 
