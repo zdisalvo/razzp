@@ -168,17 +168,13 @@ const SparkProfile = ({ sparkProfile }) => {
 
     //Open to
 
-    const openToData = [
-      looking_for && { value: looking_for },
-    ]
+    const openToData = looking_for && looking_for.map((looking, index) => ({ value: looking }));
 
     const filteredOpenToData = openToData.filter(item => isNotEmpty(item.value));
   
     //LANGUAGES
 
-    const languagesData = [
-      languages && { value: languages },
-    ]
+    const languagesData = languages && languages.map((language, index) => ({ value: language }));
 
     const filteredLanguagesData = languagesData.filter(item => isNotEmpty(item.value));
 

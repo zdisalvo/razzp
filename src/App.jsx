@@ -12,20 +12,21 @@ import useAuthStore from "./store/authStore";
 
 function App() {
 	const [authUser] = useAuthState(auth);
-	const authUserProf = useAuthStore(state => state.user);
-	let spark;
+	// const authUserProf = useAuthStore(state => state.user);
+	// let spark;
 
-	if (authUserProf.spark === null)
-		spark = false;
-	else 
-		spark = authUserProf.spark;
+	// if (authUserProf.spark === null)
+	// 	spark = false;
+	// else 
+	// 	spark = authUserProf.spark;
 
 	return (
 		<PageLayout>
 			<Routes>
 				<Route path='/' element={authUser ? <HomePage /> : <Navigate to='/auth' />} />
 				<Route path='/auth' element={!authUser ? <AuthPage /> : <Navigate to='/' />} />
-				<Route path='/spark' element={authUser ? (!spark  ? <Navigate to='/spark/edit' /> : <Spark />) : <Navigate to='/' /> } />
+				{/* <Route path='/spark' element={authUser ? (!spark  ? <Navigate to='/spark/edit' /> : <Spark />) : <Navigate to='/' /> } /> */}
+				<Route path='/spark' element={authUser ? <Spark /> : <Navigate to='/' /> } />
 				<Route path='/spark/edit' element={authUser ? <CreateSpark /> : <Navigate to='/' />} />
 				<Route path='/:username' element={<ProfilePage />} />
 				<Route path="/:username/feed" element={<ProfilePageFeed />} />

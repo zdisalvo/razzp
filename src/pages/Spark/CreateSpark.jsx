@@ -833,7 +833,7 @@ const handlePronounsClick = (pronouns) => {
       if (currentInterests.includes(emoji)) {
         // Remove the emoji if it's already selected
         return { ...prevState, interests: currentInterests.filter((e) => e !== emoji) };
-      } else if (currentInterests.length < 10) {
+      } else if (currentInterests.length < 6) {
         // Add the emoji if less than 7 are selected
         return { ...prevState, interests: [...currentInterests, emoji] };
       } else {
@@ -1737,7 +1737,7 @@ const handlePronounsClick = (pronouns) => {
           <Stack direction="row" align="baseline">
             <FormLabel>Interests</FormLabel>
             <Text fontSize="sm" color="gray.500">
-            (Select up to 10)
+            (Select up to 6)
           </Text>
           </Stack>
             <Box>
