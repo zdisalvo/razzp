@@ -25,7 +25,8 @@ function App() {
 			<Routes>
 				<Route path='/' element={authUser ? <HomePage /> : <Navigate to='/auth' />} />
 				<Route path='/auth' element={!authUser ? <AuthPage /> : <Navigate to='/' />} />
-				<Route path='/spark' element={authUser ? (!spark  ? <CreateSpark /> : <Spark />) : <Navigate to='/' /> } />
+				<Route path='/spark' element={authUser ? (!spark  ? <Navigate to='/spark/edit' /> : <Spark />) : <Navigate to='/' /> } />
+				<Route path='/spark/edit' element={authUser ? <CreateSpark /> : <Navigate to='/' />} />
 				<Route path='/:username' element={<ProfilePage />} />
 				<Route path="/:username/feed" element={<ProfilePageFeed />} />
 

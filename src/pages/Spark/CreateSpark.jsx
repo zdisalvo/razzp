@@ -1255,7 +1255,8 @@ const handlePronounsClick = (pronouns) => {
                 isClearable
                 styles={customStyles}
                 options={cities}
-                value={selectedLocation}
+                //value={selectedLocation}
+                value={cities.find((city) => city.value === formData.location)}
                 onChange={handleLocationChange}
                 filterOption={filterCitiesLocation}
                 onKeyDown={handleKeyDown}
@@ -1270,7 +1271,8 @@ const handlePronounsClick = (pronouns) => {
                 isClearable
                 styles={customStyles}
                 options={cities}
-                value={selectedHometown}
+                //value={selectedHometown}
+                value={cities.find((city) => city.value === formData.hometown)}
                 onChange={handleHometownChange}
                 filterOption={filterCitiesHometown}
                 onKeyDown={handleKeyDown}
