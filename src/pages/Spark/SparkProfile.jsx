@@ -182,14 +182,22 @@ const SparkProfile = ({ sparkProfile }) => {
 
     const filteredLanguagesData = languagesData.filter(item => isNotEmpty(item.value));
 
+   
+
 
     //INTERESTS
 
-    const interestsData = [
-      interests && { value: interests},
-    ]
+    const interestsData = interests && interests.map((interest, index) => ({ value: interest }));
 
     const filteredInterestsData = interestsData.filter(item => isNotEmpty(item.value));
+
+    //HOMETOWN
+
+    const hometownData = [
+      hometown && { value: hometown },
+    ]
+
+    const filteredHometownData = hometownData.filter(item => isNotEmpty(item.value));
 
   const rawProfileData = [
     { label: 'Age', value: calculateAge(birthday) },
@@ -270,6 +278,7 @@ const SparkProfile = ({ sparkProfile }) => {
     filteredOpenToData.length > 0 && { label: 'Open to', data: filteredOpenToData },
     filteredLanguagesData.length > 0 && { label: 'Languages', data: filteredLanguagesData },
     filteredInterestsData.length > 0 && { label: 'Interests', data: filteredInterestsData },
+    filteredHometownData.length > 0 && { label: 'From', data: filteredHometownData },
   ].filter(Boolean); // Filter out any falsy values
   
 
@@ -285,7 +294,7 @@ const SparkProfile = ({ sparkProfile }) => {
             </Box>
           }
          
-
+            
           <Box p={4}>
               {filteredBioData && filteredBioData.map((item, index) => (
                 <Box key={index} mb={4}>
@@ -326,11 +335,12 @@ const SparkProfile = ({ sparkProfile }) => {
             </Box>
           ))}
         </Box>
-          {profilePics.length > 1 && profilePics.map((pic, index) => (
+          {profilePics.length > 1 && profilePics.slice(1).map((pic, index) => (
             <Box key={index} mx={1}>
-            <Image src={pic.imageURL} alt={`Profile picture ${index + 1}`} />
+            <Image src={pic.imageURL} alt={`Profile picture ${index + 2}`} />
           </Box>
           ))}
+          {lastPage.length > 0 &&
           <Box p={4}>
           {lastPage.map((section, index) => (
             <Box key={index} mb={4}>
@@ -347,6 +357,7 @@ const SparkProfile = ({ sparkProfile }) => {
             </Box>
           ))}
           </Box>
+        }
         </Carousel>
         <Box bg="#1B2328" p={4} textAlign="center" mx={1}>
         <Flex align="center" justify="center" direction="row" wrap="wrap">
