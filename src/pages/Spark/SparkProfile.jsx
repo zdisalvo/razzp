@@ -7,6 +7,7 @@ import WineBarRoundedIcon from '@mui/icons-material/WineBarRounded';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCannabis, faBriefcase, faWineGlass, faRuler, faDumbbell, faGraduationCap, 
   faSmoking, faSchool, faHouseChimney, faBaby, faChildren, faStarAndCrescent, faScaleBalanced, faBook, faGlobe } from '@fortawesome/free-solid-svg-icons'; 
+//import "../Spark/carousel.css"
 
 
 const calculateAge = (birthday) => {
@@ -253,9 +254,9 @@ const SparkProfile = ({ sparkProfile }) => {
   const buttonStyle = {
     backgroundColor: "#1B2328",
     color: 'white',
-    py: "10px",
-    margin: '4px 2px',
-    borderRadius: '7px',
+    py: "0px",
+    margin: '2px 2px',
+    borderRadius: '10px',
     display: 'inline-block',
     userSelect: 'none',
     pointerEvents: 'none',
@@ -281,7 +282,7 @@ const SparkProfile = ({ sparkProfile }) => {
   //profilePics.map((pic, index) => (
 
   return (
-    <Container width={{ base: "100vw", md: "auto" }} height={{ base: "auto", md: "100%" }} mb={{ base: "60px", md: "100px" }}>
+    <Container width={{ base: "100vw", md: "auto" }} height={{ base: "auto", md: "100%" }} mb={{ base: "60px", md: "100px" }} px={0} mx={0}>
       <Box>
       <Carousel
           showThumbs={false}
@@ -353,7 +354,7 @@ const SparkProfile = ({ sparkProfile }) => {
                 <Box key={index} mb={4}>
                 <Text fontWeight="bold" fontSize='sm' textAlign="left" ml={3} mb={2}>Bio</Text>
                 <Box key={index} mb={4}>
-                  <Text fontSize="sm" fontWeight="medium" margin='4px 2px' padding="10px" borderRadius='7px' textAlign="left" justifyContent="center" fontFamily="system-ui"  backgroundColor="#1B2328" lineHeight="tall" whiteSpace="pre-wrap" overflowWrap="break-word">
+                  <Text fontSize="sm" fontWeight="medium" margin='4px 2px' padding="10px" borderRadius='10px' textAlign="left" justifyContent="center" fontFamily="system-ui"  backgroundColor="#1B2328" lineHeight="tall" whiteSpace="pre-wrap" overflowWrap="break-word">
                     {item.value}
                   </Text>
                 </Box>
@@ -412,7 +413,7 @@ const SparkProfile = ({ sparkProfile }) => {
           </Box>
         }
         </Carousel>
-        <Box bg="#1B2328" p={4} textAlign="center" mx={1}>
+        <Box bg="#1B2328" p={2} textAlign="center" mx={1}>
         <Flex align="center" justify="center" direction="row" wrap="wrap">
           <Text fontSize="xl" fontWeight="bold" mr={5}>{name}</Text>
           {filteredProfileData.find(item => item.label === 'Age') &&
