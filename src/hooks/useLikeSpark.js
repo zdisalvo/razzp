@@ -32,8 +32,11 @@ const useLikeSpark = (sparkProfile) => {
       const likeMeRef = doc(firestore, "spark", sparkProfile.uid);
       const likesRef = doc(firestore, "spark", authUser.uid);
 
+      const newTotalScore = isLikedMe ? (likeMeRef.totalScore || 0) - 1 : (likeMeRef.totalScore || 0) + 1;
+
       await updateDoc(likeMeRef, {
         likedMe: isLikedMe ? arrayRemove(authUser.uid) : arrayUnion(authUser.uid),
+        totalScore: newTotalScore,
       });
 
       await updateDoc(likesRef, {

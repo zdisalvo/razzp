@@ -415,10 +415,10 @@ const SparkProfile = ({ sparkProfile }) => {
           </Box>
         }
         </Carousel>
-        <Box bg="#eb7734" p={2} textAlign="center" mx={1} borderBottomRadius="3px">
-        <Flex align="center" justify="center" direction="row" wrap="wrap">
+        <Box bg="#eb7734" p={2} textAlign="center" mx={1} borderBottomRadius="3px" alignItems="baseline">
+        <Flex align="center" justify="left" direction="row" wrap="wrap" >
         
-          <SparkLike sparkProfile={sparkProfile} />
+          <SparkLike sparkProfile={sparkProfile}/>
           <Text fontSize="xl" fontWeight="bold" textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)" mr={5}>{name}</Text>
           {filteredProfileData.find(item => item.label === 'Age') &&
           <Text fontSize="xl" fontWeight="bold" textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)" mr={5} >{filteredProfileData.find(item => item.label === 'Age').value}</Text>
