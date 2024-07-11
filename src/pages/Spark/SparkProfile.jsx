@@ -287,7 +287,64 @@ const SparkProfile = ({ sparkProfile }) => {
   return (
     <Container width={{ base: "100vw", md: "auto" }} height={{ base: "auto", md: "100%" }} mb={{ base: "60px", md: "100px" }}>
       <Box>
-        <Carousel showThumbs={false}>
+      <Carousel
+          showThumbs={false}
+          showArrows={true}
+          showStatus={false}
+          showIndicators={false}
+          infiniteLoop={false}
+          useKeyboardArrows={true}
+          renderArrowPrev={(onClickHandler, hasPrev, label) =>
+            hasPrev && (
+              <button
+                type="button"
+                onClick={onClickHandler}
+                title={label}
+                style={{
+                  position: 'absolute',
+                  zIndex: 2,
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  left: 0,
+                  width: '150px', // Adjust the width as needed
+                  height: '100%', // Ensure it covers the full height of the carousel
+                  background: 'transparent', // Make the background transparent
+                  border: 'none',
+                  opacity: 0, // Hide the button but keep it clickable
+                  cursor: 'pointer',
+                }}
+                className="control-prev control-arrow"
+              >
+                &lt;
+              </button>
+            )
+          }
+          renderArrowNext={(onClickHandler, hasNext, label) =>
+            hasNext && (
+              <button
+                type="button"
+                onClick={onClickHandler}
+                title={label}
+                style={{
+                  position: 'absolute',
+                  zIndex: 2,
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  right: 0,
+                  width: '150px', // Adjust the width as needed
+                  height: '100%', // Ensure it covers the full height of the carousel
+                  background: 'transparent', // Make the background transparent
+                  border: 'none',
+                  opacity: 0, // Hide the button but keep it clickable
+                  cursor: 'pointer',
+                }}
+                className="control-next control-arrow"
+              >
+                &gt;
+              </button>
+            )
+          }
+        >
           {profilePics.length > 0  &&
             <Box key={0} mx={1}>
               <Image src={profilePics[0].imageURL} alt={`Profile picture ${1}`} />
