@@ -283,8 +283,9 @@ const SparkProfile = ({ sparkProfile }) => {
 
   return (
     <Container width={{ base: "100vw", md: "auto" }} height={{ base: "auto", md: "100%" }} mb={{ base: "60px", md: "100px" }} px={0} mx={0}>
-      <Box>
+      <Box >
       <Carousel
+      
           showThumbs={false}
           showArrows={true}
           showStatus={false}
@@ -343,7 +344,7 @@ const SparkProfile = ({ sparkProfile }) => {
           }
         >
           {profilePics.length > 0  &&
-            <Box key={0} mx={1}>
+            <Box key={0} mx={1} >
               <Image src={profilePics[0].imageURL} alt={`Profile picture ${1}`} />
             </Box>
           }
@@ -352,8 +353,8 @@ const SparkProfile = ({ sparkProfile }) => {
           <Box p={3}>
               {filteredBioData && filteredBioData.map((item, index) => (
                 <Box key={index} mb={3}>
-                <Text fontWeight="bold" fontSize='sm' textAlign="left" ml={3} mb={2}>Bio</Text>
-                <Box key={index} mb={3}>
+                <Text fontWeight="bold" fontSize='sm' color="#eb7734" textAlign="left" ml={3} mb={2}>Bio</Text>
+                <Box key={index} mb={3} >
                   <Text fontSize="sm" fontWeight="medium" margin='4px 2px' padding="3px 10px" borderRadius='10px' textAlign="left" justifyContent="center" fontFamily="system-ui"  backgroundColor="#1B2328" lineHeight="tall" whiteSpace="pre-wrap" overflowWrap="break-word">
                     {item.value}
                   </Text>
@@ -376,7 +377,7 @@ const SparkProfile = ({ sparkProfile }) => {
           
           {profileData.map((section, index) => (
             <Box key={index} mb={3}>
-              <Text fontWeight="bold" fontSize='sm' textAlign="left" ml={3} mb={2}>{section.label}</Text>
+              <Text fontWeight="bold" fontSize='sm' color="#eb7734" textAlign="left" ml={3} mb={2}>{section.label}</Text>
               <Flex wrap="wrap">
                 {section.data.map((dataItem, idx) => ( 
                   <Button key={idx} size="sm" style={buttonStyle} m={1} display="flex" alignItems="center" justifyContent="center">
@@ -398,7 +399,7 @@ const SparkProfile = ({ sparkProfile }) => {
           <Box p={3}>
           {lastPage.map((section, index) => (
             <Box key={index} mb={3}>
-              <Text fontWeight="bold" fontSize='sm' textAlign="left" ml={3} mb={2}>{section.label}</Text>
+              <Text fontWeight="bold" fontSize='sm' color="#eb7734" textAlign="left" ml={3} mb={2}>{section.label}</Text>
               <Flex wrap="wrap">
                 {section.data.map((dataItem, idx) => ( 
                   <Button key={idx} size="sm" style={buttonStyle} m={1} display="flex" alignItems="center" justifyContent="center">
@@ -413,14 +414,14 @@ const SparkProfile = ({ sparkProfile }) => {
           </Box>
         }
         </Carousel>
-        <Box bg="#1B2328" p={2} textAlign="center" mx={1}>
+        <Box bg="#eb7734" p={2} textAlign="center" mx={1} borderBottomRadius="3px">
         <Flex align="center" justify="center" direction="row" wrap="wrap">
-          <Text fontSize="xl" fontWeight="bold" mr={5}>{name}</Text>
+          <Text fontSize="xl" fontWeight="bold" textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)" mr={5}>{name}</Text>
           {filteredProfileData.find(item => item.label === 'Age') &&
-          <Text fontSize="xl" fontWeight="bold" mr={5} >{filteredProfileData.find(item => item.label === 'Age').value}</Text>
+          <Text fontSize="xl" fontWeight="bold" textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)" mr={5} >{filteredProfileData.find(item => item.label === 'Age').value}</Text>
             }
             {filteredProfileData.find(item => item.label === 'Pronouns') &&
-          <Text fontSize="xl" fontWeight="bold">({filteredProfileData.find(item => item.label === 'Pronouns').value})</Text>
+          <Text fontSize="xl" fontWeight="bold" textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)">({filteredProfileData.find(item => item.label === 'Pronouns').value})</Text>
             }
           </Flex>
         </Box>
