@@ -22,6 +22,10 @@ const calculateAge = (birthday) => {
     return age;
   };
 
+  
+
+
+
 const SparkProfile = ({ sparkProfile }) => {
   const {
     name,
@@ -51,6 +55,8 @@ const SparkProfile = ({ sparkProfile }) => {
     profilePics,
   } = sparkProfile;
 
+  //About Me
+
   const profileData = [
     { label: 'Age', value: calculateAge(birthday) },
     { label: 'Bio', value: bio },
@@ -59,6 +65,7 @@ const SparkProfile = ({ sparkProfile }) => {
           <FontAwesomeIcon icon={faBriefcase} style={{ marginRight: '8px' }} /> {work}
         </Flex>
       )},
+    
     { label: 'School', value: school },
     { label: 'Gender', value: gender },
     { label: 'Location', value: location },
@@ -120,15 +127,17 @@ const SparkProfile = ({ sparkProfile }) => {
 
   const filteredProfileData = profileData.filter(item => item.value && (Array.isArray(item.value) ? item.value.length > 0 : true));
 
+  //profilePics.map((pic, index) => (
+
   return (
     <Container width={{ base: "100vw", md: "auto" }} height={{ base: "auto", md: "100%" }} mb={{ base: "60px", md: "100px" }}>
       <Box>
         <Carousel showThumbs={false}>
-          {profilePics.map((pic, index) => (
-            <Box key={index}>
-              <Image src={pic.imageURL} alt={`Profile picture ${index + 1}`} />
+          {profilePics.length > 0  &&
+            <Box key={0}>
+              <Image src={profilePics[0].imageURL} alt={`Profile picture ${1}`} />
             </Box>
-          ))}
+          }
           <Box p={4}>
             <VStack spacing={4} align="left">
               {filteredProfileData.slice(0, Math.ceil(filteredProfileData.length / 2)).map((data, index) => (
@@ -153,6 +162,11 @@ const SparkProfile = ({ sparkProfile }) => {
               ))}
             </VStack>
           </Box>
+          {profilePics.length > 1 && profilePics.map((pic, index) => (
+            <Box key={index}>
+            <Image src={pic.imageURL} alt={`Profile picture ${index + 1}`} />
+          </Box>
+          ))}
           <Box p={4}>
             <VStack spacing={4} align="left">
               {filteredProfileData.slice(Math.ceil(filteredProfileData.length / 2)).map((data, index) => (
