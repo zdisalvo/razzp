@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCannabis, faBriefcase, faWineGlass, faRuler, faDumbbell, faGraduationCap, 
   faSmoking, faSchool, faHouseChimney, faBaby, faChildren, faStarAndCrescent, faScaleBalanced, faBook, faGlobe } from '@fortawesome/free-solid-svg-icons'; 
 //import "../Spark/carousel.css"
+import SparkLike from './SparkLike';
 
 
 const calculateAge = (birthday) => {
@@ -416,6 +417,8 @@ const SparkProfile = ({ sparkProfile }) => {
         </Carousel>
         <Box bg="#eb7734" p={2} textAlign="center" mx={1} borderBottomRadius="3px">
         <Flex align="center" justify="center" direction="row" wrap="wrap">
+        
+          <SparkLike sparkProfile={sparkProfile} />
           <Text fontSize="xl" fontWeight="bold" textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)" mr={5}>{name}</Text>
           {filteredProfileData.find(item => item.label === 'Age') &&
           <Text fontSize="xl" fontWeight="bold" textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)" mr={5} >{filteredProfileData.find(item => item.label === 'Age').value}</Text>
