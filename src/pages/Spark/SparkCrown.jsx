@@ -17,7 +17,7 @@ const SparkCrown = ({ sparkProfile }) => {
   }, [initialIsLiked, initialIsLikedMe]);
 
   const handleLikeClick = async () => {
-    if (!authUser) return;
+    if (!authUser || !authUser.spark) return;
     if (isLiked) return;
 
     const newIsLiked = !isLiked;

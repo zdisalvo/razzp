@@ -12,14 +12,22 @@ const useLikeSpark = (sparkProfile) => {
 
   const [isLikedMe, setIsLikedMe] = useState(sparkProfile.likedMe.includes(authUser?.uid));
   const [isLiked, setIsLiked] = useState(false);
+  const [likeCount, setLikeCount ] = useState(0);
 
   const showToast = useShowToast();
 
   useEffect(() => {
     if (!isLoading && sparkUser) {
       setIsLiked(sparkUser.liked.includes(sparkProfile.uid));
+      setLikeCount(sparkUser.dayLikes);
     }
   }, [isLoading, sparkUser, sparkProfile.uid]);
+
+//   useEffect(() => {
+//     if (!isLoading && sparkUser) {
+//       setLikeCount(sparkUser.dayLikes); // Update like count
+//     }
+//   }, [isLoading, sparkUser]);
 
   //console.log(sparkUser);
 
@@ -39,8 +47,11 @@ const useLikeSpark = (sparkProfile) => {
         totalScore: newTotalScore,
       });
 
+      //const likeCount = isLiked ? likesRef.dayLikes  - 1 : likesRef.dayLikes  + 1;
+
       await updateDoc(likesRef, {
         liked: isLiked ? arrayRemove(sparkProfile.uid) : arrayUnion(sparkProfile.uid),
+        dayLikes: isLiked ? (likeCount || 0) - 1 : (likeCount || 0) + 1,
       });
 
       setIsLikedMe(!isLikedMe);
