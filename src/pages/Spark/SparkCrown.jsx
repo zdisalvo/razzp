@@ -2,11 +2,11 @@ import { Box, Image } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { NotificationsLogo, UnlikeLogo } from "../../assets/constants";
 import useAuthStore from "../../store/authStore";
-import useLikeSpark from "../../hooks/useLikeSpark";
+import useCrownSpark from "../../hooks/useCrownSpark";
 
-const SparkLike = ({ sparkProfile }) => {
+const SparkCrown = ({ sparkProfile }) => {
   const authUser = useAuthStore((state) => state.user);
-  const { handleLikeSpark, isLiked: initialIsLiked, isLikedMe: initialIsLikedMe } = useLikeSpark(sparkProfile);
+  const { handleLikeSpark, isLiked: initialIsLiked, isLikedMe: initialIsLikedMe } = useCrownSpark(sparkProfile);
 
   const [isLiked, setIsLiked] = useState(initialIsLiked);
   const [isLikedMe, setIsLikedMe] = useState(initialIsLikedMe);
@@ -18,6 +18,7 @@ const SparkLike = ({ sparkProfile }) => {
 
   const handleLikeClick = async () => {
     if (!authUser) return;
+    if (isLiked) return;
 
     const newIsLiked = !isLiked;
     setIsLiked(newIsLiked);
@@ -33,10 +34,10 @@ const SparkLike = ({ sparkProfile }) => {
   };
 
   return (
-    <Box onClick={handleLikeClick} cursor="pointer" fontSize={18} width="5%" ml={3} mr={0} textAlign="left" >
-      {!isLiked ? <NotificationsLogo  /> : <UnlikeLogo />}
+    <Box onClick={handleLikeClick} cursor="pointer" fontSize={32} width="10%" ml={3} mr={3} textAlign="left">
+      {!isLiked ? <Image src="/white-crown-small.png" ml={2} /> : <Image src="/blue-crown-small.png" ml={2} />}
     </Box>
   );
 };
 
-export default SparkLike;
+export default SparkCrown;

@@ -9,6 +9,7 @@ import { faCannabis, faBriefcase, faWineGlass, faRuler, faDumbbell, faGraduation
   faSmoking, faSchool, faHouseChimney, faBaby, faChildren, faStarAndCrescent, faScaleBalanced, faBook, faGlobe } from '@fortawesome/free-solid-svg-icons'; 
 //import "../Spark/carousel.css"
 import SparkLike from './SparkLike';
+import SparkCrown from './SparkCrown';
 
 
 const calculateAge = (birthday) => {
@@ -418,9 +419,10 @@ const SparkProfile = ({ sparkProfile }) => {
         <Box bg="#eb7734" p={2} textAlign="center" mx={1} borderBottomRadius="3px" alignItems="baseline">
         <Flex align="center" justify="center" direction="row" wrap="nowrap" >
           
-        
+          
           <SparkLike sparkProfile={sparkProfile}/>
-          <Box width="90%" display="flex" justifyContent="center">
+          <SparkCrown sparkProfile={sparkProfile} />
+          <Box width="80%" display="flex" justifyContent="center">
           <Flex alignItems="center" justify="center" direction="row" wrap="nowrap" textAlign="center">
           <Text fontSize="xl" fontWeight="bold" textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)" mr={5}>{name}</Text>
           {filteredProfileData.find(item => item.label === 'Age') &&
