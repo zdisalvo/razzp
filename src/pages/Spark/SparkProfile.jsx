@@ -420,7 +420,7 @@ const SparkProfile = ({ sparkProfile }) => {
           
         
           <SparkLike sparkProfile={sparkProfile}/>
-          <Box width="75%" display="flex" flexDirection="row" alignItems="center">
+          <Box width="90%" display="flex" justifyContent="center">
           <Flex alignItems="center" justify="center" direction="row" wrap="nowrap" textAlign="center">
           <Text fontSize="xl" fontWeight="bold" textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)" mr={5}>{name}</Text>
           {filteredProfileData.find(item => item.label === 'Age') &&

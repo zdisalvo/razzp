@@ -33,7 +33,7 @@ const SparkLike = ({ sparkProfile }) => {
   };
 
   return (
-    <Box onClick={handleLikeClick} cursor="pointer" fontSize={18} width="23%" ml={5} mr={5} textAlign="left">
+    <Box onClick={handleLikeClick} cursor="pointer" fontSize={18} width="10%" ml={5} mr={5} textAlign="left">
       {!isLiked ? <NotificationsLogo /> : <UnlikeLogo />}
     </Box>
   );
