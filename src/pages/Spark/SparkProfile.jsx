@@ -416,9 +416,12 @@ const SparkProfile = ({ sparkProfile }) => {
         }
         </Carousel>
         <Box bg="#eb7734" p={2} textAlign="center" mx={1} borderBottomRadius="3px" alignItems="baseline">
-        <Flex align="center" justify="left" direction="row" wrap="wrap" >
+        <Flex align="center" justify="center" direction="row" wrap="nowrap" >
+          
         
           <SparkLike sparkProfile={sparkProfile}/>
+          <Box width="75%" display="flex" flexDirection="row" alignItems="center">
+          <Flex alignItems="center" justify="center" direction="row" wrap="nowrap" textAlign="center">
           <Text fontSize="xl" fontWeight="bold" textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)" mr={5}>{name}</Text>
           {filteredProfileData.find(item => item.label === 'Age') &&
           <Text fontSize="xl" fontWeight="bold" textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)" mr={5} >{filteredProfileData.find(item => item.label === 'Age').value}</Text>
@@ -426,6 +429,8 @@ const SparkProfile = ({ sparkProfile }) => {
             {filteredProfileData.find(item => item.label === 'Pronouns') &&
           <Text fontSize="xl" fontWeight="bold" textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)">({filteredProfileData.find(item => item.label === 'Pronouns').value})</Text>
             }
+            </Flex>
+            </Box>
           </Flex>
         </Box>
       </Box>
