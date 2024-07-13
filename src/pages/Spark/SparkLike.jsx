@@ -40,7 +40,6 @@ const SparkLike = ({ sparkProfile }) => {
 
     try {
       await handleLikeSpark();
-      setIsLiked(!newIsLiked);
     } catch (error) {
       console.error("Error handling like click:", error);
       setIsLiked(!newIsLiked); // Rollback on error
