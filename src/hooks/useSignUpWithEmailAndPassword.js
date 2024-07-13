@@ -69,6 +69,8 @@ const useSignUpWithEmailAndPassword = () => {
 					viewed2x: [],
 					viewed3x: [],
 					liked: [],
+					crowned: [],
+					crownedMe: [],
 					dayLikes: 0,
 					likeClock: "",
 					dayCrowns: 0,

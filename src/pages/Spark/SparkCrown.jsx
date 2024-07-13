@@ -6,30 +6,31 @@ import useCrownSpark from "../../hooks/useCrownSpark";
 
 const SparkCrown = ({ sparkProfile }) => {
   const authUser = useAuthStore((state) => state.user);
-  const { handleLikeSpark, isLiked: initialIsLiked, isLikedMe: initialIsLikedMe } = useCrownSpark(sparkProfile);
+  const { handleLikeSpark, isLiked: initialIsLiked, isUpdating } = useCrownSpark(sparkProfile);
 
   const [isLiked, setIsLiked] = useState(initialIsLiked);
-  const [isLikedMe, setIsLikedMe] = useState(initialIsLikedMe);
+
 
   useEffect(() => {
     setIsLiked(initialIsLiked);
-    setIsLikedMe(initialIsLikedMe);
-  }, [initialIsLiked, initialIsLikedMe]);
+    
+  }, [initialIsLiked]);
 
   const handleLikeClick = async () => {
-    if (!authUser || !authUser.spark) return;
-    if (isLiked) return;
 
     const newIsLiked = !isLiked;
-    setIsLiked(newIsLiked);
-    setIsLikedMe(newIsLiked); // Assuming you want to update isLikedMe as well
 
+    if (!authUser || !authUser.spark || isUpdating) return;
+    if (isLiked) return;
+
+    setIsLiked(newIsLiked);
+ 
     try {
       await handleLikeSpark();
     } catch (error) {
       console.error("Error handling like click:", error);
-      setIsLiked(isLiked); // Rollback on error
-      setIsLikedMe(isLikedMe);
+      setIsLiked(!newIsLiked); // Rollback on error
+      
     }
   };
 

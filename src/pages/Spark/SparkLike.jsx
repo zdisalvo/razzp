@@ -23,19 +23,17 @@ const SparkLike = ({ sparkProfile }) => {
     //setLikeCount(initialLikeCount);
   }, [initialIsLiked]);
 
-
+ 
 
   const handleLikeClick = async () => {
 
     const newIsLiked = !isLiked;
 
-    
 
     if (!authUser || !authUser.spark || isUpdating) return;
 
     setIsLiked(newIsLiked);
 
-    
 
 
     try {
@@ -47,10 +45,12 @@ const SparkLike = ({ sparkProfile }) => {
     }
   };
 
-  return (
+  return ( 
+    
     <Box onClick={handleLikeClick} cursor="pointer" fontSize={18} width="5%" ml={3} mr={0} textAlign="left" >
       {!isLiked ? <NotificationsLogo  /> : <UnlikeLogo />}
     </Box>
+  
   );
 };
 
