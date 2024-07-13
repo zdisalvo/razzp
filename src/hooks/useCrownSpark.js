@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import useAuthStore from "../store/authStore";
-import useLikeStore from "../store/likeStore";
+import useCrownStore from "../store/crownStore";
 import useShowToast from "./useShowToast";
 import { arrayRemove, arrayUnion, doc, updateDoc, increment } from "firebase/firestore";
 import { firestore } from "../firebase/firebase";
@@ -15,17 +15,17 @@ const useCrownSpark = (sparkProfile) => {
 
   const [isLikedMe, setIsLikedMe] = useState(null || sparkProfile.crownedMe.includes(authUser?.uid));
   const [isLiked, setIsLiked] = useState(false);
-  const likeCount = useLikeStore((state) => state.likeCount);
-  const setLikeCount = useLikeStore((state) => state.setLikeCount);
-  const incrementLikeCount = useLikeStore((state) => state.incrementLikeCount);
-  const decrementLikeCount = useLikeStore((state) => state.decrementLikeCount);
+  const crownCount = useCrownStore((state) => state.crownCount);
+  const setCrownCount = useCrownStore((state) => state.setCrownCount);
+  const incrementCrownCount = useCrownStore((state) => state.incrementCrownCount);
+  const decrementCrownCount = useCrownStore((state) => state.decrementCrownCount);
 
   const showToast = useShowToast();
 
   useEffect(() => {
     if (!isLoading && sparkUser) {
       setIsLiked(sparkUser.crowned.includes(sparkProfile.uid));
-      setLikeCount(sparkUser.dayCrowns);
+      setCrownCount(sparkUser.dayCrowns);
     }
   }, [isLoading, sparkUser, sparkProfile.uid]);
 
@@ -43,7 +43,7 @@ const useCrownSpark = (sparkProfile) => {
 
     
 
-    if (!isLiked && likeCount >= MAX_CROWNS) {
+    if (!isLiked && crownCount >= MAX_CROWNS) {
         return showToast("Message", "You have reached your crowns limit for the day", "warning");
       }
 
@@ -68,7 +68,7 @@ const useCrownSpark = (sparkProfile) => {
 
       setIsLikedMe(!isLikedMe);
       setIsLiked(!isLiked);
-      isLiked ? decrementLikeCount() : incrementLikeCount();
+      isLiked ? decrementCrownCount() : incrementCrownCount();
 
     //   console.log(likeCount);
     //     console.log(isLiked);
@@ -81,7 +81,7 @@ const useCrownSpark = (sparkProfile) => {
     }
   };
 
-  return { isLikedMe, isLiked, likeCount, handleLikeSpark, isUpdating };
+  return { isLikedMe, isLiked, crownCount, handleLikeSpark, isUpdating };
 };
 
 export default useCrownSpark;
