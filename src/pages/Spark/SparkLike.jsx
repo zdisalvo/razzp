@@ -38,13 +38,13 @@ const SparkLike = ({ sparkProfile }) => {
 
 
      try {
-    //   const isAllowedToLike = await canLike(authUser.uid);
+      const isAllowedToLike = await canLike();
       
-    //   if (!isAllowedToLike) {
-    //     setIsLiked(!newIsLiked);
-    //     console.log("You have reached your likes limit. Please wait.");
-    //     return;
-    //   } 
+      if (!isAllowedToLike) {
+        setIsLiked(!newIsLiked);
+        //console.log("You have reached your likes limit. Please wait.");
+        return;
+      } 
 
       setIsUpdating(true);
 
