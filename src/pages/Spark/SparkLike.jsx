@@ -7,21 +7,23 @@ import useGetSparkProfileById from "../../hooks/useGetSparkProfileById";
 
 const SparkLike = ({ sparkProfile }) => {
   const authUser = useAuthStore((state) => state.user);
-  const { handleLikeSpark, isLiked: initialIsLiked, isLikedMe: initialIsLikedMe } = useLikeSpark(sparkProfile);
+  const { handleLikeSpark, isLiked: initialIsLiked, likeCount: initialLikeCount } = useLikeSpark(sparkProfile);
   //const { isLoading, sparkProfile: sparkUser } = useGetSparkProfileById(authUser?.uid);
 
   //console.log(sparkUser);
 
   const [isLiked, setIsLiked] = useState(initialIsLiked);
-  //const [isLikedMe, setIsLikedMe] = useState(initialIsLikedMe);
+  const [likeCount, setLikeCount] = useState(initialLikeCount);
 
   //const [likeCount, setLikeCount] = useState(0);
 
 
   useEffect(() => {
     setIsLiked(initialIsLiked);
-    //  setIsLikedMe(initialIsLikedMe);
-  }, [initialIsLiked, initialIsLikedMe]);
+    setLikeCount(initialLikeCount);
+  }, [initialIsLiked, initialLikeCount]);
+
+  //let newLikeCount = likeCount;
 
 //   useEffect(() => {
 //     if (!isLoading && sparkUser) {
@@ -31,10 +33,17 @@ const SparkLike = ({ sparkProfile }) => {
 
   //console.log(likeCount);
 
+  console.log(likeCount);
+
   const handleLikeClick = async () => {
     if (!authUser || !authUser.spark) return;
 
+    if (!isLiked && likeCount >= 2) return;
+
     const newIsLiked = !isLiked;
+    !isLiked ? setLikeCount(likeCount + 1) : setLikeCount(likeCount - 1);
+
+    //console.log(likeCount);
 
     //setLikeCount(prevCount => newIsLiked ? prevCount + 1 : prevCount - 1);
 

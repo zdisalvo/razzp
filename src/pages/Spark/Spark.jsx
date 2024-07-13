@@ -31,7 +31,7 @@ const Spark = () => {
           </VStack>
         ))}
       
-      {!isLoading && sparkProfiles.length > 0 && sparkProfiles.map((profile) => <SparkProfile key={profile.uid} sparkProfile={profile}  />)}
+      {!isLoading && sparkProfiles.length > 0 && sparkProfiles.map((profile) => <SparkProfile key={profile.uid} sparkProfile={profile} />)}
       
       
     </Container>

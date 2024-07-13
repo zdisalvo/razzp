@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import useAuthStore from "../store/authStore";
 import useShowToast from "./useShowToast";
-import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore";
+import { arrayRemove, arrayUnion, doc, updateDoc, increment } from "firebase/firestore";
 import { firestore } from "../firebase/firebase";
 import useGetSparkProfileById from "./useGetSparkProfileById";
 
@@ -51,7 +51,7 @@ const useLikeSpark = (sparkProfile) => {
 
       await updateDoc(likesRef, {
         liked: isLiked ? arrayRemove(sparkProfile.uid) : arrayUnion(sparkProfile.uid),
-        dayLikes: isLiked ? (likeCount || 0) - 1 : (likeCount || 0) + 1,
+        dayLikes: isLiked ? increment(-1) : increment(1),
       });
 
       setIsLikedMe(!isLikedMe);
@@ -64,7 +64,7 @@ const useLikeSpark = (sparkProfile) => {
     }
   };
 
-  return { isLikedMe, isLiked, handleLikeSpark, isUpdating };
+  return { isLikedMe, isLiked, likeCount, handleLikeSpark, isUpdating };
 };
 
 export default useLikeSpark;
