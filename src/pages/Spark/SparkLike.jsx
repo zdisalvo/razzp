@@ -7,7 +7,7 @@ import useGetSparkProfileById from "../../hooks/useGetSparkProfileById";
 
 const SparkLike = ({ sparkProfile }) => {
   const authUser = useAuthStore((state) => state.user);
-  const { handleLikeSpark, isLiked: initialIsLiked, isUpdating } = useLikeSpark(sparkProfile);
+  const { handleLikeSpark, canLike, isLiked: initialIsLiked, isUpdating, setIsUpdating } = useLikeSpark(sparkProfile);
   //const { isLoading, sparkProfile: sparkUser } = useGetSparkProfileById(authUser?.uid);
 
   //console.log(sparkUser);
@@ -36,14 +36,27 @@ const SparkLike = ({ sparkProfile }) => {
 
 
 
-    try {
+
+     try {
+    //   const isAllowedToLike = await canLike(authUser.uid);
+      
+    //   if (!isAllowedToLike) {
+    //     setIsLiked(!newIsLiked);
+    //     console.log("You have reached your likes limit. Please wait.");
+    //     return;
+    //   } 
+
+      setIsUpdating(true);
+
       await handleLikeSpark();
       setIsLiked(!newIsLiked);
     } catch (error) {
       console.error("Error handling like click:", error);
       setIsLiked(!newIsLiked); // Rollback on error
       //setIsLikedMe(isLikedMe);
-    }
+    } finally {
+        setIsUpdating(false);
+      }
   };
 
   return ( 

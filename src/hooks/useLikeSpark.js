@@ -2,11 +2,11 @@ import { useState, useEffect } from "react";
 import useAuthStore from "../store/authStore";
 import useLikeStore from "../store/likeStore";
 import useShowToast from "./useShowToast";
-import { arrayRemove, arrayUnion, doc, updateDoc, increment } from "firebase/firestore";
+import { arrayRemove, arrayUnion, doc, updateDoc, increment, getDoc } from "firebase/firestore";
 import { firestore } from "../firebase/firebase";
 import useGetSparkProfileById from "./useGetSparkProfileById";
 
-const MAX_LIKES = 2;
+const MAX_LIKES = 1;
 
 const useLikeSpark = (sparkProfile) => {
   const [isUpdating, setIsUpdating] = useState(false);
@@ -41,10 +41,17 @@ const useLikeSpark = (sparkProfile) => {
     if (isUpdating || !sparkUser) return;
     if (!authUser) return showToast("Error", "You must be logged in to like a post", "error");
 
-    
+    const sparkUserRef = doc(firestore, "spark", authUser.uid);
 
-    if (!isLiked && likeCount >= MAX_LIKES) {
+    if (!isLiked && likeCount >= MAX_LIKES && sparkUserRef.likeClock === "") {
+        const currentTime = new Date().toISOString();
+        await updateDoc(sparkUserRef, {
+          likeClock: currentTime,
+          dayLikes: 0,
+        });
         return showToast("Message", "You have reached your likes limit for the day", "warning");
+      } else if (!canLike()) {
+        return showToast("Message", "You still need to wait for your likes to refresh", "warning");
       }
 
     setIsUpdating(true);
@@ -81,7 +88,42 @@ const useLikeSpark = (sparkProfile) => {
     }
   };
 
-  return { isLikedMe, isLiked, likeCount, handleLikeSpark, isUpdating };
+  const canLike = async () => {
+    const sparkUserRef = doc(firestore, "spark", authUser.uid);
+
+    try {
+      const userDoc = await getDoc(sparkUserRef);
+
+      if (!userDoc.exists()) {
+        throw new Error("User not found");
+      }
+
+      const userData = userDoc.data();
+      const likeClock = userData.likeClock;
+
+      if (likeClock) {
+        const currentTime = new Date();
+        const likeClockTime = new Date(likeClock);
+        const timeDiff = (currentTime - likeClockTime) / 1000; // Time difference in seconds
+
+        if (timeDiff < 60) { // 60 seconds = 1 minute
+          return false; // Not allowed to like
+        }
+      }
+
+      await updateDoc(sparkUserRef, {
+        likeClock: "",
+      });
+
+      return true; // Allowed to like
+
+    } catch (error) {
+      console.error("Error checking like permission:", error);
+      return false;
+    }
+  };
+
+  return { isLikedMe, isLiked, likeCount, handleLikeSpark, canLike, isUpdating, setIsUpdating };
 };
 
 export default useLikeSpark;
