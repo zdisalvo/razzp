@@ -70,8 +70,8 @@ const useCrownSpark = (sparkProfile) => {
       setIsLiked(!isLiked);
       isLiked ? decrementLikeCount() : incrementLikeCount();
 
-      console.log(likeCount);
-        console.log(isLiked);
+    //   console.log(likeCount);
+    //     console.log(isLiked);
 
     } catch (error) {
       showToast("Error", error.message, "error");
