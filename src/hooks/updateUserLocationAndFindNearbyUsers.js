@@ -9,7 +9,7 @@ const updateUserLocationAndFindNearbyUsers = async (userId, latitude, longitude,
 
     // Query nearby users
     const nearbyUsers = await queryNearbyUsers(latitude, longitude, radiusInMeters);
-    console.log('Nearby users:', nearbyUsers);
+    //console.log('Nearby users:', nearbyUsers);
     // Handle nearbyUsers data as needed
   } catch (error) {
     console.error('Error updating location or querying nearby users:', error);

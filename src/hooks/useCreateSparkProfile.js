@@ -38,14 +38,15 @@ const useCreateSparkProfile = () => {
 			const updatedSpark = {
 				...sparkProfile,
 				name: inputs.name || sparkProfile?.name || '',
+				bio: inputs.bio || sparkProfile?.bio || '',
 				created: true,
 				birthday: inputs.birthday || sparkProfile?.birthday || '',
 				work: inputs.work || sparkProfile?.work || '',
 				school: inputs.school || sparkProfile?.school || '',
 				gender: inputs.gender || sparkProfile?.gender || '',
 				interested_in: inputs.interested_in || sparkProfile?.interested_in || [],
-				location: inputs.location || sparkProfile?.location || '',
-				hometown: inputs.hometown || sparkProfile?.hometown || '',
+				location: inputs.location !== undefined ? inputs.location : sparkProfile?.location || '',
+				hometown: inputs.hometown !== undefined ? inputs.hometown : sparkProfile?.hometown || '',
 				ethnicity: inputs.ethnicity || sparkProfile?.ethnicity || '',
 				height: inputs.height || sparkProfile?.height || '',
 				exercise: inputs.exercise || sparkProfile?.exercise || '',
@@ -62,8 +63,19 @@ const useCreateSparkProfile = () => {
 				pronouns: inputs.pronouns || sparkProfile?.pronouns || [],
 				languages: inputs.languages || sparkProfile?.languages || [],
 				interests: inputs.interests || sparkProfile?.interests || [],
+				profilePics: inputs.profilePics || sparkProfile?.profilePics || [],
 				uploadedImages: inputs.uploadedImages || sparkProfile?.uploadedImages || [],
 				selectedImages: inputs.selectedImages || sparkProfile?.selectedImages || [],
+
+				viewed1x: inputs.viewed1x || sparkProfile?.viewed1x || [],
+				viewed2x: inputs.viewed2x || sparkProfile?.viewed2x || [],
+				viewed3x: inputs.viewed3x || sparkProfile?.viewed3x || [],
+				liked: inputs.liked || sparkProfile?.liked || [],
+				likedMe: inputs.likedMe || sparkProfile?.likedMe || [],
+				matched: inputs.matched || sparkProfile?.matched || [],
+				blocked: inputs.blocked || sparkProfile?.blocked || [],
+				ratings: inputs.ratings || sparkProfile?.ratings || [],
+				totalScore: inputs.totalScore || sparkProfile?.totalScore || 0,
 			};
 
 			const updatedUser = {

@@ -35,6 +35,7 @@ const useSignUpWithEmailAndPassword = () => {
 				const spark = {
 					uid: newUser.user.uid,
 					name: "",
+					bio: "",
 					created: false,
 					birthday: "",
 					work: "",
@@ -60,8 +61,25 @@ const useSignUpWithEmailAndPassword = () => {
 					languages: [],
 					photos: [],
 					interests: [],
+					profilePics: [],
 					uploadedImages: [],
 					selectedImages: [],
+
+					viewed1x: [],
+					viewed2x: [],
+					viewed3x: [],
+					liked: [],
+					crowned: [],
+					crownedMe: [],
+					dayLikes: 0,
+					likeClock: "",
+					dayCrowns: 0,
+					crownClock: "",
+					likedMe: [],
+					matched: [],
+					blocked: [],
+					ratings: [],
+					totalScore: 0,
 				}
 
 				const userDoc = {

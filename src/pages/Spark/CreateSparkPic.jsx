@@ -201,9 +201,9 @@ function useUploadSparkPic() {
     }, [authUser, fetchSparkProfile]);
 
 	const handleUploadPic = async (selectedFile) => {
-        console.log("before");
+        //console.log("before");
 		if (isLoading || sparkProfileLoading || !authUser || !sparkProfile) return;
-        console.log("after");
+        //console.log("after");
 		if (!selectedFile) throw new Error("Please select an image");
 		setIsLoading(true);
 		const newPic = {

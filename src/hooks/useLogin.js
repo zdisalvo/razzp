@@ -9,6 +9,7 @@ const useLogin = () => {
 	const [signInWithEmailAndPassword, , loading, error] = useSignInWithEmailAndPassword(auth);
 	const loginUser = useAuthStore((state) => state.login);
 
+
 	const login = async (inputs) => {
 		if (!inputs.email || !inputs.password) {
 			return showToast("Error", "Please fill all the fields", "error");
@@ -21,6 +22,10 @@ const useLogin = () => {
 				const docSnap = await getDoc(docRef);
 				localStorage.setItem("user-info", JSON.stringify(docSnap.data()));
 				loginUser(docSnap.data());
+
+				// const sparkDocRef = doc(firestore, "spark", userCred.user.uid);
+				// const sparkDocSnap = await getDoc(sparkDocRef);
+				// localStorage.setItem("spark-info", JSON.stringify(sparkDocSnap.data()));
 			}
 		} catch (error) {
 			showToast("Error", error.message, "error");

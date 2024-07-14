@@ -1,0 +1,14 @@
+
+/* .carousel .slide {
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+  } */
+
+
+.carousel .slide {
+    transition: none !important;
+  }
+  
+  /* .carousel .slide.carousel-slider .slide.active {
+    opacity: 1;
+  } */

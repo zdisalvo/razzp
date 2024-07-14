@@ -15,7 +15,8 @@ import {
   Spinner,
   Flex,
   CloseButton,
-  useBreakpointValue
+  useBreakpointValue,
+  Textarea,
 } from "@chakra-ui/react";
 import useAuthStore from "../../store/authStore";
 import useCreateSparkProfile from "../../hooks/useCreateSparkProfile";
@@ -31,6 +32,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons';
 import CreateSparkPic from "./CreateSparkPic";
 import useGetSparkImagesById from "../../hooks/useGetSparkImagesById";
 import DeleteSparkPic from "./DeleteSparkPic";
+import DragAndDropGrid from "./DragAndDropGrid";
 
 
 
@@ -53,7 +55,13 @@ const CreateSpark = () => {
 
   const [sparkImages, setSparkImages] = useState([]);
   const [imagesLoading, setImagesLoading] = useState(false);
+  
+  //333333
+  //const [profilePics, setProfilePics] = useState([]);
   const { sparkImages: fetchedImages, isLoading: imagesLoadingFromHook } = useGetSparkImagesById(authUser.uid);
+ // const { profilePics: fetchedProfilePics, isLoading: profilePicsLoadingFromHook } = useGetSparkImagesById(authUser.uid);
+
+  
 
   //const{ sparkImages, isLoading: imagesLoading } = useGetSparkImagesById(authUser.uid);
 
@@ -62,16 +70,32 @@ const CreateSpark = () => {
   useEffect(() => {
     if (fetchedImages) {
       setSparkImages(fetchedImages);
+    // if (fetchedImages)
+    //   setProfilePics([...fetchedImages, ...formData.selectedImages]);
     }
   }, [fetchedImages]);
+
+
+
+  
+
+  // useEffect(() => {
+  //   if (fetchedProfilePics) {
+  //     setProfilePics(fetchedProfilePics); // Initialize profilePics with sparkImages
+  //     console.log("test");
+  //   }
+  // }, [fetchedProfilePics]);
 
   const handleImageUpload = (newImage) => {
     setSparkImages([...sparkImages, newImage]);
   };
 
   const handleDeleteImage = (imageId) => {
+
     setSparkImages(sparkImages.filter(image => image.id !== imageId));
   };
+
+  
   
   //if (postsLoading) return <Spinner size="xl" />; // Adjust this based on your needs
 
@@ -81,6 +105,7 @@ const CreateSpark = () => {
   
     const [formData, setFormData] = useState({
         name: "",
+        bio: "",
         birthday: "",
         work: "",
         school: "",
@@ -104,10 +129,11 @@ const CreateSpark = () => {
         pronouns: [],
         languages: [],
         interests: [],
-        profilePic: null,
+        profilePics: [],
         selectedImages: [],
         uploadedImages: [],
       });
+
     
       // useEffect to update formData when sparkProfile changes
       useEffect(() => {
@@ -115,6 +141,7 @@ const CreateSpark = () => {
           setFormData((prevFormData) => ({
             ...prevFormData,
             name: sparkProfile.name || "",
+            bio: sparkProfile.bio || "",
             birthday: sparkProfile.birthday || "",
             work: sparkProfile.work || "",
             school: sparkProfile.school || "",
@@ -138,7 +165,7 @@ const CreateSpark = () => {
             pronouns: sparkProfile.pronouns || [],
             languages: sparkProfile.languages || [],
             interests: sparkProfile.interests || [],
-            profilePic: sparkProfile.profilePic || null,
+            profilePics: sparkProfile.profilePics || [],
             selectedImages: sparkProfile.selectedImages || [],
             uploadedImages: sparkProfile.uploadedImages || [],
           }));
@@ -147,6 +174,83 @@ const CreateSpark = () => {
       }, [sparkProfile]);
 
   const [preview, setPreview] = useState(null);
+
+
+  //stripping images from posts
+
+  useEffect(() => {
+  if (sparkProfile && formData ) {
+    const selectedImagesRaw = formData.selectedImages.map((post) => ({ id: post.id, imageURL: post.imageURL }));
+    const sparkImagesRaw = sparkImages.map((image) => ({ id: image.id, imageURL: image.imageURL }));
+    const allImages = [...sparkImagesRaw, ...selectedImagesRaw];
+    
+    // Only update if the profilePics are different
+    if (!sparkProfile.profilePics && formData.profilePics.length === 0) {
+      setFormData((prevState) => {
+        const updatedFormData = {
+          ...prevState,
+          profilePics: allImages,
+        };
+
+        // Call editSparkProfile to update the profile
+        editSparkProfile(updatedFormData);
+
+        return updatedFormData;
+      });
+    } else if (formData.profilePics.length < allImages.length) {
+        const newImages = allImages.filter(image => !formData.profilePics.some(pic => pic.id === image.id));
+        setFormData((prevState) => {
+          const updatedFormData = {
+            ...prevState,
+            profilePics: [...prevState.profilePics, ...newImages],
+          };
+
+          // Call editSparkProfile to update the profile
+          editSparkProfile(updatedFormData);
+
+          return updatedFormData;
+        });
+      } else if (formData.profilePics.length > allImages.length) {
+        const removedImages = formData.profilePics.filter(pic => !allImages.some(img => img.id === pic.id));
+
+        setFormData((prevState) => {
+          const updatedFormData = {
+            ...prevState,
+            profilePics: prevState.profilePics.filter(pic => !removedImages.some(removed => removed.id === pic.id)),
+          };
+
+          // Call editSparkProfile to update the profile
+          editSparkProfile(updatedFormData);
+
+          return updatedFormData;
+        });
+      }
+
+    
+  }
+}, [sparkImages, formData.selectedImages, sparkProfile, editSparkProfile]);
+
+
+
+const handleDragEnd = (reorderedImages) => {
+  // Ensure reorderedImages is an array of images
+  if (Array.isArray(reorderedImages)) {
+    // Update formData with the reordered images
+    setFormData((prevState) => {
+      const updatedFormData = {
+        ...prevState,
+        profilePics: reorderedImages, // Set profilePics to the reordered list
+      };
+
+      // Call editSparkProfile to persist the changes
+      editSparkProfile(updatedFormData);
+
+      return updatedFormData;
+    });
+  } else {
+    console.error("Invalid reordered images data.");
+  }
+};
 
   ///HANDLE SUBMIT
 
@@ -170,23 +274,61 @@ const CreateSpark = () => {
 
   
   
+//PREVIOUS HANDLE IMAGE CLICK WITHOUT AUTO RENDERING
 
+  // const handleImageClick = (id) => {
+  //   setFormData((prevState) => {
+      
+  //     const currentSelectedImages = [...prevState.selectedImages];
+  //     if (currentSelectedImages.includes(id)) {
 
-  const handleImageClick = (id) => {
+  //       return { ...prevState, selectedImages: currentSelectedImages.filter((p) => p !== id) };
+  //     } else if (currentSelectedImages.length < 5) {
+        
+  //       return { ...prevState, selectedImages: [...currentSelectedImages, id] };
+  //     } else {
+  //       return prevState; 
+  //     }
+  //   });
+  // };
+
+  //handling selectedImages update on change
+
+  const handleImageClick = (id, imageURL) => {
     setFormData((prevState) => {
-      //console.log(prevState.selectedImages);
       const currentSelectedImages = [...prevState.selectedImages];
-      if (currentSelectedImages.includes(id)) {
-        // Remove the emoji if it's already selected
-        return { ...prevState, selectedImages: currentSelectedImages.filter((p) => p !== id) };
+      
+      // Check if the id already exists in the selectedImages
+      const imageIndex = currentSelectedImages.findIndex((image) => image.id === id);
+      
+      let newSelectedImages;
+      
+      if (imageIndex > -1) {
+        // If the image is already selected, remove it
+        newSelectedImages = currentSelectedImages.filter((image) => image.id !== id);
       } else if (currentSelectedImages.length < 5) {
-        // Add the emoji if less than 7 are selected
-        return { ...prevState, selectedImages: [...currentSelectedImages, id] };
+        // If the image is not selected and we have less than 5 images, add it
+        newSelectedImages = [...currentSelectedImages, { id, imageURL }];
       } else {
-        return prevState; // Do nothing if already 7 are selected
+        // If 5 images are already selected, do nothing
+        return prevState;
       }
+      
+      // Update the formData
+      const updatedFormData = {
+        ...prevState,
+        selectedImages: newSelectedImages,
+      };
+      
+      // Call editSparkProfile to update the profile
+      editSparkProfile(updatedFormData);
+      
+      return updatedFormData;
     });
   };
+  
+
+
 
   
   //const [selectedImages, setSelectedImages] = useState([]);
@@ -336,9 +478,13 @@ const CreateSpark = () => {
 
 
     const handleLocationChange = (selectedOption) => {
-        setSelectedLocation(selectedOption);
-        setFormData({ ...formData, location: selectedOption ? selectedOption.value : '' });
+      setFormData((prevState) => ({
+        ...prevState,
+        location: selectedOption !== null ? selectedOption.value : "", // Single value
+        
+      }));
     };
+  
 
     const filterCitiesLocation = (candidate, input) => {
       if (isTyping && input.length > 2) {
@@ -687,7 +833,7 @@ const handlePronounsClick = (pronouns) => {
       if (currentInterests.includes(emoji)) {
         // Remove the emoji if it's already selected
         return { ...prevState, interests: currentInterests.filter((e) => e !== emoji) };
-      } else if (currentInterests.length < 10) {
+      } else if (currentInterests.length < 6) {
         // Add the emoji if less than 7 are selected
         return { ...prevState, interests: [...currentInterests, emoji] };
       } else {
@@ -717,9 +863,9 @@ const handlePronounsClick = (pronouns) => {
   
   
   return (
-    <Container maxW="container.md" mb={{ base: "10vh", md: "60px" }}>
-      <Heading as="h1" textAlign="center" mb={6}>
-        Create Your Spark Profile
+    <Container maxW="container.md" mt={{ base: "5vh", md: "30px" }} mb={{ base: "10vh", md: "60px" }}>
+      <Heading as="h1" textAlign="center" mb={4} >
+        Spark Dating Profile
       </Heading>
       <Box as="form" onSubmit={handleSubmit} p={4} boxShadow="md" borderRadius="md">
         <Stack spacing={4}>
@@ -735,6 +881,23 @@ const handlePronounsClick = (pronouns) => {
               onMouseLeave={textBoxStyle.onMouseLeave}
               //value={formData.name || "" || (sparkProfile ? sparkProfile.name : "")}
               value={formData.name}
+              onChange={handleChange}
+            />
+          </FormControl>
+
+          <FormControl id="bio" mb={4}>
+            <FormLabel>Bio</FormLabel>
+            <Textarea
+              name="bio"
+              rows={5}
+              maxLength={150}
+              style={{ ...textBoxStyle }}
+              onFocus={textBoxStyle.onFocus}
+              onBlur={textBoxStyle.onBlur}
+              onMouseEnter={textBoxStyle.onMouseEnter}
+              onMouseLeave={textBoxStyle.onMouseLeave}
+              //value={formData.name || "" || (sparkProfile ? sparkProfile.name : "")}
+              value={formData.bio}
               onChange={handleChange}
             />
           </FormControl>
@@ -944,7 +1107,7 @@ const handlePronounsClick = (pronouns) => {
             // >
             <Box
               key={post.id}
-              onClick={() => handleImageClick(post.id)}
+              onClick={() => handleImageClick(post.id, post.imageURL)}
               cursor="pointer"
               mx={2}
               display="inline-block"
@@ -958,7 +1121,7 @@ const handlePronounsClick = (pronouns) => {
                 width={{base: "40vw", md: "auto"}}
                 aspectRatio={1}
                 borderRadius="md"
-                border={formData.selectedImages.includes(post.id) ? "2px solid orange" : "none"}
+                border={formData.selectedImages.some((image) => image.id === post.id ) ? "2px solid orange" : "none"}
               />
             </Box>
             //</Button>
@@ -977,6 +1140,16 @@ const handlePronounsClick = (pronouns) => {
         </Button> }
       </Box>
           </FormControl>
+
+          
+          <FormControl id="profilePics">
+            <FormLabel>Profile Pics</FormLabel>
+            {!imagesLoadingFromHook && (
+            <DragAndDropGrid images={formData.profilePics} onDragEnd={handleDragEnd}/>
+            )}
+            </FormControl>
+          
+          
 
           <FormControl id="birthday">
             <FormLabel>Birthday</FormLabel>
@@ -1056,7 +1229,7 @@ const handlePronounsClick = (pronouns) => {
           <Stack direction="row" align="baseline">
           <FormLabel>Interested In</FormLabel>
           <Text fontSize="sm" color="gray.500">
-            (This will not show on your profile)
+            (Won't show on profile)
           </Text>
           </Stack>
             <Box display="flex" flexWrap="wrap">
@@ -1086,7 +1259,8 @@ const handlePronounsClick = (pronouns) => {
                 isClearable
                 styles={customStyles}
                 options={cities}
-                value={selectedLocation}
+                //value={selectedLocation}
+                value={cities.find((city) => city.value === formData.location)}
                 onChange={handleLocationChange}
                 filterOption={filterCitiesLocation}
                 onKeyDown={handleKeyDown}
@@ -1101,7 +1275,8 @@ const handlePronounsClick = (pronouns) => {
                 isClearable
                 styles={customStyles}
                 options={cities}
-                value={selectedHometown}
+                //value={selectedHometown}
+                value={cities.find((city) => city.value === formData.hometown)}
                 onChange={handleHometownChange}
                 filterOption={filterCitiesHometown}
                 onKeyDown={handleKeyDown}
@@ -1562,7 +1737,7 @@ const handlePronounsClick = (pronouns) => {
           <Stack direction="row" align="baseline">
             <FormLabel>Interests</FormLabel>
             <Text fontSize="sm" color="gray.500">
-            (Select up to 10)
+            (Select up to 6)
           </Text>
           </Stack>
             <Box>
