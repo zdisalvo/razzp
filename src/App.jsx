@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react';
 import { Navigate, Route, Routes } from "react-router-dom";
 import HomePage from "./pages/HomePage/HomePage";
 import AuthPage from "./pages/AuthPage/AuthPage";
@@ -12,7 +13,21 @@ import useAuthStore from "./store/authStore";
 
 function App() {
 	const [authUser] = useAuthState(auth);
-	// const authUserProf = useAuthStore(state => state.user);
+	const authUserProf = useAuthStore(state => state.user);
+	const [showSpark, setShowSpark] = useState(false);
+
+	useEffect(() => {
+		const checkAuthUserProf = async () => {
+		  if (authUserProf && authUserProf.spark === true) {
+			setShowSpark(true);
+		  } else {
+			setShowSpark(false);
+		  }
+		};
+	
+		checkAuthUserProf();
+	  }, [authUserProf]);
+
 	// let spark;
 
 	// if (authUserProf.spark === null)
@@ -20,13 +35,16 @@ function App() {
 	// else 
 	// 	spark = authUserProf.spark;
 
+
+
+
 	return (
 		<PageLayout>
 			<Routes>
 				<Route path='/' element={authUser ? <HomePage /> : <Navigate to='/auth' />} />
 				<Route path='/auth' element={!authUser ? <AuthPage /> : <Navigate to='/' />} />
-				{/* <Route path='/spark' element={authUser ? (!spark  ? <Navigate to='/spark/edit' /> : <Spark />) : <Navigate to='/' /> } /> */}
-				<Route path='/spark' element={authUser ? <Spark /> : <Navigate to='/' /> } />
+				<Route path='/spark' element={authUser ? (!showSpark  ? <Navigate to='/spark/edit' /> : <Spark />) : <Navigate to='/' /> } />
+				{/* <Route path='/spark' element={authUser ? <Spark /> : <Navigate to='/' /> } /> */}
 				<Route path='/spark/edit' element={authUser ? <CreateSpark /> : <Navigate to='/' />} />
 				<Route path='/:username' element={<ProfilePage />} />
 				<Route path="/:username/feed" element={<ProfilePageFeed />} />

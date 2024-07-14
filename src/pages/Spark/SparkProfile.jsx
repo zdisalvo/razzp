@@ -30,17 +30,12 @@ const calculateAge = (birthday) => {
 const SparkProfile = ({ sparkProfile, onViewed }) => {
 
   const [isMatch, setIsMatch] = useState(false);
-  const [showMatchMessage, setShowMatchMessage] = useState(false);
+  //const [showMatchMessage, setShowMatchMessage] = useState(false);
 
   const handleMatchChange = (match) => {
     setIsMatch(match);
-    if (match) {
-      setShowMatchMessage(true);
-      // Hide the message after 3 seconds
-      setTimeout(() => {
-        setShowMatchMessage(false);
-      }, 2000);
-    }
+    // Perform any additional actions based on the match value
+    console.log('Match status:', match);
   };
 
   const profileRef = useRef();
@@ -327,7 +322,7 @@ const SparkProfile = ({ sparkProfile, onViewed }) => {
   return (
     <Container ref={profileRef} width={{ base: "100vw", md: "auto" }} height={{ base: "auto", md: "100%" }} mb={{ base: "60px", md: "100px" }} px={0} mx={0}>
       <Box >
-      {showMatchMessage && (
+      {isMatch && (
         <Box
           //position="absolute"
           top="0"
