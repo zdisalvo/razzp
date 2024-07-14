@@ -5,12 +5,20 @@ import useAuthStore from "../../store/authStore";
 import useLikeSpark from "../../hooks/useLikeSpark";
 import useGetSparkProfileById from "../../hooks/useGetSparkProfileById";
 
-const SparkLike = ({ sparkProfile }) => {
+const SparkLike = ({ sparkProfile, onMatchChange }) => {
   const authUser = useAuthStore((state) => state.user);
-  const { handleLikeSpark, canLike, isLiked: initialIsLiked, isUpdating, setIsUpdating } = useLikeSpark(sparkProfile);
+  const { handleLikeSpark, canLike, isLiked: initialIsLiked, isUpdating, setIsUpdating, match } = useLikeSpark(sparkProfile);
   //const { isLoading, sparkProfile: sparkUser } = useGetSparkProfileById(authUser?.uid);
 
+  useEffect(() => {
+    if (onMatchChange) {
+      onMatchChange(match);
+    }
+  }, [match, onMatchChange]);
+
   //console.log(sparkUser);
+
+  console.log
 
   const [isLiked, setIsLiked] = useState(initialIsLiked);
   //const [likeCount, setLikeCount] = useState(initialLikeCount);

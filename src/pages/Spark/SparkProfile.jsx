@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Box, Image, Text, SimpleGrid, VStack, Container, Button, Flex, Icon } from '@chakra-ui/react';
 import { Carousel } from 'react-responsive-carousel';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
@@ -28,6 +28,20 @@ const calculateAge = (birthday) => {
 
 
 const SparkProfile = ({ sparkProfile, onViewed }) => {
+
+  const [isMatch, setIsMatch] = useState(false);
+  const [showMatchMessage, setShowMatchMessage] = useState(false);
+
+  const handleMatchChange = (match) => {
+    setIsMatch(match);
+    if (match) {
+      setShowMatchMessage(true);
+      // Hide the message after 3 seconds
+      setTimeout(() => {
+        setShowMatchMessage(false);
+      }, 2000);
+    }
+  };
 
   const profileRef = useRef();
 
@@ -313,6 +327,25 @@ const SparkProfile = ({ sparkProfile, onViewed }) => {
   return (
     <Container ref={profileRef} width={{ base: "100vw", md: "auto" }} height={{ base: "auto", md: "100%" }} mb={{ base: "60px", md: "100px" }} px={0} mx={0}>
       <Box >
+      {showMatchMessage && (
+        <Box
+          //position="absolute"
+          top="0"
+          left="0"
+          width="100%"
+          height="100%"
+          backgroundColor="rgba(0, 0, 0, 0.6)"
+          color="white"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          fontSize="2xl"
+          fontWeight="bold"
+          zIndex="10"
+        >
+          You Matched!
+        </Box>
+      )}
       <Carousel
       
           showThumbs={false}
@@ -447,7 +480,7 @@ const SparkProfile = ({ sparkProfile, onViewed }) => {
         <Flex align="center" justify="center" direction="row" wrap="nowrap" >
           
           
-          <SparkLike sparkProfile={sparkProfile}/>
+          <SparkLike sparkProfile={sparkProfile} onMatchChange={handleMatchChange}/>
           <SparkCrown sparkProfile={sparkProfile} />
           <Box width="80%" display="flex" justifyContent="center">
           <Flex alignItems="center" justify="center" direction="row" wrap="nowrap" textAlign="center">

@@ -44,6 +44,7 @@ const useGetSparkProfiles = () => {
 
                 const filteredDocs = allDocs.filter(
                     doc => !sparkProfile.blocked.includes(doc.uid) && !sparkProfile.viewed2x.includes(doc.uid)
+							|| sparkProfile.liked.includes(doc.uid) || sparkProfile.matched.includes(doc.uid)
 
                     ///REPLACE SO IT DOESN'T SHOW USER'S OWN PROFILE
                             //&& sparkProfile.uid !== doc.uid

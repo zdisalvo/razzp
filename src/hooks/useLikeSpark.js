@@ -14,17 +14,20 @@ const useLikeSpark = (sparkProfile) => {
   const { isLoading, sparkProfile: sparkUser } = useGetSparkProfileById(authUser?.uid);
 
   const [isLikedMe, setIsLikedMe] = useState(sparkProfile.likedMe.includes(authUser?.uid));
+  const [sparkLikesUser, setSparkLikesUser] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const likeCount = useLikeStore((state) => state.likeCount);
   const setLikeCount = useLikeStore((state) => state.setLikeCount);
   const incrementLikeCount = useLikeStore((state) => state.incrementLikeCount);
   const decrementLikeCount = useLikeStore((state) => state.decrementLikeCount);
+  const [match, setMatch] = useState(false);
 
   const showToast = useShowToast();
 
   useEffect(() => {
     if (!isLoading && sparkUser) {
       setIsLiked(sparkUser.liked.includes(sparkProfile.uid));
+      setSparkLikesUser(sparkUser.likedMe.includes(sparkProfile.uid));
       setLikeCount(sparkUser.dayLikes);
     }
   }, [isLoading, sparkUser, sparkProfile.uid]);
@@ -73,9 +76,35 @@ const useLikeSpark = (sparkProfile) => {
         dayLikes: isLiked ? increment(-1) : increment(1) ,
       });
 
+      //MATCH
+      //console.log(authUser);
+
+      if (sparkLikesUser && !isLiked) {
+        setMatch(true);
+
+        await updateDoc(likeMeRef, {
+            matched: arrayUnion(authUser.uid),
+          });
+        await updateDoc(likesRef, {
+            matched: arrayUnion(sparkProfile.uid),
+        });
+      } else {
+        setMatch(false);
+
+        await updateDoc(likeMeRef, {
+            matched: arrayRemove(authUser.uid),
+          });
+        await updateDoc(likesRef, {
+            matched: arrayRemove(sparkProfile.uid),
+        });
+      }
+      
+
       setIsLikedMe(!isLikedMe);
       setIsLiked(!isLiked);
       isLiked ? decrementLikeCount() : incrementLikeCount();
+
+ 
 
     //   console.log(likeCount);
     //     console.log(isLiked);
@@ -120,7 +149,7 @@ const useLikeSpark = (sparkProfile) => {
     }
   };
 
-  return { isLikedMe, isLiked, likeCount, handleLikeSpark, canLike, isUpdating, setIsUpdating };
+  return { isLikedMe, isLiked, likeCount, handleLikeSpark, canLike, isUpdating, setIsUpdating, match };
 };
 
 export default useLikeSpark;
