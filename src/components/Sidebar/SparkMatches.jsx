@@ -1,12 +1,12 @@
-import { Box, Link, Tooltip } from "@chakra-ui/react";
+import { Box, Link, Tooltip, Image } from "@chakra-ui/react";
 import { NotificationsLogo } from "../../assets/constants";
 import { Link as RouterLink } from "react-router-dom";
 
-const SparkMenu = () => {
+const SparkMatches = () => {
 	return (
 		<Tooltip
 			hasArrow
-			label={"Spark"}
+			label={"Spark Matches"}
 			placement='right'
 			ml={1}
 			openDelay={500}
@@ -14,7 +14,7 @@ const SparkMenu = () => {
 		>
 			<Link
 				display={"flex"}
-				to={"/spark"}
+				to={"/spark/matches"}
 				as={RouterLink}
 				alignItems={"center"}
 				gap={4}
@@ -24,11 +24,13 @@ const SparkMenu = () => {
 				w={{ base: 10, md: "full" }}
 				justifyContent={{ base: "center", md: "flex-start" }}
 			>
-				<NotificationsLogo />
-				<Box display={{ base: "none", md: "block" }}>Spark</Box>
+                <Box fontSize={45}>
+				<Image src="/matches-icon-100.png" />
+                </Box>
+				<Box display={{ base: "none", md: "block" }}>Matches</Box>
 			</Link>
 		</Tooltip>
 	);
 };
 
-export default SparkMenu;
+export default SparkMatches;
