@@ -1,15 +1,15 @@
 import CreatePost from "./CreatePost";
 import Home from "./Home";
-import Notifications from "./Notifications";
+import SparkMenu from "./SparkMenu";
 import ProfileLink from "./ProfileLink";
 import Search from "./Search";
 
 const SidebarItems = () => {
 	return (
 		<>
-			<Home />
+			{/* <Home /> */}
 			<Search />
-			<Notifications />
+			<SparkMenu />
 			<CreatePost />
 			<ProfileLink />
 		</>

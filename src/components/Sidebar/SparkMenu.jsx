@@ -2,7 +2,7 @@ import { Box, Link, Tooltip } from "@chakra-ui/react";
 import { NotificationsLogo } from "../../assets/constants";
 import { Link as RouterLink } from "react-router-dom";
 
-const Notifications = () => {
+const SparkMenu = () => {
 	return (
 		<Tooltip
 			hasArrow
@@ -25,10 +25,10 @@ const Notifications = () => {
 				justifyContent={{ base: "center", md: "flex-start" }}
 			>
 				<NotificationsLogo />
-				<Box display={{ base: "none", md: "block" }}>Notifications</Box>
+				<Box display={{ base: "none", md: "block" }}>Spark</Box>
 			</Link>
 		</Tooltip>
 	);
 };
 
-export default Notifications;
+export default SparkMenu;

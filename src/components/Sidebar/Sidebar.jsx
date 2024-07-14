@@ -40,14 +40,14 @@ const Sidebar = () => {
 
     >
       <Flex direction={"row"} justifyContent={"center"} alignItems={"center"} w='full' height="100%" gap={4}>
-        <Link ml={2} to={"/"} as={RouterLink} pl={2} display={{ base: "none", md: "flex" }} cursor='pointer' >
+        <Link ml={2} to={"/"} as={RouterLink} pl={2} display={{ base: "none", md: "none" }} cursor='pointer' >
           <Image src="/logo.png" />
         </Link>
         <Link
           to={"/"}
           as={RouterLink}
           p={2}
-          display={{ base: "block", md: "none" }}
+          display={{ base: "block", md: "flex" }}
           borderRadius={6}
           _hover={{
             bg: "whiteAlpha.200",
@@ -55,7 +55,7 @@ const Sidebar = () => {
           w={10}
           cursor='pointer'
         >
-          <Image src="../../../dist/razzp-mobile-logo.png" />
+          <Image src="/razzp-mobile-logo.png" />
         </Link>
         <Flex direction={"row"} gap={5} cursor={"pointer"} justifyContent={"center"}>
           <SidebarItems />
