@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Box, Image, Text, SimpleGrid, VStack, Container, Button, Flex, Icon } from '@chakra-ui/react';
 import { Carousel } from 'react-responsive-carousel';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
@@ -27,7 +27,10 @@ const calculateAge = (birthday) => {
   };
 
 
-const SparkProfile = ({ sparkProfile }) => {
+const SparkProfile = ({ sparkProfile, onViewed }) => {
+
+  const profileRef = useRef();
+
   const {
     name,
     birthday,
@@ -55,6 +58,30 @@ const SparkProfile = ({ sparkProfile }) => {
     interests,
     profilePics,
   } = sparkProfile;
+
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          onViewed(sparkProfile.uid);
+          observer.unobserve(profileRef.current);
+        }
+      },
+      { threshold: 0.75 }
+    );
+
+    if (profileRef.current) {
+      observer.observe(profileRef.current);
+    }
+
+    return () => {
+      if (profileRef.current) {
+        observer.unobserve(profileRef.current);
+      }
+    };
+  }, [sparkProfile.uid, onViewed]);
+
 
   const isNotEmpty = (value) => {
     if (typeof value === 'string') {
@@ -284,7 +311,7 @@ const SparkProfile = ({ sparkProfile }) => {
   //profilePics.map((pic, index) => (
 
   return (
-    <Container width={{ base: "100vw", md: "auto" }} height={{ base: "auto", md: "100%" }} mb={{ base: "60px", md: "100px" }} px={0} mx={0}>
+    <Container ref={profileRef} width={{ base: "100vw", md: "auto" }} height={{ base: "auto", md: "100%" }} mb={{ base: "60px", md: "100px" }} px={0} mx={0}>
       <Box >
       <Carousel
       
