@@ -14,7 +14,7 @@ const SparkMatches = () => {
 
 
   return (
-    <Container py={6}   px={0} w={['100vw', null, '60vh']} >
+    <Container py={6}   px={0} w={['100vw', null, '80vh']} >
       {isLoading &&
         [0, 1, 2, 3, 4].map((_, idx) => (
           <VStack key={idx} gap={4} alignItems={"flex-start"} mb={10}>
