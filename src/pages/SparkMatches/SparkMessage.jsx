@@ -1,14 +1,16 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Box, Avatar, Input, Button, VStack, Text, Container, Flex } from "@chakra-ui/react";
 import useSendMessage from "../../hooks/useSendMessage";
-import useGetSparkMessages from "../../hooks/useGetSparkMessages";
-import { doc, getDoc, updateDoc, arrayUnion, onSnapshot } from "firebase/firestore";
+import { doc, getDoc, onSnapshot } from "firebase/firestore";
 import { firestore } from "../../firebase/firebase";
 
 const SparkMessage = () => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [matchedProfile, setMatchedProfile] = useState(null);
+  const [userScrolled, setUserScrolled] = useState(false); // Track if the user has scrolled up
+
+  const containerRef = useRef(null);
 
   const userId = localStorage.getItem("userId");
   const matchedUserId = localStorage.getItem("matchedUserId");
@@ -16,7 +18,7 @@ const SparkMessage = () => {
   const { sendMessage } = useSendMessage();
 
   useEffect(() => {
-    // Fetch and set matched profile
+    // Fetch matched profile
     const fetchMatchedProfile = async () => {
       try {
         const profileDoc = await getDoc(doc(firestore, "spark", matchedUserId));
@@ -38,12 +40,22 @@ const SparkMessage = () => {
       const data = doc.data();
       const match = data.matches.find(match => match.matchedUserId === matchedUserId);
       if (match && match.messages) {
-        setMessages(match.messages);
+        setMessages((prevMessages) => [
+          ...prevMessages.filter((msg) => msg.sendingUser !== matchedUserId), // Keep existing messages from other users
+          ...match.messages // Add new messages from matchedUserId
+        ]);
       }
     });
 
     return () => unsubscribe();
   }, [userId, matchedUserId]);
+
+  useEffect(() => {
+    const element = containerRef.current;
+    if (element && !userScrolled) {
+      element.scrollTop = element.scrollHeight;
+    }
+  }, [messages, userScrolled]);
 
   const handleSendMessage = async () => {
     if (!newMessage.trim()) return;
@@ -55,13 +67,24 @@ const SparkMessage = () => {
     };
 
     try {
-      // Update messages in Firestore
-      await sendMessage(userId, matchedUserId, newMessageObject);
-      setNewMessage("");
-      // Optimistically update the local state
+      // Optimistically update local state
       setMessages((prevMessages) => [...prevMessages, newMessageObject]);
+
+      // Send the message
+      await sendMessage(userId, matchedUserId, newMessageObject);
+
+      // Clear the input field
+      setNewMessage("");
     } catch (error) {
       console.error("Error sending message:", error);
+    }
+  };
+
+  const handleScroll = () => {
+    if (containerRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } = containerRef.current;
+      // Check if the user has scrolled up
+      setUserScrolled(scrollTop + clientHeight < scrollHeight - 5);
     }
   };
 
@@ -84,20 +107,23 @@ const SparkMessage = () => {
         borderRadius="md"
         maxH="60vh"
         overflowY="scroll"
+        ref={containerRef}
+        bg="gray.100"
+        onScroll={handleScroll} // Attach scroll event listener
       >
         {messages.length > 0 && messages.map((msg, index) => (
           <Box
             key={index}
             alignSelf={msg.sendingUser === userId ? "flex-end" : "flex-start"}
             bg={msg.sendingUser === userId ? "orange.100" : "white"}
-            color={msg.sendingUser === userId ? "black" : "black"}
+            color="black"
             p={3}
             borderRadius="md"
             maxW="80%"
           >
             <Text>{msg.message}</Text>
             <Text fontSize="xs" color="gray.500">
-              {new Date(msg.timeStamp.seconds * 1000).toLocaleTimeString()}
+              {msg.timeStamp ? new Date(msg.timeStamp.seconds * 1000).toLocaleTimeString() : "Unknown time"}
             </Text>
           </Box>
         ))}
