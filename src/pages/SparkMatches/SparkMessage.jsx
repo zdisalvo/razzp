@@ -88,6 +88,24 @@ const SparkMessage = () => {
     }
   };
 
+  // Format date to show only hours and minutes, removing leading zero for single-digit hours
+  const formatTime = (timestamp) => {
+    if (timestamp) {
+      const date = new Date(timestamp.seconds * 1000);
+      let hours = date.getHours();
+      const minutes = date.getMinutes();
+      
+      // Format hours to remove leading zero for single-digit hours
+      const formattedHours = (hours % 12 || 12).toString(); // Convert 24-hour format to 12-hour format, ensuring 12-hour format shows 12 instead of 0
+      const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes; // Ensure minutes are always two digits
+      
+      const period = hours >= 12 ? 'PM' : 'AM'; // Determine AM/PM period
+      
+      return `${formattedHours}:${formattedMinutes} ${period}`;
+    }
+    return "Unknown time";
+  };
+
   return (
     <Container maxW="container.md" py={4}>
       {matchedProfile && (
@@ -123,7 +141,7 @@ const SparkMessage = () => {
           >
             <Text>{msg.message}</Text>
             <Text fontSize="xs" color="gray.500">
-              {msg.timeStamp ? new Date(msg.timeStamp.seconds * 1000).toLocaleTimeString() : "Unknown time"}
+              {formatTime(msg.timeStamp)} {/* Display formatted time */}
             </Text>
           </Box>
         ))}
