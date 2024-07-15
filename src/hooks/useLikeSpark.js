@@ -50,8 +50,8 @@ const useLikeSpark = (sparkProfile) => {
       messages: []
     };
 
-    console.log(matchObject);
-    console.log(matchDoc.exists());
+    // console.log(matchObject);
+    // console.log(matchDoc.exists());
   
     if (match) {
       //setMatch(true);
