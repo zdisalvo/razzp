@@ -8,6 +8,7 @@ import ProfilePageFeed from "./pages/ProfilePageFeed/ProfilePageFeed";
 import CreateSpark from "./pages/Spark/CreateSpark";
 import Spark from "./pages/Spark/Spark";
 import SparkMatches from './pages/SparkMatches/SparkMatches';
+import SparkMessage from './pages/SparkMatches/SparkMessage';
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "./firebase/firebase";
 import useAuthStore from "./store/authStore";
@@ -48,6 +49,7 @@ function App() {
 				{/* <Route path='/spark' element={authUser ? <Spark /> : <Navigate to='/' /> } /> */}
 				<Route path='/spark/edit' element={authUser ? <CreateSpark /> : <Navigate to='/' />} />
 				<Route path='/spark/matches' element={authUser ? (!showSpark  ? <Navigate to='/spark/edit' /> : <SparkMatches />) : <Navigate to='/' /> } />
+				<Route path='/spark/matches/msg' element={authUser ? (!showSpark  ? <Navigate to='/spark/edit' /> : <SparkMessage />) : <Navigate to='/' /> } />
 				<Route path='/:username' element={<ProfilePage />} />
 				<Route path="/:username/feed" element={<ProfilePageFeed />} />
 

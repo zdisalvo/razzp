@@ -1,36 +1,55 @@
-
-import { doc, updateDoc, arrayUnion } from "firebase/firestore";
+import { doc, updateDoc, arrayUnion, getDoc } from "firebase/firestore";
 import { firestore } from "../firebase/firebase";
 
 const useSendMessage = () => {
-  const sendMessage = async (userId, matchedUserId, message) => {
-    const chatId = `${userId}_${matchedUserId}`;
-
+  const sendMessage = async (userId, matchedUserId, messageObject) => {
     const userDocRef = doc(firestore, "sparkMatches", userId);
     const matchedUserDocRef = doc(firestore, "sparkMatches", matchedUserId);
 
-    const messageObject = {
-      sender: userId,
-      text: message,
-      timestamp: new Date(),
-    };
+    const userDocSnap = await getDoc(userDocRef);
+    const matchedUserDocSnap = await getDoc(matchedUserDocRef);
+
+    let userMatches = [];
+    let matchedUserMatches = [];
+
+    if (userDocSnap.exists()) {
+      userMatches = userDocSnap.data().matches || [];
+    }
+
+    if (matchedUserDocSnap.exists()) {
+      matchedUserMatches = matchedUserDocSnap.data().matches || [];
+    }
+
+    const updateUserMessages = userMatches.map(match => {
+      if (match.matchedUserId === matchedUserId) {
+        return {
+          ...match,
+          messages: match.messages ? [...match.messages, messageObject] : [messageObject],
+        };
+      }
+      return match;
+    });
+
+    const updateMatchedUserMessages = matchedUserMatches.map(match => {
+      if (match.matchedUserId === userId) {
+        return {
+          ...match,
+          messages: match.messages ? [...match.messages, messageObject] : [messageObject],
+        };
+      }
+      return match;
+    });
 
     await updateDoc(userDocRef, {
-      matches: arrayUnion({
-        matchedUserId: matchedUserId,
-        messages: arrayUnion(messageObject),
-      }),
+      matches: updateUserMessages,
     });
 
     await updateDoc(matchedUserDocRef, {
-      matches: arrayUnion({
-        matchedUserId: userId,
-        messages: arrayUnion(messageObject),
-      }),
+      matches: updateMatchedUserMessages,
     });
   };
 
-  return sendMessage;
+  return { sendMessage };
 };
 
 export default useSendMessage;
