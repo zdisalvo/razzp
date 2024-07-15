@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import useAuthStore from "../store/authStore";
 import useLikeStore from "../store/likeStore";
 import useShowToast from "./useShowToast";
-import { arrayRemove, arrayUnion, doc, updateDoc, increment, getDoc } from "firebase/firestore";
+import { arrayRemove, arrayUnion, doc, updateDoc, increment, getDoc, setDoc } from "firebase/firestore";
 import { firestore } from "../firebase/firebase";
 import useGetSparkProfileById from "./useGetSparkProfileById";
 
@@ -39,6 +39,44 @@ const useLikeSpark = (sparkProfile) => {
 //   }, [isLoading, sparkUser]);
 
   //console.log(sparkUser);
+
+  const handleMatchUpdate = async (user, matchedWith, match) => {
+    const matchDocRef = doc(firestore, "sparkMatches", user.uid); // Use userId as the document ID
+  
+    const matchDoc = await getDoc(matchDocRef);
+  
+    const matchObject = {
+      matchedUserId: matchedWith.uid,
+      messages: []
+    };
+
+    console.log(matchObject);
+    console.log(matchDoc.exists());
+  
+    if (match) {
+      //setMatch(true);
+  
+      if (matchDoc.exists()) {
+        await updateDoc(matchDocRef, {
+          matches: arrayUnion(matchObject)
+        });
+      } else {
+        await setDoc(matchDocRef, {
+          matches: [matchObject]
+        });
+      }
+    } else {
+      //setMatch(false);
+  
+      if (matchDoc.exists()) {
+        await updateDoc(matchDocRef, {
+          matches: arrayRemove(matchObject)
+        });
+      }
+    }
+  };
+
+
 
   const handleLikeSpark = async () => {
     if (isUpdating || !sparkUser) return;
@@ -85,18 +123,30 @@ const useLikeSpark = (sparkProfile) => {
         await updateDoc(likeMeRef, {
             matched: arrayUnion(authUser.uid),
           });
+
+        handleMatchUpdate(authUser, sparkProfile, true);
+        
         await updateDoc(likesRef, {
             matched: arrayUnion(sparkProfile.uid),
         });
+
+        handleMatchUpdate(sparkProfile, authUser, true);
+
+
       } else {
         setMatch(false);
 
         await updateDoc(likeMeRef, {
             matched: arrayRemove(authUser.uid),
           });
+
+        handleMatchUpdate(authUser, sparkProfile, false);
+
         await updateDoc(likesRef, {
             matched: arrayRemove(sparkProfile.uid),
         });
+
+        handleMatchUpdate(sparkProfile, authUser, false);
       }
       
 

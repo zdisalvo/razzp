@@ -35,7 +35,7 @@ const SparkProfile = ({ sparkProfile, onViewed }) => {
   const handleMatchChange = (match) => {
     setIsMatch(match);
     // Perform any additional actions based on the match value
-    console.log('Match status:', match);
+    //console.log('Match status:', match);
   };
 
   const profileRef = useRef();
