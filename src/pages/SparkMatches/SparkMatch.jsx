@@ -83,13 +83,15 @@ const SparkMatch = ({ userId, matchedUserId }) => {
 			</AvatarGroup>
       </Box>
       
-      <Box
-      ml={{base: "20px", md: "20px"}}
+      <Box  
+        ml={{base: "20px", md: "20px"}}
         flex="1"
         display="flex"
         flexDirection="column"
         justifyContent="left"
         alignItems="left"
+        onClick={handleClick(userId, matchedUserId)}
+        cursor={pointer}
           >
         <Text fontWeight="bold">{matchedProfile.name}</Text>
         <Text>{lastMessage || "Say hi"}</Text>
