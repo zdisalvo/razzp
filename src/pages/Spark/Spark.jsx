@@ -39,7 +39,7 @@ const Spark = () => {
 
     return (
         <Container py={6} px={0} w={['100vw', null, '60vh']} >
-            <Box position="fixed" top="0" right="0" p={4} zIndex="docked" boxShadow="md" width="100%">
+            <Box position="fixed" top="0" right="0" p={4} zIndex="docked" width="100%">
                 <Flex justifyContent="flex-end">
                     <IconButton
                         icon={<FaSlidersH />}
