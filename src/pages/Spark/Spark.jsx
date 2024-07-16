@@ -1,4 +1,4 @@
-import { Box, Container, Flex, Skeleton, SkeletonCircle, Text, VStack } from "@chakra-ui/react";
+import { Box, Container, Flex, Skeleton, SkeletonCircle, Text, VStack, IconButton, useDisclosure } from "@chakra-ui/react";
 import useGetSparkProfiles from "../../hooks/useGetSparkProfiles";
 import SparkProfile from "./SparkProfile";
 import useSparkProfileStore from "../../store/sparkProfileStore";
@@ -7,6 +7,8 @@ import useGetSparkProfileById from "../../hooks/useGetSparkProfileById";
 import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore";
 //import useSparkProfileView from "../../hooks/useSparkProfileView";
 import {firestore} from "../../firebase/firebase";
+import { FaSlidersH } from "react-icons/fa";
+import FilterUserModal from "./FilterUserModal";
 
 
 const Spark = () => {
@@ -15,6 +17,7 @@ const Spark = () => {
   //const sparkProfile = useSparkProfileStore((state) => state.setSparkProfile);
   const { isLoading, sparkProfiles } = useGetSparkProfiles(sparkProfile);
   //const [viewedPosts, setViewedPosts] = useState([]);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   //const { updateProfileView } = useSparkProfileView();
 
@@ -75,6 +78,16 @@ const Spark = () => {
 
   return (
     <Container py={6}   px={0} w={['100vw', null, '60vh']} >
+
+      <Flex justifyContent="space-between" alignItems="center" mb={4}>
+        <Text fontSize="2xl" fontWeight="bold">Spark Profiles</Text>
+        <IconButton
+          icon={<FaSlidersH />}
+          aria-label="Filter users"
+          onClick={onOpen}
+        />
+      </Flex>
+
       {isLoading &&
         [0, 1, 2].map((_, idx) => (
           <VStack key={idx} gap={4} alignItems={"flex-start"} mb={10}>
@@ -93,7 +106,7 @@ const Spark = () => {
       
       {!isLoading && sparkProfiles.length > 0 && sparkProfiles.map((profile) => <SparkProfile key={profile.uid} id={profile.uid} sparkProfile={profile} onViewed={handleViewed} />)}
       
-      
+      <FilterUserModal isOpen={isOpen} onClose={onClose} />
     </Container>
   );
 };
