@@ -53,18 +53,18 @@ const FilterUserModal = ({ isOpen, onClose }) => {
   };
 
   const handleShorterThanClick = () => {
-    setShorterThan((prev) => !prev);
+    setShorterThan(prev => !prev);
     if (!shorterThan) setTallerThan(false); // Deselect "taller than" when "shorter than" is selected
   };
 
   const handleTallerThanClick = () => {
-    setTallerThan((prev) => !prev);
+    setTallerThan(prev => !prev);
     if (!tallerThan) setShorterThan(false); // Deselect "shorter than" when "taller than" is selected
   };
 
   const handleCheckboxChange = (option, setSelected) => {
-    setSelected((prev) =>
-      prev.includes(option) ? prev.filter((item) => item !== option) : [...prev, option]
+    setSelected(prev =>
+      prev.includes(option) ? prev.filter(item => item !== option) : [...prev, option]
     );
   };
 
@@ -74,8 +74,8 @@ const FilterUserModal = ({ isOpen, onClose }) => {
     return `${feet}'${remainingInches}"`;
   };
 
-  const resetFilters = () => {
-    setSelectedHeight(60);
+  const resetFilters = async () => {
+    setSelectedHeight(60); // Reset to default value
     setShorterThan(false);
     setTallerThan(false);
     setSelectedOpenTo([]);
@@ -87,7 +87,36 @@ const FilterUserModal = ({ isOpen, onClose }) => {
     setSelectedFamilyPlans([]);
     setSelectedPolitics([]);
     setSelectedReligion([]);
+
+    if (!authUser) return; // Ensure the user is authenticated
+
+    const userDocRef = doc(firestore, "spark", authUser.uid);
+
+    try {
+      await updateDoc(userDocRef, {
+        filters: {
+          height: {
+            value: selectedHeight,
+            shorterThan,
+            tallerThan,
+          },
+          openTo: selectedOpenTo,
+          ethnicity: selectedEthnicity,
+          exercise: selectedExercise,
+          drinking: selectedDrinking,
+          cannabis: selectedCannabis,
+          haveKids: selectedHaveKids,
+          familyPlans: selectedFamilyPlans,
+          politics: selectedPolitics,
+          religion: selectedReligion,
+        },
+      });
+      onClose(); // Close the modal after saving filters
+    } catch (error) {
+      console.error("Error saving filters:", error);
+    }
   };
+  
 
   const saveFilters = async () => {
     if (!authUser) return; // Ensure the user is authenticated
