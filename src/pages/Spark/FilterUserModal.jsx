@@ -74,6 +74,21 @@ const FilterUserModal = ({ isOpen, onClose }) => {
     return `${feet}'${remainingInches}"`;
   };
 
+  const resetFilters = () => {
+    setSelectedHeight(60);
+    setShorterThan(false);
+    setTallerThan(false);
+    setSelectedOpenTo([]);
+    setSelectedEthnicity([]);
+    setSelectedExercise([]);
+    setSelectedDrinking([]);
+    setSelectedCannabis([]);
+    setSelectedHaveKids([]);
+    setSelectedFamilyPlans([]);
+    setSelectedPolitics([]);
+    setSelectedReligion([]);
+  };
+
   const saveFilters = async () => {
     if (!authUser) return; // Ensure the user is authenticated
 
@@ -270,6 +285,9 @@ const FilterUserModal = ({ isOpen, onClose }) => {
         <ModalFooter>
           <Button colorScheme="blue" mr={3} onClick={saveFilters}>
             Apply Filters
+          </Button>
+          <Button colorScheme="red" mr={3} onClick={resetFilters}>
+            Remove Filters
           </Button>
           <Button variant="ghost" onClick={onClose}>
             Close

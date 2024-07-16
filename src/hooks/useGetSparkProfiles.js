@@ -47,7 +47,7 @@ const useGetSparkProfiles = () => {
 							
 
                     ///UNCOMMENT SO IT DOESN'T SHOW USER'S OWN PROFILE
-                            && sparkProfile.uid !== doc.uid
+                            //&& sparkProfile.uid !== doc.uid
 							|| sparkProfile.liked.includes(doc.uid) || sparkProfile.matched.includes(doc.uid)
                   );
 

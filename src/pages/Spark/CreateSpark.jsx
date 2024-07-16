@@ -593,18 +593,19 @@ const handleDragEnd = (reorderedImages) => {
 
 //HEIGHT
 
-    const predefinedHeights = heightsData.map((height) => ({
-        label: height,
-        value: height,
-        }));  
+    // const predefinedHeights = heightsData.map((height) => ({
+    //     label: height,
+    //     value: height,
+    //     }));  
+    const predefinedHeights = heightsData;
 
 
         const handleHeightChange = (selectedOption) => {
-            setFormData((prevState) => ({
-              ...prevState,
-              height: selectedOption ? selectedOption.value : "", // Single value
-            }));
-          };
+          setFormData((prevState) => ({
+            ...prevState,
+            height: selectedOption ? selectedOption.value : null, // Single value
+          }));
+        };
         
           const filterHeights = (candidate, input) => {
             return candidate.label.toLowerCase().startsWith(input.toLowerCase());

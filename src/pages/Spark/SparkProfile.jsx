@@ -26,6 +26,15 @@ const calculateAge = (birthday) => {
     return age;
   };
 
+  const formatHeight = (heightInInches) => {
+    if (typeof heightInInches === 'number') {
+      const feet = Math.floor(heightInInches / 12);
+      const inches = heightInInches % 12;
+      return `${feet}' ${inches}"`;
+    }
+    return heightInInches;
+  };
+
 
 const SparkProfile = ({ sparkProfile, onViewed }) => {
 
@@ -145,7 +154,7 @@ const SparkProfile = ({ sparkProfile, onViewed }) => {
     gender && { value: gender },
     height && { value: (
         <Flex align="center">
-          <FontAwesomeIcon icon={faRuler} style={{ marginRight: '8px' }} /> {height}
+           <FontAwesomeIcon icon={faRuler} style={{ marginRight: '8px' }} /> {formatHeight(height)}
         </Flex>
       )},
     exercise && { value: (

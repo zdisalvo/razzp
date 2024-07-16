@@ -45,7 +45,7 @@ const useSignUpWithEmailAndPassword = () => {
 					location: "",
 					hometown: "",
 					ethnicity: "",
-					height: "",
+					height: 0,
 					exercise: "",
 					education_level: "",
 					drinking: "",
@@ -80,6 +80,7 @@ const useSignUpWithEmailAndPassword = () => {
 					blocked: [],
 					ratings: [],
 					totalScore: 0,
+					filters: [],
 				}
 
 				const userDoc = {
