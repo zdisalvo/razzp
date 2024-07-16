@@ -6,6 +6,60 @@ import { firestore } from "../firebase/firebase";
 import useSparkStore from "../store/sparkStore";
 import useAuthStore from "../store/authStore";
 import useGetSparkProfileById from "./useGetSparkProfileById";
+import * as geofireCommon from 'geofire-common';
+
+const allDocsQuery = query(collection(firestore, "spark"), where("created", "==", true));
+
+const queryNearbyUsers = async (latitude, longitude, radiusInMiles) => {
+	const center = [latitude, longitude];
+	const radiusInKm = Number(radiusInMiles) * 1.60934; // Convert radius to kilometers
+  
+	// Calculate geohashes for querying
+	const centerGeohash = geofireCommon.geohashForLocation(center);
+	const radiusInRadians = radiusInKm / 6371; // Earth's radius in kilometers
+  
+	const EARTH_RADIUS_KM = 6371; // Earth's radius in kilometers
+  
+	// Calculate latitude and longitude degrees for a given radius in kilometers
+	const latitudeDegrees = (radiusInKm) => {
+	  return (radiusInKm / EARTH_RADIUS_KM) * (180 / Math.PI);
+	};
+  
+	const longitudeDegrees = (radiusInKm, latitude) => {
+	  const radians = latitude * Math.PI / 180;
+	  return (radiusInKm / EARTH_RADIUS_KM) * (180 / Math.PI) / Math.cos(radians);
+	};
+  
+	const latDegrees = latitudeDegrees(radiusInKm);
+	const lonDegrees = longitudeDegrees(radiusInKm, latitude);
+  
+	// Define the boundaries for querying nearby geohashes
+	const queryBounds = {
+	  minLat: center[0] - latDegrees,
+	  maxLat: center[0] + latDegrees,
+	  minLon: center[1] - lonDegrees,
+	  maxLon: center[1] + lonDegrees
+	};
+  
+	// Query Firestore for users within the geohash bounds
+	const q = query(
+	  allDocsQuery,
+	  where('location', '>=', [queryBounds.minLat, queryBounds.minLon]),
+	  where('location', '<=', [queryBounds.maxLat, queryBounds.maxLon])
+	);
+  
+	try {
+	  const querySnapshot = await getDocs(q);
+	  const nearbyUsers = [];
+	  querySnapshot.forEach((doc) => {
+		nearbyUsers.push(doc.data());
+	  });
+	  return nearbyUsers;
+	} catch (error) {
+	  console.error("Error querying nearby users:", error);
+	  throw error;
+	}
+  };
 
 const useGetSparkProfiles = (refreshKey) => {
     const authUser = useAuthStore((state) => state.user);
@@ -27,10 +81,17 @@ const useGetSparkProfiles = (refreshKey) => {
             setSparkProfiles([]);
 
             try {
+				let allDocs = [];
 				//console.log("test");
-                const allDocsQuery = query(collection(firestore, "spark"), where("created", "==", true));
-                const allDocsSnapshot = await getDocs(allDocsQuery);
-                const allDocs = allDocsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                //const allDocsQuery = query(collection(firestore, "spark"), where("created", "==", true));
+                
+				if (sparkProfile.location.length > 0) {
+					allDocs = await queryNearbyUsers(sparkProfile.location[0], sparkProfile.location[1], sparkProfile.radiusInMiles);
+				} else {
+					allDocsSnapshot = await getDocs(allDocsQuery);
+					allDocs = allDocsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+				}
+
 
                 // Apply filters from sparkProfile
                 const filteredDocs = allDocs.filter(doc => {
