@@ -5,9 +5,11 @@ import useAuthStore from "../../store/authStore";
 import useGetSparkProfileById from "../../hooks/useGetSparkProfileById";
 import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore";
 import { firestore } from "../../firebase/firebase";
-import { FaSlidersH } from "react-icons/fa";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faLocationDot, faSliders } from '@fortawesome/free-solid-svg-icons';
 import FilterUserModal from "./FilterUserModal";
-import { useState, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { storeSparkUserLocation } from "../../hooks/storeSparkUserLocation";
 
 const Spark = () => {
     const authUser = useAuthStore((state) => state.user);
@@ -15,6 +17,40 @@ const Spark = () => {
     const [refreshKey, setRefreshKey] = useState(0); // State variable to trigger refresh
     const { isLoading, sparkProfiles } = useGetSparkProfiles(sparkProfile, refreshKey);
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const [isFetchingLocation, setIsFetchingLocation] = useState(false);
+
+    
+
+    const getCurrentLocation = () => {
+      if (navigator.geolocation && authUser) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const { latitude, longitude } = position.coords;
+            // Example: Update user location and find nearby users
+
+            storeSparkUserLocation(authUser.uid, latitude, longitude); 
+
+            setIsFetchingLocation(false); // Stop fetching location after getting it
+          },
+          (error) => {
+            console.error('Error getting current location:', error);
+            setIsFetchingLocation(false); // Stop fetching location in case of error
+            // Handle error appropriately
+          }
+        );
+      } else {
+        console.error('Geolocation is not supported by this browser.');
+        setIsFetchingLocation(false); // Stop fetching location if geolocation is not supported
+        // Handle geolocation not supported
+      }
+    };
+
+    useEffect(() => {
+      if (isFetchingLocation) {
+        getCurrentLocation();
+      }
+    }, [isFetchingLocation]);
+
 
     const handleViewed = async (profileId) => {
         const sparkUserRef = doc(firestore, "spark", authUser.uid);
@@ -41,11 +77,21 @@ const Spark = () => {
         <Container py={6} px={0} w={['100vw', null, '60vh']} >
             <Box position="fixed" top="0" right="0" p={4} zIndex="docked" width="100%">
                 <Flex justifyContent="flex-end">
-                    <IconButton
-                        icon={<FaSlidersH />}
-                        aria-label="Filter users"
-                        onClick={onOpen}
-                    />
+                <IconButton
+                  icon={<FontAwesomeIcon icon={faLocationDot} />}
+                  aria-label="Get My Location"
+                  onClick={() => setIsFetchingLocation(true)} 
+                  isLoading={isFetchingLocation} 
+                  loadingText="Fetching location..."
+                  variant="outline"
+                  mx={2} // Adds horizontal margin between the icons
+                />
+                <IconButton
+                  icon={<FontAwesomeIcon icon={faSliders} />}
+                  aria-label="Filter users"
+                  onClick={onOpen}
+                  variant="outline"
+                />
                 </Flex>
             </Box>
 
