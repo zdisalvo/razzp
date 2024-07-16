@@ -83,6 +83,7 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
   const [selectedFamilyPlans, setSelectedFamilyPlans] = useState([]);
   const [selectedPolitics, setSelectedPolitics] = useState([]);
   const [selectedReligion, setSelectedReligion] = useState([]);
+  const [radiusInMiles, setRadiusInMiles] = useState(50); // Default distance
 
   const { isOpen: isAdvancedFiltersOpen, onToggle: toggleAdvancedFilters } = useDisclosure();
 
@@ -106,6 +107,7 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
           setSelectedFamilyPlans(filters.familyPlans || []);
           setSelectedPolitics(filters.politics || []);
           setSelectedReligion(filters.religion || []);
+          setRadiusInMiles(filters.distance || 50); // Fetch the distance filter if available
         }
       };
 
@@ -139,6 +141,10 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
     return `${feet}'${remainingInches}"`;
   };
 
+  const handleDistanceChange = (value) => {
+    setRadiusInMiles(value);
+  };
+
   const resetFilters = async () => {
     setSelectedHeight(60); // Reset to default value
     setShorterThan(false);
@@ -152,6 +158,7 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
     setSelectedFamilyPlans([]);
     setSelectedPolitics([]);
     setSelectedReligion([]);
+    setRadiusInMiles(50); // Reset distance to default value
 
     if (!authUser) return; // Ensure the user is authenticated
 
@@ -174,6 +181,7 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
           familyPlans: [],
           politics: [],
           religion: [],
+          distance: 50, // Default distance
         },
       });
       onFiltersApplied();
@@ -205,6 +213,7 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
           familyPlans: selectedFamilyPlans,
           politics: selectedPolitics,
           religion: selectedReligion,
+          distance: radiusInMiles, // Save the distance filter value
         },
       });
       onFiltersApplied();
@@ -250,9 +259,27 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
               <SliderThumb />
             </Slider>
           </Box>
-         
-          {/* Advanced Filters Toggle */}
           
+          <Box mb={4}>
+            <Text mb={4}>Distance:</Text>
+            <Flex alignItems="center" mb={4}>
+              <Text mr={4}>{radiusInMiles === 100 ? "Any" : `${radiusInMiles} miles`}</Text>
+              <Slider
+                min={5}
+                max={100}
+                step={1}
+                value={radiusInMiles}
+                onChange={handleDistanceChange}
+              >
+                <SliderTrack>
+                  <SliderFilledTrack />
+                </SliderTrack>
+                <SliderThumb />
+              </Slider>
+            </Flex>
+          </Box>
+
+          {/* Advanced Filters Toggle */}
           <Box mb={4}>
             <Button
               rightIcon={isAdvancedFiltersOpen ? <FaMinus /> : <FaPlus />}
@@ -261,145 +288,142 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
               Advanced Filters
             </Button>
             <Collapse in={isAdvancedFiltersOpen}>
-            <Box mb={4}>
-            <Text mb={4}>Open to:</Text>
-            <VStack align="start">
-              {openToOptions.map((option) => (
-                <Checkbox
-                  key={option}
-                  isChecked={selectedOpenTo.includes(option)}
-                  onChange={() => handleCheckboxChange(option, setSelectedOpenTo)}
-                >
-                  {option}
-                </Checkbox>
-              ))}
-            </VStack>
-          </Box>
-          <Box mb={4}>
-            <Text mb={4}>Ethnicity:</Text>
-            <VStack align="start">
-              {ethnicityOptions.map((option) => (
-                <Checkbox
-                  key={option}
-                  isChecked={selectedEthnicity.includes(option)}
-                  onChange={() => handleCheckboxChange(option, setSelectedEthnicity)}
-                >
-                  {option}
-                </Checkbox>
-              ))}
-            </VStack>
-          </Box>
-              <Box mt={4}>
-                <Box mb={4}>
-                  <Text mb={4}>Exercise:</Text>
-                  <VStack align="start">
-                    {exerciseOptions.map((option) => (
-                      <Checkbox
-                        key={option}
-                        isChecked={selectedExercise.includes(option)}
-                        onChange={() => handleCheckboxChange(option, setSelectedExercise)}
-                      >
-                        {option}
-                      </Checkbox>
-                    ))}
-                  </VStack>
-                </Box>
-                <Box mb={4}>
-                  <Text mb={4}>Drinking:</Text>
-                  <VStack align="start">
-                    {drinkingOptions.map((option) => (
-                      <Checkbox
-                        key={option}
-                        isChecked={selectedDrinking.includes(option)}
-                        onChange={() => handleCheckboxChange(option, setSelectedDrinking)}
-                      >
-                        {option}
-                      </Checkbox>
-                    ))}
-                  </VStack>
-                </Box>
-                <Box mb={4}>
-                  <Text mb={4}>Cannabis:</Text>
-                  <VStack align="start">
-                    {cannabisOptions.map((option) => (
-                      <Checkbox
-                        key={option}
-                        isChecked={selectedCannabis.includes(option)}
-                        onChange={() => handleCheckboxChange(option, setSelectedCannabis)}
-                      >
-                        {option}
-                      </Checkbox>
-                    ))}
-                  </VStack>
-                </Box>
-                <Box mb={4}>
-                  <Text mb={4}>Have Kids:</Text>
-                  <VStack align="start">
-                    {haveKidsOptions.map((option) => (
-                      <Checkbox
-                        key={option}
-                        isChecked={selectedHaveKids.includes(option)}
-                        onChange={() => handleCheckboxChange(option, setSelectedHaveKids)}
-                      >
-                        {option}
-                      </Checkbox>
-                    ))}
-                  </VStack>
-                </Box>
-                <Box mb={4}>
-                  <Text mb={4}>Family Plans:</Text>
-                  <VStack align="start">
-                    {familyPlansOptions.map((option) => (
-                      <Checkbox
-                        key={option}
-                        isChecked={selectedFamilyPlans.includes(option)}
-                        onChange={() => handleCheckboxChange(option, setSelectedFamilyPlans)}
-                      >
-                        {option}
-                      </Checkbox>
-                    ))}
-                  </VStack>
-                </Box>
-                <Box mb={4}>
-                  <Text mb={4}>Politics:</Text>
-                  <VStack align="start">
-                    {politicsOptions.map((option) => (
-                      <Checkbox
-                        key={option}
-                        isChecked={selectedPolitics.includes(option)}
-                        onChange={() => handleCheckboxChange(option, setSelectedPolitics)}
-                      >
-                        {option}
-                      </Checkbox>
-                    ))}
-                  </VStack>
-                </Box>
-                <Box mb={4}>
-                  <Text mb={4}>Religion:</Text>
-                  <VStack align="start">
-                    {religionOptions.map((option) => (
-                      <Checkbox
-                        key={option}
-                        isChecked={selectedReligion.includes(option)}
-                        onChange={() => handleCheckboxChange(option, setSelectedReligion)}
-                      >
-                        {option}
-                      </Checkbox>
-                    ))}
-                  </VStack>
-                </Box>
+              <Box mb={4}>
+                <Text mb={4}>Open to:</Text>
+                <VStack align="start">
+                  {openToOptions.map((option) => (
+                    <Checkbox
+                      key={option}
+                      isChecked={selectedOpenTo.includes(option)}
+                      onChange={() => handleCheckboxChange(option, setSelectedOpenTo)}
+                    >
+                      {option}
+                    </Checkbox>
+                  ))}
+                </VStack>
+              </Box>
+              <Box mb={4}>
+                <Text mb={4}>Ethnicity:</Text>
+                <VStack align="start">
+                  {ethnicityOptions.map((option) => (
+                    <Checkbox
+                      key={option}
+                      isChecked={selectedEthnicity.includes(option)}
+                      onChange={() => handleCheckboxChange(option, setSelectedEthnicity)}
+                    >
+                      {option}
+                    </Checkbox>
+                  ))}
+                </VStack>
+              </Box>
+              <Box mb={4}>
+                <Text mb={4}>Exercise:</Text>
+                <VStack align="start">
+                  {exerciseOptions.map((option) => (
+                    <Checkbox
+                      key={option}
+                      isChecked={selectedExercise.includes(option)}
+                      onChange={() => handleCheckboxChange(option, setSelectedExercise)}
+                    >
+                      {option}
+                    </Checkbox>
+                  ))}
+                </VStack>
+              </Box>
+              <Box mb={4}>
+                <Text mb={4}>Drinking:</Text>
+                <VStack align="start">
+                  {drinkingOptions.map((option) => (
+                    <Checkbox
+                      key={option}
+                      isChecked={selectedDrinking.includes(option)}
+                      onChange={() => handleCheckboxChange(option, setSelectedDrinking)}
+                    >
+                      {option}
+                    </Checkbox>
+                  ))}
+                </VStack>
+              </Box>
+              <Box mb={4}>
+                <Text mb={4}>Cannabis:</Text>
+                <VStack align="start">
+                  {cannabisOptions.map((option) => (
+                    <Checkbox
+                      key={option}
+                      isChecked={selectedCannabis.includes(option)}
+                      onChange={() => handleCheckboxChange(option, setSelectedCannabis)}
+                    >
+                      {option}
+                    </Checkbox>
+                  ))}
+                </VStack>
+              </Box>
+              <Box mb={4}>
+                <Text mb={4}>Have Kids:</Text>
+                <VStack align="start">
+                  {haveKidsOptions.map((option) => (
+                    <Checkbox
+                      key={option}
+                      isChecked={selectedHaveKids.includes(option)}
+                      onChange={() => handleCheckboxChange(option, setSelectedHaveKids)}
+                    >
+                      {option}
+                    </Checkbox>
+                  ))}
+                </VStack>
+              </Box>
+              <Box mb={4}>
+                <Text mb={4}>Family Plans:</Text>
+                <VStack align="start">
+                  {familyPlansOptions.map((option) => (
+                    <Checkbox
+                      key={option}
+                      isChecked={selectedFamilyPlans.includes(option)}
+                      onChange={() => handleCheckboxChange(option, setSelectedFamilyPlans)}
+                    >
+                      {option}
+                    </Checkbox>
+                  ))}
+                </VStack>
+              </Box>
+              <Box mb={4}>
+                <Text mb={4}>Politics:</Text>
+                <VStack align="start">
+                  {politicsOptions.map((option) => (
+                    <Checkbox
+                      key={option}
+                      isChecked={selectedPolitics.includes(option)}
+                      onChange={() => handleCheckboxChange(option, setSelectedPolitics)}
+                    >
+                      {option}
+                    </Checkbox>
+                  ))}
+                </VStack>
+              </Box>
+              <Box mb={4}>
+                <Text mb={4}>Religion:</Text>
+                <VStack align="start">
+                  {religionOptions.map((option) => (
+                    <Checkbox
+                      key={option}
+                      isChecked={selectedReligion.includes(option)}
+                      onChange={() => handleCheckboxChange(option, setSelectedReligion)}
+                    >
+                      {option}
+                    </Checkbox>
+                  ))}
+                </VStack>
               </Box>
             </Collapse>
           </Box>
         </ModalBody>
         <ModalFooter>
-        <Button colorScheme="red" mr={3} onClick={resetFilters}>
+          <Button colorScheme="red" mr={3} onClick={resetFilters}>
             Remove Filters
           </Button>
           <Button colorScheme="blue" mr={3} onClick={saveFilters}>
             Apply Filters
           </Button>
-          
           <Button variant="ghost" onClick={onClose}>
             Close
           </Button>
@@ -410,3 +434,4 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
 };
 
 export default FilterUserModal;
+

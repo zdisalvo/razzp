@@ -8,7 +8,7 @@ import useAuthStore from "../store/authStore";
 import useGetSparkProfileById from "./useGetSparkProfileById";
 import * as geofireCommon from 'geofire-common';
 
-const allDocsQuery = query(collection(firestore, "spark"), where("created", "==", true));
+const usersCollection = collection(firestore, 'spark');
 
 const queryNearbyUsers = async (latitude, longitude, radiusInMiles) => {
 	const center = [latitude, longitude];
@@ -43,7 +43,7 @@ const queryNearbyUsers = async (latitude, longitude, radiusInMiles) => {
   
 	// Query Firestore for users within the geohash bounds
 	const q = query(
-	  allDocsQuery,
+	  usersCollection,
 	  where('location', '>=', [queryBounds.minLat, queryBounds.minLon]),
 	  where('location', '<=', [queryBounds.maxLat, queryBounds.maxLon])
 	);
@@ -84,11 +84,15 @@ const useGetSparkProfiles = (refreshKey) => {
 				let allDocs = [];
 				//console.log("test");
                 //const allDocsQuery = query(collection(firestore, "spark"), where("created", "==", true));
+				//const allDocsQuery = query(collection(firestore, "spark"), where("created", "==", true));
                 
-				if (sparkProfile.location.length > 0) {
-					allDocs = await queryNearbyUsers(sparkProfile.location[0], sparkProfile.location[1], sparkProfile.radiusInMiles);
+				if (sparkProfile.location.length > 0 && sparkProfile.filters.distance !== 100 && 
+					sparkProfile.filters.distance !== undefined && sparkProfile.filters.distance !== 0) {
+					allDocs = await queryNearbyUsers(sparkProfile.location[0], sparkProfile.location[1], sparkProfile.filters.distance);
 				} else {
-					allDocsSnapshot = await getDocs(allDocsQuery);
+					//const allDocsQuery = query(usersCollection);
+					const allDocsQuery = query(collection(firestore, "spark"), where("created", "==", true));
+					const allDocsSnapshot = await getDocs(allDocsQuery);
 					allDocs = allDocsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 				}
 
