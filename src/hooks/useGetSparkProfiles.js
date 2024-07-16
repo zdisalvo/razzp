@@ -7,7 +7,7 @@ import useSparkStore from "../store/sparkStore";
 import useAuthStore from "../store/authStore";
 import useGetSparkProfileById from "./useGetSparkProfileById";
 
-const useGetSparkProfiles = () => {
+const useGetSparkProfiles = (refreshKey) => {
     const authUser = useAuthStore((state) => state.user);
     const [isLoading, setIsLoading] = useState(true);
     const showToast = useShowToast();
@@ -27,6 +27,7 @@ const useGetSparkProfiles = () => {
             setSparkProfiles([]);
 
             try {
+				//console.log("test");
                 const allDocsQuery = query(collection(firestore, "spark"), where("created", "==", true));
                 const allDocsSnapshot = await getDocs(allDocsQuery);
                 const allDocs = allDocsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -51,13 +52,14 @@ const useGetSparkProfiles = () => {
                         const { value, shorterThan, tallerThan } = filters.height;
                         const height = doc.height; // Assuming height is stored as a number
 
-                        if (height !== undefined && height !== null) {
+                        if (height !== undefined && height !== null && height !== "" && height !== 0) {
                             if (shorterThan && height >= value) {
                                 matchesFilters = false;
                             }
                             if (tallerThan && height <= value) {
                                 matchesFilters = false;
                             }
+							
                         }
                     }
 
@@ -182,7 +184,7 @@ const useGetSparkProfiles = () => {
         };
 
         getSparkProfiles();
-    }, [setSparkProfiles, sparkProfile, showToast]);
+    }, [setSparkProfiles, sparkProfile, showToast, refreshKey]);
 
     return { isLoading, sparkProfiles };
 };

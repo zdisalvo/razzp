@@ -33,7 +33,7 @@ const familyPlansOptions = ["Don't want kids", "Open to kids", "Want kids", "Not
 const politicsOptions = ["Apolitical", "Liberal", "Moderate", "Conservative"];
 const religionOptions = ["Agnostic", "Atheist", "Buddhist", "Catholic", "Christian", "Hindu", "Jain", "Jewish", "Mormon", "Latter-day Saint", "Muslim", "Zoroastrian", "Sikh", "Spiritual", "Other"];
 
-const FilterUserModal = ({ isOpen, onClose }) => {
+const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
   const authUser = useAuthStore((state) => state.user);
   const [selectedHeight, setSelectedHeight] = useState(60);
   const [shorterThan, setShorterThan] = useState(false);
@@ -111,6 +111,7 @@ const FilterUserModal = ({ isOpen, onClose }) => {
           religion: selectedReligion,
         },
       });
+      onFiltersApplied();
       onClose(); // Close the modal after saving filters
     } catch (error) {
       console.error("Error saving filters:", error);
@@ -142,6 +143,7 @@ const FilterUserModal = ({ isOpen, onClose }) => {
           religion: selectedReligion,
         },
       });
+      onFiltersApplied();
       onClose(); // Close the modal after saving filters
     } catch (error) {
       console.error("Error saving filters:", error);
