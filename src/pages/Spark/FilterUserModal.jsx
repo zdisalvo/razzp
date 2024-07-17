@@ -1,25 +1,26 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  ModalFooter,
-  Button,
-  Box,
-  Slider,
-  SliderTrack,
-  SliderFilledTrack,
-  SliderThumb,
-  Flex,
-  Text,
-  Checkbox,
-  VStack,
-  Collapse,
-  useDisclosure,
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalCloseButton,
+    ModalBody,
+    ModalFooter,
+    Button,
+    Box,
+    Slider,
+    SliderTrack,
+    SliderFilledTrack,
+    SliderThumb,
+    Flex,
+    Text,
+    Checkbox,
+    VStack,
+    Collapse,
+    useDisclosure,
 } from "@chakra-ui/react";
+import { Range } from "react-range";
 import { firestore } from "../../firebase/firebase"; // Import your Firestore instance
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import useAuthStore from "../../store/authStore"; // Import your auth store
@@ -84,6 +85,7 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
   const [selectedPolitics, setSelectedPolitics] = useState([]);
   const [selectedReligion, setSelectedReligion] = useState([]);
   const [radiusInMiles, setRadiusInMiles] = useState(50); // Default distance
+  const [ageRange, setAgeRange] = useState([18, 80]); // Default age range
 
   const { isOpen: isAdvancedFiltersOpen, onToggle: toggleAdvancedFilters } = useDisclosure();
 
@@ -108,6 +110,7 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
           setSelectedPolitics(filters.politics || []);
           setSelectedReligion(filters.religion || []);
           setRadiusInMiles(filters.distance || 50); // Fetch the distance filter if available
+          setAgeRange(filters.ageRange || [18, 80]); // Fetch the age range filter if available
         }
       };
 
@@ -145,6 +148,10 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
     setRadiusInMiles(value);
   };
 
+  const handleAgeRangeChange = (values) => {
+    setAgeRange(values);
+  };
+
   const resetFilters = async () => {
     setSelectedHeight(60); // Reset to default value
     setShorterThan(false);
@@ -159,6 +166,7 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
     setSelectedPolitics([]);
     setSelectedReligion([]);
     setRadiusInMiles(50); // Reset distance to default value
+    setAgeRange([18, 80]); // Reset age range to default values
 
     if (!authUser) return; // Ensure the user is authenticated
 
@@ -182,6 +190,7 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
           politics: [],
           religion: [],
           distance: 50, // Default distance
+          ageRange: [18, 80], // Default age range
         },
       });
       onFiltersApplied();
@@ -214,6 +223,7 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
           politics: selectedPolitics,
           religion: selectedReligion,
           distance: radiusInMiles, // Save the distance filter value
+          ageRange, // Save the age range filter values
         },
       });
       onFiltersApplied();
@@ -230,18 +240,60 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
         <ModalHeader>Filter Users</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-
         <Box mb={4}>
-            <Text mb={1}>Show users within:</Text>
-            <Text mb={4} mr={3}>{radiusInMiles === 100 ? "Any" : `${radiusInMiles} miles`}</Text>
+            <Text mb={4}>Age Range:</Text>
             <Flex alignItems="center" mb={4}>
-              
+              <Text mr={4}>{`${ageRange[0]} - ${ageRange[1]} years`}</Text>
+              <Range
+                values={ageRange}
+                step={1}
+                min={18}
+                max={80}
+                onChange={handleAgeRangeChange}
+                renderTrack={({ props, children }) => (
+                  <div
+                    {...props}
+                    style={{
+                      ...props.style,
+                      height: "6px",
+                      width: "100%",
+                      backgroundColor: "#ccc",
+                    }}
+                  >
+                    {children}
+                  </div>
+                )}
+                renderThumb={({ index, props }) => (
+                  <div
+                    {...props}
+                    style={{
+                      ...props.style,
+                      height: "20px",
+                      width: "20px",
+                      borderRadius: "50%",
+                      backgroundColor: "#999",
+                    }}
+                  />
+                )}
+              />
+            </Flex>
+          </Box>
+
+          <Box mb={4}>
+            <Text mb={4}>Distance:</Text>
+            <Flex alignItems="center" mb={4}>
+              <Flex alignItems="center" mr={4}>
+                <Text mr={2}>
+                  {radiusInMiles === 100 ? "Any" : `${radiusInMiles} miles`}
+                </Text>
+              </Flex>
               <Slider
                 min={5}
                 max={100}
                 step={1}
                 value={radiusInMiles}
                 onChange={handleDistanceChange}
+                width="100%"
               >
                 <SliderTrack>
                   <SliderFilledTrack />
@@ -251,8 +303,9 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
             </Flex>
           </Box>
 
+
           <Box mb={4}>
-            <Text mb={4}>Height:</Text>
+            <Text mb={4}>Filter by Height:</Text>
             <Flex justifyContent="space-between" alignItems="center" mb={4}>
               <Button
                 colorScheme={shorterThan ? "blue" : "gray"}
@@ -271,6 +324,7 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
             <Slider
               min={60}
               max={78}
+              step={1}
               value={selectedHeight}
               onChange={handleHeightChange}
             >
@@ -280,156 +334,136 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
               <SliderThumb />
             </Slider>
           </Box>
-          
+
           
 
-          {/* Advanced Filters Toggle */}
-          <Box mb={4}>
-            <Button
-              rightIcon={isAdvancedFiltersOpen ? <FaMinus /> : <FaPlus />}
-              onClick={toggleAdvancedFilters}
-            >
-              Advanced Filters
-            </Button>
-            <Collapse in={isAdvancedFiltersOpen}>
-              <Box mb={4}>
-                <Text mb={4}>Open to:</Text>
-                <VStack align="start">
-                  {openToOptions.map((option) => (
-                    <Checkbox
-                      key={option}
-                      isChecked={selectedOpenTo.includes(option)}
-                      onChange={() => handleCheckboxChange(option, setSelectedOpenTo)}
-                    >
-                      {option}
-                    </Checkbox>
-                  ))}
-                </VStack>
+          
+
+          <Button onClick={toggleAdvancedFilters} leftIcon={isAdvancedFiltersOpen ? <FaMinus /> : <FaPlus />}>
+            Advanced Filters
+          </Button>
+          <Collapse in={isAdvancedFiltersOpen} animateOpacity>
+            <VStack align="start" spacing={4} mt={4}>
+              <Box>
+                <Text mb={2}>Open To:</Text>
+                {openToOptions.map((option) => (
+                  <Checkbox
+                    key={option}
+                    isChecked={selectedOpenTo.includes(option)}
+                    onChange={() => handleCheckboxChange(option, setSelectedOpenTo)}
+                  >
+                    {option}
+                  </Checkbox>
+                ))}
               </Box>
-              <Box mb={4}>
-                <Text mb={4}>Ethnicity:</Text>
-                <VStack align="start">
-                  {ethnicityOptions.map((option) => (
-                    <Checkbox
-                      key={option}
-                      isChecked={selectedEthnicity.includes(option)}
-                      onChange={() => handleCheckboxChange(option, setSelectedEthnicity)}
-                    >
-                      {option}
-                    </Checkbox>
-                  ))}
-                </VStack>
+              <Box>
+                <Text mb={2}>Ethnicity:</Text>
+                {ethnicityOptions.map((option) => (
+                  <Checkbox
+                    key={option}
+                    isChecked={selectedEthnicity.includes(option)}
+                    onChange={() => handleCheckboxChange(option, setSelectedEthnicity)}
+                  >
+                    {option}
+                  </Checkbox>
+                ))}
               </Box>
-              <Box mb={4}>
-                <Text mb={4}>Exercise:</Text>
-                <VStack align="start">
-                  {exerciseOptions.map((option) => (
-                    <Checkbox
-                      key={option}
-                      isChecked={selectedExercise.includes(option)}
-                      onChange={() => handleCheckboxChange(option, setSelectedExercise)}
-                    >
-                      {option}
-                    </Checkbox>
-                  ))}
-                </VStack>
+              <Box>
+                <Text mb={2}>Exercise:</Text>
+                {exerciseOptions.map((option) => (
+                  <Checkbox
+                    key={option}
+                    isChecked={selectedExercise.includes(option)}
+                    onChange={() => handleCheckboxChange(option, setSelectedExercise)}
+                  >
+                    {option}
+                  </Checkbox>
+                ))}
               </Box>
-              <Box mb={4}>
-                <Text mb={4}>Drinking:</Text>
-                <VStack align="start">
-                  {drinkingOptions.map((option) => (
-                    <Checkbox
-                      key={option}
-                      isChecked={selectedDrinking.includes(option)}
-                      onChange={() => handleCheckboxChange(option, setSelectedDrinking)}
-                    >
-                      {option}
-                    </Checkbox>
-                  ))}
-                </VStack>
+              <Box>
+                <Text mb={2}>Drinking:</Text>
+                {drinkingOptions.map((option) => (
+                  <Checkbox
+                    key={option}
+                    isChecked={selectedDrinking.includes(option)}
+                    onChange={() => handleCheckboxChange(option, setSelectedDrinking)}
+                  >
+                    {option}
+                  </Checkbox>
+                ))}
               </Box>
-              <Box mb={4}>
-                <Text mb={4}>Cannabis:</Text>
-                <VStack align="start">
-                  {cannabisOptions.map((option) => (
-                    <Checkbox
-                      key={option}
-                      isChecked={selectedCannabis.includes(option)}
-                      onChange={() => handleCheckboxChange(option, setSelectedCannabis)}
-                    >
-                      {option}
-                    </Checkbox>
-                  ))}
-                </VStack>
+              <Box>
+                <Text mb={2}>Cannabis:</Text>
+                {cannabisOptions.map((option) => (
+                  <Checkbox
+                    key={option}
+                    isChecked={selectedCannabis.includes(option)}
+                    onChange={() => handleCheckboxChange(option, setSelectedCannabis)}
+                  >
+                    {option}
+                  </Checkbox>
+                ))}
               </Box>
-              <Box mb={4}>
-                <Text mb={4}>Have Kids:</Text>
-                <VStack align="start">
-                  {haveKidsOptions.map((option) => (
-                    <Checkbox
-                      key={option}
-                      isChecked={selectedHaveKids.includes(option)}
-                      onChange={() => handleCheckboxChange(option, setSelectedHaveKids)}
-                    >
-                      {option}
-                    </Checkbox>
-                  ))}
-                </VStack>
+              <Box>
+                <Text mb={2}>Have Kids:</Text>
+                {haveKidsOptions.map((option) => (
+                  <Checkbox
+                    key={option}
+                    isChecked={selectedHaveKids.includes(option)}
+                    onChange={() => handleCheckboxChange(option, setSelectedHaveKids)}
+                  >
+                    {option}
+                  </Checkbox>
+                ))}
               </Box>
-              <Box mb={4}>
-                <Text mb={4}>Family Plans:</Text>
-                <VStack align="start">
-                  {familyPlansOptions.map((option) => (
-                    <Checkbox
-                      key={option}
-                      isChecked={selectedFamilyPlans.includes(option)}
-                      onChange={() => handleCheckboxChange(option, setSelectedFamilyPlans)}
-                    >
-                      {option}
-                    </Checkbox>
-                  ))}
-                </VStack>
+              <Box>
+                <Text mb={2}>Family Plans:</Text>
+                {familyPlansOptions.map((option) => (
+                  <Checkbox
+                    key={option}
+                    isChecked={selectedFamilyPlans.includes(option)}
+                    onChange={() => handleCheckboxChange(option, setSelectedFamilyPlans)}
+                  >
+                    {option}
+                  </Checkbox>
+                ))}
               </Box>
-              <Box mb={4}>
-                <Text mb={4}>Politics:</Text>
-                <VStack align="start">
-                  {politicsOptions.map((option) => (
-                    <Checkbox
-                      key={option}
-                      isChecked={selectedPolitics.includes(option)}
-                      onChange={() => handleCheckboxChange(option, setSelectedPolitics)}
-                    >
-                      {option}
-                    </Checkbox>
-                  ))}
-                </VStack>
+              <Box>
+                <Text mb={2}>Politics:</Text>
+                {politicsOptions.map((option) => (
+                  <Checkbox
+                    key={option}
+                    isChecked={selectedPolitics.includes(option)}
+                    onChange={() => handleCheckboxChange(option, setSelectedPolitics)}
+                  >
+                    {option}
+                  </Checkbox>
+                ))}
               </Box>
-              <Box mb={4}>
-                <Text mb={4}>Religion:</Text>
-                <VStack align="start">
-                  {religionOptions.map((option) => (
-                    <Checkbox
-                      key={option}
-                      isChecked={selectedReligion.includes(option)}
-                      onChange={() => handleCheckboxChange(option, setSelectedReligion)}
-                    >
-                      {option}
-                    </Checkbox>
-                  ))}
-                </VStack>
+              <Box>
+                <Text mb={2}>Religion:</Text>
+                {religionOptions.map((option) => (
+                  <Checkbox
+                    key={option}
+                    isChecked={selectedReligion.includes(option)}
+                    onChange={() => handleCheckboxChange(option, setSelectedReligion)}
+                  >
+                    {option}
+                  </Checkbox>
+                ))}
               </Box>
-            </Collapse>
-          </Box>
+            </VStack>
+          </Collapse>
         </ModalBody>
         <ModalFooter>
-          <Button colorScheme="red" mr={3} onClick={resetFilters}>
-            Remove Filters
+          <Button variant="ghost" mr={3} onClick={onClose}>
+            Cancel
           </Button>
-          <Button colorScheme="blue" mr={3} onClick={saveFilters}>
-            Apply Filters
+          <Button colorScheme="blue" mr={3} onClick={resetFilters}>
+            Reset
           </Button>
-          <Button variant="ghost" onClick={onClose}>
-            Close
+          <Button colorScheme="blue" onClick={saveFilters}>
+            Save
           </Button>
         </ModalFooter>
       </ModalContent>
@@ -438,4 +472,3 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
 };
 
 export default FilterUserModal;
-

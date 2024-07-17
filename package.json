@@ -33,9 +33,11 @@
     "react-google-recaptcha": "^3.1.0",
     "react-google-recaptcha-v3": "^1.10.1",
     "react-icons": "^4.11.0",
+    "react-range": "^1.9.0",
     "react-responsive-carousel": "^3.2.23",
     "react-router-dom": "^6.17.0",
     "react-select": "^5.8.0",
+    "react-two-thumb-input-range": "^1.0.7",
     "styled-components": "^6.1.11",
     "zustand": "^4.4.5"
   },
