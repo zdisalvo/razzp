@@ -230,8 +230,29 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
         <ModalHeader>Filter Users</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
+
+        <Box mb={4}>
+            <Text mb={1}>Show users within:</Text>
+            <Text mb={4} mr={3}>{radiusInMiles === 100 ? "Any" : `${radiusInMiles} miles`}</Text>
+            <Flex alignItems="center" mb={4}>
+              
+              <Slider
+                min={5}
+                max={100}
+                step={1}
+                value={radiusInMiles}
+                onChange={handleDistanceChange}
+              >
+                <SliderTrack>
+                  <SliderFilledTrack />
+                </SliderTrack>
+                <SliderThumb />
+              </Slider>
+            </Flex>
+          </Box>
+
           <Box mb={4}>
-            <Text mb={4}>Filter by Height:</Text>
+            <Text mb={4}>Height:</Text>
             <Flex justifyContent="space-between" alignItems="center" mb={4}>
               <Button
                 colorScheme={shorterThan ? "blue" : "gray"}
@@ -260,24 +281,7 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
             </Slider>
           </Box>
           
-          <Box mb={4}>
-            <Text mb={4}>Distance:</Text>
-            <Flex alignItems="center" mb={4}>
-              <Text mr={4}>{radiusInMiles === 100 ? "Any" : `${radiusInMiles} miles`}</Text>
-              <Slider
-                min={5}
-                max={100}
-                step={1}
-                value={radiusInMiles}
-                onChange={handleDistanceChange}
-              >
-                <SliderTrack>
-                  <SliderFilledTrack />
-                </SliderTrack>
-                <SliderThumb />
-              </Slider>
-            </Flex>
-          </Box>
+          
 
           {/* Advanced Filters Toggle */}
           <Box mb={4}>
