@@ -112,6 +112,21 @@ const useGetSparkProfiles = (refreshKey) => {
                     // Check if the profile matches the filters
                     let matchesFilters = true;
 
+					if (filters.ageRange.length > 0) {
+						const minAge = filters.ageRange[0];
+						const maxAge = filters.ageRange[1];
+						
+						const today = new Date();
+						const minAgeDate = new Date(today.getFullYear() - minAge, today.getMonth(), today.getDate());
+						const maxAgeDate = new Date(today.getFullYear() - maxAge, today.getMonth(), today.getDate());
+						
+						const birthdate = new Date(doc.birthday); // Assuming birthdate is a Firestore Timestamp
+					
+						if (birthdate > minAgeDate || birthdate < maxAgeDate) {
+							matchesFilters = false;
+						}
+					}
+
                     // Height filter
                     if (filters.height) {
                         const { value, shorterThan, tallerThan } = filters.height;
