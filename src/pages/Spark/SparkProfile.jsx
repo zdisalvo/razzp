@@ -506,10 +506,13 @@ const SparkProfile = ({ sparkProfile, onViewed, sparkUser }) => {
           ))}
           {!isLoading && pin && pin.length > 0 && sparkUser.pin && sparkUser.pin.length > 0 &&
             <Flex alignItems="center">
-            <IconButton
+            {/* <IconButton
             icon={<FontAwesomeIcon icon={faLocationDot} />}
             mx={2} // Adds horizontal margin between the icons
-          />
+          /> */}
+          <Box mx={2}>
+          <FontAwesomeIcon icon={faLocationDot}  />
+          </Box>
             <Text fontSize="sm" >{city}, {state} - {Math.max(1, distance)} mi away</Text>
             </Flex>
             }
