@@ -42,9 +42,6 @@ const SparkLike = ({ sparkProfile, onMatchChange }) => {
 
     setIsLiked(newIsLiked);
 
-
-
-
      try {
       const isAllowedToLike = await canLike();
       

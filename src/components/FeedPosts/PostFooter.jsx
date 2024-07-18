@@ -14,7 +14,7 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
     const authUser = useAuthStore((state) => state.user);
     const commentRef = useRef(null);
     const { handleLikePost, isLiked: initialIsLiked, likes: initialLikes } = useLikePost(post);
-    const { handleCrownPost, isCrowned: initialIsCrowned, crowns: initialCrowns } = useCrownPost(post);
+    const { handleCrownPost, canCrown, isCrowned: initialIsCrowned, crowns: initialCrowns, isUpdating, setIsUpdating } = useCrownPost(post);
     const { isOpen, onOpen, onClose } = useDisclosure();
 
     const [isLiked, setIsLiked] = useState(initialIsLiked); // Local state for isLiked
@@ -42,19 +42,48 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
         
     };
 
-    const handleCrownClick = () => {
+    const handleCrownClick = async () => {
+
+        const newIsCrowned = !isCrowned;
+
+        // if (isCrowned)
+        //     return;
+        if (!authUser)
+            return;
+
+        setIsCrowned(newIsCrowned);
         
-		if (authUser) {
-			const newIsCrowned = !isCrowned;
-			const newCrowns = newIsCrowned ? crowns + 1 : crowns - 1;
+		
+            try{
 
-			setIsCrowned(newIsCrowned);
-			setCrowns(newCrowns);
+            const isAllowedToCrown = await canCrown();
 
-			handleCrownPost();
-		} else {
-			handleCrownPost();
-		}
+            if (!isAllowedToCrown) {
+                setIsCrowned(!newIsCrowned);
+                return;
+            }
+            
+            setIsUpdating(true);
+			
+			//const newCrowns = newIsCrowned ? crowns + 1 : crowns - 1;
+
+			
+
+			await handleCrownPost();
+            setIsCrowned(!newIsCrowned);
+			//setCrowns(newCrowns);
+
+            } catch (error) {
+                console.error("Error handling like click:", error);
+                setIsCrowned(!newIsCrowned); // Rollback on error
+                //setIsLikedMe(isLikedMe);
+              } finally {
+                  setIsUpdating(false);
+                }
+		
+        // else {
+		// 	handleCrownPost();
+		// }
         
         // if (newIsLiked !== initialIsLiked || newLikes !== initialLikes) {
         

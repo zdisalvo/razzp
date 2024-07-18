@@ -96,6 +96,7 @@ const useSignUpWithEmailAndPassword = () => {
 					createdAt: Date.now(),
 					geohash: "",
 					spark: false,
+					dayCrowns: 0,
 				};
 				await setDoc(doc(firestore, "spark", newUser.user.uid), spark);
 				localStorage.setItem("spark-profile", JSON.stringify(spark));
