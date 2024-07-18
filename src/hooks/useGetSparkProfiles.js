@@ -86,7 +86,7 @@ const useGetSparkProfiles = (refreshKey) => {
                 //const allDocsQuery = query(collection(firestore, "spark"), where("created", "==", true));
 				//const allDocsQuery = query(collection(firestore, "spark"), where("created", "==", true));
                 
-				if (sparkProfile.filters && sparkProfile.pin && sparkProfile.pin.length > 0 && sparkProfile.filters.distance !== 100 && 
+				if (sparkProfile.filters && sparkProfile.filters.length > 0 && sparkProfile.pin && sparkProfile.pin.length > 0 && sparkProfile.filters.distance !== 100 && 
 					sparkProfile.filters.distance !== undefined && sparkProfile.filters.distance !== 0) {
 					allDocs = await queryNearbyUsers(sparkProfile.pin[0], sparkProfile.pin[1], sparkProfile.filters.distance);
 				} else {
@@ -112,7 +112,7 @@ const useGetSparkProfiles = (refreshKey) => {
                     // Check if the profile matches the filters
                     let matchesFilters = true;
 				
-				if (sparkProfile.filters) {
+				if (sparkProfile.filters && sparkProfile.filters.length > 0) {
 
 					if (filters.ageRange.length > 0) {
 						const minAge = filters.ageRange[0];

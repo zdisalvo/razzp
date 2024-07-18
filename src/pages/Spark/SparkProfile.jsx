@@ -1,18 +1,25 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Box, Image, Text, SimpleGrid, VStack, Container, Button, Flex, Icon } from '@chakra-ui/react';
+import { Box, Image, Text, SimpleGrid, VStack, Container, Button, Flex, IconButton } from '@chakra-ui/react';
 import { Carousel } from 'react-responsive-carousel';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import WineBarRoundedIcon from '@mui/icons-material/WineBarRounded';
 //import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCannabis, faBriefcase, faWineGlass, faRuler, faDumbbell, faGraduationCap, 
-  faSmoking, faSchool, faHouseChimney, faBaby, faChildren, faStarAndCrescent, faScaleBalanced, faBook, faGlobe } from '@fortawesome/free-solid-svg-icons'; 
+  faSmoking, faSchool, faHouseChimney, faBaby, faChildren, faStarAndCrescent, faScaleBalanced, faBook, faGlobe, faLocationDot } from '@fortawesome/free-solid-svg-icons'; 
 //import "../Spark/carousel.css"
 import SparkLike from './SparkLike';
 import SparkCrown from './SparkCrown';
+import useGetSparkLocationAndDistance from '../../hooks/useGetSparkLocationAndDistance';
+import useAuthStore from '../../store/authStore';
+import useGetSparkProfileById from '../../hooks/useGetSparkProfileById';
+
 
 
 const calculateAge = (birthday) => {
+    //const {city, setCity} = useState(null);
+    
+
     const birthDate = new Date(birthday);
     const today = new Date();
     let age = today.getFullYear() - birthDate.getFullYear();
@@ -36,7 +43,17 @@ const calculateAge = (birthday) => {
   };
 
 
-const SparkProfile = ({ sparkProfile, onViewed }) => {
+const SparkProfile = ({ sparkProfile, onViewed, sparkUser }) => {
+
+  //console.log(sparkUser);
+
+  // const authUser = useAuthStore((state) => state);
+  //   if (!authUser)
+  //     return;
+
+  //   console.log(authUser.uid);
+
+  //   const { isLoading: profileLoading, sparkUser } = useGetSparkProfileById(authUser?.uid);
 
   const [isMatch, setIsMatch] = useState(false);
   //const [showMatchMessage, setShowMatchMessage] = useState(false);
@@ -75,6 +92,7 @@ const SparkProfile = ({ sparkProfile, onViewed }) => {
     languages,
     interests,
     profilePics,
+    pin,
   } = sparkProfile;
 
 
@@ -242,6 +260,15 @@ const SparkProfile = ({ sparkProfile, onViewed }) => {
     ]
 
     const filteredHometownData = hometownData.filter(item => isNotEmpty(item.value));
+
+
+    //CURRENT LOCATION
+    //const currentLocation = pin && pin.length > 0 ? [pin[0], pin[1]]: [];
+
+    //console.log(pin);
+    
+    const locationData = pin && pin.length > 0 && sparkUser.pin && sparkUser.pin.length > 0 ? useGetSparkLocationAndDistance(pin[0], pin[1], sparkUser) : { city: "", state: "", distance: null, isLoading: false };
+    const { city, state, distance, isLoading } = locationData;
 
   const rawProfileData = [
     { label: 'Age', value: calculateAge(birthday) },
@@ -477,6 +504,15 @@ const SparkProfile = ({ sparkProfile, onViewed }) => {
               </Flex>
             </Box>
           ))}
+          {!isLoading && pin && pin.length > 0 && sparkUser.pin && sparkUser.pin.length > 0 &&
+            <Flex alignItems="center">
+            <IconButton
+            icon={<FontAwesomeIcon icon={faLocationDot} />}
+            mx={2} // Adds horizontal margin between the icons
+          />
+            <Text fontSize="sm" >{city}, {state} - {Math.max(1, distance)} mi away</Text>
+            </Flex>
+            }
           </Box>
         }
         </Carousel>
@@ -495,6 +531,7 @@ const SparkProfile = ({ sparkProfile, onViewed }) => {
             {filteredProfileData.find(item => item.label === 'Pronouns') &&
           <Text fontSize="xl" fontWeight="bold" textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)">({filteredProfileData.find(item => item.label === 'Pronouns').value})</Text>
             }
+            
             </Flex>
             </Box>
           </Flex>

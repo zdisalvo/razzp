@@ -13,12 +13,15 @@ import { storeSparkUserLocation } from "../../hooks/storeSparkUserLocation";
 
 const Spark = () => {
     const authUser = useAuthStore((state) => state.user);
+    
+
     const { isLoading: profileLoading, sparkProfile } = useGetSparkProfileById(authUser?.uid);
     const [refreshKey, setRefreshKey] = useState(0); // State variable to trigger refresh
     const { isLoading, sparkProfiles } = useGetSparkProfiles(sparkProfile, refreshKey);
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [isFetchingLocation, setIsFetchingLocation] = useState(false);
 
+    //console.log(sparkProfile);
     
 
     const getCurrentLocation = () => {
@@ -112,7 +115,7 @@ const Spark = () => {
                 ))}
 
             {!isLoading&& !profileLoading && sparkProfiles.length > 0 && sparkProfiles.map((profile) => (
-                <SparkProfile key={profile.uid} id={profile.uid} sparkProfile={profile} onViewed={handleViewed} />
+                <SparkProfile key={profile.uid} id={profile.uid} sparkProfile={profile} onViewed={handleViewed} sparkUser={sparkProfile} />
             ))}
 
             <FilterUserModal isOpen={isOpen} onClose={onClose} onFiltersApplied={handleFiltersApplied} />
