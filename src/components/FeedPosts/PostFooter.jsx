@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Input, InputGroup, InputRightElement, Text, useDisclosure } from "@chakra-ui/react";
+import { Box, Button, Flex, Input, InputGroup, InputRightElement, Text, useDisclosure, Image } from "@chakra-ui/react";
 import { useRef, useState } from "react";
 import { CommentLogo, NotificationsLogo, UnlikeLogo } from "../../assets/constants";
 import usePostComment from "../../hooks/usePostComment";
@@ -6,6 +6,7 @@ import useAuthStore from "../../store/authStore";
 import useLikePost from "../../hooks/useLikePost";
 import { timeAgo } from "../../utils/timeAgo";
 import CommentsModal from "../Modals/CommentsModal";
+import useCrownPost from "../../hooks/useCrownPost";
 
 const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
     const { isCommenting, handlePostComment } = usePostComment();
@@ -13,10 +14,14 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
     const authUser = useAuthStore((state) => state.user);
     const commentRef = useRef(null);
     const { handleLikePost, isLiked: initialIsLiked, likes: initialLikes } = useLikePost(post);
+    const { handleCrownPost, isCrowned: initialIsCrowned, crowns: initialCrowns } = useCrownPost(post);
     const { isOpen, onOpen, onClose } = useDisclosure();
 
     const [isLiked, setIsLiked] = useState(initialIsLiked); // Local state for isLiked
     const [likes, setLikes] = useState(initialLikes); // Local state for likes
+
+    const [isCrowned, setIsCrowned] = useState(initialIsCrowned); // Local state for isLiked
+    const [crowns, setCrowns] = useState(initialCrowns);
 
     const handleLikeClick = () => {
         
@@ -37,6 +42,25 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
         
     };
 
+    const handleCrownClick = () => {
+        
+		if (authUser) {
+			const newIsCrowned = !isCrowned;
+			const newCrowns = newIsCrowned ? crowns + 1 : crowns - 1;
+
+			setIsCrowned(newIsCrowned);
+			setCrowns(newCrowns);
+
+			handleCrownPost();
+		} else {
+			handleCrownPost();
+		}
+        
+        // if (newIsLiked !== initialIsLiked || newLikes !== initialLikes) {
+        
+        
+    };
+
     const handleSubmitComment = async () => {
         await handlePostComment(post.id, comment);
         setComment("");
@@ -48,7 +72,9 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
                 <Box onClick={handleLikeClick} cursor={"pointer"} fontSize={18}>
                     {!isLiked ? <NotificationsLogo /> : <UnlikeLogo />}
                 </Box>
-
+                <Box onClick={handleCrownClick} cursor={"pointer"} width="10%" fontSize={32}>
+                    {!isCrowned ? <Image src="/white-crown-small.png" /> : <Image src="/blue-crown-small.png" />}
+                </Box>
                 <Box cursor={"pointer"} fontSize={18} onClick={() => commentRef.current.focus()}>
                     <CommentLogo />
                 </Box>

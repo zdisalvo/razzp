@@ -1,7 +1,7 @@
 import { useState } from "react";
 import useAuthStore from "../store/authStore";
 import useShowToast from "./useShowToast";
-import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore";
+import { arrayRemove, arrayUnion, doc, updateDoc, increment } from "firebase/firestore";
 import { firestore } from "../firebase/firebase";
 
 const useLikePost = (post) => {
@@ -20,6 +20,7 @@ const useLikePost = (post) => {
 			const postRef = doc(firestore, "posts", post.id);
 			await updateDoc(postRef, {
 				likes: isLiked ? arrayRemove(authUser.uid) : arrayUnion(authUser.uid),
+				score: isLiked ? increment((authUser.followers.length + 1) * -1): increment((authUser.followers.length + 1) * 1),
 			});
 
 			setIsLiked(!isLiked);

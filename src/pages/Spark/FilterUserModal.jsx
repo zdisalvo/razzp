@@ -280,13 +280,9 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
           </Box>
 
           <Box mb={4}>
-            <Text mb={4}>Distance:</Text>
+            <Text mb={1}>Show users within:</Text>
+            <Text mb={4} mr={3}>{radiusInMiles === 100 ? "Any" : `${radiusInMiles} miles`}</Text>
             <Flex alignItems="center" mb={4}>
-              <Flex alignItems="center" mr={4}>
-                <Text mr={2}>
-                  {radiusInMiles === 100 ? "Any" : `${radiusInMiles} miles`}
-                </Text>
-              </Flex>
               <Slider
                 min={5}
                 max={100}

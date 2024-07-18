@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Navigate, Route, Routes } from "react-router-dom";
 import HomePage from "./pages/HomePage/HomePage";
 import AuthPage from "./pages/AuthPage/AuthPage";
+import TopFivePosts from "./pages/Top5Posts/TopFivePosts";
 import PageLayout from "./Layouts/PageLayout/PageLayout";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import ProfilePageFeed from "./pages/ProfilePageFeed/ProfilePageFeed";
@@ -44,6 +45,7 @@ function App() {
 		<PageLayout>
 			<Routes>
 				<Route path='/' element={authUser ? <HomePage /> : <Navigate to='/auth' />} />
+				<Route path='/top5' element={<TopFivePosts />} />
 				<Route path='/auth' element={!authUser ? <AuthPage /> : <Navigate to='/' />} />
 				<Route path='/spark' element={authUser ? (!showSpark  ? <Navigate to='/spark/edit' /> : <Spark />) : <Navigate to='/' /> } />
 				{/* <Route path='/spark' element={authUser ? <Spark /> : <Navigate to='/' /> } /> */}
