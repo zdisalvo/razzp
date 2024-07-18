@@ -44,8 +44,8 @@ const queryNearbyUsers = async (latitude, longitude, radiusInMiles) => {
 	// Query Firestore for users within the geohash bounds
 	const q = query(
 	  usersCollection,
-	  where('location', '>=', [queryBounds.minLat, queryBounds.minLon]),
-	  where('location', '<=', [queryBounds.maxLat, queryBounds.maxLon])
+	  where('pin', '>=', [queryBounds.minLat, queryBounds.minLon]),
+	  where('pin', '<=', [queryBounds.maxLat, queryBounds.maxLon])
 	);
   
 	try {
@@ -86,9 +86,9 @@ const useGetSparkProfiles = (refreshKey) => {
                 //const allDocsQuery = query(collection(firestore, "spark"), where("created", "==", true));
 				//const allDocsQuery = query(collection(firestore, "spark"), where("created", "==", true));
                 
-				if (sparkProfile.filters && sparkProfile.location.length > 0 && sparkProfile.filters.distance !== 100 && 
+				if (sparkProfile.filters && sparkProfile.pin && sparkProfile.pin.length > 0 && sparkProfile.filters.distance !== 100 && 
 					sparkProfile.filters.distance !== undefined && sparkProfile.filters.distance !== 0) {
-					allDocs = await queryNearbyUsers(sparkProfile.location[0], sparkProfile.location[1], sparkProfile.filters.distance);
+					allDocs = await queryNearbyUsers(sparkProfile.pin[0], sparkProfile.pin[1], sparkProfile.filters.distance);
 				} else {
 					//const allDocsQuery = query(usersCollection);
 					const allDocsQuery = query(collection(firestore, "spark"), where("created", "==", true));

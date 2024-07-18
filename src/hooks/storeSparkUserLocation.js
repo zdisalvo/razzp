@@ -12,7 +12,7 @@ const storeSparkUserLocation = async (userId, latitude, longitude) => {
   try {
     await updateDoc(userDocRef, {
       geohash: geohash,
-      location: [latitude, longitude] // Optionally store location for easier querying or display
+      pin: [latitude, longitude] // Optionally store location for easier querying or display
     });
     console.log("Geohash and location stored successfully.");
     return geohash; // Optionally return geohash for further processing
