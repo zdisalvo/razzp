@@ -1,8 +1,11 @@
 import { useState, useEffect, useRef } from "react";
-import { Box, Avatar, Input, Button, VStack, Text, Container, Flex } from "@chakra-ui/react";
+import { Box, Avatar, Input, Button, VStack, Text, Container, Flex, Link, IconButton} from "@chakra-ui/react";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCaretLeft } from '@fortawesome/free-solid-svg-icons';
 import useSendMessage from "../../hooks/useSendMessage";
 import { doc, getDoc, onSnapshot } from "firebase/firestore";
 import { firestore } from "../../firebase/firebase";
+import { Link as RouterLink } from 'react-router-dom';
 
 const SparkMessage = () => {
   const [messages, setMessages] = useState([]);
@@ -35,15 +38,11 @@ const SparkMessage = () => {
 
   useEffect(() => {
     // Real-time listener for messages
-    const messagesRef = doc(firestore, "sparkMatches", userId);
-    const unsubscribe = onSnapshot(messagesRef, (doc) => {
+    const unsubscribe = onSnapshot(doc(firestore, "sparkMatches", userId), (doc) => {
       const data = doc.data();
       const match = data.matches.find(match => match.matchedUserId === matchedUserId);
       if (match && match.messages) {
-        setMessages((prevMessages) => [
-          ...prevMessages.filter((msg) => msg.sendingUser !== matchedUserId), // Keep existing messages from other users
-          ...match.messages // Add new messages from matchedUserId
-        ]);
+        setMessages(match.messages); // Update messages array directly from Firestore
       }
     });
 
@@ -107,10 +106,17 @@ const SparkMessage = () => {
   };
 
   return (
-    <Container maxW="container.md" py={4}>
+    <Container maxW="container.md" mt={{ base: "3vh", md: "30px" }} mb={{ base: "10vh", md: "60px" }}>
       {matchedProfile && (
         <Flex mb={4} align="center">
-          <Avatar size="lg" src={matchedProfile.profilePics[0]?.imageURL || ""} alt="Matched User Avatar" />
+          <Link as={RouterLink} to="/spark/matches">
+            <IconButton
+            icon={<FontAwesomeIcon fontSize={32} icon={faCaretLeft} />}
+            aria-label="Go back"
+            variant="ghost"
+            />
+          </Link>
+          <Avatar ml={2} size="lg" src={matchedProfile.profilePics[0]?.imageURL || ""} alt="Matched User Avatar" />
           <Box ml={4}>
             <Text fontSize="xl" fontWeight="bold">
               {matchedProfile.name}
@@ -123,7 +129,8 @@ const SparkMessage = () => {
         p={4}
         border="1px solid #e2e8f0"
         borderRadius="md"
-        maxH="60vh"
+        minH={{base: "50vh", md: "60vh"}}
+        maxH={{base: "50vh", md: "60vh"}}
         overflowY="scroll"
         ref={containerRef}
         bg="gray.100"

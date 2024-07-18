@@ -60,7 +60,7 @@ const SparkMatch = ({ userId, matchedUserId }) => {
     <Container width={{ base: "100vw", md: "auto" }} height={{ base: "auto", md: "5%" }} px={0} mx={0}>
       <Flex 
         align="center"
-        mb={4}
+        mb={0}
         p={2}
         position="relative"
         borderBottom="1px groove #1B2328"
@@ -94,7 +94,7 @@ const SparkMatch = ({ userId, matchedUserId }) => {
           cursor="pointer"
         >
           <Text fontWeight="bold">{matchedProfile.name}</Text>
-          <Text>{lastMessage || "Say hi"}</Text>
+          <Text>{lastMessage ? `${lastMessage.substring(0, 37)}${lastMessage.length > 37 ? "..." : ""}` : "Say hi"}</Text>
         </Box>
       </Flex>
     </Container>

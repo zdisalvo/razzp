@@ -891,7 +891,7 @@ const handlePronounsClick = (pronouns) => {
             <Textarea
               name="bio"
               rows={5}
-              maxLength={250}
+              maxLength={200}
               style={{ ...textBoxStyle }}
               onFocus={textBoxStyle.onFocus}
               onBlur={textBoxStyle.onBlur}
