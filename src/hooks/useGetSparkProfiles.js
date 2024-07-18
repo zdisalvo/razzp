@@ -86,7 +86,7 @@ const useGetSparkProfiles = (refreshKey) => {
                 //const allDocsQuery = query(collection(firestore, "spark"), where("created", "==", true));
 				//const allDocsQuery = query(collection(firestore, "spark"), where("created", "==", true));
                 
-				if (sparkProfile.location.length > 0 && sparkProfile.filters.distance !== 100 && 
+				if (sparkProfile.filters && sparkProfile.location.length > 0 && sparkProfile.filters.distance !== 100 && 
 					sparkProfile.filters.distance !== undefined && sparkProfile.filters.distance !== 0) {
 					allDocs = await queryNearbyUsers(sparkProfile.location[0], sparkProfile.location[1], sparkProfile.filters.distance);
 				} else {
@@ -111,6 +111,8 @@ const useGetSparkProfiles = (refreshKey) => {
 
                     // Check if the profile matches the filters
                     let matchesFilters = true;
+				
+				if (sparkProfile.filters) {
 
 					if (filters.ageRange.length > 0) {
 						const minAge = filters.ageRange[0];
@@ -250,6 +252,7 @@ const useGetSparkProfiles = (refreshKey) => {
                             }
                         }
                     }
+				}
 
                     return matchesFilters;
                 });

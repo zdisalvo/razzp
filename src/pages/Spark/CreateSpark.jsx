@@ -807,7 +807,7 @@ const handlePronounsClick = (pronouns) => {
     "Going Out": [
       "🍺 Beer", "☕ Cafes", "🥂 Champagne", "🎛️ Clubs", "🍸 Cocktails", "💃 Dancing",
       "🎪 Festivals", "🎭 Improv", "🎤 Karaoke", "🎉 Parties", "🎤 Stand-up Comedy",
-      "🥃 Whiskey", "🍷 Wine", 
+      "🥃 Whiskey",
     ],
     "Pets": [
       "🐦 Birds", "🐱 Cats", "🐶 Dogs", "🐠 Fish", "🐸 Frogs", "🐹 Hamsters", "🐭 Mice", "🐵 Monkeys", "🐰 Rabbits",
@@ -891,7 +891,7 @@ const handlePronounsClick = (pronouns) => {
             <Textarea
               name="bio"
               rows={5}
-              maxLength={150}
+              maxLength={250}
               style={{ ...textBoxStyle }}
               onFocus={textBoxStyle.onFocus}
               onBlur={textBoxStyle.onBlur}
@@ -1118,8 +1118,9 @@ const handlePronounsClick = (pronouns) => {
                 src={post.imageURL}
                 //alt={`Post ${index + 1}`}
                 maxWidth={{base: "40vw", md: "150px"}}
-                maxHeight={{base: "40vh", md: "auto"}}
+                maxHeight={{base: "auto", md: "auto"}}
                 width={{base: "40vw", md: "auto"}}
+                //height={{base: "auto", md: "300px"}}
                 aspectRatio={1}
                 borderRadius="md"
                 border={formData.selectedImages.some((image) => image.id === post.id ) ? "2px solid orange" : "none"}

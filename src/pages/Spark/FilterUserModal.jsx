@@ -84,7 +84,7 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
   const [selectedFamilyPlans, setSelectedFamilyPlans] = useState([]);
   const [selectedPolitics, setSelectedPolitics] = useState([]);
   const [selectedReligion, setSelectedReligion] = useState([]);
-  const [radiusInMiles, setRadiusInMiles] = useState(50); // Default distance
+  const [radiusInMiles, setRadiusInMiles] = useState(100); // Default distance
   const [ageRange, setAgeRange] = useState([18, 80]); // Default age range
 
   const { isOpen: isAdvancedFiltersOpen, onToggle: toggleAdvancedFilters } = useDisclosure();
@@ -109,7 +109,7 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
           setSelectedFamilyPlans(filters.familyPlans || []);
           setSelectedPolitics(filters.politics || []);
           setSelectedReligion(filters.religion || []);
-          setRadiusInMiles(filters.distance || 50); // Fetch the distance filter if available
+          setRadiusInMiles(filters.distance || 100); // Fetch the distance filter if available
           setAgeRange(filters.ageRange || [18, 80]); // Fetch the age range filter if available
         }
       };
@@ -165,7 +165,7 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
     setSelectedFamilyPlans([]);
     setSelectedPolitics([]);
     setSelectedReligion([]);
-    setRadiusInMiles(50); // Reset distance to default value
+    setRadiusInMiles(100); // Reset distance to default value
     setAgeRange([18, 80]); // Reset age range to default values
 
     if (!authUser) return; // Ensure the user is authenticated
@@ -189,7 +189,7 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
           familyPlans: [],
           politics: [],
           religion: [],
-          distance: 50, // Default distance
+          distance: 100, // Default distance
           ageRange: [18, 80], // Default age range
         },
       });

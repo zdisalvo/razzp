@@ -3,6 +3,13 @@ import { firestore } from "../firebase/firebase"; // Import your Firestore insta
 import { collection, getDocs, query, orderBy, limit } from "firebase/firestore";
 import usePostStore from "../store/postStore"; // Assuming you have a post store
 
+const calculateRankingScore = (post) => {
+    const postTime = new Date(post.createdAt);
+    const currentTime = new Date();
+    const elapsedTimeInDays = (currentTime - postTime) / (1000 * 60 * 60 * 24);
+    return post.score / (elapsedTimeInDays + 1);
+};
+
 const useGetTop5Posts = () => {
     const [isLoading, setIsLoading] = useState(true);
     const { posts, setPosts } = usePostStore();
@@ -23,11 +30,19 @@ const useGetTop5Posts = () => {
                     postsArray.push({ id: doc.id, ...doc.data() });
                 });
 
-                setPosts(postsArray);
+                // Calculate the ranking score for each post
+                const sortedPosts = postsArray
+                    .map(post => ({
+                        ...post,
+                        rankingScore: calculateRankingScore(post),
+                    }))
+                    .sort((a, b) => b.rankingScore - a.rankingScore); // Sort by ranking score
+
+                setPosts(sortedPosts);
                 setIsLoading(false);
             } catch (error) {
                 console.error("Error getting top posts: ", error);
-                throw new Error("Failed to get top posts");
+                setIsLoading(false); // Ensure loading state is turned off on error
             }
         };
 

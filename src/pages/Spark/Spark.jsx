@@ -82,7 +82,7 @@ const Spark = () => {
                   aria-label="Get My Location"
                   onClick={() => setIsFetchingLocation(true)} 
                   isLoading={isFetchingLocation} 
-                  loadingText="Fetching location..."
+                  loadingText="Getting location..."
                   variant="outline"
                   mx={2} // Adds horizontal margin between the icons
                 />
@@ -111,7 +111,7 @@ const Spark = () => {
                     </VStack>
                 ))}
 
-            {!isLoading && sparkProfiles.length > 0 && sparkProfiles.map((profile) => (
+            {!isLoading&& !profileLoading && sparkProfiles.length > 0 && sparkProfiles.map((profile) => (
                 <SparkProfile key={profile.uid} id={profile.uid} sparkProfile={profile} onViewed={handleViewed} />
             ))}
 
