@@ -20,7 +20,7 @@ const useLikePost = (post) => {
 			const postRef = doc(firestore, "posts", post.id);
 			await updateDoc(postRef, {
 				likes: isLiked ? arrayRemove(authUser.uid) : arrayUnion(authUser.uid),
-				score: isLiked ? increment((authUser.followers.length + 1) * -1): increment((authUser.followers.length + 1) * 1),
+				score: isLiked ? increment(Math.max(authUser.followers.length, 1) * -1): increment(Math.max(authUser.followers.length, 1) * 1),
 			});
 
 			setIsLiked(!isLiked);
