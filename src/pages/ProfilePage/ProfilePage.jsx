@@ -1,20 +1,72 @@
-import { Container, Flex, Link, Skeleton, SkeletonCircle, Text, VStack, Box } from "@chakra-ui/react";
+import { useState, useEffect } from "react";
+import { Container, Flex, Link, Skeleton, SkeletonCircle, Text, VStack, Box, IconButton } from "@chakra-ui/react";
 import ProfileHeader from "../../components/Profile/ProfileHeader";
 import ProfileTabs from "../../components/Profile/ProfileTabs";
 import ProfilePosts from "../../components/Profile/ProfilePosts";
 import useGetUserProfileByUsername from "../../hooks/useGetUserProfileByUsername";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { Link as RouterLink } from "react-router-dom";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faComments } from '@fortawesome/free-solid-svg-icons';
+import useMsgStore from "../../store/msgStore";
+import useAuthStore from "../../store/authStore";
 
 const ProfilePage = () => {
+  const authUser = useAuthStore((state) => state.user);
   const { username } = useParams();
+  //const { isLoading: authUserLoading } = useAuthStore((state) => state);
+
   const { isLoading, userProfile } = useGetUserProfileByUsername(username);
 
+  const [loading, setLoading] = useState(true);
+
+  const navigate = useNavigate();
+
   const userNotFound = !isLoading && !userProfile;
+  const setUserId = useMsgStore((state) => state.setUserId);
+  const setReceivingUserId = useMsgStore((state) => state.setReceivingUserId);
+
+  // console.log(userProfile.uid);
+  // console.log(authUser);
+
+  useEffect(() => {
+    if (!isLoading) {
+      setLoading(false);
+    }
+  }, [isLoading]);
+
+  // useEffect(() => {
+  //   if (authUser && userProfile) {
+  //     console.log(authUser.uid);
+  //     console.log(userProfile.uid);
+  //   }
+  // }, [authUser, userProfile]);
+
+  const handleMessageClick = () => {
+    setUserId(authUser.uid);
+    setReceivingUserId(userProfile.uid);
+    // Store IDs in localStorage
+    localStorage.setItem("userId", authUser.uid);
+    localStorage.setItem("receivingUserId", userProfile.uid);
+    navigate(`/${username}/messages`);
+  };
+
+
   if (userNotFound) return <UserNotFound />;
 
   return (
     <Container top={0} p={0} maxW={{base: "100vw", md: "100vw"}} pb={{base: "10vh", md: "60px"}}  m={0}>
+      <Box position="fixed" top="0" right={{base: "0", md: "15vw"}} p={4} zIndex="docked" width="100%">
+                <Flex justifyContent="flex-end">
+                <IconButton
+                  icon={<FontAwesomeIcon icon={faComments} />}
+                  aria-label="Messages"
+                  onClick={handleMessageClick} 
+                  variant="outline"
+                  mx={2} // Adds horizontal margin between the icons
+                />
+                </Flex>
+            </Box>
 			<Box
 			px={0}
 			mx="auto"
