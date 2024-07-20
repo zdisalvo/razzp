@@ -4,7 +4,7 @@ import usePostComment from "../../hooks/usePostComment";
 import useLikeComment from "../../hooks/useLikeComment";
 import { useRef, useState, useEffect } from "react";
 import useAuthStore from "../../store/authStore";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, updateDoc, arrayUnion } from "firebase/firestore";
 import { firestore } from "../../firebase/firebase";
 import { NotificationsLogo, UnlikeLogo } from "../../assets/constants";
 
@@ -25,14 +25,14 @@ const CommentsModal = ({ isOpen, onClose, post }) => {
         await updateComments();
     };
 
-    const updateComments = async () => {
+    const updateComments = async (userLikes = new Set()) => {
         const postRef = doc(firestore, "posts", post.id);
         const postDoc = await getDoc(postRef);
         if (postDoc.exists()) {
             const postData = postDoc.data();
             const updatedComments = postData.comments.map(comment => ({
                 ...comment,
-                likedByUser: userCommentLikes.has(comment.id)
+                likedByUser: userLikes.has(comment.id)
             }));
             setComments(updatedComments);
         }
@@ -51,19 +51,21 @@ const CommentsModal = ({ isOpen, onClose, post }) => {
                     await setDoc(userRef, { commentLikes: [] }, { merge: true });
                     setUserCommentLikes(new Set());
                 } else {
-                    setUserCommentLikes(new Set(userData.commentLikes || []));
+                    const commentLikesSet = new Set(userData.commentLikes || []);
+                    setUserCommentLikes(commentLikesSet);
+                    return commentLikesSet;
                 }
             } else {
-                // Handle case where user document does not exist, if needed
                 console.error("User document does not exist");
             }
         }
+        return new Set();
     };
 
     useEffect(() => {
         if (isOpen && isInitialLoad) {
-            fetchUserCommentLikes().then(() => {
-                updateComments();
+            fetchUserCommentLikes().then(userLikes => {
+                updateComments(userLikes);
             });
             const scrollToBottom = () => {
                 if (commentsContainerRef.current) {
@@ -92,6 +94,22 @@ const CommentsModal = ({ isOpen, onClose, post }) => {
 
             // Update in the backend without waiting
             handleLikeComment(post.id, commentId);
+
+            // Create notification
+            const comment = comments.find(comment => comment.id === commentId);
+            if (comment) {
+                const notification = {
+                    userId: authUser.uid,
+                    time: new Date(),
+                    postId: post.id,
+                    commentId,
+                    type: "commentLike"
+                };
+                const commentUserRef = doc(firestore, "users", comment.createdBy);
+                await updateDoc(commentUserRef, {
+                    notifications: arrayUnion(notification)
+                });
+            }
         }
     };
 
