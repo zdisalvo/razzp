@@ -61,15 +61,21 @@ const NotificationsPage = () => {
         }
     };
 
+    // Sort notifications in reverse chronological order
+    const sortedNotifications = notifications
+        .slice() // Create a copy to avoid mutating the original array
+        .sort((a, b) => b.time.toDate().getTime() - a.time.toDate().getTime());
+
     return (
         <Box padding="4" maxW="3xl" mx="auto">
             <List spacing={3}>
-                {notifications.map((notification) => {
+                {sortedNotifications.map((notification) => {
                     const user = userData[notification.userId];
                     const post = postData[notification.postId];
+
                     return (
                         <ListItem 
-                            key={notification.id} // Ensure that 'notification.id' is unique for each item
+                            key={notification.time.toDate().toISOString()} // Ensure unique key
                             display="flex" 
                             alignItems="center" 
                             justifyContent="space-between" 
@@ -79,15 +85,24 @@ const NotificationsPage = () => {
                         >
                             <Avatar src={user?.profilePicURL} alt={user?.username || 'User'} />
                             <Box flex="1" mx={4}>
-                                <Text>
-                                    <Text as="span" fontWeight="bold">
-                                        {user?.username || 'Unknown User'}
+                                {notification.type === "follow" ? (
+                                    <Text>
+                                        <Text as="span" fontWeight="bold">
+                                            {user?.username || 'Unknown User'}
+                                        </Text>
+                                        {" followed you."}
                                     </Text>
-                                    {" liked your post."}
-                                </Text>
+                                ) : (
+                                    <Text>
+                                        <Text as="span" fontWeight="bold">
+                                            {user?.username || 'Unknown User'}
+                                        </Text>
+                                        {" liked your post."}
+                                    </Text>
+                                )}
                                 <Text color="gray.500">{formatNotificationTime(notification.time)}</Text>
                             </Box>
-                            <Avatar src={post?.imageURL} alt="Post Image" />
+                            {post?.imageURL && <Avatar src={post.imageURL} alt="Post Image" />}
                         </ListItem>
                     );
                 })}

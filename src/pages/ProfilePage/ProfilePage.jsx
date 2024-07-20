@@ -56,7 +56,7 @@ const ProfilePage = () => {
 
   return (
     <Container top={0} p={0} maxW={{base: "100vw", md: "100vw"}} pb={{base: "10vh", md: "60px"}}  m={0}>
-      <Box position="fixed" top="0" right={{base: "0", md: "15vw"}} p={4} zIndex="docked" width="100%">
+      {/* <Box position="fixed" top="0" right={{base: "0", md: "15vw"}} p={4} zIndex="docked" width="100%">
                 <Flex justifyContent="flex-end">
                 <IconButton
                   icon={<FontAwesomeIcon icon={faComments} />}
@@ -66,7 +66,7 @@ const ProfilePage = () => {
                   mx={2} // Adds horizontal margin between the icons
                 />
                 </Flex>
-            </Box>
+            </Box> */}
 			<Box
 			px={0}
 			mx="auto"
