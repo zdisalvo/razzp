@@ -89,41 +89,46 @@ const CommentsModal = ({ isOpen, onClose, post }) => {
     };
 
     const handleCommentLike = async (commentId) => {
-        if (authUser) {
-            // Optimistic update
-            setComments(prevComments =>
-                prevComments.map(comment =>
-                    comment.id === commentId
-                        ? {
-                            ...comment,
-                            likes: comment.likedByUser ? comment.likes - 1 : comment.likes + 1,
-                            likedByUser: !comment.likedByUser
-                        }
-                        : comment
-                )
-            );
-
-            // Update in the backend without waiting
-            handleLikeComment(post.id, commentId);
-
-            // Create notification
-            const comment = comments.find(comment => comment.id === commentId);
-            if (comment) {
-                const notification = {
-                    userId: authUser.uid,
-                    time: new Date(),
-                    postId: post.id,
-                    commentId,
-                    type: "commentLike"
-                };
-                const commentUserRef = doc(firestore, "users", comment.createdBy);
-                await updateDoc(commentUserRef, {
-                    notifications: arrayUnion(notification)
-                });
-            }
-        }
-    };
-
+		if (authUser) {
+			// Find the comment to check its current like status
+			const comment = comments.find(comment => comment.id === commentId);
+	
+			if (comment) {
+				// Check if the comment is already liked by the user
+				if (!comment.likedByUser) {
+					// Optimistic update
+					setComments(prevComments =>
+						prevComments.map(c =>
+							c.id === commentId
+								? {
+									...c,
+									likes: c.likes + 1,
+									likedByUser: true
+								}
+								: c
+						)
+					);
+	
+					// Update in the backend without waiting
+					handleLikeComment(post.id, commentId);
+	
+					// Create notification
+					const notification = {
+						userId: authUser.uid,
+						time: new Date(),
+						postId: post.id,
+						commentId,
+						type: "commentLike"
+					};
+					const commentUserRef = doc(firestore, "users", comment.createdBy);
+					await updateDoc(commentUserRef, {
+						notifications: arrayUnion(notification)
+					});
+				}
+			}
+		}
+	};
+	
     return (
         <Modal isOpen={isOpen} onClose={onClose} motionPreset='slideInLeft'>
             <ModalOverlay />

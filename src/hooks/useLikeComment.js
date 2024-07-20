@@ -32,36 +32,23 @@ const useLikeComment = () => {
             }
 
             const comment = comments[commentIndex];
-            const isLiked = comment.likedByUser || false;
-            const newLikesCount = comment.likes + (isLiked ? -1 : 1);
+            // Only allow liking the comment, no unliking
+            if (!comment.likedByUser) {
+                const newLikesCount = comment.likes + 1;
+                comments[commentIndex] = {
+                    ...comment,
+                    likes: newLikesCount,
+                    likedByUser: true // Mark as liked by user
+                };
 
-            comments[commentIndex] = {
-                ...comment,
-                likes: newLikesCount,
-                likedByUser: !isLiked // Update if user liked or unliked
-            };
+                await updateDoc(postRef, { comments });
 
-            await updateDoc(postRef, {
-                comments
-            });
-
-            // Update the user's commentLikes field
-            const userRef = doc(firestore, "users", authUser.uid);
-            if (!isLiked) {
+                // Update the user's commentLikes field
+                const userRef = doc(firestore, "users", authUser.uid);
                 await updateDoc(userRef, {
                     commentLikes: arrayUnion(commentId)
                 });
-            } else {
-                const userDoc = await getDoc(userRef);
-                if (userDoc.exists()) {
-                    const userData = userDoc.data();
-                    const updatedLikes = (userData.commentLikes || []).filter(id => id !== commentId);
-                    await updateDoc(userRef, {
-                        commentLikes: updatedLikes
-                    });
-                }
             }
-
         } catch (error) {
             showToast("Error", error.message, "error");
         } finally {
