@@ -16,13 +16,19 @@ const CommentsModal = ({ isOpen, onClose, post }) => {
     const commentsContainerRef = useRef(null);
     const authUser = useAuthStore((state) => state.user);
     const [userCommentLikes, setUserCommentLikes] = useState(new Set());
-    const [isInitialLoad, setIsInitialLoad] = useState(true);
+    const [userScrolled, setUserScrolled] = useState(false);
 
     const handleSubmitComment = async (e) => {
         e.preventDefault();
         await handlePostComment(post.id, commentRef.current.value);
         commentRef.current.value = "";
         await updateComments();
+    };
+
+    const scrollToBottom = () => {
+        if (commentsContainerRef.current && !userScrolled) {
+            commentsContainerRef.current.scrollTop = commentsContainerRef.current.scrollHeight;
+        }
     };
 
     const updateComments = async (userLikes = new Set()) => {
@@ -63,19 +69,24 @@ const CommentsModal = ({ isOpen, onClose, post }) => {
     };
 
     useEffect(() => {
-        if (isOpen && isInitialLoad) {
+        if (isOpen) {
             fetchUserCommentLikes().then(userLikes => {
                 updateComments(userLikes);
+                setTimeout(scrollToBottom, 100);
             });
-            const scrollToBottom = () => {
-                if (commentsContainerRef.current) {
-                    commentsContainerRef.current.scrollTop = commentsContainerRef.current.scrollHeight;
-                }
-            };
-            setTimeout(scrollToBottom, 100);
-            setIsInitialLoad(false);
         }
-    }, [isOpen, isInitialLoad]);
+    }, [isOpen]);
+
+    useEffect(() => {
+        scrollToBottom();
+    }, [comments, userScrolled]);
+
+    const handleScroll = () => {
+        if (commentsContainerRef.current) {
+            const { scrollTop, scrollHeight, clientHeight } = commentsContainerRef.current;
+            setUserScrolled(scrollTop + clientHeight < scrollHeight - 5);
+        }
+    };
 
     const handleCommentLike = async (commentId) => {
         if (authUser) {
@@ -127,25 +138,26 @@ const CommentsModal = ({ isOpen, onClose, post }) => {
                         maxH={"250px"}
                         overflowY={"auto"}
                         ref={commentsContainerRef}
+                        onScroll={handleScroll}
                     >
                         {comments.map((comment, idx) => (
-                            <Flex key={idx} direction="column" borderBottom="1px" borderColor="gray.600" pb={2} mb={2}>
-                                <Flex alignItems={"left"} gap={0} mt={2}>
+                            <Flex key={idx} direction="column" borderBottom="1px" borderStyle="groove" borderColor="gray.600" pb={2} mb={2}>
+                                <Flex alignItems={"left"} gap={0} mt={0} mb={2}>
                                     <Comment comment={comment} />
-                                    <Flex alignItems="center" ml={4}>
-                                        <Box display="flex" alignItems="center" m={0}>
-                                            <Button
-                                                onClick={() => handleCommentLike(comment.id)}
-                                                variant="unstyled"
-                                                aria-label={comment.likedByUser ? "Unlike" : "Like"}
-                                            >
-                                                {comment.likedByUser ? <UnlikeLogo /> : <NotificationsLogo />}
-                                            </Button>
-                                            <Text fontSize="sm" ml={0}>
-                                                {comment.likes || 0} Likes
-                                            </Text>
-                                        </Box>
-                                    </Flex>
+                                    <Box flex="1" ml={2} display="flex" alignItems="center" justifyContent="flex-start">
+									<Flex direction="row" alignItems="center" gap={1}> {/* Arrange items in a row with space between them */}
+										<Button
+											onClick={() => handleCommentLike(comment.id)}
+											variant="unstyled"
+											aria-label={comment.likedByUser ? "Unlike" : "Like"}
+										>
+											{comment.likedByUser ? <UnlikeLogo /> : <NotificationsLogo />}
+										</Button>
+										<Text fontSize="sm" ml={0}>
+											{comment.likes || 0}
+										</Text>
+									</Flex>
+								</Box>
                                 </Flex>
                             </Flex>
                         ))}

@@ -1,4 +1,4 @@
-import { Avatar, Flex, Skeleton, SkeletonCircle, Text } from "@chakra-ui/react";
+import { Avatar, Flex, Skeleton, SkeletonCircle, Text, Container } from "@chakra-ui/react";
 import useGetUserProfileById from "../../hooks/useGetUserProfileById";
 import { Link } from "react-router-dom";
 import { timeAgo } from "../../utils/timeAgo";
@@ -8,24 +8,32 @@ const Comment = ({ comment }) => {
 
 	if (isLoading) return <CommentSkeleton />;
 	return (
-		<Flex gap={4}>
-			<Link to={`/${userProfile.username}`}>
-				<Avatar src={userProfile.profilePicURL} size={"sm"} />
-			</Link>
-			<Flex direction={"column"}>
-				<Flex gap={2} alignItems={"center"}>
-					<Link to={`/${userProfile.username}`}>
-						<Text fontWeight={"bold"} fontSize={12}>
-							{userProfile.username}
-						</Text>
-					</Link>
-					<Text fontSize={14}>{comment.comment}</Text>
-				</Flex>
+		<Container width="80%">
+		<Flex gap={4} align="center" >
+		<Link to={`/${userProfile.username}`}>
+			<Avatar src={userProfile.profilePicURL} size={"sm"} />
+		</Link>
+		
+		<Flex direction="column" gap={1}>
+			{/* Username and Timestamp Side by Side */}
+			<Flex direction="row" alignItems="center" gap={2}>
+				<Link to={`/${userProfile.username}`}>
+					<Text fontWeight={"bold"} fontSize={12}>
+						{userProfile.username}
+					</Text>
+				</Link>
 				<Text fontSize={12} color={"gray"}>
 					{timeAgo(comment.createdAt)}
 				</Text>
 			</Flex>
+			
+			{/* Comment Text */}
+			<Text fontSize={14} maxWidth="100%">
+				{comment.comment}
+			</Text>
 		</Flex>
+	</Flex>
+	</Container>
 	);
 };
 
