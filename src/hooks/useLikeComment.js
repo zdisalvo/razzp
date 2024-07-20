@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { doc, getDoc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
+import { doc, getDoc, updateDoc, arrayUnion } from "firebase/firestore";
 import { firestore } from "../firebase/firebase";
 import useAuthStore from "../store/authStore";
 import useShowToast from "./useShowToast";
@@ -38,38 +38,29 @@ const useLikeComment = () => {
             comments[commentIndex] = {
                 ...comment,
                 likes: newLikesCount,
-                likedByUser: !isLiked
+                likedByUser: !isLiked // Update if user liked or unliked
             };
 
-            await updateDoc(postRef, { comments });
+            await updateDoc(postRef, {
+                comments
+            });
 
+            // Update the user's commentLikes field
             const userRef = doc(firestore, "users", authUser.uid);
-            const userDoc = await getDoc(userRef);
-
-            if (userDoc.exists()) {
-                const userData = userDoc.data();
-                const userCommentLikes = userData.commentLikes || [];
-                const newCommentLikes = !isLiked
-                    ? arrayUnion(commentId)
-                    : arrayRemove(commentId);
-
-                await updateDoc(userRef, { commentLikes: newCommentLikes });
+            if (!isLiked) {
+                await updateDoc(userRef, {
+                    commentLikes: arrayUnion(commentId)
+                });
             } else {
-                // Create a new user document if it does not exist
-                await updateDoc(userRef, { commentLikes: [commentId] });
+                const userDoc = await getDoc(userRef);
+                if (userDoc.exists()) {
+                    const userData = userDoc.data();
+                    const updatedLikes = (userData.commentLikes || []).filter(id => id !== commentId);
+                    await updateDoc(userRef, {
+                        commentLikes: updatedLikes
+                    });
+                }
             }
-
-            // Optionally: Notify the post owner
-            const postOwnerRef = doc(firestore, "users", postData.createdBy);
-            const notification = {
-                userId: authUser.uid,
-                time: new Date(),
-                postId,
-                commentId,
-                type: "commentLike"
-            };
-
-            await updateDoc(postOwnerRef, { notifications: arrayUnion(notification) });
 
         } catch (error) {
             showToast("Error", error.message, "error");

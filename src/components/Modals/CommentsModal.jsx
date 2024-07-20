@@ -1,32 +1,40 @@
-import { Button, Flex, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Text } from "@chakra-ui/react";
+import { Button, Flex, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Text, Box } from "@chakra-ui/react";
 import Comment from "../Comment/Comment";
 import usePostComment from "../../hooks/usePostComment";
 import useLikeComment from "../../hooks/useLikeComment";
 import { useRef, useState, useEffect } from "react";
 import useAuthStore from "../../store/authStore";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { firestore } from "../../firebase/firebase";
+import { NotificationsLogo, UnlikeLogo } from "../../assets/constants";
 
 const CommentsModal = ({ isOpen, onClose, post }) => {
     const { handlePostComment, isCommenting } = usePostComment();
-    const { handleLikeComment, isLiking } = useLikeComment();
+    const { handleLikeComment } = useLikeComment();
     const [comments, setComments] = useState(post.comments);
     const commentRef = useRef(null);
     const commentsContainerRef = useRef(null);
     const authUser = useAuthStore((state) => state.user);
     const [userCommentLikes, setUserCommentLikes] = useState(new Set());
+    const [isInitialLoad, setIsInitialLoad] = useState(true);
 
     const handleSubmitComment = async (e) => {
         e.preventDefault();
         await handlePostComment(post.id, commentRef.current.value);
         commentRef.current.value = "";
+        await updateComments();
     };
 
     const updateComments = async () => {
         const postRef = doc(firestore, "posts", post.id);
         const postDoc = await getDoc(postRef);
         if (postDoc.exists()) {
-            setComments(postDoc.data().comments || []);
+            const postData = postDoc.data();
+            const updatedComments = postData.comments.map(comment => ({
+                ...comment,
+                likedByUser: userCommentLikes.has(comment.id)
+            }));
+            setComments(updatedComments);
         }
     };
 
@@ -34,32 +42,56 @@ const CommentsModal = ({ isOpen, onClose, post }) => {
         if (authUser) {
             const userRef = doc(firestore, "users", authUser.uid);
             const userDoc = await getDoc(userRef);
+
             if (userDoc.exists()) {
                 const userData = userDoc.data();
-                setUserCommentLikes(new Set(userData.commentLikes || []));
+
+                // Initialize commentLikes if it doesn't exist
+                if (!userData.commentLikes) {
+                    await setDoc(userRef, { commentLikes: [] }, { merge: true });
+                    setUserCommentLikes(new Set());
+                } else {
+                    setUserCommentLikes(new Set(userData.commentLikes || []));
+                }
+            } else {
+                // Handle case where user document does not exist, if needed
+                console.error("User document does not exist");
             }
         }
     };
 
     useEffect(() => {
-        if (isOpen) {
-            updateComments();
-            fetchUserCommentLikes();
+        if (isOpen && isInitialLoad) {
+            fetchUserCommentLikes().then(() => {
+                updateComments();
+            });
             const scrollToBottom = () => {
                 if (commentsContainerRef.current) {
                     commentsContainerRef.current.scrollTop = commentsContainerRef.current.scrollHeight;
                 }
             };
             setTimeout(scrollToBottom, 100);
+            setIsInitialLoad(false);
         }
-    }, [isOpen]);
+    }, [isOpen, isInitialLoad]);
 
     const handleCommentLike = async (commentId) => {
         if (authUser) {
-            await handleLikeComment(post.id, commentId);
-            // Refresh comment likes after liking/unliking
-            fetchUserCommentLikes();
-            updateComments();
+            // Optimistic update
+            setComments(prevComments =>
+                prevComments.map(comment =>
+                    comment.id === commentId
+                        ? {
+                            ...comment,
+                            likes: comment.likedByUser ? comment.likes - 1 : comment.likes + 1,
+                            likedByUser: !comment.likedByUser
+                        }
+                        : comment
+                )
+            );
+
+            // Update in the backend without waiting
+            handleLikeComment(post.id, commentId);
         }
     };
 
@@ -80,18 +112,22 @@ const CommentsModal = ({ isOpen, onClose, post }) => {
                     >
                         {comments.map((comment, idx) => (
                             <Flex key={idx} direction="column" borderBottom="1px" borderColor="gray.600" pb={2} mb={2}>
-                                <Comment comment={comment} />
-                                <Flex align="center" mt={2}>
-                                    <Button
-                                        onClick={() => handleCommentLike(comment.id)}
-                                        isLoading={isLiking}
-                                        colorScheme={userCommentLikes.has(comment.id) ? "red" : "blue"}
-                                        size="sm"
-                                        mr={2}
-                                    >
-                                        {userCommentLikes.has(comment.id) ? "Unlike" : "Like"}
-                                    </Button>
-                                    <Text fontSize="sm">{comment.likes || 0} Likes</Text>
+                                <Flex alignItems={"left"} gap={0} mt={2}>
+                                    <Comment comment={comment} />
+                                    <Flex alignItems="center" ml={4}>
+                                        <Box display="flex" alignItems="center" m={0}>
+                                            <Button
+                                                onClick={() => handleCommentLike(comment.id)}
+                                                variant="unstyled"
+                                                aria-label={comment.likedByUser ? "Unlike" : "Like"}
+                                            >
+                                                {comment.likedByUser ? <UnlikeLogo /> : <NotificationsLogo />}
+                                            </Button>
+                                            <Text fontSize="sm" ml={0}>
+                                                {comment.likes || 0} Likes
+                                            </Text>
+                                        </Box>
+                                    </Flex>
                                 </Flex>
                             </Flex>
                         ))}
