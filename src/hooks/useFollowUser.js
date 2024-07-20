@@ -74,6 +74,8 @@ const useFollowUser = (userId) => {
 				const userNotificationsRef = doc(firestore, "users", userId);
 				const notification = {
 					userId: authUser.uid,
+					username: authUser.username,
+					profilePic: authUser.profilePicURL,
 					time: new Date(),
 					type: "follow",
 				};

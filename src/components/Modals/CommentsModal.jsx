@@ -115,8 +115,11 @@ const CommentsModal = ({ isOpen, onClose, post }) => {
 					// Create notification
 					const notification = {
 						userId: authUser.uid,
+						username: authUser.username,
+						profilePicURL: authUser.profilePicURL,
 						time: new Date(),
 						postId: post.id,
+						postImageURL: post.postImageURL,
 						commentId,
 						type: "commentLike"
 					};

@@ -27,8 +27,11 @@ const useLikePost = (post) => {
             const userNotificationsRef = doc(firestore, "users", postOwnerId);
             const notification = {
                 userId: authUser.uid, // The user who liked the post
+				username: authUser.username,
+				profilePic: authUser.profilePicURL,
                 time: new Date(),
                 postId: post.id,
+				postImageURL: post.imageURL,
                 type: "like"
             };
 

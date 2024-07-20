@@ -41,10 +41,14 @@ const usePostComment = () => {
 			// Create notification object
 			const notification = {
 				postOwner: postData.createdBy,
-				commentUser: authUser.uid,
+				userId: authUser.uid,
+				username: authUser.username,
+				profilePic: authUser.profilePicURL,
 				time: new Date(),
 				postId,
+				postImageURL: postData.imageURL,
 				commentId: newComment.id,
+				comment: newComment.comment,
 				type: "comment",
 			};
 
@@ -59,13 +63,13 @@ const usePostComment = () => {
 				notifications: arrayUnion(notification),
 			});
 
-			// Notify the comment owner (if different from post owner)
-			if (postData.createdBy !== authUser.uid) {
-				const commentOwnerRef = doc(firestore, "users", authUser.uid);
-				await updateDoc(commentOwnerRef, {
-					notifications: arrayUnion(notification),
-				});
-			}
+			// Change this for replied comments)
+			// if (postData.createdBy !== authUser.uid) {
+			// 	const commentOwnerRef = doc(firestore, "users", authUser.uid);
+			// 	await updateDoc(commentOwnerRef, {
+			// 		notifications: arrayUnion(notification),
+			// 	});
+			// }
 
 			// Update local state or context
 			addComment(postId, newComment);
