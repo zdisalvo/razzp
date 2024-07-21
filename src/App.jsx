@@ -62,8 +62,8 @@ function App() {
 				<Route path="/:username/messages" element={<Message />} />
 				<Route path="/messages" element={<Messages />} />
 				<Route path="/notifications" element={<NotificationsPage />} />
-				<Route path="/followers" element={<FollowersPage />} />
-				<Route path="/following" element={<FollowingPage />} />
+				<Route path="/:username/followers" element={<FollowersPage />} />
+				<Route path="/:username/following" element={<FollowingPage />} />
 
 			</Routes>
 		</PageLayout>

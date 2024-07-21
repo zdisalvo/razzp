@@ -4,21 +4,27 @@ import { doc, getDoc } from 'firebase/firestore';
 import { firestore } from '../../firebase/firebase';
 import useAuthStore from '../../store/authStore';
 import useFollowUserFP from '../../hooks/useFollowUserFP';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
+import { useNavigate, useParams } from 'react-router-dom'; // Import useParams for path parameters
+import useGetUserProfileByUsername from '../../hooks/useGetUserProfileByUsername';
 
 const FollowersPage = () => {
     const [followers, setFollowers] = useState([]);
     const [userProfiles, setUserProfiles] = useState({});
     const [followStates, setFollowStates] = useState({});
+    const [loading, setLoading] = useState(true); // Loading state
 
     const authUser = useAuthStore((state) => state.user);
     const { handleFollowUser } = useFollowUserFP();
     const navigate = useNavigate(); // Initialize navigate
+    const { username } = useParams(); // Extract username from URL
+
+    const { userProfile, isLoading: profileLoading } = useGetUserProfileByUsername(username);
+
 
     useEffect(() => {
         const fetchFollowers = async () => {
-            if (authUser) {
-                const userRef = doc(firestore, 'users', authUser.uid);
+            if (authUser && userProfile) {
+                const userRef = doc(firestore, 'users', userProfile.uid);
                 const userDoc = await getDoc(userRef);
                 if (userDoc.exists()) {
                     const followerIds = userDoc.data().followers || [];
@@ -76,7 +82,7 @@ const FollowersPage = () => {
             const userDoc = await getDoc(userRef);
             if (userDoc.exists()) {
                 const profile = userDoc.data();
-                navigate(`/${profile.username}`);
+                navigate(`/${profile.username}`); // Navigate using username
             }
         } catch (error) {
             console.error('Error fetching user data:', error);
