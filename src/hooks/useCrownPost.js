@@ -26,7 +26,7 @@ const useCrownPost = (post) => {
         }
     }, [authUser]);
 
-    console.log(crownCount);
+    //console.log(crownCount);
 
 	const handleCrownPost = async () => {
 		if (isUpdating) return;

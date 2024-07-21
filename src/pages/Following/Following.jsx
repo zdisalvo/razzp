@@ -1,53 +1,26 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Avatar, Button, Flex, Text, VStack, Container, Box } from '@chakra-ui/react';
 import { doc, getDoc } from 'firebase/firestore';
 import { firestore } from '../../firebase/firebase';
 import useAuthStore from '../../store/authStore';
 import useFollowUserFP from '../../hooks/useFollowUserFP';
+import useFollowingUsers from '../../hooks/useFollowingUsers';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
 
-const FollowersPage = () => {
-    const [followers, setFollowers] = useState([]);
-    const [userProfiles, setUserProfiles] = useState({});
-    const [followStates, setFollowStates] = useState({});
-
+const FollowingPage = () => {
+    const { following, userProfiles } = useFollowingUsers();
+    const [followStates, setFollowStates] = React.useState({});
     const authUser = useAuthStore((state) => state.user);
     const { handleFollowUser } = useFollowUserFP();
     const navigate = useNavigate(); // Initialize navigate
 
-    useEffect(() => {
-        const fetchFollowers = async () => {
-            if (authUser) {
-                const userRef = doc(firestore, 'users', authUser.uid);
-                const userDoc = await getDoc(userRef);
-                if (userDoc.exists()) {
-                    const followerIds = userDoc.data().followers || [];
-                    setFollowers(followerIds.reverse()); // Reverse the order here
-                }
-            }
-        };
-
-        fetchFollowers();
-    }, [authUser]);
-
-    useEffect(() => {
-        const fetchUserProfiles = async () => {
-            const profiles = {};
-            const followState = {};
-            for (const followerId of followers) {
-                const followerRef = doc(firestore, 'users', followerId);
-                const followerDoc = await getDoc(followerRef);
-                if (followerDoc.exists()) {
-                    profiles[followerId] = followerDoc.data();
-                    followState[followerId] = authUser.following.includes(followerId);
-                }
-            }
-            setUserProfiles(profiles);
-            setFollowStates(followState);
-        };
-
-        fetchUserProfiles();
-    }, [followers, authUser]);
+    React.useEffect(() => {
+        const followState = {};
+        for (const userId of following) {
+            followState[userId] = authUser.following.includes(userId);
+        }
+        setFollowStates(followState);
+    }, [following, authUser]);
 
     const handleFollowClick = async (userId) => {
         const isCurrentlyFollowing = followStates[userId];
@@ -87,7 +60,7 @@ const FollowersPage = () => {
         <Container top={0} p={0} maxW={{ base: '100vw', md: '100vw' }} pb={{ base: '10vh', md: '60px' }} m={0}>
             <Box padding="4" maxW="3xl" mx="auto">
                 <VStack spacing={4} align="stretch" p={4}>
-                    {followers.map((userId) => {
+                    {following.map((userId) => {
                         const profile = userProfiles[userId];
                         const isFollowing = followStates[userId];
                         return (
@@ -119,4 +92,4 @@ const FollowersPage = () => {
     );
 };
 
-export default FollowersPage;
+export default FollowingPage;

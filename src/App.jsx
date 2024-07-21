@@ -14,6 +14,7 @@ import Message from './components/Messages/Message';
 import Messages from './components/Messages/Messages';
 import NotificationsPage from './pages/NotificationsPage/NotificationsPage';
 import FollowersPage from './pages/Followers/Followers';
+import FollowingPage from './pages/Following/Following';
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "./firebase/firebase";
 import useAuthStore from "./store/authStore";
@@ -62,6 +63,7 @@ function App() {
 				<Route path="/messages" element={<Messages />} />
 				<Route path="/notifications" element={<NotificationsPage />} />
 				<Route path="/followers" element={<FollowersPage />} />
+				<Route path="/following" element={<FollowingPage />} />
 
 			</Routes>
 		</PageLayout>
