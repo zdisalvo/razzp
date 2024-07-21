@@ -25,6 +25,20 @@ const Message = () => {
     navigate(-1); // Navigate to the previous page
   };
 
+  const fetchUserData = async (userId) => {
+    if (!userId) return null;
+    const userRef = doc(firestore, "users", userId);
+    const userDoc = await getDoc(userRef);
+    return userDoc.exists() ? userDoc.data() : null;
+  };
+
+  const handleAvatarClick = async (userId) => {
+    const profile = await fetchUserData(userId);
+    if (profile) {
+      navigate(`/${profile.username}`);
+    }
+  };
+
   useEffect(() => {
     // Fetch matched profile
     const fetchReceivingProfile = async () => {
@@ -119,7 +133,14 @@ const Message = () => {
             variant="ghost"
             onClick={handleGoBack}
           />
-          <Avatar ml={2} size="lg" src={receivingProfile.profilePicURL || ""} alt="User Avatar" />
+          <Avatar
+            ml={2}
+            size="lg"
+            src={receivingProfile.profilePicURL || ""}
+            alt="User Avatar"
+            onClick={() => handleAvatarClick(receivingUserId)}
+            cursor="pointer"
+          />
           <Box ml={4}>
             <Text fontSize="xl" fontWeight="bold">
               {receivingProfile.username}

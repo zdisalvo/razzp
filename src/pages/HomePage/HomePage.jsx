@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Box, Button, Container, Flex, Image } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faComments,  } from "@fortawesome/free-solid-svg-icons";
@@ -14,9 +14,13 @@ const HomePage = () => {
   const [isFetchingLocation, setIsFetchingLocation] = useState(false);
   const navigate = useNavigate();
 
-    const handleImageClick = () => {
+    const handleMessagesClick = () => {
         navigate("/messages");
     };
+
+    const handleNotificationsClick = useCallback(() => {
+      navigate("/notifications");
+    }, [navigate]);
 
   useEffect(() => {
     if (isFetchingLocation) {
@@ -79,7 +83,8 @@ const HomePage = () => {
                   mx={2} 
                 />
                 </Box>
-                <Box>
+                <Box onClick={handleNotificationsClick} cursor="pointer" >
+        
                 <Image 
                   src="/notifications-small.png"
                   aria-label="Top 5"
@@ -88,7 +93,7 @@ const HomePage = () => {
                   mx={2} 
                 />
                 </Box>
-                <Box onClick={handleImageClick} cursor="pointer">
+                <Box onClick={handleMessagesClick} cursor="pointer">
                 <Image 
                   src="/messages-small.png"
                   aria-label="Top 5"
