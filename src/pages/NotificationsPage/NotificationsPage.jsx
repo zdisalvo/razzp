@@ -46,6 +46,7 @@ const formatNotificationTime = (timestamp) => {
     }
 };
 
+
 const NotificationsPage = () => {
     const notifications = useNotifications();
     const authUser = useAuthStore((state) => state.user);
