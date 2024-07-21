@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Avatar, Box, List, ListItem, Text, Container } from "@chakra-ui/react";
+import { Avatar, Box, List, ListItem, Text, Container, Image } from "@chakra-ui/react";
+import { Link, useNavigate } from "react-router-dom";
 import useNotifications from "../../hooks/useNotifications";
 import { getDoc, doc } from "firebase/firestore";
 import { firestore } from "../../firebase/firebase";
@@ -11,6 +12,7 @@ const NotificationsPage = () => {
     const [userData, setUserData] = useState({});
     const [postData, setPostData] = useState({});
     const authUser = useAuthStore((state) => state.user);
+    const navigate = useNavigate();
 
     const fetchUserData = async (userId) => {
         if (!userId) return null;
@@ -26,33 +28,15 @@ const NotificationsPage = () => {
         return postDoc.exists() ? postDoc.data() : null;
     };
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const users = {};
-            const posts = {};
-            for (const notification of notifications) {
-                if (notification.postOwner && !users[notification.postOwner]) {
-                    users[notification.postOwner] = await fetchUserData(notification.postOwner);
-                }
-                if (notification.postId && !posts[notification.postId]) {
-                    posts[notification.postId] = await fetchPostData(notification.postId);
-                }
-            }
-            setUserData(users);
-            setPostData(posts);
-        };
-        fetchData();
-    }, [notifications]);
-
     const formatNotificationTime = (timestamp) => {
         try {
             if (!timestamp) return "Unknown time";
-            
+
             // Convert Firestore timestamp to JavaScript Date object
             const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
-            
+
             if (isNaN(date.getTime())) throw new Error("Invalid date");
-            
+
             // Format the date
             return formatDistanceToNow(date, { addSuffix: true });
         } catch (error) {
@@ -73,7 +57,7 @@ const NotificationsPage = () => {
     const handlePostClick = async (postId) => {
         if (!postId) return;
 
-        const post = postData[postId];
+        const post = await fetchPostData(postId);
         if (!post) return;
 
         const profile = await fetchUserData(post.createdBy);
@@ -82,13 +66,18 @@ const NotificationsPage = () => {
         }
     };
 
+    const handleAvatarClick = async (userId) => {
+        const profile = await fetchUserData(userId);
+        if (profile) {
+            navigate(`/${profile.username}`);
+        }
+    };
+
     return (
         <Container top={0} p={0} maxW={{ base: "100vw", md: "100vw" }} pb={{ base: "10vh", md: "60px" }} m={0}>
             <Box padding="4" maxW="3xl" mx="auto">
                 <List spacing={3}>
                     {sortedNotifications.map((notification) => {
-                        const user = userData[notification.postOwner];
-                        const post = postData[notification.postId];
                         let notificationText = '';
 
                         if (notification.type === "comment") {
@@ -140,17 +129,25 @@ const NotificationsPage = () => {
                                 borderWidth={1}
                                 borderRadius="lg"
                             >
-                                <Avatar src={notification.profilePic} alt={notification.username || 'User'} />
+                                <Avatar 
+                                    src={notification.profilePic} 
+                                    alt={notification.username || 'User'} 
+                                    boxSize="40px" // Set size of Avatar
+                                    onClick={() => handleAvatarClick(notification.userId)}
+                                    cursor="pointer"
+                                />
                                 <Box flex="1" mx={4}>
                                     {notificationText}
                                     <Text color="gray.500">{formatNotificationTime(notification.time)}</Text>
                                 </Box>
                                 {notification.postImageURL && (
-                                    <Avatar
+                                    <Image
                                         src={notification.postImageURL}
                                         alt="Post Image"
                                         onClick={() => handlePostClick(notification.postId)}
                                         cursor="pointer"
+                                        boxSize="40px" // Set size of Image same as Avatar
+                                        borderRadius="5px" // Optional: match Avatar's round shape
                                     />
                                 )}
                             </ListItem>
