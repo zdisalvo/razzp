@@ -70,7 +70,7 @@ const HomePage = () => {
         justifyContent={{ base: "none", md: "center" }}
         alignItems="center"
       >
-        <Button 
+        {/* <Button 
           onClick={() => setIsFetchingLocation(true)} 
           isLoading={isFetchingLocation} 
           loadingText="Fetching location..."
@@ -78,7 +78,7 @@ const HomePage = () => {
           mt={4}
         >
           Get Current Location to find matches near you
-        </Button>
+        </Button> */}
 
         <Flex gap={20} px={0} mx={0} justifyContent="center" mt={4}>
           <Box flex={2} py={0} px={0} ml={{ base: "none", md: "20" }}>

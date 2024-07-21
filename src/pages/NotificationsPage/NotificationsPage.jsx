@@ -1,18 +1,59 @@
 import React, { useState, useEffect } from "react";
-import { Avatar, Box, List, ListItem, Text, Container, Image } from "@chakra-ui/react";
-import { Link, useNavigate } from "react-router-dom";
+import { Avatar, Box, List, ListItem, Text, Container, Image, Heading, Flex, IconButton } from "@chakra-ui/react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCaretLeft } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate } from "react-router-dom";
 import useNotifications from "../../hooks/useNotifications";
 import { getDoc, doc } from "firebase/firestore";
 import { firestore } from "../../firebase/firebase";
 import useAuthStore from "../../store/authStore";
 import { formatDistanceToNow } from "date-fns";
 
+// Convert Firestore Timestamp or numeric seconds to JavaScript Date object
+const convertToDate = (timestamp) => {
+    if (!timestamp) return new Date();
+
+    if (timestamp.nanoseconds) {
+        // Firestore Timestamp (nanoseconds)
+        const milliseconds = timestamp.seconds * 1000 + timestamp.nanoseconds / 1_000_000;
+        return new Date(milliseconds);
+    } else if (timestamp.seconds) {
+        // Firestore Timestamp (seconds)
+        return new Date(timestamp.seconds * 1000);
+    } else if (typeof timestamp === 'number') {
+        // Numeric timestamp in seconds
+        return new Date(timestamp * 1000);
+    } else if (timestamp.toDate) {
+        // Firestore Timestamp with toDate method
+        return timestamp.toDate();
+    }
+
+    // Default case
+    return new Date(timestamp);
+};
+
+// Function to format the timestamp
+const formatNotificationTime = (timestamp) => {
+    try {
+        const date = convertToDate(timestamp);
+
+        if (isNaN(date.getTime())) throw new Error("Invalid date");
+
+        return formatDistanceToNow(date, { addSuffix: true });
+    } catch (error) {
+        console.error("Error formatting date:", error);
+        return "Unknown time";
+    }
+};
+
 const NotificationsPage = () => {
     const notifications = useNotifications();
-    const [userData, setUserData] = useState({});
-    const [postData, setPostData] = useState({});
     const authUser = useAuthStore((state) => state.user);
     const navigate = useNavigate();
+
+    const handleGoBack = () => {
+        navigate(-1); // Navigate to the previous page
+    };
 
     const fetchUserData = async (userId) => {
         if (!userId) return null;
@@ -28,29 +69,12 @@ const NotificationsPage = () => {
         return postDoc.exists() ? postDoc.data() : null;
     };
 
-    const formatNotificationTime = (timestamp) => {
-        try {
-            if (!timestamp) return "Unknown time";
-
-            // Convert Firestore timestamp to JavaScript Date object
-            const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
-
-            if (isNaN(date.getTime())) throw new Error("Invalid date");
-
-            // Format the date
-            return formatDistanceToNow(date, { addSuffix: true });
-        } catch (error) {
-            console.error("Error formatting date:", error);
-            return "Unknown time";
-        }
-    };
-
     // Sort notifications in reverse chronological order
     const sortedNotifications = notifications
         .slice() // Create a copy to avoid mutating the original array
         .sort((a, b) => {
-            const aDate = a.time.toDate ? a.time.toDate() : new Date(a.time);
-            const bDate = b.time.toDate ? b.time.toDate() : new Date(b.time);
+            const aDate = convertToDate(a.time);
+            const bDate = convertToDate(b.time);
             return bDate - aDate;
         });
 
@@ -76,6 +100,16 @@ const NotificationsPage = () => {
     return (
         <Container top={0} p={0} maxW={{ base: "100vw", md: "100vw" }} pb={{ base: "10vh", md: "60px" }} m={0}>
             <Box padding="4" maxW="3xl" mx="auto">
+                <Flex align="center" mb={4}>
+                    <IconButton
+                        icon={<FontAwesomeIcon fontSize={32} icon={faCaretLeft} />}
+                        aria-label="Go back"
+                        variant="ghost"
+                        onClick={handleGoBack}
+                        mr={4} // Add margin-right to space out from the heading
+                    />
+                    <Heading as="h1" size="lg">Notifications</Heading>
+                </Flex>
                 <List spacing={3}>
                     {sortedNotifications.map((notification) => {
                         let notificationText = '';
