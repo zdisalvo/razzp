@@ -3,22 +3,13 @@ import { doc, updateDoc, arrayRemove, arrayUnion, getDoc } from 'firebase/firest
 import { firestore } from '../firebase/firebase';
 import useAuthStore from '../store/authStore';
 
-const useFollowUserFP = (userId) => {
-    const [isFollowing, setIsFollowing] = useState(false);
+const useFollowUserFP = () => {
     const [isUpdating, setIsUpdating] = useState(false);
+
     const authUser = useAuthStore((state) => state.user);
     const setAuthUser = useAuthStore((state) => state.setUser);
 
-    useEffect(() => {
-        const checkIfFollowing = async () => {
-            if (authUser && userId) {
-                setIsFollowing(authUser.following.includes(userId));
-            }
-        };
-        checkIfFollowing();
-    }, [authUser, userId]);
-
-    const handleFollowUser = async () => {
+    const handleFollowUser = async (userId, isFollowing) => {
         if (!authUser || !userId || isUpdating) return;
 
         setIsUpdating(true);
@@ -34,10 +25,10 @@ const useFollowUserFP = (userId) => {
                 await updateDoc(userToFollowRef, {
                     followers: arrayRemove(authUser.uid),
                 });
-                setAuthUser((prevUser) => ({
-                    ...prevUser,
-                    following: prevUser.following.filter((id) => id !== userId),
-                }));
+                // setAuthUser((prevUser) => ({
+                //     ...prevUser,
+                //     following: prevUser.following.filter((id) => id !== userId),
+                // }));
             } else {
                 // Follow
                 await updateDoc(currentUserRef, {
@@ -46,12 +37,11 @@ const useFollowUserFP = (userId) => {
                 await updateDoc(userToFollowRef, {
                     followers: arrayUnion(authUser.uid),
                 });
-                setAuthUser((prevUser) => ({
-                    ...prevUser,
-                    following: [...prevUser.following, userId],
-                }));
+                // setAuthUser((prevUser) => ({
+                //     ...prevUser,
+                //     following: [...prevUser.following, userId],
+                // }));
             }
-            setIsFollowing(!isFollowing);
         } catch (error) {
             console.error('Error updating follow status:', error);
         } finally {
@@ -59,7 +49,7 @@ const useFollowUserFP = (userId) => {
         }
     };
 
-    return { isFollowing, isUpdating, handleFollowUser };
+    return { handleFollowUser, isUpdating };
 };
 
 export default useFollowUserFP;
