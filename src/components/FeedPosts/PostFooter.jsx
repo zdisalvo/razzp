@@ -50,8 +50,8 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
     const handleCrownClick = async () => {
 
         //don't allow uncrown
-        // if (isCrowned)
-        //     return;
+        if (isCrowned)
+            return;
 
         const newIsCrowned = !isCrowned;
 
