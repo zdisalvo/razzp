@@ -36,17 +36,13 @@ const CommentsModal = ({ isOpen, onClose, post }) => {
         const postDoc = await getDoc(postRef);
         if (postDoc.exists()) {
             const postData = postDoc.data();
-            const updatedComments = postData.comments.map(comment => ({
-                ...comment,
-                likedByUser: userLikes.has(comment.id)
-            }));
-            setComments(updatedComments);
+            setComments(postData.comments);
         }
     };
 
     const fetchUserCommentLikes = async () => {
         if (authUser) {
-            const userRef = doc(firestore, "users", authUser.uid);
+			const userRef = doc(firestore, "users", authUser.uid);
             const userDoc = await getDoc(userRef);
 
             if (userDoc.exists()) {
@@ -90,48 +86,83 @@ const CommentsModal = ({ isOpen, onClose, post }) => {
 
     const handleCommentLike = async (commentId) => {
 		if (authUser) {
-			// Find the comment to check its current like status
-			const comment = comments.find(comment => comment.id === commentId);
+			// Check if the comment is already liked by the user
+			const isLiked = userCommentLikes.has(commentId);
 	
-			if (comment) {
-				// Check if the comment is already liked by the user
-				if (!comment.likedByUser) {
-					// Optimistic update
-					setComments(prevComments =>
-						prevComments.map(c =>
-							c.id === commentId
-								? {
-									...c,
-									likes: c.likes + 1,
-									likedByUser: true
-								}
-								: c
-						)
-					);
+			// Optimistic update: toggle like status immediately
+			setComments(prevComments =>
+				prevComments.map(c =>
+					c.id === commentId
+						? {
+							...c,
+							likes: isLiked ? c.likes - 1 : c.likes + 1
+						}
+						: c
+				)
+			);
 	
-					// Update in the backend without waiting
-					handleLikeComment(post.id, commentId);
+			// Optimistically update local user likes
+			setUserCommentLikes(prevLikes => {
+				const updatedLikes = new Set(prevLikes);
+				if (isLiked) {
+					updatedLikes.delete(commentId);
+				} else {
+					updatedLikes.add(commentId);
+				}
+				return updatedLikes;
+			});
 	
-					// Create notification
-					const notification = {
-						userId: authUser.uid,
-						username: authUser.username,
-						profilePicURL: authUser.profilePicURL,
-						time: new Date(),
-						postId: post.id,
-						postImageURL: post.postImageURL,
-						commentId,
-						type: "commentLike"
-					};
-					const commentUserRef = doc(firestore, "users", comment.createdBy);
-					await updateDoc(commentUserRef, {
-						notifications: arrayUnion(notification)
+			// Perform backend update
+			try {
+				if (isLiked) {
+					// Handle unliking the comment
+					await handleLikeComment(post.id, commentId, false); // Assuming handleLikeComment supports a third parameter for unlike
+					await updateDoc(doc(firestore, "users", authUser.uid), {
+						commentLikes: arrayRemove(commentId)
+					});
+				} else {
+					// Handle liking the comment
+					await handleLikeComment(post.id, commentId, true); // Assuming handleLikeComment supports a third parameter for like
+					await updateDoc(doc(firestore, "users", authUser.uid), {
+						commentLikes: arrayUnion(commentId),
+						notifications: arrayUnion({
+							userId: authUser.uid,
+							username: authUser.username,
+							profilePic: authUser.profilePicURL,
+							time: new Date(),
+							postId: post.id,
+							postImageURL: post.imageURL,
+							commentId,
+							type: "commentLike"
+						})
 					});
 				}
+			} catch (error) {
+				console.error("Failed to update like status:", error);
+				// Rollback optimistic update in case of error
+				setComments(prevComments =>
+					prevComments.map(c =>
+						c.id === commentId
+							? {
+								...c,
+								likes: isLiked ? c.likes + 1 : c.likes - 1
+							}
+							: c
+					)
+				);
+				setUserCommentLikes(prevLikes => {
+					const updatedLikes = new Set(prevLikes);
+					if (isLiked) {
+						updatedLikes.add(commentId);
+					} else {
+						updatedLikes.delete(commentId);
+					}
+					return updatedLikes;
+				});
 			}
 		}
 	};
-	
+
     return (
         <Modal isOpen={isOpen} onClose={onClose} motionPreset='slideInLeft'>
             <ModalOverlay />
@@ -153,19 +184,19 @@ const CommentsModal = ({ isOpen, onClose, post }) => {
                                 <Flex alignItems={"left"} gap={0} mt={0} mb={2}>
                                     <Comment comment={comment} />
                                     <Box flex="1" ml={2} display="flex" alignItems="center" justifyContent="flex-start">
-									<Flex direction="row" alignItems="center" gap={1}> {/* Arrange items in a row with space between them */}
-										<Button
-											onClick={() => handleCommentLike(comment.id)}
-											variant="unstyled"
-											aria-label={comment.likedByUser ? "Unlike" : "Like"}
-										>
-											{comment.likedByUser ? <UnlikeLogo /> : <NotificationsLogo />}
-										</Button>
-										<Text fontSize="sm" ml={0}>
-											{comment.likes || 0}
-										</Text>
-									</Flex>
-								</Box>
+                                        <Flex direction="row" alignItems="center" gap={1}> {/* Arrange items in a row with space between them */}
+                                            <Button
+                                                onClick={() => handleCommentLike(comment.id)}
+                                                variant="unstyled"
+                                                aria-label={userCommentLikes.has(comment.id) ? "Unlike" : "Like"}
+                                            >
+                                                {userCommentLikes.has(comment.id) ? <UnlikeLogo /> : <NotificationsLogo />}
+                                            </Button>
+                                            <Text fontSize="sm" ml={0}>
+                                                {comment.likes || 0}
+                                            </Text>
+                                        </Flex>
+                                    </Box>
                                 </Flex>
                             </Flex>
                         ))}
@@ -185,3 +216,4 @@ const CommentsModal = ({ isOpen, onClose, post }) => {
 };
 
 export default CommentsModal;
+
