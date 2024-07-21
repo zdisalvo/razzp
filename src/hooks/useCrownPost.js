@@ -53,7 +53,7 @@ const useCrownPost = (post) => {
             
 			await updateDoc(postRef, {
 				crowns: isCrowned ? arrayRemove(authUser.uid) : arrayUnion(authUser.uid),
-                score: isCrowned ? increment(Math.max(authUser.followers.length, 1) * -5): increment((Math.max(authUser.followers.length, 1)) * 5),
+                score: isCrowned ? increment(-Math.max(authUser.followers.length, 5)): increment((Math.max(authUser.followers.length, 5))),
 			});
 
             await updateDoc(userRef, {

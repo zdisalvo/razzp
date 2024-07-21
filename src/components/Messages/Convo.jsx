@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { firestore } from "../../firebase/firebase";
-import useMatchStore from "../../store/matchStore";
 import useMsgStore from "../../store/msgStore";
 
 const Convo = ({ userId, receivingUserId }) => {
@@ -21,8 +20,22 @@ const Convo = ({ userId, receivingUserId }) => {
     localStorage.setItem("receivingUserId", receivingUserId);
     
     if (receivingProfile && receivingProfile.username) {
-        navigate(`/${receivingProfile.username}/messages`);
-      }
+      navigate(`/${receivingProfile.username}/messages`);
+    }
+  };
+
+  const fetchUserData = async (userId) => {
+    if (!userId) return null;
+    const userRef = doc(firestore, "users", userId);
+    const userDoc = await getDoc(userRef);
+    return userDoc.exists() ? userDoc.data() : null;
+  };
+
+  const handleAvatarClick = async (userId) => {
+    const profile = await fetchUserData(userId);
+    if (profile) {
+      navigate(`/${profile.username}`);
+    }
   };
 
   useEffect(() => {
@@ -77,6 +90,8 @@ const Convo = ({ userId, receivingUserId }) => {
           boxSize={{ base: "40px", md: "60px" }}
           display="flex"
           mr="10px"
+          onClick={() => handleAvatarClick(receivingUserId)}
+          cursor="pointer"
         >
           <AvatarGroup size={{ base: "md", md: "lg" }} justifySelf={"left"} p={0} alignSelf={"center"} >
             {receivingProfile.profilePicURL &&

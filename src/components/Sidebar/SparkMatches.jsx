@@ -24,8 +24,10 @@ const SparkMatches = () => {
 				w={{ base: 10, md: "full" }}
 				justifyContent={{ base: "center", md: "flex-start" }}
 			>
-                <Box fontSize={45}>
-				<Image src="/matches-icon-100.png" />
+                <Box >
+				<Image 
+				width="110px"
+				src="/matches-icon-100.png" />
                 </Box>
 				<Box display={{ base: "none", md: "block" }}>Matches</Box>
 			</Link>

@@ -1,14 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { Box, Button, Container, Flex } from "@chakra-ui/react";
+import { Box, Button, Container, Flex, Image } from "@chakra-ui/react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faComments,  } from "@fortawesome/free-solid-svg-icons";
 import FeedPostsOrig from "../../components/FeedPosts/FeedPostsOrig";
 import SuggestedUsers from "../../components/SuggestedUsers/SuggestedUsers";
 import { storeUserLocation } from "../../hooks/storeUserLocation";
 import { queryNearbyUsers } from "../../hooks/queryNearbyUsers";
 import authStore from "../../store/authStore";
+import { useNavigate } from "react-router-dom";
 
 const HomePage = () => {
   const userAuth = authStore((state) => state.user);
   const [isFetchingLocation, setIsFetchingLocation] = useState(false);
+  const navigate = useNavigate();
+
+    const handleImageClick = () => {
+        navigate("/messages");
+    };
 
   useEffect(() => {
     if (isFetchingLocation) {
@@ -57,6 +65,40 @@ const HomePage = () => {
 
   return (
     <Container p={0} maxW={{ base: "100vw", md: "100vw" }} m={0}>
+      <Box position="fixed" top="0" right={{base: "0", md: "15vw"}} p={4} zIndex="docked" width="100%">
+                <Flex justifyContent="flex-end" alignItems="center">
+                  <Box>
+                <Image 
+                  src="/blue-crown-small.png"
+                  aria-label="Top 5"
+                  width="50px" 
+                  //minWidth="45px"
+                  //maxheight="15px"
+                  height="auto"
+                  //variant="outline"
+                  mx={2} 
+                />
+                </Box>
+                <Box>
+                <Image 
+                  src="/notifications-small.png"
+                  aria-label="Top 5"
+                  width="40px" 
+                  //variant="outline"
+                  mx={2} 
+                />
+                </Box>
+                <Box onClick={handleImageClick} cursor="pointer">
+                <Image 
+                  src="/messages-small.png"
+                  aria-label="Top 5"
+                  width="40px" 
+                  //variant="outline"
+                  mx={2} 
+                />
+                </Box>
+                </Flex>
+            </Box>
       <Box
         px={0}
         mx="auto"

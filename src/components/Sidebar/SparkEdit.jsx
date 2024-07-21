@@ -24,8 +24,10 @@ const SparkEdit = () => {
 				w={{ base: 10, md: "full" }}
 				justifyContent={{ base: "center", md: "flex-start" }}
 			>
-                <Box fontSize={24}>
-				<Image src="/edit-profile-icon-24.png"  />
+                <Box >
+				<Image 
+                width="30px"
+                src="/edit-profile-icon-24.png"  />
                 </Box>
 				<Box display={{ base: "none", md: "block" }}>Profile</Box>
 			</Link>
