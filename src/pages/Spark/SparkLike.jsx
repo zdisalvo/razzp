@@ -18,7 +18,6 @@ const SparkLike = ({ sparkProfile, onMatchChange }) => {
 
   //console.log(sparkUser);
 
-  console.log
 
   const [isLiked, setIsLiked] = useState(initialIsLiked);
   //const [likeCount, setLikeCount] = useState(initialLikeCount);

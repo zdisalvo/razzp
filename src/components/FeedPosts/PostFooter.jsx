@@ -1,5 +1,5 @@
 import { Box, Button, Flex, Input, InputGroup, InputRightElement, Text, useDisclosure, Image } from "@chakra-ui/react";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { CommentLogo, NotificationsLogo, UnlikeLogo } from "../../assets/constants";
 import usePostComment from "../../hooks/usePostComment";
 import useAuthStore from "../../store/authStore";
@@ -23,6 +23,11 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
     const [isCrowned, setIsCrowned] = useState(initialIsCrowned); // Local state for isLiked
     const [crowns, setCrowns] = useState(initialCrowns);
 
+    useEffect(() => {
+        setIsCrowned(initialIsCrowned);
+        //setLikeCount(initialLikeCount);
+      }, [initialIsCrowned]);
+
     const handleLikeClick = () => {
         
 		if (authUser) {
@@ -44,11 +49,15 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
 
     const handleCrownClick = async () => {
 
+        //don't allow uncrown
+        // if (isCrowned)
+        //     return;
+
         const newIsCrowned = !isCrowned;
 
         // if (isCrowned)
         //     return;
-        if (!authUser)
+        if (!authUser || isUpdating)
             return;
 
         setIsCrowned(newIsCrowned);
@@ -72,7 +81,7 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
 			await handleCrownPost();
             setIsCrowned(!newIsCrowned);
 			//setCrowns(newCrowns);
-
+            console.log("end: " + newIsCrowned);
             } catch (error) {
                 console.error("Error handling like click:", error);
                 setIsCrowned(!newIsCrowned); // Rollback on error

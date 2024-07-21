@@ -26,7 +26,7 @@ const useCrownPost = (post) => {
         }
     }, [authUser]);
 
-    //console.log(crownCount);
+    console.log(crownCount);
 
 	const handleCrownPost = async () => {
 		if (isUpdating) return;
@@ -64,7 +64,7 @@ const useCrownPost = (post) => {
 
 			setIsCrowned(!isCrowned);
             isCrowned ? decrementCrownCount() : incrementCrownCount();
-			isCrowned ? setCrowns(crowns - 1) : setCrowns(crowns + 1);
+			//isCrowned ? setCrowns(crowns - 1) : setCrowns(crowns + 1);
 		} catch (error) {
 			showToast("Error", error.message, "error");
 		} finally {
