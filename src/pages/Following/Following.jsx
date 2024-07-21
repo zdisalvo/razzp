@@ -5,10 +5,11 @@ import { firestore } from '../../firebase/firebase';
 import useAuthStore from '../../store/authStore';
 import useFollowUserFP from '../../hooks/useFollowUserFP';
 import useFollowingUsers from '../../hooks/useFollowingUsers';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
+import { useNavigate, useParams } from 'react-router-dom'; // Import useNavigate for navigation
 
 const FollowingPage = () => {
-    const { following, userProfiles } = useFollowingUsers();
+    const { username } = useParams();
+    const { following, userProfiles } = useFollowingUsers(username);
     const [followStates, setFollowStates] = React.useState({});
     const authUser = useAuthStore((state) => state.user);
     const { handleFollowUser } = useFollowUserFP();
