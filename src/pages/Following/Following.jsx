@@ -1,5 +1,7 @@
 import React from 'react';
-import { Avatar, Button, Flex, Text, VStack, Container, Box } from '@chakra-ui/react';
+import { Avatar, Button, Flex, Text, VStack, Container, Box, IconButton, Heading } from '@chakra-ui/react';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCaretLeft } from "@fortawesome/free-solid-svg-icons";
 import { doc, getDoc } from 'firebase/firestore';
 import { firestore } from '../../firebase/firebase';
 import useAuthStore from '../../store/authStore';
@@ -14,6 +16,10 @@ const FollowingPage = () => {
     const authUser = useAuthStore((state) => state.user);
     const { handleFollowUser } = useFollowUserFP();
     const navigate = useNavigate(); // Initialize navigate
+
+    const handleGoBack = () => {
+        navigate(-1); // Navigate to the previous page
+    };
 
     React.useEffect(() => {
         const followState = {};
@@ -60,6 +66,16 @@ const FollowingPage = () => {
     return (
         <Container top={0} p={0} maxW={{ base: '100vw', md: '100vw' }} pb={{ base: '10vh', md: '60px' }} m={0}>
             <Box padding="4" maxW="3xl" mx="auto">
+            <Flex align="center" mb={4}>
+                    <IconButton
+                        icon={<FontAwesomeIcon fontSize={32} icon={faCaretLeft} />}
+                        aria-label="Go back"
+                        variant="ghost"
+                        onClick={handleGoBack}
+                        mr={4}
+                    />
+                    <Heading as="h1" size="lg">Following</Heading>
+                </Flex>
                 <VStack spacing={4} align="stretch" p={4}>
                     {following.map((userId) => {
                         const profile = userProfiles[userId];

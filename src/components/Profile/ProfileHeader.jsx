@@ -3,8 +3,9 @@ import useUserProfileStore from "../../store/userProfileStore";
 import useAuthStore from "../../store/authStore";
 import EditProfile from "./EditProfile";
 import useFollowUser from "../../hooks/useFollowUser";
+import { Link } from "react-router-dom";
 
-const ProfileHeader = () => {
+const ProfileHeader = ({ username, page }) => {
 	const { userProfile } = useUserProfileStore();
 	const authUser = useAuthStore((state) => state.user);
 	const { isOpen, onOpen, onClose } = useDisclosure();
@@ -64,16 +65,20 @@ const ProfileHeader = () => {
 						Posts
 					</Text>
 					<Text fontSize={{ base: "xs", md: "sm" }}>
-						<Text as='span' fontWeight={"bold"} mr={1}>
-							{userProfile.followers.length}
-						</Text>
-						Followers
+					<Link to={`/${username}/followers`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                        <Text as='span' fontWeight={"bold"} mr={1}>
+                            {userProfile.followers.length}
+                        </Text>
+                        Followers
+                    </Link>
 					</Text>
 					<Text fontSize={{ base: "xs", md: "sm" }}>
+					<Link to={`/${username}/following`} style={{ textDecoration: 'none', color: 'inherit' }}>
 						<Text as='span' fontWeight={"bold"} mr={1}>
 							{userProfile.following.length}
 						</Text>
 						Following
+					</Link>
 					</Text>
 				</Flex>
 				<Flex alignItems={"center"} gap={4}>
