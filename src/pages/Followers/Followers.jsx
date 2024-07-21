@@ -20,7 +20,7 @@ const FollowersPage = () => {
                 const userDoc = await getDoc(userRef);
                 if (userDoc.exists()) {
                     const followerIds = userDoc.data().followers || [];
-                    setFollowers(followerIds);
+                    setFollowers(followerIds.reverse()); // Reverse the order here
                 }
             }
         };
@@ -48,12 +48,24 @@ const FollowersPage = () => {
     }, [followers, authUser]);
 
     const handleFollowClick = async (userId) => {
-        const isFollowing = followStates[userId];
-        await handleFollowUser(userId, isFollowing);
-        setFollowStates((prevStates) => ({
+        const isCurrentlyFollowing = followStates[userId];
+        
+        // Optimistically update the state
+        setFollowStates(prevStates => ({
             ...prevStates,
-            [userId]: !prevStates[userId]
+            [userId]: !isCurrentlyFollowing
         }));
+        
+        try {
+            await handleFollowUser(userId, isCurrentlyFollowing);
+        } catch (error) {
+            console.error('Error updating follow status:', error);
+            // Rollback optimistic update in case of error
+            setFollowStates(prevStates => ({
+                ...prevStates,
+                [userId]: isCurrentlyFollowing
+            }));
+        }
     };
 
     return (
@@ -63,7 +75,6 @@ const FollowersPage = () => {
                     {followers.map((userId) => {
                         const profile = userProfiles[userId];
                         const isFollowing = followStates[userId];
-                        console.log(userId);
                         return (
                             <Flex key={userId} align="center" gap={4}>
                                 <Avatar src={profile?.profilePicURL} />
