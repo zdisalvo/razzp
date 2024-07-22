@@ -1,7 +1,9 @@
-import { Avatar, Box, Button, Flex, Skeleton, SkeletonCircle } from "@chakra-ui/react";
+import { Avatar, Box, Button, Flex, Skeleton, SkeletonCircle, IconButton, Text } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { MdDelete } from "react-icons/md";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { doc, deleteDoc, updateDoc, arrayRemove } from "firebase/firestore";
 import { ref, deleteObject } from "firebase/storage";
 import useFollowUser from "../../hooks/useFollowUser";
@@ -76,13 +78,15 @@ const PostHeader = ({ post, creatorProfile }) => {
           <SkeletonCircle size='10' />
         )}
 
-        <Flex fontSize={12} fontWeight={"bold"} gap='2' >
-          {creatorProfile ? (
-            <Link to={`/${userProfile.username}`} >{userProfile.username}</Link>
+        <Flex fontSize={12}  gap='2' >
+          <Box fontWeight={"bold"}>
+          {creatorProfile && userProfile ? (
+            <Link to={`/${userProfile.username || ""}`} >{userProfile.username || "Deleted User"}</Link>
           ) : (
-            <Skeleton w={"100px"} h={"10px"} />
+            <Text>Deleted User</Text>
           )}
-          <Box color={"gray.500"}>• {timeAgo(post.createdAt)}</Box>
+          </Box>
+          <Box fontWeight={"regular"} color={"gray.500"}>• {timeAgo(post.createdAt)}</Box>
         </Flex>
       </Flex>
       <Flex alignItems={"center"} gap={2} m={3}>
@@ -105,7 +109,7 @@ const PostHeader = ({ post, creatorProfile }) => {
         </Box>
         {authUser?.uid === userProfile?.uid && (
           <Box cursor={"pointer"}>
-            <Button
+            {/* <Button
               size={"xs"}
               bg={"transparent"}
               _hover={{ bg: "whiteAlpha.300", color: "red.600" }}
@@ -113,9 +117,19 @@ const PostHeader = ({ post, creatorProfile }) => {
               p={1}
               onClick={handleDeletePost}
               isLoading={isDeleting}
-            >
-              <MdDelete size={20} cursor='pointer' />
-            </Button>
+            > */}
+              {/* <MdDelete size={20} cursor='pointer' /> */}
+              <IconButton
+                  icon={<FontAwesomeIcon icon={faTrash} />}
+                  aria-label="Delete Post"
+      onClick={handleDeletePost}
+      variant="ghost" // Transparent background with no border
+      _hover={{ bg: "transparent", color: "red.600" }} // Transparent on hover
+      _active={{ bg: "transparent" }} // Transparent when active
+      isLoading={isDeleting}
+      size="xs" // Adjust the size if needed
+                />
+            
           </Box>
         )}
       </Flex>
