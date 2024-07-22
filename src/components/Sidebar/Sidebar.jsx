@@ -17,8 +17,8 @@ const Sidebar = () => {
 	return (
 	
 	<Box
-		height={{base: "10vh", md: "60px"}}
-		width={{base: "100vw", md: "70vw"}}
+		height={{base: "10vh", lg: "60px"}}
+		width={{base: "100vw", lg: "70vw"}}
 		//alignItems={"center"}
 		//justifyContent={"center"}
 		borderTop={"1px solid"}
@@ -29,25 +29,25 @@ const Sidebar = () => {
     
     mx={0}
 
-		left={{ base: 0, md: "50%" }} // Center horizontally on medium and larger screens
-      	transform={{ base: "none", md: "translateX(-50%)" }} // Center horizontally on medium and larger screens
+		left={{ base: 0, lg: "50%" }} // Center horizontally on medium and larger screens
+      	transform={{ base: "none", lg: "translateX(-50%)" }} // Center horizontally on medium and larger screens
       
 
 		//left={0}
-		px={{ base: 0, md: 2 }}
+		px={{ base: 0, lg: 2 }}
 		bg={"gray.900"}
 		zIndex={10}
 
     >
-      <Flex direction={"row"} justifyContent={"center"} alignItems={"center"} w='full' height="100%" gap={4}>
-        <Link ml={2} to={"/"} as={RouterLink} pl={2} display={{ base: "none", md: "none" }} cursor='pointer' >
+      <Flex direction={"row"} justifyContent={"center"} alignItems={"center"} w='full' height="100%" gap={2}>
+        <Link ml={2} to={"/"} as={RouterLink} pl={2} display={{ base: "none", lg: "none" }} cursor='pointer' >
           <Image src="/logo.png" />
         </Link>
         <Link
           to={"/"}
           as={RouterLink}
           p={2}
-          display={{ base: "block", md: "flex" }}
+          display={{ base: "block", lg: "flex" }}
           borderRadius={6}
           _hover={{
             bg: "whiteAlpha.200",
@@ -68,7 +68,7 @@ const Sidebar = () => {
           placement='top'
           ml={1}
           openDelay={500}
-          display={{ base: "block", md: "none" }}
+          display={{ base: "block", lg: "none" }}
           mr={2}
         >
           <Flex
@@ -79,11 +79,11 @@ const Sidebar = () => {
             borderRadius={6}
             p={2}
             //w={{ base: 10, md: "full" }}
-            justifyContent={{ base: "center", md: "center" }}
+            justifyContent={{ base: "center", lg: "center" }}
           >
             <BiLogOut size={25} />
             <Button
-              display={{ base: "none", md: "block" }}
+              display={{ base: "none", lg: "block" }}
               variant={"ghost"}
               _hover={{ bg: "transparent" }}
               isLoading={isLoggingOut}

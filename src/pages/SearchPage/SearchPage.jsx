@@ -19,8 +19,12 @@ import {
   import SuggestedUser from "../../components/SuggestedUsers/SuggestedUser";
   import { debounce } from "lodash";
   import { useNavigate } from "react-router-dom";
+  import useAuthStore from "../../store/authStore";
+  import { storeUserLocation } from "../../hooks/storeUserLocation";
+  import { unstoreUserLocation } from "../../hooks/unstoreUserLocation";
   
   const SearchPage = () => {
+    const authUser = useAuthStore((state) => state.user);
     const { users: nearbyUsers, isLoading: isLoadingNearby, getUserProfiles: getNearbyUserProfiles } = useSearchNearbyUsers();
     const { users: searchedUsers, isLoading: isLoadingSearch, getUserProfiles: getUserProfilesSearch } = useSearchUser();
     const [searchQuery, setSearchQuery] = useState("");
@@ -41,7 +45,7 @@ import {
     const debounceSearch = debounce((query) => {
       if (query.trim() !== "") {
         if (isToggled && userLocation.latitude && userLocation.longitude) {
-          getNearbyUserProfiles(query, userLocation.latitude, userLocation.longitude, 20000); // 20km radius
+          getNearbyUserProfiles(query, userLocation.latitude, userLocation.longitude, 48000); // 20km radius
         } else {
           getUserProfilesSearch(query);
         }
@@ -59,6 +63,7 @@ import {
               (position) => {
                 const { latitude, longitude } = position.coords;
                 setUserLocation({ latitude, longitude });
+                storeUserLocation(authUser.uid, latitude, longitude);
                 debounceSearch(searchQuery);
               },
               (error) => {
@@ -71,7 +76,10 @@ import {
           }
         };
         getCurrentLocation();
-      }
+      } 
+    //   else {
+    //     unstoreUserLocation(authUser.uid);
+    //   }
     }, [isToggled]);
   
     useEffect(() => {

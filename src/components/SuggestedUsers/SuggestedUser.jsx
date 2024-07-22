@@ -19,7 +19,7 @@ const SuggestedUser = ({ user, setUser }) => {
 
 	return (
 		<Flex justifyContent={"space-between"} alignItems={"center"} w={"full"}>
-			<Flex alignItems={"center"} gap={2}>
+			<Flex alignItems={"center"} gap={2} ml={4}>
 				<Link to={`/${user.username}`}>
 					<Avatar src={user.profilePicURL} size={"md"} />
 				</Link>
@@ -50,6 +50,7 @@ const SuggestedUser = ({ user, setUser }) => {
 					fontSize={13}
 					bg={"transparent"}
 					p={0}
+					mr={6}
 					h={"max-content"}
 					fontWeight={"medium"}
 					color={"blue.400"}

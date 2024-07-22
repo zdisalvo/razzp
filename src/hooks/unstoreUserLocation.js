@@ -3,10 +3,10 @@ import * as geofireCommon from 'geofire-common';
 import { collection, doc, updateDoc} from "firebase/firestore";
 
 
-const usersCollection = collection(firestore, 'users'); // Assuming 'users' is your Firestore collection
+//const usersCollection = collection(firestore, 'users'); // Assuming 'users' is your Firestore collection
 
-const storeUserLocation = async (userId, latitude, longitude) => {
-  const geohash = geofireCommon.geohashForLocation([latitude, longitude]);
+const unstoreUserLocation = async (userId) => {
+  
 
   const userDocRef = doc(firestore, `users/${userId}`); // Assuming userId is passed from auth or context
   
@@ -16,8 +16,8 @@ const storeUserLocation = async (userId, latitude, longitude) => {
 // })
 
   return updateDoc(userDocRef, {
-    geohash: geohash,
-    location: [latitude, longitude] // Optionally store location for easier querying or display
+    geohash: "",
+    location: [] // Optionally store location for easier querying or display
   })
   .then(() => {
     //console.log("Geohash and location stored successfully.");
@@ -29,4 +29,4 @@ const storeUserLocation = async (userId, latitude, longitude) => {
   });
 };
 
-export {storeUserLocation};
+export {unstoreUserLocation};
