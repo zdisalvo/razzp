@@ -32,15 +32,18 @@ const ProfileLink = () => {
 				_hover={{ bg: "whiteAlpha.400" }}
 				borderRadius={6}
 				p={1}
+				ml={0}
 				mr={0}
 				w={{ base: 10, md: "full" }}
 				justifyContent={{ base: "center", md: "flex-start" }}
-				color={location.pathname === `/${authUser?.username}` ? activeColor : "inherit"}
+				//color={location.pathname === `/${authUser?.username}` ? activeColor : "inherit"}
+				color="inherit"
 				//_active={activeStyles} // Apply active styles
         		//_focus={activeStyles} // Apply active styles
 			>
 				<Avatar size={"sm"} src={authUser?.profilePicURL || ""} />
-				<Box display={{ base: "none", md: "block" }} style={location.pathname === `/${authUser?.username}` ? activeStyles : {}}>Profile</Box>
+				<Box display={{ base: "none", md: "block" }} >Profile</Box>
+				{/* style={location.pathname === `/${authUser?.username}` ? activeStyles : {}} */}
 			</Link>
 		</Tooltip>
 	);

@@ -27,10 +27,10 @@ const SparkMatches = () => {
 			>
                 <Box >
 				<Image 
-				width="60px"
+				width="40px"
 				src="/matches.png" />
                 </Box>
-				<Box display={{ base: "none", md: "block" }}>Matches</Box>
+				<Box display={{ base: "none", md: "block" }}>Match</Box>
 			</Link>
 		</Tooltip>
 	);

@@ -6,10 +6,11 @@ import useGetSparkProfileById from "../../hooks/useGetSparkProfileById";
 import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore";
 import { firestore } from "../../firebase/firebase";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faLocationDot, faSliders } from '@fortawesome/free-solid-svg-icons';
+import { faLocationDot, faSliders, faUserPen } from '@fortawesome/free-solid-svg-icons';
 import FilterUserModal from "./FilterUserModal";
 import { useState, useEffect, useCallback } from "react";
 import { storeSparkUserLocation } from "../../hooks/storeSparkUserLocation";
+import { useNavigate } from 'react-router-dom';
 
 const Spark = () => {
     const authUser = useAuthStore((state) => state.user);
@@ -22,6 +23,12 @@ const Spark = () => {
     const [isFetchingLocation, setIsFetchingLocation] = useState(false);
 
     //console.log(sparkProfile);
+
+    const navigate = useNavigate();
+
+  const goToSparkEdit = () => {
+    navigate('/spark/edit');
+  };
     
 
     const getCurrentLocation = () => {
@@ -89,6 +96,15 @@ const Spark = () => {
                   variant="outline"
                   mx={2} // Adds horizontal margin between the icons
                 />
+                <IconButton
+                  icon={<FontAwesomeIcon icon={faUserPen} />}
+                  aria-label="Edit My Profile"
+                  onClick={goToSparkEdit}
+                  variant="outline"
+                  mr={2} // Adds horizontal margin between the icons
+                />
+
+
                 <IconButton
                   icon={<FontAwesomeIcon icon={faSliders} />}
                   aria-label="Filter users"

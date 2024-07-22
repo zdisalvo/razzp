@@ -6,7 +6,7 @@ import { doc, getDoc } from 'firebase/firestore';
 import { firestore } from '../../firebase/firebase';
 import useAuthStore from '../../store/authStore';
 import useFollowUserFP from '../../hooks/useFollowUserFP';
-import { useNavigate, useParams } from 'react-router-dom'; 
+import { useNavigate, useParams, Link } from 'react-router-dom'; 
 import useGetUserProfileByUsername from '../../hooks/useGetUserProfileByUsername';
 
 const FollowersPage = () => {
@@ -115,28 +115,25 @@ const FollowersPage = () => {
 
     if (profileLoading || loading) {
         return (
-            <Container top={0} p={0} maxW={{ base: '100vw', md: '100vw' }} pb={{ base: '10vh', md: '60px' }} m={0}>
-                <Box padding="4" maxW="3xl" mx="auto" textAlign="center">
+            <Container py={6} px={0} w={['100vw', null, '80vh']}>
                     <Spinner size="xl" />
                     <Text>Loading...</Text>
-                </Box>
+                
             </Container>
         );
     }
 
     if (error || profileError) {
         return (
-            <Container top={0} p={0} maxW={{ base: '100vw', md: '100vw' }} pb={{ base: '10vh', md: '60px' }} m={0}>
-                <Box padding="4" maxW="3xl" mx="auto" textAlign="center">
+            <Container py={6} px={0} w={['100vw', null, '80vh']}>
                     <Text color="red.500">Error loading data</Text>
-                </Box>
+                
             </Container>
         );
     }
 
     return (
-        <Container top={0} p={0} maxW={{ base: '100vw', md: '100vw' }} pb={{ base: '10vh', md: '60px' }} m={0}>
-            <Box padding="4" maxW="3xl" mx="auto">
+        <Container py={6} px={0} w={['100vw', null, '80vh']}>
                 <Flex align="center" mb={4}>
                     <IconButton
                         icon={<FontAwesomeIcon fontSize={32} icon={faCaretLeft} />}
@@ -161,8 +158,10 @@ const FollowersPage = () => {
                                     cursor="pointer"
                                 />
                                 <VStack align="start">
+                                    <Link onClick={() => handleAvatarClick(userId)}>
                                     <Text fontWeight="bold">{profile?.username}</Text>
                                     <Text fontSize="sm">{profile?.fullName}</Text>
+                                    </Link>
                                 </VStack>
                                 <Button
                                     ml="auto"
@@ -175,7 +174,7 @@ const FollowersPage = () => {
                         );
                     })}
                 </VStack>
-            </Box>
+            
         </Container>
     );
 };

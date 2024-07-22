@@ -99,8 +99,7 @@ const NotificationsPage = () => {
     };
 
     return (
-        <Container top={0} p={0} maxW={{ base: "100vw", md: "100vw" }} pb={{ base: "10vh", md: "60px" }} m={0}>
-            <Box padding="4" maxW="3xl" mx="auto">
+        <Container py={6} px={0} w={['100vw', null, '80vh']}>
                 <Flex align="center" mb={4}>
                     <IconButton
                         icon={<FontAwesomeIcon fontSize={32} icon={faCaretLeft} />}
@@ -189,7 +188,7 @@ const NotificationsPage = () => {
                         );
                     })}
                 </List>
-            </Box>
+            
         </Container>
     );
 };

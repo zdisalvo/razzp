@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Box, Button, Container, Flex, Image } from "@chakra-ui/react";
+import { Box, Button, Container, Flex, Image, IconButton } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faComments,  } from "@fortawesome/free-solid-svg-icons";
+import { faBolt, faCommentDots, faTrophy } from "@fortawesome/free-solid-svg-icons";
 import FeedPostsOrig from "../../components/FeedPosts/FeedPostsOrig";
 import SuggestedUsers from "../../components/SuggestedUsers/SuggestedUsers";
 import { storeUserLocation } from "../../hooks/storeUserLocation";
@@ -13,6 +13,11 @@ const HomePage = () => {
   const userAuth = authStore((state) => state.user);
   const [isFetchingLocation, setIsFetchingLocation] = useState(false);
   const navigate = useNavigate();
+
+  const handleTop5Click = () => {
+    navigate("/top5");
+  };
+
 
     const handleMessagesClick = () => {
         navigate("/messages");
@@ -71,7 +76,28 @@ const HomePage = () => {
     <Container p={0} maxW={{ base: "100vw", md: "100vw" }} m={0}>
       <Box position="fixed" top="0" right={{base: "0", md: "15vw"}} p={4} zIndex="docked" width="100%">
                 <Flex justifyContent="flex-end" alignItems="center">
-                  <Box>
+                <IconButton
+                  icon={<FontAwesomeIcon icon={faTrophy} />}
+                  aria-label="Top 5"
+                  onClick={handleTop5Click}
+                  variant="outline"
+                  mx={2} // Adds horizontal margin between the icons
+                />
+                <IconButton
+                  icon={<FontAwesomeIcon icon={faBolt} />}
+                  aria-label="Notifications"
+                  onClick={handleNotificationsClick}
+                  variant="outline"
+                  mr={2} // Adds horizontal margin between the icons
+                />
+                <IconButton
+                  icon={<FontAwesomeIcon icon={faCommentDots} />}
+                  aria-label="Messages"
+                  onClick={handleMessagesClick}
+                  variant="outline"
+                   // Adds horizontal margin between the icons
+                />
+                  {/* <Box>
                 <Image 
                   src="/blue-crown-small.png"
                   aria-label="Top 5"
@@ -101,7 +127,7 @@ const HomePage = () => {
                   //variant="outline"
                   mx={2} 
                 />
-                </Box>
+                </Box> */}
                 </Flex>
             </Box>
       <Box

@@ -7,7 +7,7 @@ import { firestore } from '../../firebase/firebase';
 import useAuthStore from '../../store/authStore';
 import useFollowUserFP from '../../hooks/useFollowUserFP';
 import useFollowingUsers from '../../hooks/useFollowingUsers';
-import { useNavigate, useParams } from 'react-router-dom'; // Import useNavigate for navigation
+import { useNavigate, useParams, Link } from 'react-router-dom'; // Import useNavigate for navigation
 
 const FollowingPage = () => {
     const { username } = useParams();
@@ -64,8 +64,7 @@ const FollowingPage = () => {
     };
 
     return (
-        <Container top={0} p={0} maxW={{ base: '100vw', md: '100vw' }} pb={{ base: '10vh', md: '60px' }} m={0}>
-            <Box padding="4" maxW="3xl" mx="auto">
+        <Container py={6} px={0} w={['100vw', null, '80vh']}>
             <Flex align="center" mb={4}>
                     <IconButton
                         icon={<FontAwesomeIcon fontSize={32} icon={faCaretLeft} />}
@@ -90,8 +89,10 @@ const FollowingPage = () => {
                                     cursor="pointer"
                                 />
                                 <VStack align="start">
+                                    <Link onClick={() => handleAvatarClick(userId)} >
                                     <Text fontWeight="bold">{profile?.username}</Text>
                                     <Text fontSize="sm">{profile?.fullName}</Text>
+                                    </Link>
                                 </VStack>
                                 <Button
                                     ml="auto"
@@ -104,7 +105,7 @@ const FollowingPage = () => {
                         );
                     })}
                 </VStack>
-            </Box>
+            
         </Container>
     );
 };

@@ -18,16 +18,17 @@ const SidebarItems = () => {
 		<>
 			{/* <Home /> */}
 			<Search />
+			<CreatePost /> 
 			<SparkMenu />
-			{currentPath === '/spark' && <SparkEdit />}
+			{/* {currentPath === '/spark' && <SparkEdit />}
 			{currentPath === '/spark/edit' && <SparkEdit />}
 			{currentPath === '/spark/matches' && <SparkEdit />}
-			{currentPath === '/spark/matches/msg' && <SparkEdit />}
+			{currentPath === '/spark/matches/msg' && <SparkEdit />} */}
 			{currentPath === '/spark' && <SparkMatches />}
 			{currentPath === '/spark/edit' && <SparkMatches />}
 			{currentPath === '/spark/matches' && <SparkMatches />}
 			{currentPath === '/spark/matches/msg' && <SparkMatches />}
-			{currentPath !== '/spark' && currentPath !== '/spark/edit' && currentPath !== '/spark/matches' && currentPath !== '/spark/matches/msg' && <CreatePost /> }
+			
 			{currentPath !== '/spark' && currentPath !== '/spark/edit' && currentPath !== '/spark/matches' && currentPath !== '/spark/matches/msg' && <ProfileLink /> }
 		</>
 	);

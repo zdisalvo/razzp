@@ -18,7 +18,7 @@ const Sidebar = () => {
 	
 	<Box
 		height={{base: "10vh", md: "60px"}}
-		width={{base: "100vw", md: "625px"}}
+		width={{base: "100vw", md: "652px"}}
 		//alignItems={"center"}
 		//justifyContent={"center"}
 		borderTop={"1px solid"}
@@ -47,6 +47,7 @@ const Sidebar = () => {
           to={"/"}
           as={RouterLink}
           p={1}
+          ml={3}
           display={{ base: "block", md: "flex" }}
           borderRadius={6}
           _hover={{
