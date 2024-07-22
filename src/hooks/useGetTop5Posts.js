@@ -7,6 +7,7 @@ const calculateRankingScore = (post) => {
     const postTime = new Date(post.createdAt);
     const currentTime = new Date();
     const elapsedTimeInDays = (currentTime - postTime) / (1000 * 60 * 60 * 24);
+    console.log(post.score / (elapsedTimeInDays + 1));
     return post.score / (elapsedTimeInDays + 1);
 };
 

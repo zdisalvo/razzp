@@ -25,7 +25,7 @@ const useSearchUser = () => {
         user.fullName.toLowerCase().startsWith(lowerCaseQuery)
       );
 
-	  console.log(filteredUsers);
+	  //console.log(filteredUsers);
 
       setUsers(filteredUsers);
     } catch (error) {
