@@ -9,20 +9,27 @@ import {
     Flex,
     IconButton,
     Heading,
+    Switch
   } from "@chakra-ui/react";
   import { useState, useEffect } from "react";
   import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCaretLeft } from "@fortawesome/free-solid-svg-icons";
+  import { faCaretLeft } from "@fortawesome/free-solid-svg-icons";
+  import useSearchNearbyUsers from "../../hooks/useSearchNearbyUsers";
   import useSearchUser from "../../hooks/useSearchUser";
   import SuggestedUser from "../../components/SuggestedUsers/SuggestedUser";
   import { debounce } from "lodash";
+  import { useNavigate } from "react-router-dom";
   
   const SearchPage = () => {
-    const { users, isLoading, getUserProfiles, setUsers } = useSearchUser();
+    const { users: nearbyUsers, isLoading: isLoadingNearby, getUserProfiles: getNearbyUserProfiles } = useSearchNearbyUsers();
+    const { users: searchedUsers, isLoading: isLoadingSearch, getUserProfiles: getUserProfilesSearch } = useSearchUser();
     const [searchQuery, setSearchQuery] = useState("");
-
+    const [isToggled, setIsToggled] = useState(false);
+    const [userLocation, setUserLocation] = useState({ latitude: null, longitude: null });
+    const navigate = useNavigate();
+  
     const handleGoBack = () => {
-        navigate(-1); // Navigate to the previous page
+      navigate(-1); // Navigate to the previous page
     };
   
     const handleSearchChange = (e) => {
@@ -33,11 +40,39 @@ import { faCaretLeft } from "@fortawesome/free-solid-svg-icons";
   
     const debounceSearch = debounce((query) => {
       if (query.trim() !== "") {
-        getUserProfiles(query);
+        if (isToggled && userLocation.latitude && userLocation.longitude) {
+          getNearbyUserProfiles(query, userLocation.latitude, userLocation.longitude, 20000); // 20km radius
+        } else {
+          getUserProfilesSearch(query);
+        }
       } else {
-        setUsers([]);
+        // Clear users if query is empty
       }
     }, 500);
+  
+    useEffect(() => {
+      // Get current location if the proximity toggle is on
+      if (isToggled) {
+        const getCurrentLocation = () => {
+          if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+              (position) => {
+                const { latitude, longitude } = position.coords;
+                setUserLocation({ latitude, longitude });
+                debounceSearch(searchQuery);
+              },
+              (error) => {
+                console.error('Error getting current location:', error);
+                // Handle error appropriately
+              }
+            );
+          } else {
+            console.error('Geolocation is not supported by this browser.');
+          }
+        };
+        getCurrentLocation();
+      }
+    }, [isToggled]);
   
     useEffect(() => {
       return () => {
@@ -46,38 +81,48 @@ import { faCaretLeft } from "@fortawesome/free-solid-svg-icons";
     }, []);
   
     return (
-        <Container top={0} p={0} maxW={{ base: "100vw", md: "100vw" }} pb={{ base: "10vh", md: "60px" }} m={0}>
-      <Box padding="4" maxW="3xl" mx="auto">
-                <Flex align="center" mb={4}>
-                    <IconButton
-                        icon={<FontAwesomeIcon fontSize={32} icon={faCaretLeft} />}
-                        aria-label="Go back"
-                        variant="ghost"
-                        onClick={handleGoBack}
-                        mr={4} // Add margin-right to space out from the heading
-                    />
-                    <Heading as="h1" size="lg">Search</Heading>
-                </Flex>
-        <FormControl>
-          <Input
-            placeholder="Search for users..."
-            value={searchQuery}
-            onChange={handleSearchChange}
-          />
-        </FormControl>
-        {isLoading && <Spinner mt={4} />}
-        {!isLoading && (
-          <VStack mt={4} spacing={4}>
-            {users.length > 0 ? (
-              users.map((user) => (
-                <SuggestedUser key={user.uid} user={user} setUser={setUsers} />
-              ))
-            ) : (
-              <Text>No users found</Text>
-            )}
-          </VStack>
-        )}
-      </Box>
+      <Container top={0} p={0} maxW={{ base: "100vw", md: "100vw" }} pb={{ base: "10vh", md: "60px" }} m={0}>
+        <Box padding="4" maxW="3xl" mx="auto">
+          <Flex align="center" mb={4} justify="space-between">
+            <Flex align="center">
+              <IconButton
+                icon={<FontAwesomeIcon fontSize={32} icon={faCaretLeft} />}
+                aria-label="Go back"
+                variant="ghost"
+                onClick={handleGoBack}
+                mr={4}
+              />
+              <Heading as="h1" size="lg">Search</Heading>
+            </Flex>
+            <Flex ml="auto" mr={5}>
+              <Text mr={4}>Proximity</Text>
+              <Switch
+                isChecked={isToggled}
+                onChange={() => setIsToggled(!isToggled)}
+                size="md"
+              />
+            </Flex>
+          </Flex>
+          <FormControl>
+            <Input
+              placeholder="Search for users..."
+              value={searchQuery}
+              onChange={handleSearchChange}
+            />
+          </FormControl>
+          {(isLoadingNearby || isLoadingSearch) && <Spinner mt={4} />}
+          {!isLoadingNearby && !isLoadingSearch && (
+            <VStack mt={4} spacing={4}>
+              {(isToggled && userLocation.latitude && userLocation.longitude ? nearbyUsers : searchedUsers).length > 0 ? (
+                (isToggled && userLocation.latitude && userLocation.longitude ? nearbyUsers : searchedUsers).map((user) => (
+                  <SuggestedUser key={user.userId} user={user} />
+                ))
+              ) : (
+                <Text>No users found</Text>
+              )}
+            </VStack>
+          )}
+        </Box>
       </Container>
     );
   };

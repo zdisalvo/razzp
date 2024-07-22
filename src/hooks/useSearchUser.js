@@ -1,6 +1,7 @@
+// useSearchUser.js
 import { useState } from "react";
 import useShowToast from "./useShowToast";
-import { collection, getDocs, query, orderBy, limit } from "firebase/firestore";
+import { collection, getDocs, query, orderBy } from "firebase/firestore";
 import { firestore } from "../firebase/firebase";
 
 const useSearchUser = () => {
@@ -14,7 +15,7 @@ const useSearchUser = () => {
     try {
       const lowerCaseQuery = searchQuery.toLowerCase();
       const usersCollection = collection(firestore, "users");
-      const usersQuery = query(usersCollection, orderBy("username")); // Adjust limit as needed
+      const usersQuery = query(usersCollection, orderBy("username"));
 
       const usersSnapshot = await getDocs(usersQuery);
       const allUsers = usersSnapshot.docs.map(doc => doc.data());
@@ -24,9 +25,7 @@ const useSearchUser = () => {
         user.fullName.toLowerCase().startsWith(lowerCaseQuery)
       );
 
-    //   if (filteredUsers.length === 0) {
-    //     showToast("Error", "User not found", "error");
-    //   }
+	  console.log(filteredUsers);
 
       setUsers(filteredUsers);
     } catch (error) {
@@ -37,7 +36,7 @@ const useSearchUser = () => {
     }
   };
 
-  return { isLoading, getUserProfiles, users, setUsers };
+  return { isLoading, getUserProfiles, users, setUserSearchQuery: setUsers };
 };
 
 export default useSearchUser;
