@@ -80,10 +80,15 @@ const PostHeader = ({ post, creatorProfile }) => {
 
         <Flex fontSize={12}  gap='2' >
           <Box fontWeight={"bold"}>
-          {creatorProfile && userProfile ? (
+          {/* {creatorProfile && userProfile ? (
             <Link to={`/${userProfile.username || ""}`} >{userProfile.username || "Deleted User"}</Link>
           ) : (
             <Text>Deleted User</Text>
+          )} */}
+          {creatorProfile && userProfile ? (
+            <Link to={`/${userProfile.username}`} >{userProfile.username}</Link>
+          ) : (
+            <Skeleton w={"100px"} h={"10px"} />
           )}
           </Box>
           <Box fontWeight={"regular"} color={"gray.500"}>• {timeAgo(post.createdAt)}</Box>
