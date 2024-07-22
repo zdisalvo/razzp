@@ -24,14 +24,25 @@ const SuggestedUser = ({ user, setUser }) => {
 					<Avatar src={user.profilePicURL} size={"md"} />
 				</Link>
 				<VStack spacing={2} alignItems={"flex-start"}>
-					<Link to={`/${user.username}`}>
+				<Link to={`/${user.username}`}>
+					<Flex justifyContent="center" alignItems="baseline">
 						<Box fontSize={12} fontWeight={"bold"}>
+							{user.username}
+						</Box>
+						
+						<Box fontSize={11} color={"gray.500"} ml={2}>
 							{user.fullName}
 						</Box>
-					</Link>
-					<Box fontSize={11} color={"gray.500"}>
+					
+					</Flex>
+						<Box fontSize={11} color={"gray.500"}>
 						{user.followers.length} followers
-					</Box>
+						</Box>
+					</Link>
+					
+					{/* <Box fontSize={11} color={"gray.500"}>
+						{user.followers.length} followers
+					</Box> */}
 				</VStack>
 			</Flex>
 			{authUser.uid !== user.uid && (

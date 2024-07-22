@@ -1,6 +1,6 @@
 import { useState } from "react";
 import useShowToast from "./useShowToast";
-import { collection, getDocs, query, where, orderBy, startAt, endAt } from "firebase/firestore";
+import { collection, getDocs, query, orderBy, limit } from "firebase/firestore";
 import { firestore } from "../firebase/firebase";
 
 const useSearchUser = () => {
@@ -12,37 +12,23 @@ const useSearchUser = () => {
     setIsLoading(true);
     setUsers([]);
     try {
+      const lowerCaseQuery = searchQuery.toLowerCase();
       const usersCollection = collection(firestore, "users");
+      const usersQuery = query(usersCollection, orderBy("username")); // Adjust limit as needed
 
-      const usernameQuery = query(
-        usersCollection,
-        orderBy("username"),
-        startAt(searchQuery),
-        endAt(searchQuery + "\uf8ff")
+      const usersSnapshot = await getDocs(usersQuery);
+      const allUsers = usersSnapshot.docs.map(doc => doc.data());
+
+      const filteredUsers = allUsers.filter(user =>
+        user.username.toLowerCase().startsWith(lowerCaseQuery) ||
+        user.fullName.toLowerCase().startsWith(lowerCaseQuery)
       );
 
-      const nameQuery = query(
-        usersCollection,
-        orderBy("name"),
-        startAt(searchQuery),
-        endAt(searchQuery + "\uf8ff")
-      );
+    //   if (filteredUsers.length === 0) {
+    //     showToast("Error", "User not found", "error");
+    //   }
 
-      const [usernameSnapshot, nameSnapshot] = await Promise.all([
-        getDocs(usernameQuery),
-        getDocs(nameQuery)
-      ]);
-
-      const usernameResults = usernameSnapshot.docs.map(doc => doc.data());
-      const nameResults = nameSnapshot.docs.map(doc => doc.data());
-
-      const combinedResults = [...usernameResults, ...nameResults];
-      const uniqueResults = Array.from(new Set(combinedResults.map(user => user.uid)))
-        .map(uid => combinedResults.find(user => user.uid === uid));
-
-      if (uniqueResults.length === 0) return showToast("Error", "User not found", "error");
-
-      setUsers(uniqueResults);
+      setUsers(filteredUsers);
     } catch (error) {
       showToast("Error", error.message, "error");
       setUsers([]);
