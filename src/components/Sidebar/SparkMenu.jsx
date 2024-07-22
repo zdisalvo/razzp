@@ -1,4 +1,4 @@
-import { Box, Link, Tooltip } from "@chakra-ui/react";
+import { Box, Link, Tooltip, Image } from "@chakra-ui/react";
 import { NotificationsLogo } from "../../assets/constants";
 import { Link as RouterLink } from "react-router-dom";
 
@@ -17,14 +17,18 @@ const SparkMenu = () => {
 				to={"/spark"}
 				as={RouterLink}
 				alignItems={"center"}
-				gap={4}
+				gap={3}
 				_hover={{ bg: "whiteAlpha.400" }}
 				borderRadius={6}
-				p={2}
+				p={1}
 				w={{ base: 10, md: "full" }}
 				justifyContent={{ base: "center", md: "flex-start" }}
 			>
-				<NotificationsLogo />
+				<Box >
+				<Image 
+				width="100px"
+				src="/firework3.png" />
+                </Box>
 				<Box display={{ base: "none", md: "block" }}>Spark</Box>
 			</Link>
 		</Tooltip>

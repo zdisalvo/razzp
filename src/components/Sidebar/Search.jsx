@@ -14,7 +14,7 @@ const Search = () => {
       hasArrow
       label={"Search"}
       placement='right'
-      ml={1}
+      ml={3}
       openDelay={500}
       display={{ base: "block", md: "none" }}
     >
@@ -22,10 +22,11 @@ const Search = () => {
         as={RouterLink}
         to="/search"
         alignItems={"center"}
-        gap={4}
+        gap={3}
         _hover={{ bg: "whiteAlpha.400" }}
         borderRadius={6}
         p={2}
+		ml={4}
         w={{ base: 10, md: "full" }}
         justifyContent={{ base: "center", md: "flex-start" }}
       >

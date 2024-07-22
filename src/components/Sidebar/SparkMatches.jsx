@@ -17,17 +17,18 @@ const SparkMatches = () => {
 				to={"/spark/matches"}
 				as={RouterLink}
 				alignItems={"center"}
-				gap={4}
+				gap={1}
 				_hover={{ bg: "whiteAlpha.400" }}
 				borderRadius={6}
 				p={2}
+				ml={0}
 				w={{ base: 10, md: "full" }}
 				justifyContent={{ base: "center", md: "flex-start" }}
 			>
                 <Box >
 				<Image 
-				width="110px"
-				src="/matches-icon-100.png" />
+				width="60px"
+				src="/matches.png" />
                 </Box>
 				<Box display={{ base: "none", md: "block" }}>Matches</Box>
 			</Link>

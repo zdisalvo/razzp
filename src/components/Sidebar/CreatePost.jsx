@@ -60,10 +60,10 @@ const CreatePost = () => {
 			>
 				<Flex
 					alignItems={"center"}
-					gap={4}
+					gap={3}
 					_hover={{ bg: "whiteAlpha.400" }}
 					borderRadius={6}
-					p={2}
+					p={1}
 					w={{ base: 10, md: "full" }}
 					justifyContent={{ base: "center", md: "flex-start" }}
 					onClick={onOpen}
@@ -157,9 +157,9 @@ function useCreatePost() {
 
 			newPost.imageURL = downloadURL;
 
-			if (userProfile.uid === authUser.uid) createPost({ ...newPost, id: postDocRef.id });
+			if (authUser) createPost({ ...newPost, id: postDocRef.id });
 
-			if (userProfile.uid === authUser.uid) addPost({ ...newPost, id: postDocRef.id });
+			if (authUser) addPost({ ...newPost, id: postDocRef.id });
 
 			showToast("Success", "Post created successfully", "success");
 		} catch (error) {

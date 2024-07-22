@@ -17,10 +17,10 @@ const SparkEdit = () => {
 				to={"/spark/edit"}
 				as={RouterLink}
 				alignItems={"center"}
-				gap={4}
+				gap={3}
 				_hover={{ bg: "whiteAlpha.400" }}
 				borderRadius={6}
-				p={2}
+				p={0}
 				w={{ base: 10, md: "full" }}
 				justifyContent={{ base: "center", md: "flex-start" }}
 			>

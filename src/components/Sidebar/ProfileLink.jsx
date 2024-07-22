@@ -28,10 +28,11 @@ const ProfileLink = () => {
 				to={`/${authUser?.username}`}
 				as={RouterLink}
 				alignItems={"center"}
-				gap={4}
+				gap={3}
 				_hover={{ bg: "whiteAlpha.400" }}
 				borderRadius={6}
-				p={2}
+				p={1}
+				mr={0}
 				w={{ base: 10, md: "full" }}
 				justifyContent={{ base: "center", md: "flex-start" }}
 				color={location.pathname === `/${authUser?.username}` ? activeColor : "inherit"}

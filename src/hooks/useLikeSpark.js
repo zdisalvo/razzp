@@ -53,24 +53,35 @@ const useLikeSpark = (sparkProfile) => {
     // console.log(matchObject);
     // console.log(matchDoc.exists());
   
-    if (match) {
-      //setMatch(true);
+    if (matchDoc.exists()) {
+      // Get the current list of matches
+      const data = matchDoc.data();
+      const currentMatches = data.matches || [];
   
-      if (matchDoc.exists()) {
-        await updateDoc(matchDocRef, {
-          matches: arrayUnion(matchObject)
-        });
-      } else {
+      // Check if the matchObject is already in the list of matches
+      const isAlreadyMatched = currentMatches.some(match => match.matchedUserId === matchedWith.uid);
+  
+      if (match) {
+        if (!isAlreadyMatched) {
+          // Add the new match to the list if it's not already there
+          await updateDoc(matchDocRef, {
+            matches: arrayUnion(matchObject)
+          });
+        }
+      } 
+      // else {
+      //   if (isAlreadyMatched) {
+      //     // Remove the match from the list if it's already there
+      //     await updateDoc(matchDocRef, {
+      //       matches: arrayRemove(matchObject)
+      //     });
+      //   }
+      // }
+    } else {
+      if (match) {
+        // If document does not exist and we want to add a match
         await setDoc(matchDocRef, {
           matches: [matchObject]
-        });
-      }
-    } else {
-      //setMatch(false);
-  
-      if (matchDoc.exists()) {
-        await updateDoc(matchDocRef, {
-          matches: arrayRemove(matchObject)
         });
       }
     }
