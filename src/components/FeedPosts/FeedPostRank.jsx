@@ -24,11 +24,11 @@ const FeedPost = forwardRef(({ post, rank }, ref) => {
           {rank && (
             <Box
               position="absolute"
-              bottom={2} // Adjust this value to move the badge up or down
-              right={2}
-              color="white" // Firetruck red color
+              bottom={3} // Adjust this value to move the badge up or down
+              right={3}
+              color="#eb7734" // Firetruck red color
               fontWeight="bold"
-              fontSize="xl"
+              fontSize="3xl"
               fontStyle="italic" // Italicize the text
               textAlign="center"
               px={2} // Optional: Add some padding for better visibility

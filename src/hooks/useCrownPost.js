@@ -90,9 +90,15 @@ const useCrownPost = (post) => {
             const currentTime = new Date();
             const crownClockTime = new Date(crownClock);
             const timeDiff = (currentTime - crownClockTime) / 1000; // Time difference in seconds
+
+            //60 * 60 * 24
+            
+            let timeRemaining = 24 - timeDiff / 3600;
+            timeRemaining = Math.round(timeRemaining);
+
     
-            if (timeDiff < 60) { // 60 seconds = 1 minute
-              showToast("Message", "Please wait for your crowns to refresh", "warning");
+            if (timeDiff < 86400) { // 60 seconds = 1 minute
+              showToast("Message", "Please wait " + timeRemaining + " hours for your crowns to refresh", "warning");
               return false; // Not allowed to like
             }
           }
