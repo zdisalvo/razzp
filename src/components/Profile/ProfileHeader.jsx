@@ -76,7 +76,8 @@ const ProfileHeader = ({ username, page }) => {
 
 	return (
 		<Flex gap={{ base: 4, sm: 10 }} py={1} direction={{ base: "column", sm: "row" }}>
-			<Container width="30%" p={0}>
+			
+			<Container width="40%" p={0}>
 			<Flex direction="column" alignItems="flex-end">
 				<Flex direction="column" alignItems="center">
 			<AvatarGroup size={{ base: "xl", md: "2xl" }}  mx={1}>
@@ -100,7 +101,7 @@ const ProfileHeader = ({ username, page }) => {
               <Switch
                 isChecked={isToggled}
                 onChange={() => setIsToggled(!isToggled)}
-                size="sm"
+                size="md"
                 colorScheme="orange"
               />
             </Flex>
@@ -108,51 +109,62 @@ const ProfileHeader = ({ username, page }) => {
 			</Flex>
 			</Flex>
 			</Container>
-			
+			<Container width="85%">
 			<VStack alignItems={"start"} gap={2} mx={0} flex={1}>
 				<Flex
-					gap={4}
+					gap={3}
 					direction={{ base: "row", sm: "row" }}
-					justifyContent={{ base: "flex-start", sm: "flex-start" }}
-					alignItems={"center"}
+					justifyContent={{ base: "center", sm: "flex-start" }}
+					alignItems="baseline"
 					w={"full"}
 				>
-					<Text fontWeight="bold" fontSize={{ base: "lg", md: "lg" }}>{userProfile.username}</Text>
-					
+					<Text fontWeight="bold" fontSize={{ base: "xl", md: "lg" }}>{userProfile.username}</Text>
+					<Text>•</Text>
+					<Text fontSize={"sm"} >
+						{userProfile.fullName}
+					</Text>
 				</Flex>
 
-				<Flex alignItems={"center"} gap={{ base: 2, sm: 4 }}>
-					<Text fontSize={{ base: "sm", md: "sm" }}>
-						<Text as='span' fontWeight={"bold"} mr={1}>
+				<Flex 
+				justifyContent={{ base: "center", sm: "flex-start" }}
+				alignItems={"center"} gap={{ base: 5, sm: 4 }}>
+					<Text color="#eb7734" fontSize={{ base: "md", md: "sm" }}>
+						<Text as='span' fontWeight={"bold"} mr={2}>
 							{userProfile.posts.length}
 						</Text>
 						Posts
 					</Text>
-					<Text fontSize={{ base: "sm", md: "sm" }}>
+					<Text color="#eb7734" fontSize={{ base: "md", md: "sm" }}>
 					<Link to={`/${username}/followers`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                        <Text as='span' fontWeight={"bold"} mr={1}>
+                        <Text as='span' fontWeight={"bold"} mr={2}>
                             {userProfile.followers.length}
                         </Text>
                         Followers
                     </Link>
 					</Text>
-					<Text fontSize={{ base: "sm", md: "sm" }}>
+					<Text color="#eb7734" fontSize={{ base: "md", md: "sm" }}>
 					<Link to={`/${username}/following`} style={{ textDecoration: 'none', color: 'inherit' }}>
-						<Text as='span' fontWeight={"bold"} mr={1}>
+						<Text as='span' fontWeight={"bold"} mr={2}>
 							{userProfile.following.length}
 						</Text>
 						Following
 					</Link>
 					</Text>
 				</Flex>
-				<Flex alignItems={"center"} gap={4}>
+				{/* <Flex alignItems={"center"} gap={4}>
 					<Text fontSize={"sm"} fontWeight={"bold"}>
 						{userProfile.fullName}
 					</Text>
-				</Flex>
-				<Text fontSize={"sm"} whiteSpace="normal" overflowWrap="break-word" width="60%">{userProfile.bio}</Text>
+				</Flex> */}
+				<Text fontSize={"sm"} whiteSpace="normal" overflowWrap="break-word" width="100%">{userProfile.bio}</Text>
 				{visitingOwnProfileAndAuth && (
-						<Flex gap={4} alignItems={"center"} justifyContent={"center"}>
+						<Flex	
+						gap={3}
+					direction={{ base: "row", sm: "row" }}
+					justifyContent={{ base: "center", sm: "flex-start" }}
+					alignItems="baseline"
+					w={"full"}	
+					>
 							<Button
 								bg={"white"}
 								color={"black"}
@@ -165,23 +177,32 @@ const ProfileHeader = ({ username, page }) => {
 						</Flex>
 					)}
 					{visitingAnotherProfileAndAuth && (
-						<Flex gap={4} alignItems={"center"} justifyContent={"center"}>
+					<Flex	
+						gap={3}
+					direction={{ base: "row", sm: "row" }}
+					justifyContent={{ base: "center", sm: "flex-start" }}
+					alignItems="baseline"
+					w={"full"}	
+					>
 							<Button
 								bg={"#eb7734"}
 								color={"white"}
 								_hover={{ bg: "#c75e1f" }}
-								size={{ base: "xs", md: "sm" }}
+								size={{ base: "sm", md: "sm" }}
 								onClick={handleFollowClick} // Use the optimized handler
 								isDisabled={isOptimisticUpdate} // Disable button during optimistic update
 								textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)"
 							>
 								{isFollowing ? "Unfollow" : "Follow"}
 							</Button>
+							
 						</Flex>
+						
 					)}
 			</VStack>
-			
+			</Container>
 			{isOpen && <EditProfile isOpen={isOpen} onClose={onClose} />}
+			
 		</Flex>
 	);
 };
