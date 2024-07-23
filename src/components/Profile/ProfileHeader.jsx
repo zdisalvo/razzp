@@ -3,13 +3,14 @@ import useUserProfileStore from "../../store/userProfileStore";
 import useAuthStore from "../../store/authStore";
 import EditProfile from "./EditProfile";
 import useFollowUserFP from "../../hooks/useFollowUserFP";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import useUserLocation from '../../hooks/useUserLocation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLocationDot } from '@fortawesome/free-solid-svg-icons'; 
 import { storeUserLocation } from "../../hooks/storeUserLocation";
 import { unstoreUserLocation } from "../../hooks/unstoreUserLocation";
+import useMsgStore from "../../store/msgStore";
 
 const ProfileHeader = ({ username, page }) => {
 	const { userProfile } = useUserProfileStore();
@@ -27,6 +28,9 @@ const ProfileHeader = ({ username, page }) => {
 	//console.log(locationData);
 	const [isToggled, setIsToggled] = useState(userProfile.location && userProfile.location.length > 0);
     const [userLocation, setUserLocation] = useState({ latitude: null, longitude: null });
+	const navigate = useNavigate();
+	const setUserId = useMsgStore((state) => state.setUserId);
+	const setReceivingUserId = useMsgStore((state) => state.setReceivingUserId);
 
 	useEffect(() => {
 		// Get current location if the proximity toggle is on
@@ -72,15 +76,24 @@ const ProfileHeader = ({ username, page }) => {
 		}
 	};
 
+	const handleMessageClick = () => {
+		setUserId(authUser.uid);
+		setReceivingUserId(userProfile.uid);
+		// Store IDs in localStorage
+		localStorage.setItem("userId", authUser.uid);
+		localStorage.setItem("receivingUserId", userProfile.uid);
+		navigate(`/${userProfile.username}/messages`);
+	  };
+
 	//console.log(locationData.location.city);
 
 	return (
-		<Flex gap={{ base: 4, sm: 10 }} py={1} direction={{ base: "column", sm: "row" }}>
+		<Flex gap={{ base: 4, sm: 10 }} py={1} direction={{ base: "column", sm: "row" }} mb={4}>
 			
-			<Container width="40%" p={0}>
-			<Flex direction="column" alignItems="flex-end">
+			<Container width={{base: "50%", md: "35%"}} p={0}>
+			<Flex direction="column" alignItems={{base: "center", md: "flex-end"}}>
 				<Flex direction="column" alignItems="center">
-			<AvatarGroup size={{ base: "xl", md: "2xl" }}  mx={1}>
+			<AvatarGroup size={{ base: "xl", md: "2xl" }}  mx={1} mt={2}>
 				<Avatar src={userProfile.profilePicURL} alt='Profile picture' />
 			</AvatarGroup>
 			{!isLoading && userProfile.location && userProfile.location.length > 0 &&
@@ -97,7 +110,7 @@ const ProfileHeader = ({ username, page }) => {
             }
 			{visitingOwnProfileAndAuth && (
 			<Flex alignItems="baseline">
-              <Text fontSize="xs" mt={1} mr={2}>Location: {isToggled ? 'on' : 'off'}</Text>
+              <Text fontSize="xs" mt={1} mr={2} mb={0}>Location: {isToggled ? 'on' : 'off'}</Text>
               <Switch
                 isChecked={isToggled}
                 onChange={() => setIsToggled(!isToggled)}
@@ -110,7 +123,7 @@ const ProfileHeader = ({ username, page }) => {
 			</Flex>
 			</Container>
 			<Container width="85%">
-			<VStack alignItems={"start"} gap={2} mx={0} flex={1}>
+			<VStack alignItems={"start"} gap={2} mx={0} flex={1} mt={{base: "0px", md: "20px"}}>
 				<Flex
 					gap={3}
 					direction={{ base: "row", sm: "row" }}
@@ -127,7 +140,7 @@ const ProfileHeader = ({ username, page }) => {
 
 				<Flex 
 				justifyContent={{ base: "center", sm: "flex-start" }}
-				alignItems={"center"} gap={{ base: 5, sm: 4 }}>
+				alignItems={"center"} gap={{ base: 5, sm: 4 }} w={"full"}>
 					<Text color="#eb7734" fontSize={{ base: "md", md: "sm" }}>
 						<Text as='span' fontWeight={"bold"} mr={2}>
 							{userProfile.posts.length}
@@ -195,6 +208,16 @@ const ProfileHeader = ({ username, page }) => {
 							>
 								{isFollowing ? "Unfollow" : "Follow"}
 							</Button>
+							<Button
+								bg={"#eb7734"}
+								color={"white"}
+								_hover={{ bg: "#c75e1f" }}
+								size={{ base: "sm", md: "sm" }}
+								aria-label="Messages"
+								textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)"
+								onClick={handleMessageClick} 
+								mx={2} 
+								>Message</Button>
 							
 						</Flex>
 						
