@@ -93,7 +93,7 @@ const ProfileHeader = ({ username, page }) => {
 			<Container width={{base: "50%", md: "35%"}} p={0}>
 			<Flex direction="column" alignItems={{base: "center", md: "flex-end"}}>
 				<Flex direction="column" alignItems="center">
-			<AvatarGroup size={{ base: "xl", md: "2xl" }}  mx={1} mt={2}>
+			<AvatarGroup size={{ base: "xl", md: "2xl" }}  mx={1} my={2}>
 				<Avatar src={userProfile.profilePicURL} alt='Profile picture' />
 			</AvatarGroup>
 			{!isLoading && userProfile.location && userProfile.location.length > 0 &&
@@ -102,21 +102,23 @@ const ProfileHeader = ({ username, page }) => {
             icon={<FontAwesomeIcon icon={faLocationDot} />}
             mx={2} // Adds horizontal margin between the icons
           /> */}
-          <Box mx={2} mt={2}>
+          <Box mr={2} mt={0}>
           <FontAwesomeIcon icon={faLocationDot}  />
           </Box>
             <Text fontSize="sm" >{locationData.location.city}, {locationData.location.state}</Text>
             </Flex>
             }
 			{visitingOwnProfileAndAuth && (
-			<Flex alignItems="baseline">
-              <Text fontSize="xs" mt={1} mr={2} mb={0}>Location: {isToggled ? 'on' : 'off'}</Text>
+			<Flex alignItems="baseline" justifyContent="center">
+              <Text fontSize="xs" mt={0} ml={1} mr={2} mb={0}>Location: {isToggled ? 'on' : 'off'}</Text>
+			  <Box mt={0}>
               <Switch
                 isChecked={isToggled}
                 onChange={() => setIsToggled(!isToggled)}
-                size="md"
+                size={{base: "md", md: "sm"}}
                 colorScheme="orange"
               />
+			  </Box>
             </Flex>
 			)}
 			</Flex>

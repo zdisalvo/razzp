@@ -102,14 +102,16 @@ import {
               />
               <Heading as="h1" size="lg">Search</Heading>
             </Flex>
-            <Flex ml="auto" mr={5}>
+            <Flex ml="auto" mr={5} alignItems="baseline" justifyContent="center">
               <Text mr={4}>Proximity</Text>
+              <Box>
               <Switch
                 isChecked={isToggled}
                 onChange={() => setIsToggled(!isToggled)}
                 size="md"
                 colorScheme="orange"
               />
+              </Box>
             </Flex>
           </Flex>
           <FormControl>
