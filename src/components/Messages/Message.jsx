@@ -132,6 +132,9 @@ const Message = () => {
             aria-label="Go back"
             variant="ghost"
             onClick={handleGoBack}
+            color="#eb7734"
+            ml={5}
+            mr={4}
           />
           <Avatar
             ml={2}
@@ -157,21 +160,23 @@ const Message = () => {
         maxH={{ base: "50vh", md: "60vh" }}
         overflowY="scroll"
         ref={containerRef}
-        bg="gray.100"
+        bg="#f3f5e0"
         onScroll={handleScroll}
       >
         {messages.length > 0 && messages.map((msg, index) => (
           <Box
             key={index}
             alignSelf={msg.sendingUser === userId ? "flex-end" : "flex-start"}
-            bg={msg.sendingUser === userId ? "orange.100" : "white"}
-            color="black"
+            bg={msg.sendingUser === userId ? "#0099ff" : "white"}
+            color={msg.sendingUser === userId ? "white" : "black"}
             p={3}
-            borderRadius="md"
+            borderRadius="20px"
             maxW="80%"
           >
-            <Text>{msg.message}</Text>
-            <Text fontSize="xs" color="gray.500">
+            <Text fontSize={{base: "lg", md: "md"}}
+              textShadow={msg.sendingUser === userId ? "1px 1px 2px rgba(0, 0, 0, 0.2)" : "none"}
+            >{msg.message}</Text>
+            <Text fontSize="xs" color={msg.sendingUser === userId ? "gray.100" : "gray.500"}>
               {formatTime(msg.timeStamp)}
             </Text>
           </Box>

@@ -71,6 +71,8 @@ const FollowingPage = () => {
                         aria-label="Go back"
                         variant="ghost"
                         onClick={handleGoBack}
+                        color="#eb7734"
+                        ml={5}
                         mr={4}
                     />
                     <Heading as="h1" size="lg">Following</Heading>
@@ -97,7 +99,11 @@ const FollowingPage = () => {
                                 <Button
                                     ml="auto"
                                     onClick={() => handleFollowClick(userId)}
-                                    colorScheme={isFollowing ? 'gray' : 'blue'}
+                                    bg={"#eb7734"}
+                                    color={"white"}
+                                    textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)"
+                                    _hover={{ bg: "#c75e1f" }}
+                                    size={{ base: "sm", md: "sm" }}
                                 >
                                     {isFollowing ? 'Unfollow' : 'Follow'}
                                 </Button>

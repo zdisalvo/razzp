@@ -22,7 +22,14 @@ const config = {
 };
 
 // 3. extend the theme
-const theme = extendTheme({ config, styles });
+const theme = extendTheme({
+	config,
+	styles,
+	fonts: {
+	  heading: "Lato, sans-serif",
+	  body: "Lato, sans-serif",
+	},
+  });
 
 ReactDOM.createRoot(document.getElementById("root")).render(
 	// <React.StrictMode>
