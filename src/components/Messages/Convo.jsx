@@ -87,13 +87,13 @@ const Convo = ({ userId, receivingUserId }) => {
           left={1}
           alignItems="left"
           justifyContent="left"
-          boxSize={{ base: "40px", md: "60px" }}
+          boxSize="40px"
           display="flex"
-          mr="10px"
+          mr={3}
           onClick={() => handleAvatarClick(receivingUserId)}
           cursor="pointer"
         >
-          <AvatarGroup size={{ base: "md", md: "lg" }} justifySelf={"left"} p={0} alignSelf={"center"} >
+          <AvatarGroup size="md" justifySelf={"left"} p={0} alignSelf={"center"} >
             {receivingProfile.profilePicURL &&
               <Avatar src={receivingProfile.profilePicURL} alt='This user has no pictures' />
             }
@@ -103,7 +103,7 @@ const Convo = ({ userId, receivingUserId }) => {
           </AvatarGroup>
         </Box>
         <Box  
-          ml={{base: "20px", md: "20px"}}
+          mx={4}
           flex="1"
           display="flex"
           flexDirection="column"

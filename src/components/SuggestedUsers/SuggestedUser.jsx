@@ -36,7 +36,7 @@ const SuggestedUser = ({ user, setUser }) => {
 					
 					</Flex>
 						<Box fontSize={11} color={"gray.500"}>
-						{user.followers.length} followers
+						{user.followers.length} {user.followers.length == 1 ? 'follower' : 'followers' }
 						</Box>
 					</Link>
 					

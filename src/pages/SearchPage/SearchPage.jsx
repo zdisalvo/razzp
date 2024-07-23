@@ -30,7 +30,7 @@ import {
     const [searchQuery, setSearchQuery] = useState("");
     const [isToggled, setIsToggled] = useState(false);
     const [userLocation, setUserLocation] = useState({ latitude: null, longitude: null });
-    const navigate = useNavigate();
+    const navigate = useNavigate(); 
   
     const handleGoBack = () => {
       navigate(-1); // Navigate to the previous page
@@ -98,7 +98,7 @@ import {
                 color="#eb7734"
                 variant="ghost"
                 onClick={handleGoBack}
-                mr={4}
+                mx={4}
               />
               <Heading as="h1" size="lg">Search</Heading>
             </Flex>
@@ -108,6 +108,7 @@ import {
                 isChecked={isToggled}
                 onChange={() => setIsToggled(!isToggled)}
                 size="md"
+                colorScheme="orange"
               />
             </Flex>
           </Flex>
@@ -116,6 +117,10 @@ import {
               placeholder="Search for users..."
               value={searchQuery}
               onChange={handleSearchChange}
+              _focus={{ 
+                borderColor: 'transparent', // Make the border transparent
+                boxShadow: '0 0 0 1px rgba(244, 164, 96, 0.5)' // Simulate a thinner border with box-shadow
+              }} 
             />
           </FormControl>
           {(isLoadingNearby || isLoadingSearch) && <Spinner mt={4} />}

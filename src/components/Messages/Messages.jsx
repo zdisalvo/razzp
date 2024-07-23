@@ -29,8 +29,10 @@ const Messages = () => {
         <IconButton
           icon={<FontAwesomeIcon fontSize={32} icon={faCaretLeft} />}
           aria-label="Go back"
+          color="#eb7734"
           variant="ghost"
           onClick={handleGoBack}
+          ml={5}
           mr={4} // Add margin-right to space out from the heading
         />
         <Heading as="h1" size="lg">Messages</Heading>

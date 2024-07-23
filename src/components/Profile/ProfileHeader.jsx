@@ -2,21 +2,41 @@ import { Avatar, AvatarGroup, Button, Flex, Text, VStack, useDisclosure } from "
 import useUserProfileStore from "../../store/userProfileStore";
 import useAuthStore from "../../store/authStore";
 import EditProfile from "./EditProfile";
-import useFollowUser from "../../hooks/useFollowUser";
+import useFollowUserFP from "../../hooks/useFollowUserFP";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 
 const ProfileHeader = ({ username, page }) => {
 	const { userProfile } = useUserProfileStore();
 	const authUser = useAuthStore((state) => state.user);
 	const { isOpen, onOpen, onClose } = useDisclosure();
-	const { isFollowing, isUpdating, handleFollowUser } = useFollowUser(userProfile?.uid);
+	const { isFollowing: initialIsFollowing, handleFollowUser } = useFollowUserFP();
+	const [isFollowing, setIsFollowing] = useState(initialIsFollowing);
+	const [isOptimisticUpdate, setIsOptimisticUpdate] = useState(false);
+
 	const visitingOwnProfileAndAuth = authUser && authUser.username === userProfile.username;
 	const visitingAnotherProfileAndAuth = authUser && authUser.username !== userProfile.username;
+
+	const handleFollowClick = async () => {
+		// Optimistically update the UI
+		setIsFollowing(prev => !prev);
+		setIsOptimisticUpdate(true);
+
+		try {
+			await handleFollowUser(userProfile.uid, isFollowing); // Handle server request
+		} catch (error) {
+			// Revert optimistic update if needed
+			setIsFollowing(prev => !prev);
+			console.error('Error updating follow status:', error);
+		} finally {
+			setIsOptimisticUpdate(false);
+		}
+	};
 
 	return (
 		<Flex gap={{ base: 4, sm: 10 }} py={1} direction={{ base: "column", sm: "row" }}>
 			<AvatarGroup size={{ base: "xl", md: "2xl" }} justifySelf={"center"} alignSelf={"flex-start"} mx={"auto"}>
-				<Avatar src={userProfile.profilePicURL} alt='As a programmer logo' />
+				<Avatar src={userProfile.profilePicURL} alt='Profile picture' />
 			</AvatarGroup>
 
 			<VStack alignItems={"start"} gap={2} mx={"auto"} flex={1}>
@@ -44,12 +64,13 @@ const ProfileHeader = ({ username, page }) => {
 					{visitingAnotherProfileAndAuth && (
 						<Flex gap={4} alignItems={"center"} justifyContent={"center"}>
 							<Button
-								bg={"blue.500"}
+								bg={"#eb7734"}
 								color={"white"}
-								_hover={{ bg: "blue.600" }}
+								_hover={{ bg: "#c75e1f" }}
 								size={{ base: "xs", md: "sm" }}
-								onClick={handleFollowUser}
-								isLoading={isUpdating}
+								onClick={handleFollowClick} // Use the optimized handler
+								isDisabled={isOptimisticUpdate} // Disable button during optimistic update
+								textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)"
 							>
 								{isFollowing ? "Unfollow" : "Follow"}
 							</Button>

@@ -143,7 +143,7 @@ const SparkMessage = () => {
             bg={msg.sendingUser === userId ? "orange.100" : "white"}
             color="black"
             p={3}
-            borderRadius="md"
+            borderRadius="6px"
             maxW="80%"
           >
             <Text>{msg.message}</Text>

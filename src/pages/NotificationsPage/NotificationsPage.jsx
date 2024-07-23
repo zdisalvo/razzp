@@ -104,13 +104,15 @@ const NotificationsPage = () => {
                     <IconButton
                         icon={<FontAwesomeIcon fontSize={32} icon={faCaretLeft} />}
                         aria-label="Go back"
+                        color="#eb7734"
                         variant="ghost"
                         onClick={handleGoBack}
-                        mr={4} // Add margin-right to space out from the heading
+                        ml={5}
+                        mr={4}
                     />
                     <Heading as="h1" size="lg">Notifications</Heading>
                 </Flex>
-                <List spacing={3}>
+                <List spacing={0}>
                     {sortedNotifications.map((notification) => {
                         let notificationText = '';
 
@@ -159,9 +161,12 @@ const NotificationsPage = () => {
                                 display="flex"
                                 alignItems="center"
                                 justifyContent="space-between"
-                                p={4}
-                                borderWidth={1}
-                                borderRadius="lg"
+                                mt={1}
+                                mb={1}
+                                p={1}
+                                
+                                //position="relative"
+                                borderBottom="1px groove #1B2328"
                             >
                                 <Avatar 
                                     src={notification.profilePic} 
@@ -169,10 +174,11 @@ const NotificationsPage = () => {
                                     boxSize="40px" // Set size of Avatar
                                     onClick={() => handleAvatarClick(notification.userId)}
                                     cursor="pointer"
+                                    ml={3}
                                 />
-                                <Box flex="1" mx={4}>
+                                <Box flex="1" mx={4} >
                                     {notificationText}
-                                    <Text color="gray.500">{formatNotificationTime(notification.time)}</Text>
+                                    <Text fontSize="sm" color="gray.500">{formatNotificationTime(notification.time)}</Text>
                                 </Box>
                                 {notification.postImageURL && (
                                     <Image
@@ -182,6 +188,7 @@ const NotificationsPage = () => {
                                         cursor="pointer"
                                         boxSize="40px" // Set size of Image same as Avatar
                                         borderRadius="5px" // Optional: match Avatar's round shape
+                                        mr={3}
                                     />
                                 )}
                             </ListItem>
