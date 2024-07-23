@@ -19,10 +19,6 @@ const unstoreUserLocation = async (userId) => {
     geohash: "",
     location: [] // Optionally store location for easier querying or display
   })
-  .then(() => {
-    //console.log("Geohash and location stored successfully.");
-    return geohash; // Optionally return geohash for further processing
-  })
   .catch((error) => {
     console.error("Error storing geohash and location:", error);
     throw error;

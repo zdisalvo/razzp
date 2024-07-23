@@ -1,13 +1,15 @@
-import { Avatar, AvatarGroup, Button, Flex, Text, VStack, useDisclosure, Container, Box} from "@chakra-ui/react";
+import { Avatar, AvatarGroup, Button, Flex, Text, VStack, useDisclosure, Container, Box, Switch} from "@chakra-ui/react";
 import useUserProfileStore from "../../store/userProfileStore";
 import useAuthStore from "../../store/authStore";
 import EditProfile from "./EditProfile";
 import useFollowUserFP from "../../hooks/useFollowUserFP";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import useUserLocation from '../../hooks/useUserLocation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLocationDot } from '@fortawesome/free-solid-svg-icons'; 
+import { storeUserLocation } from "../../hooks/storeUserLocation";
+import { unstoreUserLocation } from "../../hooks/unstoreUserLocation";
 
 const ProfileHeader = ({ username, page }) => {
 	const { userProfile } = useUserProfileStore();
@@ -23,6 +25,36 @@ const ProfileHeader = ({ username, page }) => {
 	const locationData = userProfile.location && userProfile.location.length > 0 ? useUserLocation(userProfile.location[0], userProfile.location[1]) : { city: "", state: "", isLoading: false };
     const { city, state, isLoading } = locationData;
 	//console.log(locationData);
+	const [isToggled, setIsToggled] = useState(userProfile.location && userProfile.location.length > 0);
+    const [userLocation, setUserLocation] = useState({ latitude: null, longitude: null });
+
+	useEffect(() => {
+		// Get current location if the proximity toggle is on
+		if (isToggled) {
+		  const getCurrentLocation = () => {
+			if (navigator.geolocation) {
+			  navigator.geolocation.getCurrentPosition(
+				(position) => {
+				  const { latitude, longitude } = position.coords;
+				  setUserLocation({ latitude, longitude });
+				  storeUserLocation(authUser.uid, latitude, longitude);
+				  
+				},
+				(error) => {
+				  console.error('Error getting current location:', error);
+				  // Handle error appropriately
+				}
+			  );
+			} else {
+			  console.error('Geolocation is not supported by this browser.');
+			}
+		  };
+		  getCurrentLocation();
+		} 
+	    else {
+	      unstoreUserLocation(authUser.uid);
+	    }
+	  }, [isToggled]);
 
 	const handleFollowClick = async () => {
 		// Optimistically update the UI
@@ -62,6 +94,17 @@ const ProfileHeader = ({ username, page }) => {
             <Text fontSize="sm" >{locationData.location.city}, {locationData.location.state}</Text>
             </Flex>
             }
+			{visitingOwnProfileAndAuth && (
+			<Flex alignItems="baseline">
+              <Text fontSize="xs" mt={1} mr={2}>Location: {isToggled ? 'on' : 'off'}</Text>
+              <Switch
+                isChecked={isToggled}
+                onChange={() => setIsToggled(!isToggled)}
+                size="sm"
+                colorScheme="orange"
+              />
+            </Flex>
+			)}
 			</Flex>
 			</Flex>
 			</Container>
