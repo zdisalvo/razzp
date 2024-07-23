@@ -1,10 +1,13 @@
-import { Avatar, AvatarGroup, Button, Flex, Text, VStack, useDisclosure } from "@chakra-ui/react";
+import { Avatar, AvatarGroup, Button, Flex, Text, VStack, useDisclosure, Container, Box} from "@chakra-ui/react";
 import useUserProfileStore from "../../store/userProfileStore";
 import useAuthStore from "../../store/authStore";
 import EditProfile from "./EditProfile";
 import useFollowUserFP from "../../hooks/useFollowUserFP";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import useUserLocation from '../../hooks/useUserLocation';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faLocationDot } from '@fortawesome/free-solid-svg-icons'; 
 
 const ProfileHeader = ({ username, page }) => {
 	const { userProfile } = useUserProfileStore();
@@ -16,6 +19,10 @@ const ProfileHeader = ({ username, page }) => {
 
 	const visitingOwnProfileAndAuth = authUser && authUser.username === userProfile.username;
 	const visitingAnotherProfileAndAuth = authUser && authUser.username !== userProfile.username;
+	//console.log(userProfile.location);
+	const locationData = userProfile.location && userProfile.location.length > 0 ? useUserLocation(userProfile.location[0], userProfile.location[1]) : { city: "", state: "", isLoading: false };
+    const { city, state, isLoading } = locationData;
+	//console.log(locationData);
 
 	const handleFollowClick = async () => {
 		// Optimistically update the UI
@@ -33,28 +40,81 @@ const ProfileHeader = ({ username, page }) => {
 		}
 	};
 
+	//console.log(locationData.location.city);
+
 	return (
 		<Flex gap={{ base: 4, sm: 10 }} py={1} direction={{ base: "column", sm: "row" }}>
-			<AvatarGroup size={{ base: "xl", md: "2xl" }} justifySelf={"center"} alignSelf={"flex-start"} mx={"auto"}>
+			<Container width="30%" p={0}>
+			<Flex direction="column" alignItems="flex-end">
+				<Flex direction="column" alignItems="center">
+			<AvatarGroup size={{ base: "xl", md: "2xl" }}  mx={1}>
 				<Avatar src={userProfile.profilePicURL} alt='Profile picture' />
 			</AvatarGroup>
-
-			<VStack alignItems={"start"} gap={2} mx={"auto"} flex={1}>
+			{!isLoading && userProfile.location && userProfile.location.length > 0 &&
+            <Flex alignItems="baseline">
+            {/* <IconButton
+            icon={<FontAwesomeIcon icon={faLocationDot} />}
+            mx={2} // Adds horizontal margin between the icons
+          /> */}
+          <Box mx={2} mt={2}>
+          <FontAwesomeIcon icon={faLocationDot}  />
+          </Box>
+            <Text fontSize="sm" >{locationData.location.city}, {locationData.location.state}</Text>
+            </Flex>
+            }
+			</Flex>
+			</Flex>
+			</Container>
+			
+			<VStack alignItems={"start"} gap={2} mx={0} flex={1}>
 				<Flex
 					gap={4}
-					direction={{ base: "column", sm: "row" }}
-					justifyContent={{ base: "center", sm: "flex-start" }}
+					direction={{ base: "row", sm: "row" }}
+					justifyContent={{ base: "flex-start", sm: "flex-start" }}
 					alignItems={"center"}
 					w={"full"}
 				>
-					<Text fontSize={{ base: "sm", md: "lg" }}>{userProfile.username}</Text>
-					{visitingOwnProfileAndAuth && (
+					<Text fontWeight="bold" fontSize={{ base: "lg", md: "lg" }}>{userProfile.username}</Text>
+					
+				</Flex>
+
+				<Flex alignItems={"center"} gap={{ base: 2, sm: 4 }}>
+					<Text fontSize={{ base: "sm", md: "sm" }}>
+						<Text as='span' fontWeight={"bold"} mr={1}>
+							{userProfile.posts.length}
+						</Text>
+						Posts
+					</Text>
+					<Text fontSize={{ base: "sm", md: "sm" }}>
+					<Link to={`/${username}/followers`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                        <Text as='span' fontWeight={"bold"} mr={1}>
+                            {userProfile.followers.length}
+                        </Text>
+                        Followers
+                    </Link>
+					</Text>
+					<Text fontSize={{ base: "sm", md: "sm" }}>
+					<Link to={`/${username}/following`} style={{ textDecoration: 'none', color: 'inherit' }}>
+						<Text as='span' fontWeight={"bold"} mr={1}>
+							{userProfile.following.length}
+						</Text>
+						Following
+					</Link>
+					</Text>
+				</Flex>
+				<Flex alignItems={"center"} gap={4}>
+					<Text fontSize={"sm"} fontWeight={"bold"}>
+						{userProfile.fullName}
+					</Text>
+				</Flex>
+				<Text fontSize={"sm"} whiteSpace="normal" overflowWrap="break-word" width="60%">{userProfile.bio}</Text>
+				{visitingOwnProfileAndAuth && (
 						<Flex gap={4} alignItems={"center"} justifyContent={"center"}>
 							<Button
 								bg={"white"}
 								color={"black"}
 								_hover={{ bg: "whiteAlpha.800" }}
-								size={{ base: "xs", md: "sm" }}
+								size={{ base: "sm", md: "sm" }}
 								onClick={onOpen}
 							>
 								Edit Profile
@@ -76,39 +136,8 @@ const ProfileHeader = ({ username, page }) => {
 							</Button>
 						</Flex>
 					)}
-				</Flex>
-
-				<Flex alignItems={"center"} gap={{ base: 2, sm: 4 }}>
-					<Text fontSize={{ base: "xs", md: "sm" }}>
-						<Text as='span' fontWeight={"bold"} mr={1}>
-							{userProfile.posts.length}
-						</Text>
-						Posts
-					</Text>
-					<Text fontSize={{ base: "xs", md: "sm" }}>
-					<Link to={`/${username}/followers`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                        <Text as='span' fontWeight={"bold"} mr={1}>
-                            {userProfile.followers.length}
-                        </Text>
-                        Followers
-                    </Link>
-					</Text>
-					<Text fontSize={{ base: "xs", md: "sm" }}>
-					<Link to={`/${username}/following`} style={{ textDecoration: 'none', color: 'inherit' }}>
-						<Text as='span' fontWeight={"bold"} mr={1}>
-							{userProfile.following.length}
-						</Text>
-						Following
-					</Link>
-					</Text>
-				</Flex>
-				<Flex alignItems={"center"} gap={4}>
-					<Text fontSize={"sm"} fontWeight={"bold"}>
-						{userProfile.fullName}
-					</Text>
-				</Flex>
-				<Text fontSize={"sm"}>{userProfile.bio}</Text>
 			</VStack>
+			
 			{isOpen && <EditProfile isOpen={isOpen} onClose={onClose} />}
 		</Flex>
 	);
