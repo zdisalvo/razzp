@@ -625,7 +625,7 @@ const handleExerciseClick = (exercise) => {
 
 //EDUCATION LEVEL
 
-const educationOptions = ["High School", "Trade/Tech School", "In College", "Undergraduate Degree", "In Grad School", "Graduate Degree", "PhD", "MD"];
+const educationOptions = ["High School", "Trade/Tech School", "In College", "Undergraduate", "In Grad School", "Graduate Degree", "PhD", "MD"];
         
 const handleEducationClick = (education_level) => {
   setFormData((prevState) => ({
@@ -636,7 +636,7 @@ const handleEducationClick = (education_level) => {
 
 //DRINKING
 
-const drinkingOptions = ["Often", "Socially", "On Special Occasion", "Never"];
+const drinkingOptions = ["Often", "Socially", "On Occasion", "Never"];
 
 const handleDrinkingClick = (drinking) => {
   setFormData((prevState) => ({
@@ -647,7 +647,7 @@ const handleDrinkingClick = (drinking) => {
 
 //SMOKING
 
-const smokingOptions = ["Often", "Socially", "On Special Occasion", "Never"];
+const smokingOptions = ["Often", "Socially", "On Occasion", "Never"];
 
 const handleSmokingClick = (smoking) => {
   setFormData((prevState) => ({
@@ -659,7 +659,7 @@ const handleSmokingClick = (smoking) => {
 
 //CANNABIS
 
-const cannabisOptions = ["Often", "Socially", "On Special Occasion", "Never"];
+const cannabisOptions = ["Often", "Socially", "On Occasion", "Never"];
 
 const handleCannabisClick = (cannabis) => {
   setFormData((prevState) => ({
@@ -670,7 +670,7 @@ const handleCannabisClick = (cannabis) => {
 
 //LOOKING FOR
 
-const lookingForOptions = ["Exploring", "Casual Dating", "Monogamous Relationship", "Open Relationship", "Long Term", "Marriage"];
+const lookingForOptions = ["Exploring", "Casual Dating", "Exclusive", "Open Relationship", "Long Term", "Marriage"];
 
 const handleLookingForClick = (lookingForSelection) => {
   setFormData((prevState) => {
@@ -689,7 +689,7 @@ const handleLookingForClick = (lookingForSelection) => {
 
 //FAMILY PLANS
 
-const familyPlansOptions = ["Don't want kids", "Open to kids", "Want kids", "Not sure"];
+const familyPlansOptions = ["Don't want", "Open to kids", "Want kids", "Not sure"];
 
 const handleFamilyPlansClick = (family_plans) => {
   setFormData((prevState) => ({
@@ -700,7 +700,7 @@ const handleFamilyPlansClick = (family_plans) => {
 
 //HAVE KIDS
 
-const haveKidsOptions = ["Have one", "Have kids", "Don't have kids"];
+const haveKidsOptions = ["Have one", "Have kids", "Don't have"];
 
 const handleHaveKidsClick = (have_kids) => {
   setFormData((prevState) => ({
@@ -818,7 +818,7 @@ const handlePronounsClick = (pronouns) => {
       "🧖 Sauna", "🧘 Yoga"
     ],
     "Sports": [
-      "🏈 American Football", "⚾️ Baseball", "🏀 Basketball", "🚴 Cycling", "⛳ Golf", "🏇 Horse Racing",   
+      "🏈 Football", "⚾️ Baseball", "🏀 Basketball", "🚴 Cycling", "⛳ Golf", "🏇 Horse Racing",   
       "🏒 Ice Hockey", "⛸️ Ice Skating", "🏓 Ping Pong", "🏉 Rugby", "⛷️ Skiing",
       "⚽ Soccer", "🏂 Snowboarding", "🏄 Surfing", "🏊 Swimming", "🎾 Tennis", "🏐 Volleyball", 
     ],
@@ -870,6 +870,16 @@ const handlePronounsClick = (pronouns) => {
       </Heading>
       <Box as="form" onSubmit={handleSubmit} p={4} boxShadow="md" borderRadius="md">
         <Stack spacing={4}>
+        <Button
+          type="submit"
+          bg="darkorange" // Background color
+          color="black" // Text color
+          isLoading={isUpdating}
+          mb={2}
+          _hover={{ bg: "orange" }} // Hover state background color
+        >
+          Save Profile
+        </Button>
           <FormControl id="name" mb={4}>
             <FormLabel>Name</FormLabel>
             <Input
