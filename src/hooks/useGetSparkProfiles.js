@@ -111,11 +111,21 @@ const useGetSparkProfiles = (refreshKey) => {
 					//REPLACE IN THE ABOVE IF STATEMENT
 					//|| sparkProfile.viewed2x.includes(doc.uid) || sparkProfile.uid === doc.uid
 
+                    //INTERESTED IN
+
+                    if (sparkProfile.interested_in.includes("Women") && doc.gender !== "Female")
+                        return false;
+
+                    if (sparkProfile.interested_in.includes("Men") && doc.gender !== "Male")
+                        return false;
+
                     // Get filters from sparkProfile
                     const filters = sparkProfile.filters || {}; // Adjust if the structure differs
 
                     // Check if the profile matches the filters
                     let matchesFilters = true;
+
+                    
 				
 				if (sparkProfile.filters ) {
 
