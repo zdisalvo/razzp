@@ -126,8 +126,9 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
                     <CommentLogo />
                 </Box>
             </Flex>
-            <Text fontWeight={600} fontSize={"sm"} ml={3} mb={1}>
-                {totalScore === 1 ? `${totalScore} point` : `${totalScore} points`}
+            <Text fontWeight={600} fontSize={"sm"} ml={{base: 2, md: 3}} mb={1}>
+                {/* {totalScore === 1 ? `${totalScore} point` : `${totalScore} points`} */}
+                {totalScore}°
             </Text>
 
             {isProfilePage && (
@@ -138,14 +139,14 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
 
             {!isProfilePage && (
                 <>
-                    <Text fontSize="sm" fontWeight={700} ml={3} mb={1}>
+                    <Text fontSize="sm" fontWeight={700} ml={{base: 2, md: 3}} mb={1}>
                         {creatorProfile?.username}{" "}
                         <Text as="span" fontWeight={400}>
                             {post.caption}
                         </Text>
                     </Text>
                     {post.comments.length > 0 && (
-                        <Text fontSize="sm" ml={3} color={"gray"} cursor={"pointer"} onClick={onOpen}>
+                        <Text fontSize="sm" ml={{base: 2, md: 3}} color={"gray"} cursor={"pointer"} onClick={onOpen}>
                             View all {post.comments.length} comments
                         </Text>
                     )}
@@ -162,12 +163,12 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
                             focusBorderColor="#eb7734"
                             placeholder={"Add a comment..."}
                             fontSize={16}
-                            mx={3}
+                            ml={{base: 2, md: 3}}
                             onChange={(e) => setComment(e.target.value)}
                             value={comment}
                             ref={commentRef}
                         />
-                        <InputRightElement mr={3}>
+                        <InputRightElement mr={{base: 2, md: 3}}>
                             <Button
                                 fontSize={14}
                                 color={"blue.500"}
