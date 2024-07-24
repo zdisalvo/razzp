@@ -55,13 +55,19 @@ const SparkProfile = ({ sparkProfile, onViewed, sparkUser }) => {
 
   //   const { isLoading: profileLoading, sparkUser } = useGetSparkProfileById(authUser?.uid);
 
-  const [isMatch, setIsMatch] = useState(false);
-  //const [showMatchMessage, setShowMatchMessage] = useState(false);
-
-  const handleMatchChange = (match) => {
-    setIsMatch(match);
+  const [isSparkLikeMatch, setIsSparkLikeMatch] = useState(false);
+  const [isSparkCrownMatch, setIsSparkCrownMatch] = useState(false);
+  
+  const handleSparkLikeMatchChange = (match) => {
+    setIsSparkLikeMatch(match);
     // Perform any additional actions based on the match value
-    //console.log('Match status:', match);
+    console.log('SparkLike match status:', match);
+  };
+  
+  const handleSparkCrownMatchChange = (match) => {
+    setIsSparkCrownMatch(match);
+    // Perform any additional actions based on the match value
+    console.log('SparkCrown match status:', match);
   };
 
   const profileRef = useRef();
@@ -358,7 +364,26 @@ const SparkProfile = ({ sparkProfile, onViewed, sparkUser }) => {
   return (
     <Container ref={profileRef} width={{ base: "100vw", md: "auto" }} height={{ base: "auto", md: "100%" }} mb={{ base: "60px", md: "100px" }} px={0} mx={0}>
       <Box >
-      {isMatch && (
+      {isSparkLikeMatch && (
+        <Box
+          //position="absolute"
+          top="0"
+          left="0"
+          width="100%"
+          height="100%"
+          backgroundColor="rgba(0, 0, 0, 0.6)"
+          color="white"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          fontSize="2xl"
+          fontWeight="bold"
+          zIndex="10"
+        >
+          You Matched!
+        </Box>
+      )}
+      {isSparkCrownMatch && (
         <Box
           //position="absolute"
           top="0"
@@ -523,8 +548,8 @@ const SparkProfile = ({ sparkProfile, onViewed, sparkUser }) => {
         <Flex align="center" justify="center" direction="row" wrap="nowrap" >
           
           
-          <SparkLike sparkProfile={sparkProfile} onMatchChange={handleMatchChange}/>
-          <SparkCrown sparkProfile={sparkProfile} />
+          <SparkLike sparkProfile={sparkProfile} onMatchChange={handleSparkLikeMatchChange} />
+          <SparkCrown sparkProfile={sparkProfile} onMatchChange={handleSparkCrownMatchChange}/>
           <Box width="80%" display="flex" justifyContent="center">
           <Flex alignItems="center" justify="center" direction="row" wrap="nowrap" textAlign="center">
           <Text fontSize="xl" fontWeight="bold" textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)" mr={5}>{name}</Text>

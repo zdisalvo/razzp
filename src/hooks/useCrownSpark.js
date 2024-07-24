@@ -13,7 +13,7 @@ const useCrownSpark = (sparkProfile) => {
   const authUser = useAuthStore((state) => state.user);
   const { isLoading, sparkProfile: sparkUser } = useGetSparkProfileById(authUser?.uid);
 
-  const [isLikedMe, setIsLikedMe] = useState(null || sparkProfile.crownedMe.includes(authUser?.uid));
+  const [isLikedMe, setIsLikedMe] = useState(null || sparkProfile.crownedMe.includes(authUser?.uid) || sparkProfile.likedMe.includes(authUser?.uid));
   const [sparkLikesUser, setSparkLikesUser] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const crownCount = useSparkCrownStore((state) => state.crownCount);
@@ -26,8 +26,8 @@ const useCrownSpark = (sparkProfile) => {
 
   useEffect(() => {
     if (!isLoading && sparkUser && !crownCount) {
-      setIsLiked(sparkUser.crowned.includes(sparkProfile.uid));
-      setSparkLikesUser(sparkUser.likedMe.includes(sparkProfile.uid));
+      setIsLiked(sparkUser.liked.includes(sparkProfile.uid) || sparkUser.crowned.includes(sparkProfile.uid));
+      setSparkLikesUser(sparkUser.likedMe.includes(sparkProfile.uid) || sparkUser.crownedMe.includes(sparkProfile.uid));
       setCrownCount(sparkUser.dayCrowns);
     }
   }, [isLoading, sparkUser, sparkProfile.uid]);

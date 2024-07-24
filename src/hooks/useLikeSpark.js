@@ -12,8 +12,7 @@ const useLikeSpark = (sparkProfile) => {
   const [isUpdating, setIsUpdating] = useState(false);
   const authUser = useAuthStore((state) => state.user);
   const { isLoading, sparkProfile: sparkUser } = useGetSparkProfileById(authUser?.uid);
-
-  const [isLikedMe, setIsLikedMe] = useState(sparkProfile.likedMe.includes(authUser?.uid));
+  const [isLikedMe, setIsLikedMe] = useState(null || sparkProfile.crownedMe.includes(authUser?.uid) || sparkProfile.likedMe.includes(authUser?.uid));
   const [sparkLikesUser, setSparkLikesUser] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const likeCount = useLikeStore((state) => state.likeCount);
@@ -26,8 +25,8 @@ const useLikeSpark = (sparkProfile) => {
 
   useEffect(() => {
     if (!isLoading && sparkUser && !likeCount) {
-      setIsLiked(sparkUser.liked.includes(sparkProfile.uid));
-      setSparkLikesUser(sparkUser.likedMe.includes(sparkProfile.uid));
+      setIsLiked(sparkUser.liked.includes(sparkProfile.uid) || sparkUser.crowned.includes(sparkProfile.uid));
+      setSparkLikesUser(sparkUser.likedMe.includes(sparkProfile.uid) || sparkUser.crownedMe.includes(sparkProfile.uid));
       setLikeCount(sparkUser.dayLikes);
     }
   }, [isLoading, sparkUser, sparkProfile.uid]);
