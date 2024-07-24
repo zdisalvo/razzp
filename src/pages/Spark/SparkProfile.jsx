@@ -472,7 +472,7 @@ const SparkProfile = ({ sparkProfile, onViewed, sparkUser }) => {
               {filteredBioData && filteredBioData.map((item, index) => (
                 <Box key={index} mb={1} mt={0}>
                 <Text fontWeight="bold" fontSize='sm' color="#eb7734" textAlign="left" ml={3} mb={1}>Bio</Text>
-                <Box key={index} mb={3} >
+                <Box key={index} mb={1} >
                   <Text fontSize="sm" fontWeight="medium" margin='4px 2px' padding="3px 10px" borderRadius='10px' textAlign="left" justifyContent="center" fontFamily="system-ui"  backgroundColor="#1B2328" lineHeight="tall" whiteSpace="pre-wrap" overflowWrap="break-word">
                     {item.value}
                   </Text>
@@ -480,11 +480,11 @@ const SparkProfile = ({ sparkProfile, onViewed, sparkUser }) => {
                 </Box>
               ))}
             
-            <Box mb={1}>
+            <Box mb={1} mt={0} pt={0}>
               
               <Flex wrap="wrap">
                 {filteredEssentialsData.map((dataItem, idx) => ( 
-                  <Button key={idx} size="sm" style={buttonStyle} mb={1} mt={3} display="flex" alignItems="center" justifyContent="center">
+                  <Button key={idx} size="sm" style={buttonStyle} mb={0} mt={3} display="flex" alignItems="center" justifyContent="center">
                     {dataItem.icon && <FontAwesomeIcon icon={dataItem.icon} style={{ marginRight: '8px' }} />}
                     <Text>{dataItem.value}</Text>
                   </Button>
@@ -495,7 +495,7 @@ const SparkProfile = ({ sparkProfile, onViewed, sparkUser }) => {
           
           {profileData.map((section, index) => (
             <Box key={index} mb={1}>
-              <Text fontWeight="bold" fontSize='sm' color="#eb7734" textAlign="left" ml={3} mb={1} mt={3}>{section.label}</Text>
+              <Text fontWeight="bold" fontSize='sm' color="#eb7734" textAlign="left" ml={3} mb={1} mt={1}>{section.label}</Text>
               <Flex wrap="wrap">
                 {section.data.map((dataItem, idx) => ( 
                   <Button key={idx} size="sm" style={buttonStyle} m={1} display="flex" alignItems="center" justifyContent="center">
