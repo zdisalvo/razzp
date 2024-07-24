@@ -79,6 +79,7 @@ const Sidebar = () => {
             _hover={{ bg: "whiteAlpha.400" }}
             borderRadius={6}
             p={1}
+            cursor='pointer'
             //w={{ base: 10, md: "full" }}
             justifyContent={{ base: "center", md: "center" }}
           >
