@@ -112,12 +112,23 @@ const useGetSparkProfiles = (refreshKey) => {
 					//|| sparkProfile.viewed2x.includes(doc.uid) || sparkProfile.uid === doc.uid
 
                     //INTERESTED IN
+                if (sparkProfile.interested_in) {
 
-                    if (sparkProfile.interested_in.includes("Women") && doc.gender !== "Female")
+                    const interestedIn = sparkProfile.interested_in;
+
+                    const isMatch = interestedIn.some((interest) => {
+                    return (
+                        (interest === "Women" && doc.gender === "Female") ||
+                        (interest === "Men" && doc.gender === "Male") || 
+                        (interest === "Trans Women" && doc.gender === "Trans Female") ||
+                        (interest === "Trans Men" && doc.gender === "Trans Male") ||
+                        (interest === "Non-binary" && doc.gender === "Non-binary")
+                    )})
+
+                    if (!isMatch) 
                         return false;
 
-                    if (sparkProfile.interested_in.includes("Men") && doc.gender !== "Male")
-                        return false;
+                }
 
                     // Get filters from sparkProfile
                     const filters = sparkProfile.filters || {}; // Adjust if the structure differs

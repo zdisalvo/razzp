@@ -61,13 +61,13 @@ const SparkProfile = ({ sparkProfile, onViewed, sparkUser }) => {
   const handleSparkLikeMatchChange = (match) => {
     setIsSparkLikeMatch(match);
     // Perform any additional actions based on the match value
-    console.log('SparkLike match status:', match);
+    //console.log('SparkLike match status:', match);
   };
   
   const handleSparkCrownMatchChange = (match) => {
     setIsSparkCrownMatch(match);
     // Perform any additional actions based on the match value
-    console.log('SparkCrown match status:', match);
+    //console.log('SparkCrown match status:', match);
   };
 
   const profileRef = useRef();
