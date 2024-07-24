@@ -15,7 +15,7 @@ const SparkProfileModal = ({ isOpen, onClose, sparkProfile, sparkUser }) => {
         top="-50"
       >
         <ModalCloseButton />
-        <ModalBody px={{base: "0px", md: "8px"}} pt={5} pb={{base: 0, md: 5}}>
+        <ModalBody px={{base: "0px", md: "8px"}} pt={{base: 5, md: 8}} pb={{base: 0, md: 5}}>
           <SparkProfileLite key={sparkProfile.uid} id={sparkProfile.uid} sparkProfile={sparkProfile} sparkUser={sparkUser} />
         </ModalBody>
       </ModalContent>

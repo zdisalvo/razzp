@@ -106,7 +106,7 @@ const SparkMessage = () => {
   };
 
   return (
-    <Container maxW="container.md" mt={{ base: "3vh", md: "30px" }} mb={{ base: "10vh", md: "60px" }}>
+    <Container  w={['100vw', null, '80vh']} mt={{ base: "3vh", md: "30px" }} mb={{ base: "10vh", md: "60px" }}>
       {matchedProfile && (
         <Flex mb={4} align="center">
           <Link as={RouterLink} to="/spark/matches">
