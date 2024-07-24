@@ -18,10 +18,20 @@ const useCrownPost = (post) => {
     const setCrownCount = useCrownStore((state) => state.setCrownCount);
     const incrementCrownCount = useCrownStore((state) => state.incrementCrownCount);
     const decrementCrownCount = useCrownStore((state) => state.decrementCrownCount);
+
+    const calculateOffset = (post) => {
+      const postTime = new Date(post.createdAt);
+      const currentTime = new Date();
+      const elapsedTimeInDays = (currentTime - postTime) / (1000 * 60 * 60 * 24);
+      //console.log(post.score / (elapsedTimeInDays + 1));
+      return elapsedTimeInDays + 1;
+  };
+
+  const offset = useState(calculateOffset(post));
   
 
     useEffect(() => {
-        if (authUser) {
+        if (authUser && !crownCount) {
             setCrownCount(authUser.dayCrowns);
         }
     }, [authUser]);
@@ -53,7 +63,7 @@ const useCrownPost = (post) => {
             
 			await updateDoc(postRef, {
 				crowns: isCrowned ? arrayRemove(authUser.uid) : arrayUnion(authUser.uid),
-                score: isCrowned ? increment(-Math.max(authUser.followers.length, 5)): increment((Math.max(authUser.followers.length, 5))),
+                score: isCrowned ? increment(-Math.max(authUser.followers.length, 5) * offset[0]): increment(Math.max(authUser.followers.length, 5) * offset[0]),
 			});
 
             await updateDoc(userRef, {
@@ -97,7 +107,7 @@ const useCrownPost = (post) => {
             timeRemaining = Math.round(timeRemaining);
 
     
-            if (timeDiff < 86400) { // 60 seconds = 1 minute
+            if (timeDiff < 60) { // 60 seconds = 1 minute // 86400 seconds = 1 day
               showToast("Message", "Please wait " + timeRemaining + " hours for your crowns to refresh", "warning");
               return false; // Not allowed to like
             }

@@ -23,7 +23,18 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
     const [isCrowned, setIsCrowned] = useState(initialIsCrowned); // Local state for isLiked
     const [crowns, setCrowns] = useState(initialCrowns);
 
-    const[totalScore, setTotalScore] = useState(post.score);
+    const calculateRankingScore = (post) => {
+        const postTime = new Date(post.createdAt);
+        const currentTime = new Date();
+        const elapsedTimeInDays = (currentTime - postTime) / (1000 * 60 * 60 * 24);
+        //console.log(post.score / (elapsedTimeInDays + 1));
+        return post.score / (elapsedTimeInDays + 1);
+    };
+
+    const[totalScore, setTotalScore] = useState(Math.round(calculateRankingScore(post)));
+    //const age = useState(post.createdAt);
+
+    
 
     useEffect(() => {
         setIsCrowned(initialIsCrowned);
@@ -126,7 +137,7 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
                     <CommentLogo />
                 </Box>
             </Flex>
-            <Text fontWeight={600} fontSize={"sm"} ml={{base: 2, md: 3}} mb={1}>
+            <Text fontWeight={600} fontSize={"sm"}  mb={1}>
                 {/* {totalScore === 1 ? `${totalScore} point` : `${totalScore} points`} */}
                 {totalScore}°
             </Text>
@@ -139,14 +150,14 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
 
             {!isProfilePage && (
                 <>
-                    <Text fontSize="sm" fontWeight={700} ml={{base: 2, md: 3}} mb={1}>
+                    <Text fontSize="sm" fontWeight={700}  mb={1}>
                         {creatorProfile?.username}{" "}
                         <Text as="span" fontWeight={400}>
                             {post.caption}
                         </Text>
                     </Text>
                     {post.comments.length > 0 && (
-                        <Text fontSize="sm" ml={{base: 2, md: 3}} color={"gray"} cursor={"pointer"} onClick={onOpen}>
+                        <Text fontSize="sm"  color={"gray"} cursor={"pointer"} onClick={onOpen}>
                             View all {post.comments.length} comments
                         </Text>
                     )}
@@ -163,7 +174,7 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
                             focusBorderColor="#eb7734"
                             placeholder={"Add a comment..."}
                             fontSize={16}
-                            ml={{base: 2, md: 3}}
+                            
                             onChange={(e) => setComment(e.target.value)}
                             value={comment}
                             ref={commentRef}

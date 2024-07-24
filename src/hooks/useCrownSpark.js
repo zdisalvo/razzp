@@ -6,7 +6,7 @@ import { arrayRemove, arrayUnion, doc, updateDoc, increment } from "firebase/fir
 import { firestore } from "../firebase/firebase";
 import useGetSparkProfileById from "./useGetSparkProfileById";
 
-const MAX_CROWNS = 2;
+const MAX_CROWNS = 1;
 
 const useCrownSpark = (sparkProfile) => {
   const [isUpdating, setIsUpdating] = useState(false);
@@ -23,7 +23,7 @@ const useCrownSpark = (sparkProfile) => {
   const showToast = useShowToast();
 
   useEffect(() => {
-    if (!isLoading && sparkUser) {
+    if (!isLoading && sparkUser && !crownCount) {
       setIsLiked(sparkUser.crowned.includes(sparkProfile.uid));
       setCrownCount(sparkUser.dayCrowns);
     }
