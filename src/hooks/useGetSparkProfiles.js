@@ -119,7 +119,7 @@ const useGetSparkProfiles = (refreshKey) => {
 				
 				if (sparkProfile.filters ) {
 
-					if (filters.ageRange.length > 0) {
+					if (filters.ageRange && filters.ageRange.length > 0) {
 						const minAge = filters.ageRange[0];
 						const maxAge = filters.ageRange[1];
 						
