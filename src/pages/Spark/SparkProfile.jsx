@@ -538,7 +538,7 @@ const SparkProfile = ({ sparkProfile, onViewed, sparkUser }) => {
           <Box mx={2}>
           <FontAwesomeIcon icon={faLocationDot}  />
           </Box>
-            <Text fontSize="sm" >{city}, {state} - {Math.max(1, distance)} mi away</Text>
+            <Text fontSize="sm" >{city}, {state} - {Math.max(1, Math.round(distance))} mi away</Text>
             </Flex>
             }
           </Box>
