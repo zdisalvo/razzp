@@ -514,10 +514,10 @@ const SparkProfile = ({ sparkProfile, onViewed, sparkUser }) => {
           </Box>
           ))}
           {lastPage.length > 0 &&
-          <Box p={3}>
+          <Box px={3} pt={0} mt={0}>
           {lastPage.map((section, index) => (
-            <Box key={index} mb={0}>
-              <Text fontWeight="bold" fontSize='sm' color="#eb7734" textAlign="left" ml={3} mb={1} mt={3}>{section.label}</Text>
+            <Box key={index} mb={3} mt={0} pt={0}>
+              <Text fontWeight="bold" fontSize='sm' color="#eb7734" textAlign="left" ml={3} mb={1} mt={0} pt={0}>{section.label}</Text>
               <Flex wrap="wrap">
                 {section.data.map((dataItem, idx) => ( 
                   <Button key={idx} size="sm" style={buttonStyle} m={1} display="flex" alignItems="center" justifyContent="center">
@@ -535,7 +535,7 @@ const SparkProfile = ({ sparkProfile, onViewed, sparkUser }) => {
             icon={<FontAwesomeIcon icon={faLocationDot} />}
             mx={2} // Adds horizontal margin between the icons
           /> */}
-          <Box mx={2} mb={1} mt={1}>
+          <Box mx={2} mb={1} mt={2}>
           <FontAwesomeIcon icon={faLocationDot}  />
           </Box>
             <Text fontSize="sm" >{city}, {state} - {Math.max(1, Math.round(distance))} mi away</Text>
