@@ -23,6 +23,8 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
     const [isCrowned, setIsCrowned] = useState(initialIsCrowned); // Local state for isLiked
     const [crowns, setCrowns] = useState(initialCrowns);
 
+    const[totalScore, setTotalScore] = useState(post.score);
+
     useEffect(() => {
         setIsCrowned(initialIsCrowned);
         //setLikeCount(initialLikeCount);
@@ -33,9 +35,11 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
 		if (authUser) {
 			const newIsLiked = !isLiked;
 			const newLikes = newIsLiked ? likes + 1 : likes - 1;
+            const newScore = newIsLiked ? totalScore + 1 : totalScore - 1;
 
 			setIsLiked(newIsLiked);
 			setLikes(newLikes);
+            setTotalScore(newScore);
 
 			handleLikePost();
 		} else {
@@ -61,7 +65,10 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
             return;
 
         setIsCrowned(newIsCrowned);
-        
+
+        const newCrowns = newIsCrowned ? crowns + Math.max(5, authUser.followers.length) : crowns - Math.max(5, authUser.followers.length);
+        const newScore = newIsCrowned ? totalScore + Math.max(5, authUser.followers.length) : totalScore - Math.max(5, authUser.followers.length);
+        setTotalScore(newScore);
 		
             try{
 
@@ -69,21 +76,23 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
 
             if (!isAllowedToCrown) {
                 setIsCrowned(!newIsCrowned);
+                setTotalScore(newScore - Math.max(5, authUser.followers.length));
                 return;
             }
             
             setIsUpdating(true);
 			
-			//const newCrowns = newIsCrowned ? crowns + 1 : crowns - 1;
+			
 
 			
 
 			await handleCrownPost();
             setIsCrowned(!newIsCrowned);
 			//setCrowns(newCrowns);
-            console.log("end: " + newIsCrowned);
+            //console.log("end: " + newIsCrowned);
             } catch (error) {
                 console.error("Error handling like click:", error);
+                setTotalScore(newScore - Math.max(5, authUser.followers.length));
                 setIsCrowned(!newIsCrowned); // Rollback on error
                 //setIsLikedMe(isLikedMe);
               } finally {
@@ -117,8 +126,8 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
                     <CommentLogo />
                 </Box>
             </Flex>
-            <Text fontWeight={600} fontSize={"sm"} mb={1}>
-                {likes === 1 ? `${likes} like` : `${likes} likes`}
+            <Text fontWeight={600} fontSize={"sm"} ml={3} mb={1}>
+                {totalScore === 1 ? `${totalScore} point` : `${totalScore} points`}
             </Text>
 
             {isProfilePage && (
@@ -129,14 +138,14 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
 
             {!isProfilePage && (
                 <>
-                    <Text fontSize="sm" fontWeight={700} mb={1}>
+                    <Text fontSize="sm" fontWeight={700} ml={3} mb={1}>
                         {creatorProfile?.username}{" "}
                         <Text as="span" fontWeight={400}>
                             {post.caption}
                         </Text>
                     </Text>
                     {post.comments.length > 0 && (
-                        <Text fontSize="sm" color={"gray"} cursor={"pointer"} onClick={onOpen}>
+                        <Text fontSize="sm" ml={3} color={"gray"} cursor={"pointer"} onClick={onOpen}>
                             View all {post.comments.length} comments
                         </Text>
                     )}
@@ -153,11 +162,12 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
                             focusBorderColor="#eb7734"
                             placeholder={"Add a comment..."}
                             fontSize={16}
+                            mx={3}
                             onChange={(e) => setComment(e.target.value)}
                             value={comment}
                             ref={commentRef}
                         />
-                        <InputRightElement>
+                        <InputRightElement mr={3}>
                             <Button
                                 fontSize={14}
                                 color={"blue.500"}
