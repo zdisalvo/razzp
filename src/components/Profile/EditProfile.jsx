@@ -14,6 +14,7 @@ import {
 	ModalHeader,
 	ModalOverlay,
 	Stack,
+	Textarea
 } from "@chakra-ui/react";
 import { useRef, useState } from "react";
 import useAuthStore from "../../store/authStore";
@@ -47,28 +48,29 @@ const EditProfile = ({ isOpen, onClose }) => {
 		<>
 			<Modal isOpen={isOpen} onClose={onClose}>
 				<ModalOverlay />
-				<ModalContent bg={"black"} boxShadow={"xl"} border={"1px solid gray"} mx={3}>
-					<ModalHeader />
+				<ModalContent bg={"black"} border={"1px solid gray"} maxW={{ base: "90vw", md: "400px" }} px={0} my={0}>
+				<ModalHeader mb={0}>Edit Profile</ModalHeader>
 					<ModalCloseButton />
-					<ModalBody>
+					<ModalBody pb={5} pt={1}>
 						{/* Container Flex */}
 						<Flex bg={"black"}>
-							<Stack spacing={4} w={"full"} maxW={"md"} bg={"black"} p={6} my={0}>
-								<Heading lineHeight={1.1} fontSize={{ base: "2xl", sm: "3xl" }}>
-									Edit Profile
-								</Heading>
+							<Stack spacing={3} w={"full"}  bg={"black"} p={0} my={0}>
+									{/* <Heading lineHeight={1.1} fontSize={{ base: "14px", sm: "14px" }}>
+										Edit Profile
+									</Heading> */}
 								<FormControl>
-									<Stack direction={["column", "row"]} spacing={6}>
-										<Center>
+									<Stack direction={["row", "row"]} spacing={6} my={0}>
+										<Center mt={0}>
 											<Avatar
+			
 												size='xl'
 												src={selectedFile || authUser.profilePicURL}
 												border={"2px solid white "}
 											/>
 										</Center>
 										<Center w='full'>
-											<Button w='full' onClick={() => fileRef.current.click()}>
-												Edit Profile Picture
+											<Button size="sm" w='full' onClick={() => fileRef.current.click()}>
+												Edit Picture
 											</Button>
 										</Center>
 										<Input type='file' hidden ref={fileRef} onChange={handleImageChange} />
@@ -81,8 +83,14 @@ const EditProfile = ({ isOpen, onClose }) => {
 										placeholder={"Full Name"}
 										size={"sm"}
 										type={"text"}
+										fontSize={16}
 										value={inputs.fullName || authUser.fullName}
 										onChange={(e) => setInputs({ ...inputs, fullName: e.target.value })}
+										_focus={{ 
+											borderColor: 'transparent', // Make the border transparent
+											boxShadow: '0 0 0 1px rgba(244, 164, 96, 0.5)' // Simulate a thinner border with box-shadow
+										  }} 
+										  maxLength={40}
 									/>
 								</FormControl>
 
@@ -92,23 +100,37 @@ const EditProfile = ({ isOpen, onClose }) => {
 										placeholder={"Username"}
 										size={"sm"}
 										type={"text"}
+										fontSize={16}
 										value={inputs.username || authUser.username}
 										onChange={(e) => setInputs({ ...inputs, username: e.target.value })}
+										_focus={{ 
+											borderColor: 'transparent', // Make the border transparent
+											boxShadow: '0 0 0 1px rgba(244, 164, 96, 0.5)' // Simulate a thinner border with box-shadow
+										  }} 
+										  maxLength={20}
 									/>
 								</FormControl>
 
 								<FormControl>
 									<FormLabel fontSize={"sm"}>Bio</FormLabel>
-									<Input
+									<Textarea
 										placeholder={"Bio"}
+										fontSize={16}
 										size={"sm"}
-										type={"text"}
 										value={inputs.bio || authUser.bio}
 										onChange={(e) => setInputs({ ...inputs, bio: e.target.value })}
+										width="100%"
+										resize="vertical"
+										rows={3} // Set the number of lines to 3
+										_focus={{ 
+											borderColor: 'transparent', // Make the border transparent
+											boxShadow: '0 0 0 1px rgba(244, 164, 96, 0.5)' // Simulate a thinner border with box-shadow
+										  }} 
+										  maxLength={150}
 									/>
 								</FormControl>
 
-								<Stack spacing={6} direction={["column", "row"]}>
+								<Stack spacing={6} direction={["row", "row"]}>
 									<Button
 										bg={"red.400"}
 										color={"white"}

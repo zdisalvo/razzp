@@ -28,9 +28,10 @@ const ProfileHeader = ({ username, page }) => {
 	//console.log(locationData);
 	const [isToggled, setIsToggled] = useState(userProfile.location && userProfile.location.length > 0);
     const [userLocation, setUserLocation] = useState({ latitude: null, longitude: null });
-	const navigate = useNavigate();
+	
 	const setUserId = useMsgStore((state) => state.setUserId);
 	const setReceivingUserId = useMsgStore((state) => state.setReceivingUserId);
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		// Get current location if the proximity toggle is on
@@ -203,10 +204,11 @@ const ProfileHeader = ({ username, page }) => {
 								bg={"#eb7734"}
 								color={"white"}
 								_hover={{ bg: "#c75e1f" }}
+								textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)"
 								size={{ base: "sm", md: "sm" }}
 								onClick={handleFollowClick} // Use the optimized handler
 								isDisabled={isOptimisticUpdate} // Disable button during optimistic update
-								textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)"
+								
 							>
 								{isFollowing ? "Unfollow" : "Follow"}
 							</Button>

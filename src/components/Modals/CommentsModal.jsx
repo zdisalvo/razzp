@@ -88,6 +88,9 @@ const CommentsModal = ({ isOpen, onClose, post }) => {
 		if (authUser) {
 			// Check if the comment is already liked by the user
 			const isLiked = userCommentLikes.has(commentId);
+
+            if (isLiked)
+                return;
 	
 			// Optimistic update: toggle like status immediately
 			setComments(prevComments =>
@@ -202,7 +205,13 @@ const CommentsModal = ({ isOpen, onClose, post }) => {
                         ))}
                     </Flex>
                     <form onSubmit={handleSubmitComment} style={{ marginTop: "2rem" }}>
-                        <Input placeholder='Comment' size={"sm"} ref={commentRef} />
+                        <Input 
+                        placeholder='Comment' size={"sm"} fontSize={16} ref={commentRef} 
+                        _focus={{ 
+                            borderColor: 'transparent', // Make the border transparent
+                            boxShadow: '0 0 0 1px rgba(244, 164, 96, 0.5)' // Simulate a thinner border with box-shadow
+                          }} 
+                        />
                         <Flex w={"full"} justifyContent={"flex-end"}>
                             <Button type='submit' ml={"auto"} size={"sm"} my={4} isLoading={isCommenting}>
                                 Post
