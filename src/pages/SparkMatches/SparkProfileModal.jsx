@@ -9,13 +9,13 @@ const SparkProfileModal = ({ isOpen, onClose, sparkProfile, sparkUser }) => {
       <ModalOverlay />
       <ModalContent 
       bg={"black"} border={"1px solid gray"} 
-      maxW={{ base: "100vw", md: "450px" }}  
+      maxW={{ base: "100vw", md: "425px" }}  
       px={{base: "0px", md: "8px"}} pt={3} pb={0} 
       position="absolute"
         top="-50"
       >
         <ModalCloseButton />
-        <ModalBody px={{base: "0px", md: "8px"}} pt={5} pb={0}>
+        <ModalBody px={{base: "0px", md: "8px"}} pt={5} pb={{base: 0, md: 5}}>
           <SparkProfileLite key={sparkProfile.uid} id={sparkProfile.uid} sparkProfile={sparkProfile} sparkUser={sparkUser} />
         </ModalBody>
       </ModalContent>

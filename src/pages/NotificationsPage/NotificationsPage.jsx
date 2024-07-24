@@ -99,7 +99,7 @@ const NotificationsPage = () => {
     };
 
     return (
-        <Container py={6} px={0} w={['100vw', null, '80vh']}>
+        <Container pt={6} px={0} w={['100vw', null, '80vh']} pb={{base: "10vh", md: "60px"}}>
                 <Flex align="center" mb={4}>
                     <IconButton
                         icon={<FontAwesomeIcon fontSize={32} icon={faCaretLeft} />}
