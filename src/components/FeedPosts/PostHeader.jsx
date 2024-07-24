@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { doc, deleteDoc, updateDoc, arrayRemove } from "firebase/firestore";
 import { ref, deleteObject } from "firebase/storage";
-import useFollowUser from "../../hooks/useFollowUser";
+import useFollowUserFP from "../../hooks/useFollowUserFP";
 import { timeAgo } from "../../utils/timeAgo";
 import useGetUserProfileById from "../../hooks/useGetUserProfileById";
 import useAuthStore from "../../store/authStore"; 
@@ -23,7 +23,10 @@ import useSparkProfileStore from "../../store/sparkProfileStore";
 const PostHeader = ({ post, creatorProfile }) => {
   
   const { userProfile } = useGetUserProfileById(post.createdBy);
-  const { handleFollowUser, isFollowing, isUpdating } = useFollowUser(post.createdBy);
+	const { isFollowing: initialIsFollowing, handleFollowUser } = useFollowUserFP();
+	const [isFollowing, setIsFollowing] = useState(initialIsFollowing);
+  const [isOptimisticUpdate, setIsOptimisticUpdate] = useState(false);
+
   const authUser = useAuthStore((state) => state.user);
   const showToast = useShowToast();
   const [isDeleting, setIsDeleting] = useState(false);
@@ -40,6 +43,21 @@ const PostHeader = ({ post, creatorProfile }) => {
 //   console.log(userProfile.uid);
 //   console.log(authUser.uid);
 
+const handleFollowClick = async () => {
+  // Optimistically update the UI
+  setIsFollowing(prev => !prev);
+  setIsOptimisticUpdate(true);
+
+  try {
+    await handleFollowUser(userProfile.uid, isFollowing); // Handle server request
+  } catch (error) {
+    // Revert optimistic update if needed
+    setIsFollowing(prev => !prev);
+    console.error('Error updating follow status:', error);
+  } finally {
+    setIsOptimisticUpdate(false);
+  }
+};
 
 
   const handleDeletePost = async () => {
@@ -78,8 +96,8 @@ const PostHeader = ({ post, creatorProfile }) => {
           <SkeletonCircle size='10' />
         )}
 
-        <Flex fontSize={12}  gap='2' >
-          <Box fontWeight={"bold"}>
+        <Flex  gap='2' alignItems="baseline">
+          <Box fontSize={14} fontWeight={"bold"}>
           {/* {creatorProfile && userProfile ? (
             <Link to={`/${userProfile.username || ""}`} >{userProfile.username || "Deleted User"}</Link>
           ) : (
@@ -91,26 +109,23 @@ const PostHeader = ({ post, creatorProfile }) => {
             <Skeleton w={"100px"} h={"10px"} />
           )}
           </Box>
-          <Box fontWeight={"regular"} color={"gray.500"}>• {timeAgo(post.createdAt)}</Box>
+          <Box fontSize={12} fontWeight={"regular"} color={"gray.500"}>{timeAgo(post.createdAt)}</Box>
         </Flex>
       </Flex>
-      <Flex alignItems={"center"} gap={2} m={3}>
+      <Flex alignItems={"center"} gap={4} m={3}>
         <Box cursor={"pointer"}>
-          <Button
-            size={"xs"}
-            bg={"transparent"}
-            fontSize={12}
-            color={"blue.500"}
-            fontWeight={"bold"}
-            _hover={{
-              color: "white",
-            }}
-            //transition={"0.2s ease-in-out"}
-            onClick={handleFollowUser}
-            isLoading={isUpdating}
-          >
-            {isFollowing ? "Unfollow" : "Follow"}
-          </Button>
+        <Button
+								bg={"#eb7734"}
+								color={"white"}
+								_hover={{ bg: "#c75e1f" }}
+								textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)"
+								size={{ base: "sm", md: "sm" }}
+								onClick={handleFollowClick} // Use the optimized handler
+								isDisabled={isOptimisticUpdate} // Disable button during optimistic update
+								
+							>
+								{isFollowing ? "Unfollow" : "Follow"}
+							</Button>
         </Box>
         {authUser?.uid === userProfile?.uid && (
           <Box cursor={"pointer"}>
