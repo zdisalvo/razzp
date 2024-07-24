@@ -21,7 +21,7 @@ const useLikePost = (post) => {
 
     const offset = useState(calculateOffset(post));
 
-    console.log(offset[0]);
+    //console.log(offset[0]);
 
     const handleLikePost = async () => {
         if (isUpdating) return;

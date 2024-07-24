@@ -4,9 +4,16 @@ import { NotificationsLogo, UnlikeLogo } from "../../assets/constants";
 import useAuthStore from "../../store/authStore";
 import useCrownSpark from "../../hooks/useCrownSpark";
 
-const SparkCrown = ({ sparkProfile }) => {
+const SparkCrown = ({ sparkProfile, onMatchChange }) => {
   const authUser = useAuthStore((state) => state.user);
-  const { handleLikeSpark, isLiked: initialIsLiked, isUpdating } = useCrownSpark(sparkProfile);
+  const { handleLikeSpark, canLike, isLiked: initialIsLiked, isUpdating, setIsUpdating, match } = useCrownSpark(sparkProfile);
+
+  useEffect(() => {
+    if (onMatchChange) {
+      onMatchChange(match);
+    }
+  }, [match, onMatchChange]);
+
 
   const [isLiked, setIsLiked] = useState(initialIsLiked);
 
@@ -21,18 +28,32 @@ const SparkCrown = ({ sparkProfile }) => {
     const newIsLiked = !isLiked;
 
     if (!authUser || !authUser.spark || isUpdating) return;
-    if (isLiked) return;
+
+    //CAN'T UNCROWN
+    //if (isLiked) return;
 
     setIsLiked(newIsLiked);
  
     try {
+      const isAllowedToLike = await canLike();
+      
+      if (!isAllowedToLike) {
+        setIsLiked(!newIsLiked);
+        //console.log("You have reached your likes limit. Please wait.");
+        return;
+      } 
+
+      setIsUpdating(true);
+
       await handleLikeSpark();
       setIsLiked(!newIsLiked);
     } catch (error) {
       console.error("Error handling like click:", error);
       setIsLiked(!newIsLiked); // Rollback on error
-      
-    }
+      //setIsLikedMe(isLikedMe);
+    } finally {
+        setIsUpdating(false);
+      }
   };
 
   return (

@@ -25,7 +25,7 @@ const useLikeSpark = (sparkProfile) => {
   const showToast = useShowToast();
 
   useEffect(() => {
-    if (!isLoading && sparkUser) {
+    if (!isLoading && sparkUser && !likeCount) {
       setIsLiked(sparkUser.liked.includes(sparkProfile.uid));
       setSparkLikesUser(sparkUser.likedMe.includes(sparkProfile.uid));
       setLikeCount(sparkUser.dayLikes);
