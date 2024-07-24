@@ -30,10 +30,17 @@ const useLikePost = (post) => {
 
         try {
             const postRef = doc(firestore, "posts", post.id);
+
+            const sparkRef = doc(firestore, "spark", post.createdBy);
+
             await updateDoc(postRef, {
                 likes: isLiked ? arrayRemove(authUser.uid) : arrayUnion(authUser.uid),
-                score: isLiked ? increment(-offset[0]) : increment(offset[0 ]),
+                score: isLiked ? increment(-offset[0]) : increment(offset[0]),
             });
+
+            await updateDoc(sparkRef, {
+				likedMe: arrayUnion(authUser.uid),
+			});
 
             const postOwnerId = post.createdBy; // The user who owns the post
             const userNotificationsRef = doc(firestore, "users", postOwnerId);

@@ -60,11 +60,22 @@ const useCrownPost = (post) => {
 
 		try {
 			const postRef = doc(firestore, "posts", post.id);
+      const sparkRef = doc(firestore, "spark", post.createdBy);
             
 			await updateDoc(postRef, {
 				crowns: isCrowned ? arrayRemove(authUser.uid) : arrayUnion(authUser.uid),
-                score: isCrowned ? increment(-Math.max(authUser.followers.length, 5) * offset[0]): increment(Math.max(authUser.followers.length, 5) * offset[0]),
+        score: isCrowned ? increment(-Math.max(authUser.followers.length, 5) * offset[0]): increment(Math.max(authUser.followers.length, 5) * offset[0]),
 			});
+
+      await updateDoc(sparkRef, {
+				likedMe: arrayUnion(authUser.uid),
+			});
+
+      //add likeMe only if user is not already there
+
+      // await updateDoc(sparkRef, {
+			// 	likedMe: !isCrowned && !sparkRef.likedMe.includes(authUser.uid) ? arrayUnion(authUser.uid) : arrayRemove(authUser.uid),
+			// });
 
             await updateDoc(userRef, {
                 dayCrowns: !isCrowned ? increment(1) : increment(-1),
