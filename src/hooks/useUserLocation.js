@@ -81,7 +81,16 @@ const useUserLocation = (lat, long) => {
 
                 const city = response.data.city || response.data.locality || "Unknown city";
                 const stateName = response.data.principalSubdivision || "Unknown state";
-                const state = STATE_ABBREVIATIONS[stateName] || stateName;
+                const countryName = response.data.countryName || "Unknown country";
+
+                // Check if the country is the US
+                let state;
+                if (countryName === "United States of America (the)") {
+                    state = STATE_ABBREVIATIONS[stateName] || stateName;
+                } else {
+                    console.log(countryName);
+                    state = countryName; // Use country name as state
+                }
 
                 setLocation({ city, state });
             } catch (error) {
