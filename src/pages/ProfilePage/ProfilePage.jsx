@@ -10,13 +10,19 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faComments } from '@fortawesome/free-solid-svg-icons';
 import useMsgStore from "../../store/msgStore";
 import useAuthStore from "../../store/authStore";
+import useCheckBlockedUser from "../../hooks/useCheckBlockedUser";
 
 const ProfilePage = () => {
-  const authUser = useAuthStore((state) => state.user);
+  const { authUser, fetchUserData } = useAuthStore((state) => ({
+		authUser: state.user,
+		fetchUserData: state.fetchUserData,
+	  }));
   const { username } = useParams();
   //const { isLoading: authUserLoading } = useAuthStore((state) => state);
 
   const { isLoading, userProfile } = useGetUserProfileByUsername(username);
+
+  const isBlocked = useCheckBlockedUser({userProfile});
 
   const [loading, setLoading] = useState(true);
 
@@ -25,6 +31,12 @@ const ProfilePage = () => {
   const userNotFound = !isLoading && !userProfile;
   const setUserId = useMsgStore((state) => state.setUserId);
   const setReceivingUserId = useMsgStore((state) => state.setReceivingUserId);
+
+  // useEffect(() => {
+	// 	if (authUser) {
+	// 	  fetchUserData(authUser.uid); // Ensure the user data is up-to-date
+	// 	}
+	//   }, [authUser, fetchUserData]);
 
   // console.log(userProfile.uid);
   // console.log(authUser);
@@ -52,7 +64,7 @@ const ProfilePage = () => {
   };
 
 
-  if (userNotFound) return <UserNotFound />;
+  if (userNotFound || isBlocked) return <UserNotFound />;
 
   return (
     <Container top={0} p={0} maxW={{base: "100vw", md: "100vw"}} pb={{base: "10vh", md: "60px"}}  m={0}>

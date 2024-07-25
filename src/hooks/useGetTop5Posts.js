@@ -4,6 +4,7 @@ import { collection, getDocs, query, where, orderBy, limit } from "firebase/fire
 import usePostStore from "../store/postStore"; // Assuming you have a post store
 
 const calculateRankingScore = (post) => {
+
     const postTime = new Date(post.createdAt);
     const currentTime = new Date();
     const elapsedTimeInDays = (currentTime - postTime) / (1000 * 60 * 60 * 24);

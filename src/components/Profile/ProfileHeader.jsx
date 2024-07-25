@@ -131,7 +131,7 @@ const ProfileHeader = ({ username, page }) => {
 		  };
 		  getCurrentLocation();
 		} 
-	    else {
+	    else if ( visitingOwnProfileAndAuth) {
 	      unstoreUserLocation(authUser.uid);
 	    }
 	  }, [isToggled]);
@@ -186,12 +186,13 @@ const ProfileHeader = ({ username, page }) => {
           <MenuList
             bg="black" // Sets the background color to black
             borderRadius="md" // Optional: for rounded corners
-            borderBottom="1px groove #1B2328" // Adds the border at the bottom
+            //borderBottom="1px groove #1B2328" // Adds the border at the bottom
             color="white" // Sets the text color to white for better contrast
 			fontSize="sm"
 			width="auto"
 			minWidth="75px"
 			maxWdith="75px"
+			py={1}
 			position="absolute"
 			right={-10}
             _focus={{ boxShadow: 'none' }} // Optional: Removes box shadow on focus

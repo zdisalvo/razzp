@@ -113,6 +113,7 @@ const handleFollowClick = async () => {
         </Flex>
       </Flex>
       <Flex alignItems={"center"} gap={4} m={3}>
+      {authUser && (
         <Box cursor={"pointer"}>
         <Button
 								bg={"#eb7734"}
@@ -127,6 +128,7 @@ const handleFollowClick = async () => {
 								{isFollowing ? "Unfollow" : "Follow"}
 							</Button>
         </Box>
+      )}
         {authUser?.uid === userProfile?.uid && (
           <Box cursor={"pointer"}>
             {/* <Button

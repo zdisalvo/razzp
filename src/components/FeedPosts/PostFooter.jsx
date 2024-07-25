@@ -133,9 +133,11 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
                 <Box onClick={handleCrownClick} cursor={"pointer"} width="10%" fontSize={32}>
                     {!isCrowned ? <Image src="/white-crown-small.png" /> : <Image src="/blue-crown-small.png" />}
                 </Box>
+                {authUser && (
                 <Box cursor={"pointer"} fontSize={18} onClick={() => commentRef.current.focus()}>
                     <CommentLogo />
                 </Box>
+                )}
             </Flex>
             <Text fontWeight={600} fontSize={"sm"}  mb={1}>
                 {/* {totalScore === 1 ? `${totalScore} point` : `${totalScore} points`} */}
