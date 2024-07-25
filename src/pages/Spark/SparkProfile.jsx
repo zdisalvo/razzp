@@ -6,7 +6,7 @@ import WineBarRoundedIcon from '@mui/icons-material/WineBarRounded';
 //import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCannabis, faBriefcase, faWineGlass, faRuler, faDumbbell, faGraduationCap, 
-  faSmoking, faSchool, faHouseChimney, faBaby, faChildren, faStarAndCrescent, faScaleBalanced, faBook, faGlobe, faLocationDot } from '@fortawesome/free-solid-svg-icons'; 
+  faSmoking, faSchool, faHouseChimney, faBabyCarriage, faChildren, faStarAndCrescent, faScaleBalanced, faBook, faGlobe, faLocationDot } from '@fortawesome/free-solid-svg-icons'; 
 //import "../Spark/carousel.css"
 import SparkLike from './SparkLike';
 import SparkCrown from './SparkCrown';
@@ -209,7 +209,7 @@ const SparkProfile = ({ sparkProfile, onViewed, sparkUser }) => {
     //{ value: looking_for },
     family_plans && { value: (
       <Flex align="center">
-        <FontAwesomeIcon icon={faBaby} style={{ marginRight: '8px' }} /> {family_plans}
+        <FontAwesomeIcon icon={faBabyCarriage} style={{ marginRight: '8px' }} /> {family_plans}
       </Flex>
     )},
     have_kids && { value: (
@@ -362,7 +362,7 @@ const SparkProfile = ({ sparkProfile, onViewed, sparkUser }) => {
   //profilePics.map((pic, index) => (
 
   return (
-    <Container ref={profileRef} width={{ base: "100vw", md: "auto" }} height={{ base: "auto", md: "100%" }} mb={{ base: "60px", md: "100px" }} px={0} mx={0}>
+    <Container ref={profileRef} width={{ base: "100vw", md: "auto" }} height={{ base: "auto", md: "100%" }} mb={{ base: "60px", md: "100px" }} px={0} mx={0} >
       <Box >
       {isSparkLikeMatch && (
         <Box
@@ -403,7 +403,8 @@ const SparkProfile = ({ sparkProfile, onViewed, sparkUser }) => {
         </Box>
       )}
       <Carousel
-      
+          emulateTouch={true} 
+          swipeable={false}
           showThumbs={false}
           showArrows={true}
           showStatus={false}
@@ -480,7 +481,7 @@ const SparkProfile = ({ sparkProfile, onViewed, sparkUser }) => {
                 </Box>
               ))}
             
-            <Box mb={1} mt={0} pt={0}>
+            <Box mb={2} mt={0} pt={0}>
               
               <Flex wrap="wrap">
                 {filteredEssentialsData.map((dataItem, idx) => ( 
