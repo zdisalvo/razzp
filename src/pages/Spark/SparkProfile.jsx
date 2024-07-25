@@ -45,6 +45,8 @@ const calculateAge = (birthday) => {
 
 const SparkProfile = ({ sparkProfile, onViewed, sparkUser }) => {
 
+
+
   //console.log(sparkUser);
 
   // const authUser = useAuthStore((state) => state);
@@ -57,6 +59,11 @@ const SparkProfile = ({ sparkProfile, onViewed, sparkUser }) => {
 
   const [isSparkLikeMatch, setIsSparkLikeMatch] = useState(false);
   const [isSparkCrownMatch, setIsSparkCrownMatch] = useState(false);
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  const handleCarouselChange = (index) => {
+    setCurrentSlide(index);
+  };
   
   const handleSparkLikeMatchChange = (match) => {
     setIsSparkLikeMatch(match);
@@ -402,7 +409,21 @@ const SparkProfile = ({ sparkProfile, onViewed, sparkUser }) => {
           You Matched!
         </Box>
       )}
+      <Box width="100%" display="flex" justifyContent="center" mb={2} my={1} px="2px">
+          {Array.from({ length: profilePics.length + 2 }).map((_, index) => (
+            <Box
+              key={index}
+              flex="1"
+              height="3px"
+              bg={index === currentSlide ? 'blue.500' : 'gray.300'}
+              mx="2px"
+              
+            />
+          ))}
+        </Box>
       <Carousel
+      selectedItem={currentSlide}
+      onChange={handleCarouselChange}
           emulateTouch={true} 
           swipeable={false}
           showThumbs={false}
@@ -536,7 +557,7 @@ const SparkProfile = ({ sparkProfile, onViewed, sparkUser }) => {
             icon={<FontAwesomeIcon icon={faLocationDot} />}
             mx={2} // Adds horizontal margin between the icons
           /> */}
-          <Box mx={2} mb={1} mt={2}>
+          <Box mx={2} mb={5} mt={2}>
           <FontAwesomeIcon icon={faLocationDot}  />
           </Box>
             <Text fontSize="sm" >{city}, {state} - {Math.max(1, Math.round(distance))} mi away</Text>
