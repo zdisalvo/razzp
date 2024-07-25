@@ -81,6 +81,8 @@ const useSignUpWithEmailAndPassword = () => {
 					ratings: [],
 					totalScore: 0,
 					filters: [],
+					blocked: [],
+					blockedMe: [],
 				}
 
 				const userDoc = {

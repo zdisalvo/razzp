@@ -1,4 +1,4 @@
-import { Avatar, AvatarGroup, Button, Flex, Text, VStack, useDisclosure, Container, Box, Switch} from "@chakra-ui/react";
+import { Avatar, AvatarGroup, Button, Flex, Text, VStack, useDisclosure, Container, Box, Switch, IconButton, Menu, MenuButton, MenuList, MenuItem} from "@chakra-ui/react";
 import useUserProfileStore from "../../store/userProfileStore";
 import useAuthStore from "../../store/authStore";
 import EditProfile from "./EditProfile";
@@ -7,14 +7,23 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import useUserLocation from '../../hooks/useUserLocation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faLocationDot } from '@fortawesome/free-solid-svg-icons'; 
+import { faLocationDot, faEllipsis} from '@fortawesome/free-solid-svg-icons'; 
 import { storeUserLocation } from "../../hooks/storeUserLocation";
 import { unstoreUserLocation } from "../../hooks/unstoreUserLocation";
 import useMsgStore from "../../store/msgStore";
+import useBlockUser from "../../hooks/useBlockUser";
+import useGetUserProfileById from "../../hooks/useGetUserProfileById";
+import useAuthStoreEffect from "../../store/authStoreEffect";
+import { doc, getDoc } from 'firebase/firestore';
+import { firestore } from '../../firebase/firebase';
+import useUnblockUser from "../../hooks/useUnblockUser";
+
 
 const ProfileHeader = ({ username, page }) => {
 	const { userProfile } = useUserProfileStore();
 	const authUser = useAuthStore((state) => state.user);
+	const { authUserDoc, setAuthUserDoc } = useAuthStoreEffect();
+	//const {authUserDoc} = useGetUserProfileById(authUser.uid)
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const { isFollowing: initialIsFollowing, handleFollowUser } = useFollowUserFP();
 	const [isFollowing, setIsFollowing] = useState(initialIsFollowing);
@@ -32,10 +41,66 @@ const ProfileHeader = ({ username, page }) => {
 	const setUserId = useMsgStore((state) => state.setUserId);
 	const setReceivingUserId = useMsgStore((state) => state.setReceivingUserId);
 	const navigate = useNavigate();
+	const { blockUser, isBlocking, error } = useBlockUser();
+	//const {authUserDoc, setAuthUserDoc} = doc(firestore, "users", authUser.uid);
+	const { unblockUser, isUnblocking, error: unblockError} = useUnblockUser();
+	
+	useEffect(() => {
+		const fetchUserData = async () => {
+			//console.log(authUser);
+		  if (!authUser?.uid) return; // Avoid fetching if authUser or uid is not available
+	
+		  try {
+			const userDocRef = doc(firestore, 'users', authUser?.uid);
+			const userDoc = await getDoc(userDocRef);
+
+			//console.log(userDoc);
+	
+			if (userDoc.exists()) {
+			  setAuthUserDoc(userDoc.data()); // Update the authUser state with the new data
+			}
+		  } catch (error) {
+			console.log("test");
+			console.error('Error fetching user data:', error);
+			// Handle errors here, such as showing a toast notification
+		  }
+		};
+	
+		fetchUserData();
+
+	  }, [authUser?.uid, setAuthUserDoc]);
+
+	  //console.log(authUserDoc);
+
+
+	const handleBlockUser = async () => {
+		//console.log("test");
+	  try {
+		await blockUser(userProfile.uid);
+
+		// You can handle success feedback here, such as a toast notification
+	  } catch (err) {
+		console.error(err);
+		// Handle errors here, such as showing a toast notification
+	  }
+	};
+
+	const handleUnblockUser = async () => {
+		//console.log("test");
+	  try {
+		await unblockUser(userProfile.uid);
+
+		// You can handle success feedback here, such as a toast notification
+	  } catch (err) {
+		console.error(err);
+		// Handle errors here, such as showing a toast notification
+	  }
+	};
+	
 
 	useEffect(() => {
 		// Get current location if the proximity toggle is on
-		if (isToggled) {
+		if (isToggled && visitingOwnProfileAndAuth ) {
 		  const getCurrentLocation = () => {
 			if (navigator.geolocation) {
 			  navigator.geolocation.getCurrentPosition(
@@ -60,6 +125,8 @@ const ProfileHeader = ({ username, page }) => {
 	      unstoreUserLocation(authUser.uid);
 	    }
 	  }, [isToggled]);
+
+
 
 	const handleFollowClick = async () => {
 		// Optimistically update the UI
@@ -88,10 +155,67 @@ const ProfileHeader = ({ username, page }) => {
 
 	//console.log(locationData.location.city);
 
+	//console.log(authUser);
+
 	return (
 		<Flex gap={{ base: 4, sm: 10 }} py={1} direction={{ base: "column", sm: "row" }} mb={4}>
 			
 			<Container width={{base: "50%", md: "35%"}} p={0}>
+			{visitingAnotherProfileAndAuth && (
+				<Box position="fixed" top="0" right={{base: "0", md: "15vw"}} p={4} zIndex="docked" width="100%">
+                <Flex justifyContent="flex-end">
+                <Menu>
+			
+          <MenuButton
+            as={IconButton}
+            icon={<FontAwesomeIcon icon={faEllipsis} />}
+            aria-label="Other options"
+            variant="outline"
+            mx={2} // Adds horizontal margin between the icons
+          />
+          <MenuList
+            bg="black" // Sets the background color to black
+            borderRadius="md" // Optional: for rounded corners
+            borderBottom="1px groove #1B2328" // Adds the border at the bottom
+            color="white" // Sets the text color to white for better contrast
+			fontSize="sm"
+			width="auto"
+			minWidth="75px"
+			maxWdith="75px"
+			position="absolute"
+			right={-10}
+            _focus={{ boxShadow: 'none' }} // Optional: Removes box shadow on focus
+          >
+          {authUserDoc && authUserDoc.blocked && !authUserDoc.blocked.includes(userProfile.uid) && (
+            <MenuItem
+			bg="black"
+			_hover={{ bg: '#2e2e2e' }} // Changes background color to charcoal on hover
+			px={4} // Adds padding inside MenuItem
+              //width="100%"
+			  whiteSpace="nowrap"
+			  color="#c8102e"
+			  onClick={handleBlockUser}
+			>Block User</MenuItem>
+		  )}
+		  {authUserDoc && authUserDoc.blocked && authUserDoc.blocked.includes(userProfile.uid) && (
+            <MenuItem
+			bg="black"
+			_hover={{ bg: '#2e2e2e' }} // Changes background color to charcoal on hover
+			px={4} // Adds padding inside MenuItem
+              //width="100%"
+			  whiteSpace="nowrap"
+			  color="#c8102e"
+			  onClick={handleUnblockUser}
+			>Unblock User</MenuItem>
+		  )}
+            
+          </MenuList>
+        </Menu>
+				</Flex>
+				</Box>
+			)}
+			
+
 			<Flex direction="column" alignItems={{base: "center", md: "flex-end"}}>
 				<Flex direction="column" alignItems="center">
 			<AvatarGroup size={{ base: "xl", md: "2xl" }}  mx={1} my={2}>
