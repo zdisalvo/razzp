@@ -46,6 +46,14 @@ const ProfileHeader = ({ username, page }) => {
 	const { blockUser, isBlocking, error } = useBlockUser();
 	//const {authUserDoc, setAuthUserDoc} = doc(firestore, "users", authUser.uid);
 	const { unblockUser, isUnblocking, error: unblockError} = useUnblockUser();
+
+
+	useEffect(() => {
+		if (authUser) {
+		  fetchUserData(authUser.uid); // Ensure the user data is up-to-date
+		}
+	  }, [authUser, fetchUserData]);
+
 	
 	// useEffect(() => {
 	// 	const fetchUserData = async () => {
@@ -71,13 +79,6 @@ const ProfileHeader = ({ username, page }) => {
 	// 	fetchUserData();
 
 	//   }, [authUser?.uid, setAuthUserDoc]);
-
-	useEffect(() => {
-		if (authUser) {
-		  fetchUserData(authUser.uid); // Ensure the user data is up-to-date
-		}
-	  }, [authUser, fetchUserData]);
-
 
 
 
