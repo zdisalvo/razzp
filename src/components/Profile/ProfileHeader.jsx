@@ -21,8 +21,10 @@ import useUnblockUser from "../../hooks/useUnblockUser";
 
 const ProfileHeader = ({ username, page }) => {
 	const { userProfile } = useUserProfileStore();
-	const authUser = useAuthStore((state) => state.user);
-	const { authUserDoc, setAuthUserDoc } = useAuthStoreEffect();
+	const { authUser, fetchUserData } = useAuthStore((state) => ({
+		authUser: state.user,
+		fetchUserData: state.fetchUserData,
+	  }));
 	//const {authUserDoc} = useGetUserProfileById(authUser.uid)
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const { isFollowing: initialIsFollowing, handleFollowUser } = useFollowUserFP();
@@ -45,32 +47,39 @@ const ProfileHeader = ({ username, page }) => {
 	//const {authUserDoc, setAuthUserDoc} = doc(firestore, "users", authUser.uid);
 	const { unblockUser, isUnblocking, error: unblockError} = useUnblockUser();
 	
+	// useEffect(() => {
+	// 	const fetchUserData = async () => {
+	// 		//console.log(authUser);
+	// 	  if (!authUser?.uid) return; // Avoid fetching if authUser or uid is not available
+	
+	// 	  try {
+	// 		const userDocRef = doc(firestore, 'users', authUser?.uid);
+	// 		const userDoc = await getDoc(userDocRef);
+
+	// 		//console.log(userDoc);
+	
+	// 		if (userDoc.exists()) {
+	// 		  setAuthUserDoc(userDoc.data()); // Update the authUser state with the new data
+	// 		}
+	// 	  } catch (error) {
+	// 		console.log("test");
+	// 		console.error('Error fetching user data:', error);
+	// 		// Handle errors here, such as showing a toast notification
+	// 	  }
+	// 	};
+	
+	// 	fetchUserData();
+
+	//   }, [authUser?.uid, setAuthUserDoc]);
+
 	useEffect(() => {
-		const fetchUserData = async () => {
-			//console.log(authUser);
-		  if (!authUser?.uid) return; // Avoid fetching if authUser or uid is not available
-	
-		  try {
-			const userDocRef = doc(firestore, 'users', authUser?.uid);
-			const userDoc = await getDoc(userDocRef);
+		if (authUser) {
+		  fetchUserData(authUser.uid); // Ensure the user data is up-to-date
+		}
+	  }, [authUser, fetchUserData]);
 
-			//console.log(userDoc);
-	
-			if (userDoc.exists()) {
-			  setAuthUserDoc(userDoc.data()); // Update the authUser state with the new data
-			}
-		  } catch (error) {
-			console.log("test");
-			console.error('Error fetching user data:', error);
-			// Handle errors here, such as showing a toast notification
-		  }
-		};
-	
-		fetchUserData();
 
-	  }, [authUser?.uid, setAuthUserDoc]);
 
-	  //console.log(authUserDoc);
 
 
 	const handleBlockUser = async () => {
@@ -186,7 +195,7 @@ const ProfileHeader = ({ username, page }) => {
 			right={-10}
             _focus={{ boxShadow: 'none' }} // Optional: Removes box shadow on focus
           >
-          {authUserDoc && authUserDoc.blocked && !authUserDoc.blocked.includes(userProfile.uid) && (
+          {authUser && authUser.blocked && !authUser.blocked.includes(userProfile.uid) && (
             <MenuItem
 			bg="black"
 			_hover={{ bg: '#2e2e2e' }} // Changes background color to charcoal on hover
@@ -197,7 +206,7 @@ const ProfileHeader = ({ username, page }) => {
 			  onClick={handleBlockUser}
 			>Block User</MenuItem>
 		  )}
-		  {authUserDoc && authUserDoc.blocked && authUserDoc.blocked.includes(userProfile.uid) && (
+		  {authUser && authUser.blocked && authUser.blocked.includes(userProfile.uid) && (
             <MenuItem
 			bg="black"
 			_hover={{ bg: '#2e2e2e' }} // Changes background color to charcoal on hover
