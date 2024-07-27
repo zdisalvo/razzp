@@ -1,6 +1,6 @@
 import { Avatar, Box, Button, Flex, Skeleton, SkeletonCircle, IconButton, Text } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MdDelete } from "react-icons/md";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
@@ -20,11 +20,12 @@ import useSparkProfileStore from "../../store/sparkProfileStore";
 
 
 
-const PostHeader = ({ post, creatorProfile }) => {
+const PostHeader = ({ post, initialIsFollowing, onFollowClick, creatorProfile }) => {
   
   const { userProfile } = useGetUserProfileById(post.createdBy);
-	const { isFollowing: initialIsFollowing, handleFollowUser } = useFollowUserFP();
-	const [isFollowing, setIsFollowing] = useState(initialIsFollowing);
+  const [isFollowing, setIsFollowing] = useState(initialIsFollowing);
+	//const { isFollowing: initialIsFollowing, handleFollowUser } = useFollowUserFP();
+	//const [isFollowing, setIsFollowing] = useState(initialIsFollowing);
   const [isOptimisticUpdate, setIsOptimisticUpdate] = useState(false);
 
   const authUser = useAuthStore((state) => state.user);
@@ -43,15 +44,34 @@ const PostHeader = ({ post, creatorProfile }) => {
 //   console.log(userProfile.uid);
 //   console.log(authUser.uid);
 
+// const handleFollowClick = async () => {
+//   // Optimistically update the UI
+//   setIsFollowing(prev => !prev);
+//   setIsOptimisticUpdate(true);
+
+//   try {
+//     await handleFollowUser(userProfile.uid, isFollowing); // Handle server request
+//   } catch (error) {
+//     // Revert optimistic update if needed
+//     setIsFollowing(prev => !prev);
+//     console.error('Error updating follow status:', error);
+//   } finally {
+//     setIsOptimisticUpdate(false);
+//   }
+// };
+
+// Update the isFollowing state whenever initialIsFollowing changes
+useEffect(() => {
+  setIsFollowing(initialIsFollowing);
+}, [initialIsFollowing]);
+
 const handleFollowClick = async () => {
-  // Optimistically update the UI
   setIsFollowing(prev => !prev);
   setIsOptimisticUpdate(true);
-
   try {
-    await handleFollowUser(userProfile.uid, isFollowing); // Handle server request
+    await onFollowClick(); // Use the passed handler
   } catch (error) {
-    // Revert optimistic update if needed
+    // Optionally revert optimistic update if necessary
     setIsFollowing(prev => !prev);
     console.error('Error updating follow status:', error);
   } finally {

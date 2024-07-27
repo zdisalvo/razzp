@@ -4,7 +4,7 @@ import PostFooter from "./PostFooter";
 import PostHeader from "./PostHeader";
 import useGetUserProfileById from "../../hooks/useGetUserProfileById";
 
-const FeedPost = forwardRef(({ post }, ref) => {
+const FeedPost = forwardRef(({ post, isFollowing, onFollowClick }, ref) => {
   const { userProfile } = useGetUserProfileById(post.createdBy);
 
   return (
@@ -18,7 +18,10 @@ const FeedPost = forwardRef(({ post }, ref) => {
         px={0}
         mx={0}
       >
-      <PostHeader post={post} creatorProfile={userProfile} />
+      <PostHeader post={post} creatorProfile={userProfile} 
+      initialIsFollowing={isFollowing}
+      onFollowClick={onFollowClick}
+      />
       <Box my={2} borderRadius={4} overflow={"hidden"} px={0} >
         <Image src={post.imageURL} alt={"FEED POST IMG"} width="100%" height="auto"/>
       </Box>

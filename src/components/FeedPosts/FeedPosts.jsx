@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef} from "react";
 import { Box, Container, Flex, Skeleton, SkeletonCircle, Text, VStack } from "@chakra-ui/react";
 import FeedPost from "./FeedPost";
 import useGetUserFeed from "../../hooks/useGetUserFeed";
