@@ -138,7 +138,7 @@ const ProfileHeader = ({ username, page }) => {
 				  
 				  setLatitudeLoc(latitude);
 				  setLongitudeLoc(longitude);
-				  console.log(latitudeLoc);
+				  //console.log(latitudeLoc);
 				  
 				},
 				(error) => {
