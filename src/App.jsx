@@ -64,7 +64,7 @@ function App() {
 	return (
 		<PageLayout>
 			<Routes>
-				<Route path='/' element={authUser ? <HomePage /> : <Navigate to='/auth' />} />
+				<Route path='/' element={authUser ? (authUser && showHome ? <HomePage /> : <Navigate to='/top5' /> ): <Navigate to='/auth' />} />
 				<Route path='/top5' element={<TopFivePosts />} />
 				<Route path='/auth' element={!authUser ? <AuthPage /> : <Navigate to='/' />} />
 				<Route path='/spark' element={authUser ? (!showSpark  ? <Navigate to='/spark/edit' /> : <Spark />) : <Navigate to='/' /> } />
