@@ -52,8 +52,8 @@ const ProfileHeader = ({ username, page }) => {
 	const { deleteUser, isDeleting } = useDeleteUser();
 	const [city, setCity] = useState('');
 	const [state, setState] = useState('');
-	const [latitudeLoc, setLatitudeLoc] = useState(userProfile.location[0]);
-	const [longitudeLoc, setLongitudeLoc] = useState(userProfile.location[1]);
+	const [latitudeLoc, setLatitudeLoc] = useState('');
+	const [longitudeLoc, setLongitudeLoc] = useState('');
 	const locationData = useUserLocation(latitudeLoc, longitudeLoc);
 
 

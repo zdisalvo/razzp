@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Avatar, Button, Flex, Text, VStack, Container, IconButton, Heading, Spinner } from '@chakra-ui/react';
+import { Avatar, Button, Flex, Text, VStack, Container, Box, IconButton, Heading, Spinner } from '@chakra-ui/react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretLeft } from "@fortawesome/free-solid-svg-icons";
 import { doc, getDoc, updateDoc, arrayRemove } from 'firebase/firestore';
@@ -14,7 +14,7 @@ const FollowersPage = () => {
     const [userProfiles, setUserProfiles] = useState({});
     const [followStates, setFollowStates] = useState({});
     const [loading, setLoading] = useState(true); 
-    const [error, setError] = useState(null); 
+    const [error, setError] = useState(null); // Add error state
 
     const authUser = useAuthStore((state) => state.user);
     const { handleFollowUser } = useFollowUserFP();
@@ -24,7 +24,40 @@ const FollowersPage = () => {
     const { userProfile, isLoading: profileLoading, error: profileError } = useGetUserProfileByUsername(username);
 
     const handleGoBack = () => {
-        navigate(-1);
+        navigate(-1); // Navigate to the previous page
+    };
+
+    // Function to validate and filter out invalid followers
+    const validateFollowers = async (followerIds) => {
+        const validFollowers = [];
+        const profiles = {};
+        const followState = {};
+
+        for (const followerId of followerIds) {
+            try {
+                const followerRef = doc(firestore, 'users', followerId);
+                const followerDoc = await getDoc(followerRef);
+
+                if (followerDoc.exists()) {
+                    profiles[followerId] = followerDoc.data();
+                    followState[followerId] = authUser.following.includes(followerId);
+                    validFollowers.push(followerId);
+                } else {
+                    // Remove non-existent follower from authUser's followers list
+                    const userRef = doc(firestore, 'users', userProfile.uid);
+                    await updateDoc(userRef, {
+                        followers: arrayRemove(followerId)
+                    });
+                }
+            } catch (error) {
+                console.error('Error fetching follower data:', error);
+                setError('Failed to validate followers');
+            }
+        }
+
+        setUserProfiles(profiles);
+        setFollowStates(followState);
+        return validFollowers;
     };
 
     useEffect(() => {
@@ -35,7 +68,8 @@ const FollowersPage = () => {
                     const userDoc = await getDoc(userRef);
                     if (userDoc.exists()) {
                         const followerIds = userDoc.data().followers || [];
-                        setFollowers(followerIds.reverse());
+                        const validFollowers = await validateFollowers(followerIds.reverse());
+                        setFollowers(validFollowers); // Update state to only include valid followers
                     }
                 } catch (error) {
                     console.error('Error fetching followers:', error);
@@ -55,28 +89,18 @@ const FollowersPage = () => {
                 try {
                     const profiles = {};
                     const followState = {};
-                    const validFollowers = [];
                     
                     for (const followerId of followers) {
                         const followerRef = doc(firestore, 'users', followerId);
                         const followerDoc = await getDoc(followerRef);
-                        
                         if (followerDoc.exists()) {
                             profiles[followerId] = followerDoc.data();
                             followState[followerId] = authUser.following.includes(followerId);
-                            validFollowers.push(followerId);
-                        } else {
-                            // Remove non-existent follower from authUser's followers list
-                            const userRef = doc(firestore, 'users', userProfile.uid);
-                            await updateDoc(userRef, {
-                                followers: arrayRemove(followerId)
-                            });
                         }
                     }
                     
                     setUserProfiles(profiles);
                     setFollowStates(followState);
-                    setFollowers(validFollowers); // Update state to only include valid followers
                 } catch (error) {
                     console.error('Error fetching user profiles:', error);
                     setError('Failed to fetch user profiles');
@@ -89,11 +113,12 @@ const FollowersPage = () => {
         };
 
         fetchUserProfiles();
-    }, [followers, authUser, userProfile]);
+    }, [followers, authUser]);
 
     const handleFollowClick = async (userId) => {
         const isCurrentlyFollowing = followStates[userId];
         
+        // Optimistically update the state
         setFollowStates(prevStates => ({
             ...prevStates,
             [userId]: !isCurrentlyFollowing
@@ -103,6 +128,7 @@ const FollowersPage = () => {
             await handleFollowUser(userId, isCurrentlyFollowing);
         } catch (error) {
             console.error('Error updating follow status:', error);
+            // Rollback optimistic update in case of error
             setFollowStates(prevStates => ({
                 ...prevStates,
                 [userId]: isCurrentlyFollowing
@@ -116,7 +142,7 @@ const FollowersPage = () => {
             const userDoc = await getDoc(userRef);
             if (userDoc.exists()) {
                 const profile = userDoc.data();
-                navigate(`/${profile.username}`);
+                navigate(`/${profile.username}`); 
             }
         } catch (error) {
             console.error('Error fetching user data:', error);
