@@ -16,6 +16,7 @@ import NotificationsPage from './pages/NotificationsPage/NotificationsPage';
 import FollowersPage from './pages/Followers/Followers';
 import FollowingPage from './pages/Following/Following';
 import SearchPage from './pages/SearchPage/SearchPage';
+import BlockPage from './pages/BlockPage/BlockPage';
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "./firebase/firebase";
 import useAuthStore from "./store/authStore";
@@ -66,6 +67,7 @@ function App() {
 				<Route path="/:username/followers" element={<FollowersPage />} />
 				<Route path="/:username/following" element={<FollowingPage />} />
 				<Route path="/search" element={<SearchPage />} />
+				<Route path="/blocked" element={<BlockPage />} />
 
 			</Routes>
 		</PageLayout>
