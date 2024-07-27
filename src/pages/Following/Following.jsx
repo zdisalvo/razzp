@@ -43,7 +43,7 @@ const FollowingPage = () => {
                     followState[followingId] = authUser.following.includes(followingId);
                     validFollowing.push(followingId);
                 } else {
-                    console.log("test");
+                    //console.log("test");
                     // Remove non-existent user from authUser's following list
                     const userRef = doc(firestore, 'users', userProfile.uid);
                     await updateDoc(userRef, {
