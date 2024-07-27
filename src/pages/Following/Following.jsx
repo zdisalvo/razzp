@@ -1,63 +1,104 @@
-import React from 'react';
-import { Avatar, Button, Flex, Text, VStack, Container, Box, IconButton, Heading } from '@chakra-ui/react';
+import React, { useState, useEffect } from 'react';
+import { Avatar, Button, Flex, Text, VStack, Container, IconButton, Heading, Spinner } from '@chakra-ui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretLeft } from '@fortawesome/free-solid-svg-icons';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, updateDoc, arrayRemove } from 'firebase/firestore';
 import { firestore } from '../../firebase/firebase';
 import useAuthStore from '../../store/authStore';
 import useFollowUserFP from '../../hooks/useFollowUserFP';
-import useFollowingUsers from '../../hooks/useFollowingUsers';
-import { useNavigate, useParams, Link } from 'react-router-dom';
+import { useNavigate, Link, useParams } from 'react-router-dom';
+import useGetUserProfileByUsername from '../../hooks/useGetUserProfileByUsername';
 
 const FollowingPage = () => {
-    const { username } = useParams();
-    const { following } = useFollowingUsers(username);
-    const [userProfiles, setUserProfiles] = React.useState({});
-    const [followStates, setFollowStates] = React.useState({});
+    const [following, setFollowing] = useState([]);
+    const [userProfiles, setUserProfiles] = useState({});
+    const [followStates, setFollowStates] = useState({});
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
     const authUser = useAuthStore((state) => state.user);
     const { handleFollowUser } = useFollowUserFP();
     const navigate = useNavigate();
+    const { username } = useParams();
+
+    const { userProfile, isLoading: profileLoading, error: profileError } = useGetUserProfileByUsername(username);
 
     const handleGoBack = () => {
         navigate(-1);
     };
 
-    console.log(following);
-
-    React.useEffect(() => {
-        const fetchProfiles = async () => {
-            const profiles = {};
-            const followState = {};
-
-            for (const userId of following) {
+    useEffect(() => {
+        const fetchFollowing = async () => {
+            if (authUser && userProfile) {
                 try {
-                    const userRef = doc(firestore, 'users', userId);
+                    const userRef = doc(firestore, 'users', authUser.uid);
                     const userDoc = await getDoc(userRef);
-                    
                     if (userDoc.exists()) {
-                        const profile = userDoc.data();
-                        profiles[userId] = profile;
-                        followState[userId] = authUser.following.includes(userId);
+                        const followingIds = userDoc.data().following || [];
+                        setFollowing(followingIds.reverse());
                     }
                 } catch (error) {
-                    console.error('Error fetching user data:', error);
+                    console.error('Error fetching following list:', error);
+                    setError('Failed to fetch following list');
                 }
             }
-
-            setUserProfiles(profiles);
-            setFollowStates(followState);
         };
 
-        fetchProfiles();
+        if (!profileLoading && userProfile) {
+            fetchFollowing();
+        }
+    }, [authUser, userProfile, profileLoading]);
+
+    useEffect(() => {
+        const fetchUserProfiles = async () => {
+            if (following.length > 0) {
+                try {
+                    const profiles = {};
+                    const followState = {};
+                    const validFollowing = [];
+                    
+                    for (const followingId of following) {
+                        const followingRef = doc(firestore, 'users', followingId);
+                        const followingDoc = await getDoc(followingRef);
+                        
+                        if (followingDoc.exists()) {
+                            profiles[followingId] = followingDoc.data();
+                            followState[followingId] = authUser.following.includes(followingId);
+                            validFollowing.push(followingId);
+                        } else {
+                            // Remove non-existent following from authUser's following list
+                            const userRef = doc(firestore, 'users', authUser.uid);
+                            await updateDoc(userRef, {
+                                following: arrayRemove(followingId)
+                            });
+                        }
+                    }
+                    
+                    setUserProfiles(profiles);
+                    setFollowStates(followState);
+                    setFollowing(validFollowing); // Update state to only include valid following
+                } catch (error) {
+                    console.error('Error fetching user profiles:', error);
+                    setError('Failed to fetch user profiles');
+                } finally {
+                    setLoading(false);
+                }
+            } else {
+                setLoading(false);
+            }
+        };
+
+        fetchUserProfiles();
     }, [following, authUser]);
 
     const handleFollowClick = async (userId) => {
         const isCurrentlyFollowing = followStates[userId];
+        
         setFollowStates(prevStates => ({
             ...prevStates,
             [userId]: !isCurrentlyFollowing
         }));
-
+        
         try {
             await handleFollowUser(userId, isCurrentlyFollowing);
         } catch (error) {
@@ -82,6 +123,23 @@ const FollowingPage = () => {
         }
     };
 
+    if (profileLoading || loading) {
+        return (
+            <Container py={6} px={0} w={['100vw', null, '80vh']}>
+                <Spinner size="xl" />
+                <Text>Loading...</Text>
+            </Container>
+        );
+    }
+
+    if (error || profileError) {
+        return (
+            <Container py={6} px={0} w={['100vw', null, '80vh']}>
+                <Text color="red.500">Error loading data</Text>
+            </Container>
+        );
+    }
+
     return (
         <Container py={6} px={0} w={['100vw', null, '80vh']}>
             <Flex align="center" mb={4}>
@@ -97,10 +155,10 @@ const FollowingPage = () => {
                 <Heading as="h1" size="lg">Following</Heading>
             </Flex>
             <VStack spacing={4} align="stretch" p={4}>
-                {Object.keys(userProfiles).length === 0 ? (
+                {following.length === 0 ? (
                     <Text>No users to display</Text>
                 ) : (
-                    Object.keys(userProfiles).map(userId => {
+                    following.map(userId => {
                         const profile = userProfiles[userId];
                         const isFollowing = followStates[userId];
                         return (
@@ -108,7 +166,7 @@ const FollowingPage = () => {
                                 <Avatar 
                                     src={profile?.profilePicURL} 
                                     alt={profile?.username || 'User'} 
-                                    boxSize="40px" 
+                                    boxSize="40px"
                                     onClick={() => handleAvatarClick(userId)}
                                     cursor="pointer"
                                 />
