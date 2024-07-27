@@ -56,6 +56,10 @@ const ProfileHeader = ({ username, page }) => {
 		}
 	  }, [authUser, fetchUserData]);
 
+	  const navigateToBlocked = () => {
+		navigate('/blocked');
+	  };
+
 	
 	// useEffect(() => {
 	// 	const fetchUserData = async () => {
@@ -113,7 +117,7 @@ const ProfileHeader = ({ username, page }) => {
 	useEffect(() => {
 		// Get current location if the proximity toggle is on
 		if (isToggled && visitingOwnProfileAndAuth ) {
-			console.log(visitingOwnProfileAndAuth);
+			//console.log(visitingOwnProfileAndAuth);
 		  const getCurrentLocation = () => {
 			if (navigator.geolocation) {
 			  navigator.geolocation.getCurrentPosition(
@@ -221,6 +225,49 @@ const ProfileHeader = ({ username, page }) => {
 			  color="#c8102e"
 			  onClick={handleUnblockUser}
 			>Unblock User</MenuItem>
+		  )}
+            
+          </MenuList>
+        </Menu>
+				</Flex>
+				</Box>
+			)}
+			{visitingOwnProfileAndAuth && (
+				<Box position="fixed" top="0" right={{base: "0", md: "15vw"}} p={4} zIndex="docked" width="100%">
+                <Flex justifyContent="flex-end">
+                <Menu>
+			
+          <MenuButton
+            as={IconButton}
+            icon={<FontAwesomeIcon icon={faEllipsis} />}
+            aria-label="Other options"
+            variant="outline"
+            mx={2} // Adds horizontal margin between the icons
+          />
+          <MenuList
+            bg="black" // Sets the background color to black
+            borderRadius="md" // Optional: for rounded corners
+            //borderBottom="1px groove #1B2328" // Adds the border at the bottom
+            color="white" // Sets the text color to white for better contrast
+			fontSize="sm"
+			width="auto"
+			minWidth="75px"
+			maxWdith="75px"
+			py={1}
+			position="absolute"
+			right={-10}
+            _focus={{ boxShadow: 'none' }} // Optional: Removes box shadow on focus
+          >
+          {authUser && authUser.blocked && (
+            <MenuItem
+			bg="black"
+			_hover={{ bg: '#2e2e2e' }} // Changes background color to charcoal on hover
+			px={4} // Adds padding inside MenuItem
+              //width="100%"
+			  whiteSpace="nowrap"
+			  color="#c8102e"
+			  onClick={navigateToBlocked}
+			>Blocked Users</MenuItem>
 		  )}
             
           </MenuList>

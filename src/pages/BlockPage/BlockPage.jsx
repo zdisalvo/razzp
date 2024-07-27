@@ -108,10 +108,10 @@ const BlockPage = () => {
                             <Button
                                 ml="auto"
                                 onClick={() => handleUnblockClick(userId)}
-                                bg={"#eb7734"}
+                                bg={"#c8102e"}
                                 color={"white"}
                                 textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)"
-                                _hover={{ bg: "#c75e1f" }}
+                                _hover={{ bg: "#c8102e" }}
                                 size={{ base: "sm", md: "sm" }}
                             >
                                 Unblock
