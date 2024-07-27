@@ -18,6 +18,7 @@ import { doc, getDoc } from 'firebase/firestore';
 import { firestore } from '../../firebase/firebase';
 import useUnblockUser from "../../hooks/useUnblockUser";
 import useGetUserProfileByUsername from "../../hooks/useGetUserProfileByUsername";
+import useDeleteUser from "../../hooks/useDeleteUser";
 
 
 const ProfileHeader = ({ username, page }) => {
@@ -48,6 +49,7 @@ const ProfileHeader = ({ username, page }) => {
 	const { blockUser, isBlocking, error } = useBlockUser();
 	//const {authUserDoc, setAuthUserDoc} = doc(firestore, "users", authUser.uid);
 	const { unblockUser, isUnblocking, error: unblockError} = useUnblockUser();
+	const { deleteUser, isDeleting } = useDeleteUser();
 
 
 	useEffect(() => {
@@ -86,6 +88,9 @@ const ProfileHeader = ({ username, page }) => {
 
 	//   }, [authUser?.uid, setAuthUserDoc]);
 
+	const handleDeleteUser = () => {
+		deleteUser();
+	  };
 
 
 
@@ -269,6 +274,17 @@ const ProfileHeader = ({ username, page }) => {
 			  onClick={navigateToBlocked}
 			>Blocked Users</MenuItem>
 		  )}
+		  
+            <MenuItem
+			bg="black"
+			_hover={{ bg: '#2e2e2e' }} // Changes background color to charcoal on hover
+			px={4} // Adds padding inside MenuItem
+              //width="100%"
+			  whiteSpace="nowrap"
+			  color="#c8102e"
+			  onClick={handleDeleteUser}
+			>Delete My Account</MenuItem>
+		  
             
           </MenuList>
         </Menu>

@@ -25,6 +25,7 @@ function App() {
 	const [authUser] = useAuthState(auth);
 	const authUserProf = useAuthStore(state => state.user);
 	const [showSpark, setShowSpark] = useState(false);
+	const [showHome, setShowHome ] = useState(false);
 
 	useEffect(() => {
 		const checkAuthUserProf = async () => {
@@ -32,6 +33,18 @@ function App() {
 			setShowSpark(true);
 		  } else {
 			setShowSpark(false);
+		  }
+		};
+	
+		checkAuthUserProf();
+	  }, [authUserProf]);
+
+	  useEffect(() => {
+		const checkAuthUserProf = async () => {
+		  if (authUserProf && authUserProf.followers.length > 0 === true) {
+			setShowHome(true);
+		  } else {
+			setShowHome(false);
 		  }
 		};
 	
