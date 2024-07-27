@@ -17,10 +17,12 @@ import useAuthStoreEffect from "../../store/authStoreEffect";
 import { doc, getDoc } from 'firebase/firestore';
 import { firestore } from '../../firebase/firebase';
 import useUnblockUser from "../../hooks/useUnblockUser";
+import useGetUserProfileByUsername from "../../hooks/useGetUserProfileByUsername";
 
 
 const ProfileHeader = ({ username, page }) => {
-	const { userProfile } = useUserProfileStore();
+	//const { userProfile } = useUserProfileStore();
+	const { userProfile } = useGetUserProfileByUsername(username);
 	const { authUser, fetchUserData } = useAuthStore((state) => ({
 		authUser: state.user,
 		fetchUserData: state.fetchUserData,
@@ -111,6 +113,7 @@ const ProfileHeader = ({ username, page }) => {
 	useEffect(() => {
 		// Get current location if the proximity toggle is on
 		if (isToggled && visitingOwnProfileAndAuth ) {
+			console.log(visitingOwnProfileAndAuth);
 		  const getCurrentLocation = () => {
 			if (navigator.geolocation) {
 			  navigator.geolocation.getCurrentPosition(
