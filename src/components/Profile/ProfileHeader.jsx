@@ -37,8 +37,8 @@ const ProfileHeader = ({ username, page }) => {
 	const visitingOwnProfileAndAuth = authUser && authUser.username === userProfile.username;
 	const visitingAnotherProfileAndAuth = authUser && authUser.username !== userProfile.username;
 	//console.log(userProfile.location);
-	const locationData = userProfile.location && userProfile.location.length > 0 ? useUserLocation(userProfile.location[0], userProfile.location[1]) : { city: "", state: "", isLoading: false };
-    const { city, state, isLoading } = locationData;
+	//const locationData = userProfile.location && userProfile.location.length > 0 ? useUserLocation(userProfile.location[0], userProfile.location[1]) : { city: "", state: "", isLoading: false };
+    //const { city, state, isLoading } = locationData;
 	//console.log(locationData);
 	const [isToggled, setIsToggled] = useState(userProfile.location && userProfile.location.length > 0);
     const [userLocation, setUserLocation] = useState({ latitude: null, longitude: null });
@@ -50,6 +50,11 @@ const ProfileHeader = ({ username, page }) => {
 	//const {authUserDoc, setAuthUserDoc} = doc(firestore, "users", authUser.uid);
 	const { unblockUser, isUnblocking, error: unblockError} = useUnblockUser();
 	const { deleteUser, isDeleting } = useDeleteUser();
+	const [city, setCity] = useState('');
+	const [state, setState] = useState('');
+	const [latitudeLoc, setLatitudeLoc] = useState(userProfile.location[0]);
+	const [longitudeLoc, setLongitudeLoc] = useState(userProfile.location[1]);
+	const locationData = useUserLocation(latitudeLoc, longitudeLoc);
 
 
 	useEffect(() => {
@@ -131,6 +136,10 @@ const ProfileHeader = ({ username, page }) => {
 				  setUserLocation({ latitude, longitude });
 				  storeUserLocation(authUser.uid, latitude, longitude);
 				  
+				  setLatitudeLoc(latitude);
+				  setLongitudeLoc(longitude);
+				  console.log(latitudeLoc);
+				  
 				},
 				(error) => {
 				  console.error('Error getting current location:', error);
@@ -145,8 +154,32 @@ const ProfileHeader = ({ username, page }) => {
 		} 
 	    else if ( visitingOwnProfileAndAuth) {
 	      unstoreUserLocation(authUser.uid);
+		  setLatitudeLoc("");
+		  setLongitudeLoc("");
 	    }
 	  }, [isToggled]);
+
+
+	  useEffect(() => {
+		const fetchUserLocation = async () => {
+		  try {
+			const userDocRef = doc(firestore, `users/${userProfile.uid}`);
+			const userDoc = await getDoc(userDocRef);
+	
+			if (userDoc.exists()) {
+			  const userData = userDoc.data();
+			  setCity(userData.city || '');
+			  setState(userData.state || '');
+			}
+		  } catch (error) {
+			console.error('Error fetching user location:', error);
+		  }
+		};
+	
+		if (authUser && authUser.uid) {
+		  fetchUserLocation();
+		}
+	  }, [authUser]);
 
 
 
@@ -298,7 +331,7 @@ const ProfileHeader = ({ username, page }) => {
 			<AvatarGroup size={{ base: "xl", md: "2xl" }}  mx={1} my={2}>
 				<Avatar src={userProfile.profilePicURL} alt='Profile picture' />
 			</AvatarGroup>
-			{!isLoading && userProfile.location && userProfile.location.length > 0 &&
+			{city && state && (
             <Flex alignItems="baseline">
             {/* <IconButton
             icon={<FontAwesomeIcon icon={faLocationDot} />}
@@ -307,9 +340,9 @@ const ProfileHeader = ({ username, page }) => {
           <Box mr={2} mt={0}>
           <FontAwesomeIcon icon={faLocationDot}  />
           </Box>
-            <Text fontSize="sm" >{locationData.location.city}, {locationData.location.state}</Text>
+            <Text fontSize="sm" >{city}, {state}</Text>
             </Flex>
-            }
+            )}
 			{visitingOwnProfileAndAuth && (
 			<Flex alignItems="baseline" justifyContent="center">
               <Text fontSize="xs" mt={0} ml={1} mr={2} mb={0}>Location: {isToggled ? 'on' : 'off'}</Text>

@@ -17,7 +17,9 @@ const unstoreUserLocation = async (userId) => {
 
   return updateDoc(userDocRef, {
     geohash: "",
-    location: [] // Optionally store location for easier querying or display
+    location: [], // Optionally store location for easier querying or display
+    city: "",
+    state: "",
   })
   .catch((error) => {
     console.error("Error storing geohash and location:", error);

@@ -1,5 +1,10 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import useAuthStore from "../store/authStore";
+
+import { updateDoc, doc, getDoc } from "firebase/firestore";
+import { firestore } from '../firebase/firebase';
+
 
 // Define your geocoding API endpoint
 const GEOCODING_API_URL = "https://api.bigdatacloud.net/data/reverse-geocode-client";
@@ -59,6 +64,7 @@ const STATE_ABBREVIATIONS = {
 };
 
 const useUserLocation = (lat, long) => {
+    const authUser = useAuthStore((state) => state.user)
     const [location, setLocation] = useState({ city: "", state: "" });
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -91,6 +97,19 @@ const useUserLocation = (lat, long) => {
                     console.log(countryName);
                     state = countryName; // Use country name as state
                 }
+
+                try {
+                    const userDocRef = doc(firestore, `users/${authUser.uid}`);
+                    const userDoc = await getDoc(userDocRef);
+
+                    if (userDoc.exists()) {
+                        const userData = userDoc.data();
+                        await updateDoc(userDocRef, { city: city, state: state });
+                    }
+                    
+                    } catch (error) {
+                        console.error("Error updating user location:", error);
+                    }
 
                 setLocation({ city, state });
             } catch (error) {
