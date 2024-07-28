@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { doc, getDoc } from "firebase/firestore";
 import { firestore } from "../../firebase/firebase";
 import useMsgStore from "../../store/msgStore";
+import useIncomingReadStatus from "../../hooks/useIncomingReadStatus";
 
 const Convo = ({ userId, receivingUserId }) => {
   const [receivingProfile, setReceivingProfile] = useState(null);
@@ -11,6 +12,8 @@ const Convo = ({ userId, receivingUserId }) => {
   const navigate = useNavigate();
   const setUserId = useMsgStore((state) => state.setUserId);
   const setReceivingUserId = useMsgStore((state) => state.setReceivingUserId);
+
+  const incomingRead = useIncomingReadStatus(userId, receivingUserId);
 
   const handleClick = () => {
     setUserId(userId);
@@ -112,8 +115,10 @@ const Convo = ({ userId, receivingUserId }) => {
           onClick={handleClick}
           cursor="pointer"
         >
-          <Text fontWeight="bold">{receivingProfile.username}</Text>
-          <Text>{lastMessage ? `${lastMessage.substring(0, 37)}${lastMessage.length > 37 ? "..." : ""}` : "Say hi"}</Text>
+          <Text fontSize="lg" fontWeight="bold" color="#36454F">{receivingProfile.username}</Text>
+          <Text fontSize="sm" fontWeight={incomingRead === false || incomingRead === null ? 'bold' : 'normal'}>
+            {lastMessage ? `${lastMessage.substring(0, 37)}${lastMessage.length > 37 ? "..." : ""}` : "Say hi"}
+          </Text>
         </Box>
       </Flex>
     </Container>
