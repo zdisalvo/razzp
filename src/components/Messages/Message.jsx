@@ -71,6 +71,9 @@ const Message = () => {
 
   useEffect(() => {
     const element = containerRef.current;
+
+    
+
     if (element && !userScrolled) {
       element.scrollTop = element.scrollHeight;
     }
