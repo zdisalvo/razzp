@@ -65,7 +65,7 @@ const FollowingPage = () => {
         const fetchFollowing = async () => {
             if (authUser && userProfile) {
                 try {
-                    const userRef = doc(firestore, 'users', authUser.uid);
+                    const userRef = doc(firestore, 'users', userProfile.uid);
                     const userDoc = await getDoc(userRef);
                     if (userDoc.exists()) {
                         const followingIds = userDoc.data().following || [];
