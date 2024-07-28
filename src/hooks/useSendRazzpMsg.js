@@ -75,69 +75,107 @@ const useSendRazzpMsg = () => {
       });
     }
 
-    try {
+   
+
+try {
       const readRef = doc(firestore, "razzpRead", userId);
   
       // Fetch the current document to check if it exists
       const readDoc = await getDoc(readRef);
   
       if (readDoc.exists()) {
-        // Update the read status for the receiving user
+        const currentData = readDoc.data();
+        const previousData = currentData[receivingUserId] || {};
+
         await updateDoc(readRef, {
-          [`${receivingUserId}.read`]: false,
-        });
+          [`${receivingUserId}`]: {
+            ...previousData,
+            outgoingRead: false,
+          }
+          });
       } else {
         // Create the document with the read status for the receiving user
         await setDoc(readRef, {
-          [receivingUserId]: { read: false },
+          [receivingUserId]: { 
+            outgoingRead: false,
+            incomingRead: false,
+          }
         });
       }
     } catch (error) {
-      console.error("Error updating read status:", error);
+      console.error("Error updating outgoing read status:", error);
     }
 
 
-// try {
-//       const readRef = doc(firestore, "razzpRead", userId);
-  
-//       // Fetch the current document to check if it exists
-//       const readDoc = await getDoc(readRef);
-  
-//       if (readDoc.exists()) {
-//         // Update the read status for the receiving user
-//         await updateDoc(readRef, {
-//           [`${receivingUserId}.outgoingRead`]: false,
-//         });
-//       } else {
-//         // Create the document with the read status for the receiving user
-//         await setDoc(readRef, {
-//           [receivingUserId]: { outgoingRead: false },
-//         });
-//       }
-//     } catch (error) {
-//       console.error("Error updating outgoing read status:", error);
-//     }
 
-//     try {
-//       const readRef = doc(firestore, "razzpRead", receivingUserId);
+    try {
+      const readRef = doc(firestore, "razzpRead", receivingUserId);
   
-//       // Fetch the current document to check if it exists
-//       const readDoc = await getDoc(readRef);
+      // Fetch the current document to check if it exists
+      const readDoc = await getDoc(readRef);
   
-//       if (readDoc.exists()) {
-//         // Update the read status for the receiving user
-//         await updateDoc(readRef, {
-//           [`${userId}.incomingRead`]: false,
-//         });
-//       } else {
-//         // Create the document with the read status for the receiving user
-//         await setDoc(readRef, {
-//           [userId]: { incomingRead: false },
-//         });
-//       }
-//     } catch (error) {
-//       console.error("Error updating read status:", error);
-//     }
+      if (readDoc.exists()) {
+        const currentData = readDoc.data();
+        const previousData = currentData[userId] || {};
+
+        // Update the read status for the target user
+        await updateDoc(readRef, {
+          [`${userId}`]: {
+            ...previousData,
+            incomingRead: false,
+          }
+        });
+      }  else {
+        // Create the document with the read status for the receiving user
+        await setDoc(readRef, {
+          [userId]: { 
+            outgoingRead: false,
+            incomingRead: false,
+          }
+        });
+      }
+    } catch (error) {
+      console.error("Error updating incoming read status:", error);
+    }
+
+
+    // const handleReadStatusUpdate = async (userId, receivingUserId, type, status) => {
+    //   try {
+    //     const readRef = doc(firestore, "razzpRead", userId);
+        
+    //     // Fetch the current document to check if it exists
+    //     const readDoc = await getDoc(readRef);
+    
+    //     if (readDoc.exists()) {
+    //       // Update the read status for the receiving user
+    //       await updateDoc(readRef, {
+    //         [`${receivingUserId}.${type}`]: status,
+    //       });
+    //     } else {
+    //       // Create the document with the read status for the receiving user
+    //       await setDoc(readRef, {
+    //         [receivingUserId]: { [type]: status },
+    //       }, { merge: true });
+    //     }
+    //   } catch (error) {
+    //     console.error(`Error updating ${type} status:`, error);
+    //   }
+    // };
+    
+    
+    
+    //   try {
+    //     // Update outgoing read status
+    //     await handleReadStatusUpdate(userId, receivingUserId, 'outgoingRead', false);
+    
+    //     // Update incoming read status
+    //     await handleReadStatusUpdate(receivingUserId, userId, 'incomingRead', false);
+    //   } catch (error) {
+    //     console.error("Error updating read status:", error);
+    //   }
+    
+    
+
 
     // Update the user document
     await updateDoc(userDocRef, {
