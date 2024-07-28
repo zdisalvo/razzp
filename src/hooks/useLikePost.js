@@ -48,7 +48,7 @@ const useLikePost = (post) => {
                 userId: authUser.uid, // The user who liked the post
 				username: authUser.username,
 				profilePic: authUser.profilePicURL,
-                time: new Date(),
+                time: new Date().getTime(),
                 postId: post.id,
 				postImageURL: post.imageURL,
                 type: "like"

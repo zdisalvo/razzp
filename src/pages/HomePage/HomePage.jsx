@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Box, Button, Container, Flex, Image, IconButton } from "@chakra-ui/react";
+import { Box, Button, Container, Flex, Image, IconButton, Badge } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBolt, faCommentDots, faTrophy } from "@fortawesome/free-solid-svg-icons";
 import FeedPostsOrig from "../../components/FeedPosts/FeedPostsOrig";
@@ -9,12 +9,15 @@ import { queryNearbyUsers } from "../../hooks/queryNearbyUsers";
 import authStore from "../../store/authStore";
 import { useNavigate } from "react-router-dom";
 import useIncomingReadCount from "../../hooks/useIncomingReadCount";
+import useNewNotificationsCount from "../../hooks/useNewNotificationsCount";
 
 const HomePage = () => {
   const userAuth = authStore((state) => state.user);
   const [isFetchingLocation, setIsFetchingLocation] = useState(false);
   const navigate = useNavigate();
   const incomingReadCount = useIncomingReadCount(userAuth.uid);
+  const newNotificationsCount = useNewNotificationsCount();
+
 
   const handleTop5Click = () => {
     navigate("/top5");
@@ -85,40 +88,63 @@ const HomePage = () => {
                   variant="outline"
                   mx={2} // Adds horizontal margin between the icons
                 />
-                <IconButton
-                  icon={<FontAwesomeIcon icon={faBolt} />}
-                  aria-label="Notifications"
-                  onClick={handleNotificationsClick}
-                  variant="outline"
-                  mr={2} // Adds horizontal margin between the icons
-                />
                 <Box position="relative">
-      <IconButton
-        icon={<FontAwesomeIcon icon={faCommentDots} />}
-        aria-label="Messages"
-        onClick={handleMessagesClick}
-        variant="outline"
-      />
-      {incomingReadCount > 0 && (
-        <Box
-          position="absolute"
-          bottom={0}
-          right={0}
-          bg="red.500"
-          color="white"
-          borderRadius="full"
-          width="20px"
-          height="20px"
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          fontSize="12px"
-          fontWeight="bold"
-        >
-          {incomingReadCount}
-        </Box>
-      )}
-      </Box>
+                <IconButton
+                icon={<FontAwesomeIcon icon={faBolt} />}
+                aria-label="Notifications"
+                onClick={handleNotificationsClick}
+                variant="outline"
+                mr={2} // Adds horizontal margin between the icons
+                position="relative"
+                />
+                {newNotificationsCount > 0 && (
+                    <Box
+                    position="absolute"
+                    bottom={0}
+                    right={0}
+                    bg="red.500"
+                    color="white"
+                    borderRadius="full"
+                    width="20px"
+                    height="20px"
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                    fontSize="12px"
+                    fontWeight="bold"
+                  >
+                        {newNotificationsCount}
+                    </Box>
+                )}
+                </Box>
+            
+                <Box position="relative">
+                  <IconButton
+                    icon={<FontAwesomeIcon icon={faCommentDots} />}
+                    aria-label="Messages"
+                    onClick={handleMessagesClick}
+                    variant="outline"
+                  />
+                  {incomingReadCount > 0 && (
+                    <Box
+                      position="absolute"
+                      bottom={0}
+                      right={0}
+                      bg="red.500"
+                      color="white"
+                      borderRadius="full"
+                      width="20px"
+                      height="20px"
+                      display="flex"
+                      alignItems="center"
+                      justifyContent="center"
+                      fontSize="12px"
+                      fontWeight="bold"
+                    >
+                      {incomingReadCount}
+                    </Box>
+                  )}
+                  </Box>
                   {/* <Box>
                 <Image 
                   src="/blue-crown-small.png"

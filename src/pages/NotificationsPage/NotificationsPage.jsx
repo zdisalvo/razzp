@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretLeft } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import useNotifications from "../../hooks/useNotifications";
-import { getDoc, doc } from "firebase/firestore";
+import { getDoc, doc, updateDoc } from "firebase/firestore";
 import { firestore } from "../../firebase/firebase";
 import useAuthStore from "../../store/authStore";
 import { formatDistanceToNow } from "date-fns";
@@ -51,6 +51,25 @@ const NotificationsPage = () => {
     const notifications = useNotifications();
     const authUser = useAuthStore((state) => state.user);
     const navigate = useNavigate();
+
+
+    useEffect(() => {
+        const updateCheckedNotifications = async () => {
+            if (authUser && authUser.uid) {
+                try {
+                    const userRef = doc(firestore, "users", authUser.uid);
+                    await updateDoc(userRef, {
+                        checkedNotifications: new Date().getTime()
+                    });
+                } catch (error) {
+                    console.error("Error updating checkedNotifications:", error);
+                }
+            }
+        };
+
+        updateCheckedNotifications();
+    }, [authUser]);
+
 
     const handleGoBack = () => {
         navigate(-1); // Navigate to the previous page

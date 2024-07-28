@@ -76,7 +76,7 @@ const useFollowUser = (userId) => {
 					userId: authUser.uid,
 					username: authUser.username,
 					profilePic: authUser.profilePicURL,
-					time: new Date(),
+					time: new Date().getTime(),
 					type: "follow",
 				};
 				const userNotificationsSnap = await getDoc(userNotificationsRef);
