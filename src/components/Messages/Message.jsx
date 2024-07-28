@@ -1,11 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
+import React, { Fragment } from 'react';
 import { Box, Avatar, Input, Button, VStack, Text, Container, Flex, IconButton } from "@chakra-ui/react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretLeft } from '@fortawesome/free-solid-svg-icons';
 import useSendRazzpMsg from "../../hooks/useSendRazzpMsg";
 import { doc, getDoc, onSnapshot } from "firebase/firestore";
 import { firestore } from "../../firebase/firebase";
+import useUpdateOutgoingReadStatus from "../../hooks/useUpdateOutgoingReadStatus";
 
 const Message = () => {
   const [messages, setMessages] = useState([]);
@@ -19,7 +21,14 @@ const Message = () => {
   const userId = localStorage.getItem("userId");
   const receivingUserId = localStorage.getItem("receivingUserId");
 
+  const [outgoingRead, setOutgoingRead] = useState(null);
+
+  const { previousReadData, updateReadStatus } = useUpdateOutgoingReadStatus(userId, receivingUserId);
+
+
   const { sendMessage } = useSendRazzpMsg();
+
+
 
   const handleGoBack = () => {
     navigate(-1); // Navigate to the previous page
@@ -69,15 +78,34 @@ const Message = () => {
     return () => unsubscribe();
   }, [userId, receivingUserId]);
 
+
+  useEffect(() => {
+    const readRef = doc(firestore, 'razzpRead', userId);
+
+    const unsubscribe = onSnapshot(readRef, (doc) => {
+      if (doc.exists()) {
+        const data = doc.data();
+        const outgoingReadValue = data[receivingUserId]?.outgoingRead;
+        setOutgoingRead(outgoingReadValue);
+      } else {
+        console.log('Document does not exist');
+      }
+    });
+
+    // Cleanup subscription on unmount
+    return () => unsubscribe();
+  }, [userId, receivingUserId]);
+
+
   useEffect(() => {
     const element = containerRef.current;
 
-    
+    updateReadStatus();
 
     if (element && !userScrolled) {
       element.scrollTop = element.scrollHeight;
     }
-  }, [messages, userScrolled]);
+  }, [messages, userScrolled, previousReadData, updateReadStatus]);
 
   const handleSendMessage = async () => {
     if (!newMessage.trim()) return;
@@ -155,7 +183,7 @@ const Message = () => {
         </Flex>
       )}
       <VStack
-        spacing={4}
+        spacing={0}
         p={4}
         border="1px solid #e2e8f0"
         borderRadius="md"
@@ -167,12 +195,14 @@ const Message = () => {
         onScroll={handleScroll}
       >
         {messages.length > 0 && messages.map((msg, index) => (
+          <React.Fragment key={index}>
           <Box
             key={index}
             alignSelf={msg.sendingUser === userId ? "flex-end" : "flex-start"}
             bg={msg.sendingUser === userId ? "#0099ff" : "white"}
             color={msg.sendingUser === userId ? "white" : "black"}
             p={3}
+            mb={index !== messages.length - 1 ? 3: 1}
             borderRadius="20px"
             maxW="80%"
           >
@@ -183,6 +213,12 @@ const Message = () => {
               {(formatTime(msg.timeStamp) !== "12:NaN AM") ? formatTime(msg.timeStamp) : ""}
             </Text>
           </Box>
+          {(index === messages.length - 1) && (msg.sendingUser === userId) && outgoingRead && (
+            <Text fontSize="xs" mr={4} color="gray.500" alignSelf="flex-end">
+              Read
+            </Text>
+          )}
+          </React.Fragment>
         ))}
       </VStack>
       <Flex mt={4}>
