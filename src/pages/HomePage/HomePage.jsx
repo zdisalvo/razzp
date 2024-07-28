@@ -113,6 +113,7 @@ const HomePage = () => {
           alignItems="center"
           justifyContent="center"
           fontSize="12px"
+          fontWeight="bold"
         >
           {incomingReadCount}
         </Box>

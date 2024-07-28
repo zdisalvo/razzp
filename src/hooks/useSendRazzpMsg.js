@@ -108,7 +108,7 @@ try {
     const updateIncomingReadStatus = async () => {
       try {
         const readRefRec = doc(firestore, "razzpRead", receivingUserId);
-        console.log("receivingUserId:", receivingUserId);
+        //console.log("receivingUserId:", receivingUserId);
     
         // Fetch the current document to check if it exists
         const readDocRec = await getDoc(readRefRec);
@@ -121,7 +121,7 @@ try {
           await updateDoc(readRefRec, {
             [`${userId}.incomingRead`]: false,
           });
-          console.log("Updated incoming read status to false for existing document.");
+          //console.log("Updated incoming read status to false for existing document.");
         } else {
           // Create the document with the read status for the receiving user
           await setDoc(readRefRec, {
@@ -130,7 +130,7 @@ try {
               incomingRead: false,
             },
           });
-          console.log("Created new document with incoming read status set to false.");
+          //console.log("Created new document with incoming read status set to false.");
         }
       } catch (error) {
         console.error("Error updating incoming read status:", error);
