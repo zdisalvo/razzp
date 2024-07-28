@@ -8,6 +8,7 @@ import useSendRazzpMsg from "../../hooks/useSendRazzpMsg";
 import { doc, getDoc, onSnapshot } from "firebase/firestore";
 import { firestore } from "../../firebase/firebase";
 import useUpdateOutgoingReadStatus from "../../hooks/useUpdateOutgoingReadStatus";
+import useUpdateIncomingReadStatus from "../../hooks/useUpdateIncomingReadStatus";
 
 const Message = () => {
   const [messages, setMessages] = useState([]);
@@ -24,6 +25,7 @@ const Message = () => {
   const [outgoingRead, setOutgoingRead] = useState(null);
 
   const { previousReadData, updateReadStatus } = useUpdateOutgoingReadStatus(userId, receivingUserId);
+  const { previousViewedData, updateViewedStatus } = useUpdateIncomingReadStatus(userId, receivingUserId);
 
 
   const { sendMessage } = useSendRazzpMsg();
@@ -96,16 +98,31 @@ const Message = () => {
     return () => unsubscribe();
   }, [userId, receivingUserId]);
 
+  useEffect(() => {
+    let isMounted = true;
+
+    if (isMounted) {
+      updateReadStatus();
+      updateViewedStatus();
+    }
+
+    return () => {
+      isMounted = false;
+    };
+  }, [messages, userScrolled, previousReadData, updateReadStatus, updateViewedStatus]);
+
 
   useEffect(() => {
     const element = containerRef.current;
 
-    updateReadStatus();
+    
 
     if (element && !userScrolled) {
       element.scrollTop = element.scrollHeight;
+      // updateReadStatus();
+      // updateViewedStatus();
     }
-  }, [messages, userScrolled, previousReadData, updateReadStatus]);
+  }, [messages, userScrolled]);
 
   const handleSendMessage = async () => {
     if (!newMessage.trim()) return;
@@ -132,6 +149,8 @@ const Message = () => {
 
   const handleScroll = () => {
     if (containerRef.current) {
+
+
       const { scrollTop, scrollHeight, clientHeight } = containerRef.current;
       // Check if the user has scrolled up
       setUserScrolled(scrollTop + clientHeight < scrollHeight - 5);

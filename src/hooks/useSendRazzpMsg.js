@@ -88,11 +88,8 @@ try {
         const previousData = currentData[receivingUserId] || {};
 
         await updateDoc(readRef, {
-          [`${receivingUserId}`]: {
-            ...previousData,
-            outgoingRead: false,
-          }
-          });
+          [`${receivingUserId}.outgoingRead`]: false,
+        });
       } else {
         // Create the document with the read status for the receiving user
         await setDoc(readRef, {
@@ -108,35 +105,39 @@ try {
 
 
 
-    try {
-      const readRef = doc(firestore, "razzpRead", receivingUserId);
-  
-      // Fetch the current document to check if it exists
-      const readDoc = await getDoc(readRef);
-  
-      if (readDoc.exists()) {
-        const currentData = readDoc.data();
-        const previousData = currentData[userId] || {};
-
-        // Update the read status for the target user
-        await updateDoc(readRef, {
-          [`${userId}`]: {
-            ...previousData,
-            incomingRead: false,
-          }
-        });
-      }  else {
-        // Create the document with the read status for the receiving user
-        await setDoc(readRef, {
-          [userId]: { 
-            outgoingRead: false,
-            incomingRead: false,
-          }
-        });
+    const updateIncomingReadStatus = async () => {
+      try {
+        const readRefRec = doc(firestore, "razzpRead", receivingUserId);
+        console.log("receivingUserId:", receivingUserId);
+    
+        // Fetch the current document to check if it exists
+        const readDocRec = await getDoc(readRefRec);
+    
+        if (readDocRec.exists()) {
+          const currentData = readDocRec.data();
+          const previousData = currentData[userId] || {};
+    
+          // Update the read status for the target user
+          await updateDoc(readRefRec, {
+            [`${userId}.incomingRead`]: false,
+          });
+          console.log("Updated incoming read status to false for existing document.");
+        } else {
+          // Create the document with the read status for the receiving user
+          await setDoc(readRefRec, {
+            [userId]: {
+              outgoingRead: false,
+              incomingRead: false,
+            },
+          });
+          console.log("Created new document with incoming read status set to false.");
+        }
+      } catch (error) {
+        console.error("Error updating incoming read status:", error);
       }
-    } catch (error) {
-      console.error("Error updating incoming read status:", error);
-    }
+    };
+
+    updateIncomingReadStatus();
 
 
     // const handleReadStatusUpdate = async (userId, receivingUserId, type, status) => {

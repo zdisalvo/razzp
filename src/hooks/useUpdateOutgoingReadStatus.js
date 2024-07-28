@@ -28,11 +28,9 @@ const useUpdateOutgoingReadStatus = (userId, receivingUserId) => {
       try {
         const readRef = doc(firestore, 'razzpRead', receivingUserId);
         await updateDoc(readRef, {
-          [`${userId}`]: {
-            ...previousReadData,
-            outgoingRead: true,
-          },
+          [`${userId}.outgoingRead`]: true,
         });
+        
       } catch (error) {
         console.error('Error updating outgoing read status:', error);
       }
