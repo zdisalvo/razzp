@@ -180,7 +180,7 @@ const Message = () => {
               textShadow={msg.sendingUser === userId ? "1px 1px 2px rgba(0, 0, 0, 0.2)" : "none"}
             >{msg.message}</Text>
             <Text fontSize="xs" color={msg.sendingUser === userId ? "gray.100" : "gray.500"}>
-              {formatTime(msg.timeStamp)}
+              {(formatTime(msg.timeStamp) !== "12:NaN AM") ? formatTime(msg.timeStamp) : ""}
             </Text>
           </Box>
         ))}
