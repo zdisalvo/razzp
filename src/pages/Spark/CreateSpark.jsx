@@ -1018,6 +1018,7 @@ const handlePronounsClick = (pronouns) => {
                 maxWidth={{base: "40vw", md: "150px"}}
                 maxHeight={{base: "40vh", md: "auto"}}
                 width={{base: "40vw", md: "auto"}}
+                objectFit="cover" // Maintain aspect ratio //ADDED
                 aspectRatio={1}
                 borderRadius="md"
                 //objectFit="cover"
@@ -1130,6 +1131,7 @@ const handlePronounsClick = (pronouns) => {
                 maxWidth={{base: "40vw", md: "150px"}}
                 maxHeight={{base: "auto", md: "auto"}}
                 width={{base: "40vw", md: "auto"}}
+                objectFit="cover"
                 //height={{base: "auto", md: "300px"}}
                 aspectRatio={1}
                 borderRadius="md"

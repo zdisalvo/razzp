@@ -47,10 +47,11 @@ const DragAndDropGrid = ({ images, onDragEnd }) => {
                     justifyContent="center"
                     alignItems="center"
                     bg="gray.100"
-                    w="100px"
-                    h="100px"
+                    w={{base: "60px", md: "100px"}}
+                    h={{base: "60px", md: "100px"}}
+                    
                   >
-                    <Image src={imageURL} alt={`Image ${id}`} maxW="100px" maxH="100px" />
+                    <Image src={imageURL} alt={`Image ${id}`} objectFit="cover" maxW="100px" maxH="100px" />
                   </Box>
                 )}
               </Draggable>
