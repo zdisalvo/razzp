@@ -23,7 +23,7 @@ const FeedPost = forwardRef(({ post, isFollowing, onFollowClick }, ref) => {
       onFollowClick={onFollowClick}
       />
       <Box my={2} borderRadius={4} overflow={"hidden"} px={0} >
-        <Image src={post.imageURL} alt={"FEED POST IMG"} width="100%" height="auto"/>
+        <Image src={post.imageURL} alt={"FEED POST IMG"} width="100%" objectFit="cover" maxHeight="450px" height="auto"/>
       </Box>
       <PostFooter post={post} creatorProfile={userProfile} />
       </Container>

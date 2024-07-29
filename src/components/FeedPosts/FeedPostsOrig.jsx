@@ -75,8 +75,8 @@ const FeedPostsOrig = () => {
       
       {!isLoading && posts.length === 0 && (
         <>
-          <Text fontSize={"md"} color={"red.400"}>
-            Follow some people to populate your feed here.
+          <Text fontSize={"md"} color={"#eb7734"}>
+            Start following people to see them in your feed.
           </Text>
         </>
       )}
