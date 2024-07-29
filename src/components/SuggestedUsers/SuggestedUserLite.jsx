@@ -10,6 +10,7 @@ const SuggestedUser = ({ user, setUser }) => {
 	const { handleFollowUser } = useFollowUserFP();
 	const authUser = useAuthStore((state) => state.user);
 	const [isFollowingInit, setIsFollowingInit] = useState(isFollowing);
+    const [isOptimisticUpdate, setIsOptimisticUpdate] = useState(false);
 
 	useEffect(() => {
         setIsFollowingInit(isFollowing);
@@ -30,14 +31,17 @@ const SuggestedUser = ({ user, setUser }) => {
         
         // Optimistically update the state
         setIsFollowingInit(!isCurrentlyFollowing);
-        
+        setIsOptimisticUpdate(true);
+
         try {
             await handleFollowUser(userId, isCurrentlyFollowing);
         } catch (error) {
             console.error('Error updating follow status:', error);
             // Rollback optimistic update in case of error
             setIsFollowingInit(isCurrentlyFollowing);
-        }
+        } finally {
+			setIsOptimisticUpdate(false);
+		}
     };
 
 	return (
@@ -72,6 +76,7 @@ const SuggestedUser = ({ user, setUser }) => {
 				<Button
 				ml={5}
 				onClick={() => handleFollowClick(user.uid)}
+                isDisabled={isOptimisticUpdate}
 				bg={"#eb7734"}
 				color={"white"}
 				textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)"

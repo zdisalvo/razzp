@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Box, Container, Flex, Skeleton, SkeletonCircle, Text, VStack } from "@chakra-ui/react";
+import { Box, Container, Flex, Skeleton, SkeletonCircle, Text, VStack, Heading } from "@chakra-ui/react";
 import FeedPostRank from "../../components/FeedPosts/FeedPostRank";
 import useGetTop5Posts from "../../hooks/useGetTop5Posts";
 import useFollowUserFP from "../../hooks/useFollowUserFP";
@@ -46,7 +46,12 @@ const TopFivePosts = () => {
   };
 
   return (
-    <Container py={6} px={0} w={['100vw', null, '60vh']}>
+    <Container py={6} px={0} w={['100vw', null, '60vh']} pb={{base: "10vh", md: "60px"}} pt={{base: "2vh", md: "5px"}}>
+      <Box position="sticky" top="0" bg="black" zIndex="1" py={4}>
+        <Heading as="h1" size="lg" color="white" textAlign="center">
+          Top 5 of the Week
+        </Heading>
+      </Box>
       {isLoading &&
         [0, 1, 2].map((_, idx) => (
           <VStack key={idx} gap={4} alignItems={"flex-start"} mb={10}>

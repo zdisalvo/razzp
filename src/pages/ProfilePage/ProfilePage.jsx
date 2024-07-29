@@ -106,7 +106,7 @@ const ProfilePage = () => {
           justifyContent="center"
           alignItems="center"
         >
-          <ProfileTabs />
+          {/* <ProfileTabs /> */}
           <ProfilePosts username={username} />
         </Flex>
       </Box>

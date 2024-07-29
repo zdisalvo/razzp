@@ -1,3 +1,4 @@
+
 import {
 	Avatar,
 	Button,
@@ -30,6 +31,16 @@ import {
 	const [isDeleting, setIsDeleting] = useState(false);
 	const deletePost = usePostStore((state) => state.deletePost);
 	const decrementPostsCount = useUserProfileStore((state) => state.deletePost);
+
+	const calculateRankingScore = (post) => {
+        const postTime = new Date(post.createdAt);
+        const currentTime = new Date();
+        const elapsedTimeInDays = (currentTime - postTime) / (1000 * 60 * 60 * 24);
+        //console.log(post.score / (elapsedTimeInDays + 1));
+        return post.score / (elapsedTimeInDays + 1);
+    };
+
+    const[totalScore, setTotalScore] = useState(Math.round(calculateRankingScore(post)));
   
 	const handleDeletePost = async () => {
 	  if (!window.confirm("Are you sure you want to delete this post?")) return;
@@ -79,11 +90,11 @@ import {
 		  zIndex={1}
 		  justifyContent={"center"}
 		>
-		  <Flex alignItems={"center"} justifyContent={"center"} gap={50}>
+		  <Flex alignItems={"center"} justifyContent={"center"} gap={10}>
 			<Flex>
 			  <AiFillHeart size={20} />
 			  <Text fontWeight={"bold"} ml={2}>
-				{post.likes.length}
+				{totalScore}°
 			  </Text>
 			</Flex>
   
