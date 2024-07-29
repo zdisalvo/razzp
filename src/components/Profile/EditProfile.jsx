@@ -126,7 +126,7 @@ const EditProfile = ({ isOpen, onClose }) => {
 											borderColor: 'transparent', // Make the border transparent
 											boxShadow: '0 0 0 1px rgba(244, 164, 96, 0.5)' // Simulate a thinner border with box-shadow
 										  }} 
-										  maxLength={150}
+										  maxLength={200}
 									/>
 								</FormControl>
 

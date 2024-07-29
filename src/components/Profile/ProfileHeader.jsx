@@ -93,6 +93,18 @@ const ProfileHeader = ({ username, page }) => {
 
 	//   }, [authUser?.uid, setAuthUserDoc]);
 
+	const goToMessages = () => {
+        navigate("/messages");
+    };
+
+	const goToNotifications = () => {
+        navigate("/notifications");
+    };
+
+	const goToSpark = () => {
+        navigate("/spark");
+    };
+
 	const profileUrl = `https://razzp.com/${username}`;
 
 	const handleShare = async () => {
@@ -334,8 +346,35 @@ const ProfileHeader = ({ username, page }) => {
               //width="100%"
 			  whiteSpace="nowrap"
 			  color="white"
+			  onClick={goToMessages}
+			>Messages</MenuItem>
+			<MenuItem
+			bg="black"
+			_hover={{ bg: '#2e2e2e' }} // Changes background color to charcoal on hover
+			px={4} // Adds padding inside MenuItem
+              //width="100%"
+			  whiteSpace="nowrap"
+			  color="white"
+			  onClick={goToNotifications}
+			>Notifications</MenuItem>
+			<MenuItem
+			bg="black"
+			_hover={{ bg: '#2e2e2e' }} // Changes background color to charcoal on hover
+			px={4} // Adds padding inside MenuItem
+              //width="100%"
+			  whiteSpace="nowrap"
+			  color="white"
+			  onClick={goToSpark}
+			>💥 Spark Dating</MenuItem>
+			<MenuItem
+			bg="black"
+			_hover={{ bg: '#2e2e2e' }} // Changes background color to charcoal on hover
+			px={4} // Adds padding inside MenuItem
+              //width="100%"
+			  whiteSpace="nowrap"
+			  color="white"
 			  onClick={handleShare}
-			>Share to Contacts</MenuItem>
+			>Invite my Contacts</MenuItem>
           {authUser && authUser.blocked && (
             <MenuItem
 			bg="black"
