@@ -34,13 +34,14 @@ const FeedPost = forwardRef(({ post, rank, isFollowing, onFollowClick }, ref) =>
               fontSize="3xl"
               fontStyle="italic" // Italicize the text
               textAlign="center"
+              //maxHeight="450px"
               px={2} // Optional: Add some padding for better visibility
             >
               #{rank}
             </Box>
           )}
           
-          <Image src={post.imageURL} alt={"FEED POST IMG"} width="100%" height="auto" />
+          <Image src={post.imageURL} alt={"FEED POST IMG"} width="100%" objectFit="cover" maxHeight="450px" height="auto" />
         </Box>
 
         <PostFooter post={post} creatorProfile={userProfile} />

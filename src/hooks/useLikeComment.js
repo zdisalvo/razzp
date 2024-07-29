@@ -15,7 +15,7 @@ const useLikeComment = () => {
 
         setIsLiking(true);
 
-        console.log(commentId);
+        //console.log(commentId);
 
         try {
             const postRef = doc(firestore, "posts", postId);
@@ -46,7 +46,7 @@ const useLikeComment = () => {
 
                 await updateDoc(postRef, { comments });
 
-                console.log(comment.createdBy);
+                //console.log(comment.createdBy);
 
                 //notify the commenter of the like
                 // const commenterRef = doc(firestore, "users", comment.createdBy);

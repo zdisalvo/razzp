@@ -46,10 +46,10 @@ const CommentsModal = ({ isOpen, onClose, post, userProfile }) => {
             const postData = postDoc.data();
             //const filteredComments = useScrubBlockedUsersComments({ userProfile, comments: postData.comments });
             //setComments(filteredComments);
-            // const filteredComments = post.comments.filter(comment => 
-            //     !userProfile.blocked.includes(comment.createdBy));
-            // setComments(filteredComments);
-            setComments(postData.comments);
+            const filteredComments = post.comments.filter(comment => 
+                !userProfile.blocked.includes(comment.createdBy));
+            setComments(filteredComments);
+            //setComments(postData.comments);
         }
     };
 
