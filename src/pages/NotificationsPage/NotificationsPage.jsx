@@ -141,7 +141,8 @@ const NotificationsPage = () => {
                                     <Text as="span" fontWeight="bold">
                                         {notification.username || 'Unknown User'}
                                     </Text>
-                                    {" liked your comment."}
+                                    {" liked your comment: "}
+                                    <Text as="span" fontStyle="italic">{notification.comment}</Text>
                                 </Text>
                             );
                         } else if (notification.type === "follow") {

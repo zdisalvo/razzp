@@ -7,16 +7,24 @@ import useAuthStore from "../../store/authStore";
 import { doc, getDoc, setDoc, updateDoc, arrayUnion } from "firebase/firestore";
 import { firestore } from "../../firebase/firebase";
 import { NotificationsLogo, UnlikeLogo } from "../../assets/constants";
+//import useGetUserProfileById from "../../hooks/useGetUserProfileById";
+//import useScrubBlockedUsersComments from "../../hooks/useScrubBlockedUsersComments";
 
-const CommentsModal = ({ isOpen, onClose, post }) => {
+const CommentsModal = ({ isOpen, onClose, post, userProfile }) => {
     const { handlePostComment, isCommenting } = usePostComment();
     const { handleLikeComment } = useLikeComment();
     const [comments, setComments] = useState(post.comments);
+    
     const commentRef = useRef(null);
     const commentsContainerRef = useRef(null);
     const authUser = useAuthStore((state) => state.user);
     const [userCommentLikes, setUserCommentLikes] = useState(new Set());
     const [userScrolled, setUserScrolled] = useState(false);
+    //const { userProfile } = useGetUserProfileById(post.createdBy);
+    //const [comments, setComments] = useScrubBlockedUsersComments(post);
+
+    //console.log(post);
+
 
     const handleSubmitComment = async (e) => {
         e.preventDefault();
@@ -36,9 +44,16 @@ const CommentsModal = ({ isOpen, onClose, post }) => {
         const postDoc = await getDoc(postRef);
         if (postDoc.exists()) {
             const postData = postDoc.data();
+            //const filteredComments = useScrubBlockedUsersComments({ userProfile, comments: postData.comments });
+            //setComments(filteredComments);
+            // const filteredComments = post.comments.filter(comment => 
+            //     !userProfile.blocked.includes(comment.createdBy));
+            // setComments(filteredComments);
             setComments(postData.comments);
         }
     };
+
+    //setComments(useScrubBlockedUsersComments({userProfile, comments}));
 
     const fetchUserCommentLikes = async () => {
         if (authUser) {
@@ -119,25 +134,15 @@ const CommentsModal = ({ isOpen, onClose, post }) => {
 			try {
 				if (isLiked) {
 					// Handle unliking the comment
-					await handleLikeComment(post.id, commentId, false); // Assuming handleLikeComment supports a third parameter for unlike
+					await handleLikeComment(post.id, commentId, post.imageURL); // Assuming handleLikeComment supports a third parameter for unlike
 					await updateDoc(doc(firestore, "users", authUser.uid), {
 						commentLikes: arrayRemove(commentId)
 					});
 				} else {
 					// Handle liking the comment
-					await handleLikeComment(post.id, commentId, true); // Assuming handleLikeComment supports a third parameter for like
+					await handleLikeComment(post.id, commentId, post.imageURL ); // Assuming handleLikeComment supports a third parameter for like
 					await updateDoc(doc(firestore, "users", authUser.uid), {
 						commentLikes: arrayUnion(commentId),
-						notifications: arrayUnion({
-							userId: authUser.uid,
-							username: authUser.username,
-							profilePic: authUser.profilePicURL,
-							time: new Date().getTime(),
-							postId: post.id,
-							postImageURL: post.imageURL,
-							commentId,
-							type: "commentLike"
-						})
 					});
 				}
 			} catch (error) {

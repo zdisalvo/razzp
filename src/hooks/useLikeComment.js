@@ -9,11 +9,13 @@ const useLikeComment = () => {
     const authUser = useAuthStore((state) => state.user);
     const showToast = useShowToast();
 
-    const handleLikeComment = async (postId, commentId) => {
+    const handleLikeComment = async (postId, commentId, postImageURL) => {
         if (isLiking) return;
         if (!authUser) return showToast("Error", "You must be logged in to like a comment", "error");
 
         setIsLiking(true);
+
+        console.log(commentId);
 
         try {
             const postRef = doc(firestore, "posts", postId);
@@ -33,7 +35,8 @@ const useLikeComment = () => {
 
             const comment = comments[commentIndex];
             // Only allow liking the comment, no unliking
-            if (!comment.likedByUser) {
+            //if (!comment.likedByUser) {
+            if (true) {
                 const newLikesCount = comment.likes + 1;
                 comments[commentIndex] = {
                     ...comment,
@@ -42,6 +45,27 @@ const useLikeComment = () => {
                 };
 
                 await updateDoc(postRef, { comments });
+
+                console.log(comment.createdBy);
+
+                //notify the commenter of the like
+                // const commenterRef = doc(firestore, "users", comment.createdBy);
+                // const commenterDoc = await getDoc(commenterRef);
+                await updateDoc(doc(firestore, "users", comment.createdBy), {
+                    notifications: arrayUnion({
+                        userId: authUser.uid,
+                        username: authUser.username,
+                        profilePic: authUser.profilePicURL,
+                        time: new Date().getTime(),
+                        postId: postId,
+                        postImageURL: postImageURL,
+                        comment: comment.comment,
+                        commentId,
+                        type: "commentLike"
+                    })
+                });
+
+
 
                 // Update the user's commentLikes field
                 const userRef = doc(firestore, "users", authUser.uid);
