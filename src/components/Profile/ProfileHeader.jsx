@@ -93,6 +93,28 @@ const ProfileHeader = ({ username, page }) => {
 
 	//   }, [authUser?.uid, setAuthUserDoc]);
 
+	const profileUrl = `https://razzp.com/${username}`;
+
+	const handleShare = async () => {
+        if (navigator.share) {
+            try {
+                await navigator.share({
+                    title: `What's Razzp?`,
+                    text: `Visit me and find out -${username}`,
+                    url: profileUrl,
+                });
+                console.log('Successfully shared');
+            } catch (error) {
+                console.error('Error sharing:', error);
+            }
+        } else {
+            console.warn('Web Share API is not supported in your browser.');
+            // Fallback for browsers that don't support the Web Share API
+            // You could use a different sharing library or mechanism here
+        }
+    };
+
+
 	const handleDeleteUser = () => {
 		deleteUser();
 	  };
@@ -242,6 +264,15 @@ const ProfileHeader = ({ username, page }) => {
 			right={-10}
             _focus={{ boxShadow: 'none' }} // Optional: Removes box shadow on focus
           >
+			{/* <MenuItem
+			bg="black"
+			_hover={{ bg: '#2e2e2e' }} // Changes background color to charcoal on hover
+			px={4} // Adds padding inside MenuItem
+              //width="100%"
+			  whiteSpace="nowrap"
+			  color="white"
+			  onClick={handleShare}
+			>Share to Contacts</MenuItem> */}
           {authUser && authUser.blocked && !authUser.blocked.includes(userProfile.uid) && (
             <MenuItem
 			bg="black"
@@ -296,6 +327,15 @@ const ProfileHeader = ({ username, page }) => {
 			right={-10}
             _focus={{ boxShadow: 'none' }} // Optional: Removes box shadow on focus
           >
+			<MenuItem
+			bg="black"
+			_hover={{ bg: '#2e2e2e' }} // Changes background color to charcoal on hover
+			px={4} // Adds padding inside MenuItem
+              //width="100%"
+			  whiteSpace="nowrap"
+			  color="white"
+			  onClick={handleShare}
+			>Share to Contacts</MenuItem>
           {authUser && authUser.blocked && (
             <MenuItem
 			bg="black"

@@ -41,7 +41,7 @@ function App() {
 
 	  useEffect(() => {
 		const checkAuthUserProf = async () => {
-		  if (authUserProf && authUserProf.followers.length > 0 === true) {
+		  if (authUserProf && authUserProf.following.length > 0 === true) {
 			setShowHome(true);
 		  } else {
 			setShowHome(false);
