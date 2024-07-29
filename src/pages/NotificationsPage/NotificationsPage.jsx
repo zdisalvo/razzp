@@ -153,6 +153,25 @@ const NotificationsPage = () => {
                                     {" followed you."}
                                 </Text>
                             );
+                        } else if (notification.type === "crown") {
+                            notificationText = (
+                                <Text>
+                                    <Text as="span" fontWeight="bold">
+                                        {notification.username || 'Unknown User'}
+                                    </Text>
+                                    {" gave you a crown! "}
+                                    <Box
+                                        as="img"
+                                        src="/blue-crown-small.png"
+                                        alt="crown icon"
+                                        display="inline-block"
+                                        verticalAlign="center"
+                                        //fontSize={32}
+                                        ml={1} // Add margin if you want some space between the text and the image
+                                        height="1em" // Adjust the height to match the text size
+                                    />
+                                </Text>
+                            );
                         } else {
                             notificationText = (
                                 <Text>
@@ -195,6 +214,9 @@ const NotificationsPage = () => {
                                         alt="Post Image"
                                         onClick={() => handlePostClick(notification.postId)}
                                         cursor="pointer"
+                                        objectFit="cover" // Maintain aspect ratio
+                                        width="100%"
+                                        height="100%"
                                         boxSize="40px" // Set size of Image same as Avatar
                                         borderRadius="5px" // Optional: match Avatar's round shape
                                         mr={3}

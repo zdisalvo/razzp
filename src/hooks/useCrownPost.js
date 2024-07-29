@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import useAuthStore from "../store/authStore";
 import useShowToast from "./useShowToast";
-import { arrayRemove, arrayUnion, doc, getDoc, updateDoc, increment } from "firebase/firestore";
+import { arrayRemove, arrayUnion, doc, getDoc, updateDoc, increment, setDoc } from "firebase/firestore";
 import { firestore } from "../firebase/firebase";
 import useCrownStore from "../store/crownStore";
 
@@ -77,13 +77,61 @@ const useCrownPost = (post) => {
 			// 	likedMe: !isCrowned && !sparkRef.likedMe.includes(authUser.uid) ? arrayUnion(authUser.uid) : arrayRemove(authUser.uid),
 			// });
 
+      const postOwnerId = post.createdBy; // The user who owns the post
+            const userNotificationsRef = doc(firestore, "users", postOwnerId);
+            const notification = {
+                userId: authUser.uid, // The user who liked the post
+				        username: authUser.username,
+				        profilePic: authUser.profilePicURL,
+                time: new Date().getTime(),
+                postId: post.id,
+				        postImageURL: post.imageURL,
+                type: "crown"
+            };
+
+
+            try {
+              const userNotificationsSnap = await getDoc(userNotificationsRef);
+
+              if (!isCrowned) {
+                  // Add notification
+                  if (userNotificationsSnap.exists()) {
+                      // Document exists, update it
+                      await setDoc(userNotificationsRef, {
+                          notifications: arrayUnion(notification)
+                      }, { merge: true });
+                  } else {
+                      // Document does not exist, create it with the notification
+                      await setDoc(userNotificationsRef, {
+                          notifications: [notification]
+                      });
+                  }
+              } else {
+                  // Remove notification
+                  if (userNotificationsSnap.exists()) {
+                      const userNotificationsData = userNotificationsSnap.data().notifications || [];
+                      const updatedNotifications = userNotificationsData.filter(
+                          (notif) => !(notif.userId === authUser.uid && notif.postId === post.id && notif.type === "crown")
+                      );
+                      await setDoc(userNotificationsRef, {
+                          notifications: updatedNotifications
+                      }, { merge: true });
+                  }
+              }
+          } catch (error) {
+              showToast("Error", "Unable to check or update notifications", "error");
+          }
+
+
+          ///END OF NOTIFICATIONS LOGIC
+
             await updateDoc(userRef, {
                 dayCrowns: !isCrowned ? increment(1) : increment(-1),
             });
 
             
 
-			setIsCrowned(!isCrowned);
+			      setIsCrowned(!isCrowned);
             isCrowned ? decrementCrownCount() : incrementCrownCount();
 			//isCrowned ? setCrowns(crowns - 1) : setCrowns(crowns + 1);
 		} catch (error) {
@@ -118,7 +166,7 @@ const useCrownPost = (post) => {
             timeRemaining = Math.round(timeRemaining);
 
     
-            if (timeDiff < 60) { // 60 seconds = 1 minute // 86400 seconds = 1 day
+            if (timeDiff < 86400) { // 60 seconds = 1 minute // 86400 seconds = 1 day
               showToast("Message", "Please wait " + timeRemaining + " hours for your crowns to refresh", "warning");
               return false; // Not allowed to like
             }

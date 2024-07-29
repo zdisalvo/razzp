@@ -17,6 +17,8 @@ const usePostComment = () => {
 		if (!authUser) return showToast("Error", "You must be logged in to comment", "error");
 		setIsCommenting(true);
 
+		//console.log("test");
+
 		const newComment = {
 			id: uuidv4(), // Generate a unique comment ID
 			comment,
@@ -44,7 +46,7 @@ const usePostComment = () => {
 				userId: authUser.uid,
 				username: authUser.username,
 				profilePic: authUser.profilePicURL,
-				time: new Date(),
+				time: new Date().getTime(),
 				postId,
 				postImageURL: postData.imageURL,
 				commentId: newComment.id,

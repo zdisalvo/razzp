@@ -186,7 +186,7 @@ const CommentsModal = ({ isOpen, onClose, post }) => {
                             <Flex key={idx} direction="column" borderBottom="1px" borderStyle="groove" borderColor="gray.600" pb={2} mb={2}>
                                 <Flex alignItems={"left"} gap={0} mt={0} mb={2}>
                                     <Comment comment={comment} />
-                                    <Box flex="1" ml={2} display="flex" alignItems="center" justifyContent="flex-start">
+                                    <Box flex="1" ml={2} display="flex" alignItems="center" justifyContent="flex-start" mr={5}>
                                         <Flex direction="row" alignItems="center" gap={1}> {/* Arrange items in a row with space between them */}
                                             <Button
                                                 onClick={() => handleCommentLike(comment.id)}
@@ -195,7 +195,7 @@ const CommentsModal = ({ isOpen, onClose, post }) => {
                                             >
                                                 {userCommentLikes.has(comment.id) ? <UnlikeLogo /> : <NotificationsLogo />}
                                             </Button>
-                                            <Text fontSize="sm" ml={0}>
+                                            <Text fontSize="sm" ml={0} >
                                                 {comment.likes || 0}
                                             </Text>
                                         </Flex>
