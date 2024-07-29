@@ -3,7 +3,7 @@ import { Box, Container, Flex, Skeleton, SkeletonCircle, Text, VStack } from "@c
 import FeedPostRank from "../../components/FeedPosts/FeedPostRank";
 import useGetTop5Posts from "../../hooks/useGetTop5Posts";
 import useFollowUserFP from "../../hooks/useFollowUserFP";
-import { firestore, storage } from "../../firebase/firebase";
+import { firestore } from "../../firebase/firebase";
 import { doc, getDoc } from "firebase/firestore";
 import useAuthStore from "../../store/authStore";
 

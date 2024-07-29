@@ -78,7 +78,7 @@ const HomePage = () => {
   };
 
   return (
-    <Container p={0} maxW={{ base: "100vw", md: "100vw" }} m={0}>
+    <Container p={0} maxW={{ base: "100vw", md: "100vw" }}  pb={{base: "5vh", md: "30px"}} pt={{base: "4vh", md: "20px"}} m={0}>
       <Box position="fixed" top="0" right={{base: "0", md: "15vw"}} p={4} zIndex="docked" width="100%">
                 <Flex justifyContent="flex-end" alignItems="center">
                 <IconButton
