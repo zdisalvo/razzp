@@ -20,7 +20,7 @@ const usePostComment = () => {
 		const newComment = {
 			id: uuidv4(), // Generate a unique comment ID
 			comment,
-			createdAt: Date.now(),
+			createdAt: new Date().getTime(),
 			createdBy: authUser.uid,
 			postId,
 			likes: 0, // Initialize likes as a number

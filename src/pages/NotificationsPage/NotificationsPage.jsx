@@ -13,23 +13,13 @@ import { formatDistanceToNow } from "date-fns";
 const convertToDate = (timestamp) => {
     if (!timestamp) return new Date();
 
-    if (timestamp.nanoseconds) {
-        // Firestore Timestamp (nanoseconds)
-        const milliseconds = timestamp.seconds * 1000 + timestamp.nanoseconds / 1_000_000;
-        return new Date(milliseconds);
-    } else if (timestamp.seconds) {
-        // Firestore Timestamp (seconds)
-        return new Date(timestamp.seconds * 1000);
-    } else if (typeof timestamp === 'number') {
-        // Numeric timestamp in seconds
-        return new Date(timestamp * 1000);
-    } else if (timestamp.toDate) {
-        // Firestore Timestamp with toDate method
-        return timestamp.toDate();
+    if (typeof timestamp === 'number') {
+        // Numeric timestamp in milliseconds
+        return new Date(timestamp);
     }
 
     // Default case
-    return new Date(timestamp);
+    return new Date();
 };
 
 // Function to format the timestamp

@@ -132,7 +132,7 @@ const CommentsModal = ({ isOpen, onClose, post }) => {
 							userId: authUser.uid,
 							username: authUser.username,
 							profilePic: authUser.profilePicURL,
-							time: new Date(),
+							time: new Date().getTime(),
 							postId: post.id,
 							postImageURL: post.imageURL,
 							commentId,
