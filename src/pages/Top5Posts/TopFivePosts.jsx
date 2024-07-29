@@ -1,11 +1,17 @@
-import React, { useEffect, useState } from "react";
-import { Box, Container, Flex, Skeleton, SkeletonCircle, Text, VStack, Heading } from "@chakra-ui/react";
+import React, { useEffect, useState, useCallback } from "react";
+import { Box, Container, Flex, Skeleton, SkeletonCircle, Text, VStack, Heading, IconButton } from "@chakra-ui/react";
 import FeedPostRank from "../../components/FeedPosts/FeedPostRank";
 import useGetTop5Posts from "../../hooks/useGetTop5Posts";
 import useFollowUserFP from "../../hooks/useFollowUserFP";
 import { firestore } from "../../firebase/firebase";
 import { doc, getDoc } from "firebase/firestore";
 import useAuthStore from "../../store/authStore";
+import { useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBolt, faCommentDots } from "@fortawesome/free-solid-svg-icons";
+import useIncomingReadCount from "../../hooks/useIncomingReadCount";
+import useNewNotificationsCount from "../../hooks/useNewNotificationsCount";
+
 
 
 const TopFivePosts = () => {
@@ -13,6 +19,17 @@ const TopFivePosts = () => {
   const { isLoading, posts } = useGetTop5Posts();
   const { isUpdating, handleFollowUser } = useFollowUserFP();
   const [followStates, setFollowStates] = useState({});
+  const incomingReadCount = useIncomingReadCount(authUser.uid);
+  const newNotificationsCount = useNewNotificationsCount();
+  const navigate = useNavigate();
+
+  const handleMessagesClick = () => {
+    navigate("/messages");
+};
+
+  const handleNotificationsClick = useCallback(() => {
+    navigate("/notifications");
+  }, [navigate]);
 
   useEffect(() => {
     const fetchFollowStates = async () => {
@@ -48,6 +65,69 @@ const TopFivePosts = () => {
   return (
     <Container py={6} px={0} w={['100vw', null, '60vh']} pb={{base: "10vh", md: "60px"}} pt={{base: "2vh", md: "5px"}}>
       <Box position="sticky" top="0" bg="black" zIndex="1" py={4}>
+      <Box position="fixed" top="0" right={{base: "0", md: "15vw"}} p={4} zIndex="docked" width="100%">
+                <Flex justifyContent="flex-end" alignItems="center">
+                
+                <Box position="relative">
+                <IconButton
+                icon={<FontAwesomeIcon icon={faBolt} />}
+                aria-label="Notifications"
+                onClick={handleNotificationsClick}
+                variant="outline"
+                mr={2} // Adds horizontal margin between the icons
+                position="relative"
+                />
+                {newNotificationsCount > 0 && (
+                    <Box
+                    position="absolute"
+                    bottom={0}
+                    right={0}
+                    bg="red.500"
+                    color="white"
+                    borderRadius="full"
+                    width="20px"
+                    height="20px"
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                    fontSize="12px"
+                    fontWeight="bold"
+                  >
+                        {newNotificationsCount}
+                    </Box>
+                )}
+                </Box>
+            
+                <Box position="relative">
+                  <IconButton
+                    icon={<FontAwesomeIcon icon={faCommentDots} />}
+                    aria-label="Messages"
+                    onClick={handleMessagesClick}
+                    variant="outline"
+                  />
+                  {incomingReadCount > 0 && (
+                    <Box
+                      position="absolute"
+                      bottom={0}
+                      right={0}
+                      bg="red.500"
+                      color="white"
+                      borderRadius="full"
+                      width="20px"
+                      height="20px"
+                      display="flex"
+                      alignItems="center"
+                      justifyContent="center"
+                      fontSize="12px"
+                      fontWeight="bold"
+                    >
+                      {incomingReadCount}
+                    </Box>
+                  )}
+                  </Box>
+                
+                </Flex>
+            </Box>
         <Heading as="h1" size="lg" color="white" textAlign="center">
           Top 5 of the Week
         </Heading>
