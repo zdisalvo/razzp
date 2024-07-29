@@ -4,7 +4,7 @@ import PostFooter from "./PostFooter";
 import PostHeader from "./PostHeader";
 import useGetUserProfileById from "../../hooks/useGetUserProfileById";
 
-const FeedPost = forwardRef(({ post, rank }, ref) => {
+const FeedPost = forwardRef(({ post, rank, isFollowing, onFollowClick }, ref) => {
   const { userProfile } = useGetUserProfileById(post.createdBy);
 
   return (
@@ -17,7 +17,10 @@ const FeedPost = forwardRef(({ post, rank }, ref) => {
         mx={0}
         position="relative" // Ensures the ranking badge is positioned correctly
       >
-        <PostHeader post={post} creatorProfile={userProfile} />
+        <PostHeader post={post} creatorProfile={userProfile} 
+        initialIsFollowing={isFollowing}
+        onFollowClick={onFollowClick}
+        />
         
         <Box position="relative" borderRadius={4} overflow="hidden">
           {/* Ranking Badge */}

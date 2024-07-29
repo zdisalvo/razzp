@@ -127,11 +127,11 @@ function useCreatePost() {
 	const authUser = useAuthStore((state) => state.user);
 	const createPost = usePostStore((state) => state.createPost);
 	const addPost = useUserProfileStore((state) => state.addPost);
-	const userProfile = useUserProfileStore((state) => state.userProfile);
+	//const userProfile = useUserProfileStore((state) => state.userProfile);
 	const { pathname } = useLocation();
 
 	const handleCreatePost = async (selectedFile, caption) => {
-		if (isLoading || !authUser || !userProfile) return;
+		if (isLoading || !authUser ) return;
 		if (!selectedFile) throw new Error("Please select an image");
 		setIsLoading(true);
 		const newPost = {
