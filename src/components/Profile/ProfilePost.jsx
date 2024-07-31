@@ -90,7 +90,7 @@ import {
 		  zIndex={1}
 		  justifyContent={"center"}
 		>
-		  <Flex alignItems={"center"} justifyContent={"center"} gap={10}>
+		  <Flex alignItems={"center"} justifyContent={"center"} gap={4}>
 			<Flex>
 			  <AiFillHeart size={20} />
 			  <Text fontWeight={"bold"} ml={2}>
