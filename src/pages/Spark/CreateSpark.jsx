@@ -65,6 +65,7 @@ const CreateSpark = () => {
   const { sparkImages: fetchedImages, isLoading: imagesLoadingFromHook } = useGetSparkImagesById(authUser.uid);
  // const { profilePics: fetchedProfilePics, isLoading: profilePicsLoadingFromHook } = useGetSparkImagesById(authUser.uid);
  const [newContent, setNewContent] = useState(false);
+ const [isModalOpen, setIsModalOpen] = useState(false);
 
   
 
