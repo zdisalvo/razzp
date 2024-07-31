@@ -21,16 +21,24 @@ const CommentsModal = ({ isOpen, onClose, post }) => {
     const authUser = useAuthStore((state) => state.user);
     const { userProfile } = useGetUserProfileById(post.createdBy);
     //const [comments, setComments] = useScrubBlockedUsersComments(post);
+    const [filtComments, setFiltComments] = useState(null);
 
     //console.log(userProfile);
 
     //console.log(post);
+
+    useEffect(() => {
+        if (isOpen) {
+            setTimeout(scrollToBottom, 200); // Set a timeout before scrolling
+        }
+    }, [filtComments, isOpen]);
 
 
     const handleSubmitComment = async (e) => {
         e.preventDefault();
         await handlePostComment(post.id, commentRef.current.value);
         commentRef.current.value = "";
+        setTimeout(scrollToBottom, 200);
         //await updateComments();
     };
 
@@ -54,33 +62,58 @@ const CommentsModal = ({ isOpen, onClose, post }) => {
             commentsContainerRef.current.scrollTop = commentsContainerRef.current.scrollHeight;
         }
     };
-    
-//     useEffect (() => {
-//     const updateComments = async (userLikes = new Set()) => {
-//         const postRef = doc(firestore, "posts", post.id);
-//         const postDoc = await getDoc(postRef);
-//         if (postDoc.exists() && userProfile) {
-//             //console.log(userProfile);
-//             const postData = postDoc.data();
-//             //const filteredComments = useScrubBlockedUsersComments({ userProfile, comments: postData.comments });
-//             //setComments(filteredComments);
-//             const filteredComments = post.comments.filter(comment => 
-//                 !userProfile.blocked.includes(comment.createdBy));
-//             setComments(filteredComments);
-//             //setComments(postData.comments);
-//         }
-//     };
 
-//     updateComments();
-// }, [post, userProfile]);
+    // useEffect(() => {
+    //     if (commentsContainerRef.current && !userScrolled) {
+    //         commentsContainerRef.current.scrollTop = commentsContainerRef.current.scrollHeight;
+    //     }
+    // }, [comments, userScrolled]);
+    
+    useEffect (() => {
+    const updateComments = async (userLikes = new Set()) => {
+        const postRef = doc(firestore, "posts", post.id);
+        const postDoc = await getDoc(postRef);
+        if (postDoc.exists() && userProfile) {
+            //console.log(userProfile);
+            const postData = postDoc.data();
+            //const filteredComments = useScrubBlockedUsersComments({ userProfile, comments: postData.comments });
+            //setComments(filteredComments);
+            const filteredComments = postData.comments.filter(comment => 
+                !userProfile.blocked.includes(comment.createdBy));
+            setComments(filteredComments);
+            setFiltComments(filteredComments);
+            //setComments(postData.comments);
+            
+        }
+        
+    };
+    updateComments();
+    scrollToBottom();
+}, [post, userProfile]);
 
     //setComments(useScrubBlockedUsersComments({userProfile, comments}));
 
+    // const updateComments = async (userLikes = new Set()) => {
+    //     const postRef = doc(firestore, "posts", post.id);
+    //     const postDoc = await getDoc(postRef);
+    //     if (postDoc.exists() && userProfile) {
+    //         //console.log(userProfile);
+    //         const postData = postDoc.data();
+    //         //const filteredComments = useScrubBlockedUsersComments({ userProfile, comments: postData.comments });
+    //         //setComments(filteredComments);
+    //         const filteredComments = postData.comments.filter(comment => 
+    //             !userProfile.blocked.includes(comment.createdBy));
+    //         setComments(filteredComments);
+    //         setFiltComments(filteredComments);
+    //         //setComments(postData.comments);
+    //         scrollToBottom();
+    //     }
+    // };
     
 
     useEffect(() => {
         scrollToBottom();
-    }, [comments, userScrolled]);
+    }, [filtComments, userScrolled]);
 
     const handleScroll = () => {
         if (commentsContainerRef.current) {
@@ -101,6 +134,7 @@ const CommentsModal = ({ isOpen, onClose, post }) => {
                 comments: arrayRemove(comments.find(comment => comment.id === commentId))
             });
             setComments(prevComments => prevComments.filter(comment => comment.id !== commentId));
+            setFiltComments(prevComments => prevComments.filter(comment => comment.id !== commentId));
         } catch (error) {
             console.error("Failed to delete comment:", error);
         }
@@ -123,7 +157,7 @@ const CommentsModal = ({ isOpen, onClose, post }) => {
                         ref={commentsContainerRef}
                         onScroll={handleScroll}
                     >
-                        {userProfile && comments.map((comment, idx) => (
+                        {userProfile && filtComments && filtComments.map((comment, idx) => (
                             
                             <Flex key={idx} direction="column" borderBottom="1px" borderStyle="groove" borderColor="gray.600" pb={0} mb={0} position="relative">
                                  <Box position="absolute" top={0} right={1} m={0} p={0}>

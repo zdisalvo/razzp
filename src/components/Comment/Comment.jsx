@@ -106,23 +106,23 @@ const Comment = ({ comment, post, postUser }) => {
         }
     };
 
-	useEffect(() => {
-        const fetchPostUser = async () => {
-            if (postUser && userProfile) {
-				console.log(postUser);
-                // Check if the current comment creator is blocked by the post creator
-                const isBlocked = postUser.blocked.includes(userProfile.uid);
-                if (isBlocked) {
-					console.log("blocked")
-                    // // Hide this comment if the comment creator is blocked
-                    // return null;
-					setBlocked(true);
-                }
-            }
-        };
+	// useEffect(() => {
+    //     const fetchPostUser = async () => {
+    //         if (postUser && userProfile) {
+	// 			console.log(postUser);
+    //             // Check if the current comment creator is blocked by the post creator
+    //             const isBlocked = postUser.blocked.includes(userProfile.uid);
+    //             if (isBlocked) {
+	// 				console.log("blocked")
+    //                 // // Hide this comment if the comment creator is blocked
+    //                 // return null;
+	// 				setBlocked(true);
+    //             }
+    //         }
+    //     };
 
-        fetchPostUser();
-    }, [postUser, userProfile]);
+    //     fetchPostUser();
+    // }, [postUser, userProfile]);
 
     if (isLoading) return <CommentSkeleton />;
 
@@ -162,7 +162,7 @@ const Comment = ({ comment, post, postUser }) => {
                         {userCommentLikes.has(comment.id) ? <UnlikeLogo /> : <NotificationsLogo />}
                     </Button>
                     <Text fontSize="sm" ml={0}>
-                        {localComments.find(c => c.id === comment.id)?.likes || comment.likes || 0}
+                        {localComments.find(c => c.id === comment.id)?.likes || comment.likes }
                     </Text>
                 </Flex>
             </Box>
