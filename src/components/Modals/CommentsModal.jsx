@@ -13,14 +13,12 @@ import useGetUserProfileById from "../../hooks/useGetUserProfileById";
 
 const CommentsModal = ({ isOpen, onClose, post }) => {
     const { handlePostComment, isCommenting } = usePostComment();
-    const { handleLikeComment } = useLikeComment();
-    const [comments, setComments] = useState(post.comments);
     
+    const [comments, setComments] = useState(post.comments);
+    const [userScrolled, setUserScrolled] = useState(false);
     const commentRef = useRef(null);
     const commentsContainerRef = useRef(null);
     const authUser = useAuthStore((state) => state.user);
-    const [userCommentLikes, setUserCommentLikes] = useState(new Set());
-    const [userScrolled, setUserScrolled] = useState(false);
     const { userProfile } = useGetUserProfileById(post.createdBy);
     //const [comments, setComments] = useScrubBlockedUsersComments(post);
 
@@ -33,23 +31,23 @@ const CommentsModal = ({ isOpen, onClose, post }) => {
         e.preventDefault();
         await handlePostComment(post.id, commentRef.current.value);
         commentRef.current.value = "";
-        await updateComments();
+        //await updateComments();
     };
 
-    const updateComments = async (userLikes = new Set()) => {
-        const postRef = doc(firestore, "posts", post.id);
-        const postDoc = await getDoc(postRef);
-        if (postDoc.exists() && userProfile) {
-            //console.log(userProfile);
-            const postData = postDoc.data();
-            //const filteredComments = useScrubBlockedUsersComments({ userProfile, comments: postData.comments });
-            //setComments(filteredComments);
-            const filteredComments = post.comments.filter(comment => 
-                !userProfile.blocked.includes(comment.createdBy));
-            setComments(filteredComments);
-            //setComments(postData.comments);
-        }
-    };
+    // const updateComments = async (userLikes = new Set()) => {
+    //     const postRef = doc(firestore, "posts", post.id);
+    //     const postDoc = await getDoc(postRef);
+    //     if (postDoc.exists() && userProfile) {
+    //         //console.log(userProfile);
+    //         const postData = postDoc.data();
+    //         //const filteredComments = useScrubBlockedUsersComments({ userProfile, comments: postData.comments });
+    //         //setComments(filteredComments);
+    //         const filteredComments = post.comments.filter(comment => 
+    //             !userProfile.blocked.includes(comment.createdBy));
+    //         setComments(filteredComments);
+    //         //setComments(postData.comments);
+    //     }
+    // };
 
     const scrollToBottom = () => {
         if (commentsContainerRef.current && !userScrolled) {
@@ -57,59 +55,28 @@ const CommentsModal = ({ isOpen, onClose, post }) => {
         }
     };
     
-    useEffect (() => {
-    const updateComments = async (userLikes = new Set()) => {
-        const postRef = doc(firestore, "posts", post.id);
-        const postDoc = await getDoc(postRef);
-        if (postDoc.exists() && userProfile) {
-            //console.log(userProfile);
-            const postData = postDoc.data();
-            //const filteredComments = useScrubBlockedUsersComments({ userProfile, comments: postData.comments });
-            //setComments(filteredComments);
-            const filteredComments = post.comments.filter(comment => 
-                !userProfile.blocked.includes(comment.createdBy));
-            setComments(filteredComments);
-            //setComments(postData.comments);
-        }
-    };
+//     useEffect (() => {
+//     const updateComments = async (userLikes = new Set()) => {
+//         const postRef = doc(firestore, "posts", post.id);
+//         const postDoc = await getDoc(postRef);
+//         if (postDoc.exists() && userProfile) {
+//             //console.log(userProfile);
+//             const postData = postDoc.data();
+//             //const filteredComments = useScrubBlockedUsersComments({ userProfile, comments: postData.comments });
+//             //setComments(filteredComments);
+//             const filteredComments = post.comments.filter(comment => 
+//                 !userProfile.blocked.includes(comment.createdBy));
+//             setComments(filteredComments);
+//             //setComments(postData.comments);
+//         }
+//     };
 
-    updateComments();
-}, [post, userProfile]);
+//     updateComments();
+// }, [post, userProfile]);
 
     //setComments(useScrubBlockedUsersComments({userProfile, comments}));
 
-    const fetchUserCommentLikes = async () => {
-        if (authUser) {
-			const userRef = doc(firestore, "users", authUser.uid);
-            const userDoc = await getDoc(userRef);
-
-            if (userDoc.exists()) {
-                const userData = userDoc.data();
-
-                // Initialize commentLikes if it doesn't exist
-                if (!userData.commentLikes) {
-                    await setDoc(userRef, { commentLikes: [] }, { merge: true });
-                    setUserCommentLikes(new Set());
-                } else {
-                    const commentLikesSet = new Set(userData.commentLikes || []);
-                    setUserCommentLikes(commentLikesSet);
-                    return commentLikesSet;
-                }
-            } else {
-                console.error("User document does not exist");
-            }
-        }
-        return new Set();
-    };
-
-    useEffect(() => {
-        if (isOpen) {
-            fetchUserCommentLikes().then(userLikes => {
-                updateComments(userLikes);
-                setTimeout(scrollToBottom, 100);
-            });
-        }
-    }, [isOpen]);
+    
 
     useEffect(() => {
         scrollToBottom();
@@ -122,77 +89,9 @@ const CommentsModal = ({ isOpen, onClose, post }) => {
         }
     };
 
-    const handleCommentLike = async (commentId) => {
-		if (authUser) {
-			// Check if the comment is already liked by the user
-			const isLiked = userCommentLikes.has(commentId);
+    //console.log(post);
 
-            if (isLiked)
-                return;
-	
-			// Optimistic update: toggle like status immediately
-			setComments(prevComments =>
-				prevComments.map(c =>
-					c.id === commentId
-						? {
-							...c,
-							likes: isLiked ? c.likes - 1 : c.likes + 1
-						}
-						: c
-				)
-			);
-	
-			// Optimistically update local user likes
-			setUserCommentLikes(prevLikes => {
-				const updatedLikes = new Set(prevLikes);
-				if (isLiked) {
-					updatedLikes.delete(commentId);
-				} else {
-					updatedLikes.add(commentId);
-				}
-				return updatedLikes;
-			});
-	
-			// Perform backend update
-			try {
-				if (isLiked) {
-					// Handle unliking the comment
-					await handleLikeComment(post.id, commentId, post.imageURL); // Assuming handleLikeComment supports a third parameter for unlike
-					await updateDoc(doc(firestore, "users", authUser.uid), {
-						commentLikes: arrayRemove(commentId)
-					});
-				} else {
-					// Handle liking the comment
-					await handleLikeComment(post.id, commentId, post.imageURL ); // Assuming handleLikeComment supports a third parameter for like
-					await updateDoc(doc(firestore, "users", authUser.uid), {
-						commentLikes: arrayUnion(commentId),
-					});
-				}
-			} catch (error) {
-				console.error("Failed to update like status:", error);
-				// Rollback optimistic update in case of error
-				setComments(prevComments =>
-					prevComments.map(c =>
-						c.id === commentId
-							? {
-								...c,
-								likes: isLiked ? c.likes + 1 : c.likes - 1
-							}
-							: c
-					)
-				);
-				setUserCommentLikes(prevLikes => {
-					const updatedLikes = new Set(prevLikes);
-					if (isLiked) {
-						updatedLikes.add(commentId);
-					} else {
-						updatedLikes.delete(commentId);
-					}
-					return updatedLikes;
-				});
-			}
-		}
-	};
+    
 
     const handleDeleteComment = async (commentId) => {
         // Handle comment deletion logic
@@ -237,26 +136,8 @@ const CommentsModal = ({ isOpen, onClose, post }) => {
                                     </Button>
                                 </Box>
                                 <Flex alignItems={"left"} gap={0} mt={6} mb={6}>
-                                    <Comment comment={comment} />
-                                    <Box flex="1" ml={2} display="flex" alignItems="center" justifyContent="flex-start" mr={5}>
+                                    <Comment comment={comment} post={post} postUser={userProfile} />
                                     
-                                        <Flex direction="row" alignItems="center" gap={1}> {/* Arrange items in a row with space between them */}
-                                        
-                                            <Button
-                                                onClick={() => handleCommentLike(comment.id)}
-                                                variant="unstyled"
-                                                aria-label={userCommentLikes.has(comment.id) ? "Unlike" : "Like"}
-                                            >
-                                                
-                                                {userCommentLikes.has(comment.id) ? <UnlikeLogo  /> : <NotificationsLogo  />}
-                                                
-                                            </Button>
-                                            
-                                            <Text fontSize="sm" ml={0} >
-                                                {comment.likes || 0}
-                                            </Text>
-                                        </Flex>
-                                    </Box>
                                 </Flex>
                             </Flex>
                         ))}
