@@ -15,6 +15,8 @@ const useLikeComment = () => {
 
         setIsLiking(true);
 
+
+        //console.log(postImageURL);
         //console.log(commentId);
 
         try {
@@ -60,7 +62,7 @@ const useLikeComment = () => {
                         postId: postId,
                         postImageURL: postImageURL,
                         comment: comment.comment,
-                        commentId,
+                        commentId: commentId,
                         type: "commentLike"
                     })
                 });

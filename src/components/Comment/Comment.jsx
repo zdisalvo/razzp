@@ -18,7 +18,7 @@ const Comment = ({ comment, post, postUser }) => {
     const { handleLikeComment } = useLikeComment();
 	const [blocked, setBlocked] = useState(false);
 
-	console.log(postUser);
+	//console.log(postUser);
 	//console.log(userProfile);
 
     useEffect(() => {
@@ -73,12 +73,12 @@ const Comment = ({ comment, post, postUser }) => {
 
             try {
                 if (isLiked) {
-                    await handleLikeComment(post.id, commentId, 'unlike');
+                    await handleLikeComment(post.id, commentId, post.imageURL);
                     await updateDoc(doc(firestore, "users", authUser.uid), {
                         commentLikes: arrayRemove(commentId)
                     });
                 } else {
-                    await handleLikeComment(post.id, commentId, 'like');
+                    await handleLikeComment(post.id, commentId, post.imageURL);
                     await updateDoc(doc(firestore, "users", authUser.uid), {
                         commentLikes: arrayUnion(commentId)
                     });
@@ -128,9 +128,12 @@ const Comment = ({ comment, post, postUser }) => {
 
 	if (blocked) return null;
 
+	//console.log(post.imageURL);
+
     return (
-		<Flex>
-        <Container width="80%">
+		
+        <Container width="100%">
+			<Flex>
             <Flex gap={4} align="center">
                 <Link to={`/${userProfile.username}`}>
                     <Avatar src={userProfile.profilePicURL} size="sm" />
@@ -154,15 +157,15 @@ const Comment = ({ comment, post, postUser }) => {
                 </Flex>
 				
             </Flex>
-            
-        </Container>
-		
-		<Box flex={1} ml="auto" display="flex" alignItems="center" justifyContent="flex-end" mr={2}>
+            <Box flex={1} ml="auto" display="flex" alignItems="center" justifyContent="flex-end" mr={2}>
                 <Flex direction="row" alignItems="center" gap={1}>
                     <Button
                         onClick={() => handleCommentLike(comment.id)}
+						// commentId={comment.id}
+						// postId={post.id}
+						// postImageURL={post.imageURL}
                         variant="unstyled"
-                        aria-label={userCommentLikes.has(comment.id) ? "Unlike" : "Like"}
+                        //aria-label={userCommentLikes.has(comment.id) ? "Unlike" : "Like"}
                     >
                         {userCommentLikes.has(comment.id) ? <UnlikeLogo /> : <NotificationsLogo />}
                     </Button>
@@ -171,8 +174,10 @@ const Comment = ({ comment, post, postUser }) => {
                     </Text>
                 </Flex>
             </Box>
-			
-		</Flex>
+			</Flex>
+        </Container>
+		
+	
     );
 };
 
