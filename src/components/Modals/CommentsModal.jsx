@@ -40,11 +40,13 @@ const CommentsModal = ({ isOpen, onClose, post }) => {
             commentsContainerRef.current.scrollTop = commentsContainerRef.current.scrollHeight;
         }
     };
-
+    
+    useEffect (() => {
     const updateComments = async (userLikes = new Set()) => {
         const postRef = doc(firestore, "posts", post.id);
         const postDoc = await getDoc(postRef);
-        if (postDoc.exists()) {
+        if (postDoc.exists() && userProfile) {
+            console.log(userProfile);
             const postData = postDoc.data();
             //const filteredComments = useScrubBlockedUsersComments({ userProfile, comments: postData.comments });
             //setComments(filteredComments);
@@ -54,6 +56,9 @@ const CommentsModal = ({ isOpen, onClose, post }) => {
             //setComments(postData.comments);
         }
     };
+
+    updateComments();
+}, [post, userProfile]);
 
     //setComments(useScrubBlockedUsersComments({userProfile, comments}));
 
@@ -174,6 +179,7 @@ const CommentsModal = ({ isOpen, onClose, post }) => {
 	};
 
     return (
+        
         <Modal isOpen={isOpen} onClose={onClose} motionPreset='slideInLeft'>
             <ModalOverlay />
             <ModalContent bg={"black"} border={"1px solid gray"} maxW={{ base: "90vw", md: "400px" }} px={0}>
@@ -189,7 +195,7 @@ const CommentsModal = ({ isOpen, onClose, post }) => {
                         ref={commentsContainerRef}
                         onScroll={handleScroll}
                     >
-                        {comments.map((comment, idx) => (
+                        {userProfile && comments.map((comment, idx) => (
                             <Flex key={idx} direction="column" borderBottom="1px" borderStyle="groove" borderColor="gray.600" pb={2} mb={2}>
                                 <Flex alignItems={"left"} gap={0} mt={0} mb={2}>
                                     <Comment comment={comment} />
