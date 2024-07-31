@@ -20,6 +20,13 @@ const SparkMatches = () => {
     navigate("/spark"); // Navigate to the previous page
 };
 
+const sortedMatches = sparkMatches.slice().sort((a, b) => {
+  const lastMessageA = a.messages[a.messages.length - 1];
+  const lastMessageB = b.messages[b.messages.length - 1];
+  
+  return (lastMessageB?.timeStamp?.seconds || 0) - (lastMessageA?.timeStamp?.seconds || 0);
+});
+
 
   return (
     <Container pt={6}   px={0} w={['100vw', null, '80vh']} pb={{base: "10vh", md: "60px"}}>
@@ -51,7 +58,7 @@ const SparkMatches = () => {
           </VStack>
         ))}
       
-      {!isLoading && sparkMatches.length > 0 && sparkMatches.map((match) => <SparkMatch key={match.matchedUserId} userId={authUser.uid} matchedUserId={match.matchedUserId} />)}
+      {!isLoading && sortedMatches.length > 0 && sortedMatches.map((match) => <SparkMatch key={match.matchedUserId} userId={authUser.uid} matchedUserId={match.matchedUserId} />)}
       
       
     </Container>

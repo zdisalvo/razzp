@@ -43,7 +43,7 @@ const calculateAge = (birthday) => {
   };
 
 
-const SparkProfile = ({ sparkProfile, onViewed, sparkUser }) => {
+const SparkProfileLite = ({ sparkProfile, sparkUser }) => {
 
   //console.log(sparkUser);
 
@@ -102,27 +102,6 @@ const SparkProfile = ({ sparkProfile, onViewed, sparkUser }) => {
   } = sparkProfile;
 
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          onViewed(sparkProfile.uid);
-          observer.unobserve(profileRef.current);
-        }
-      },
-      { threshold: 0.75 }
-    );
-
-    if (profileRef.current) {
-      observer.observe(profileRef.current);
-    }
-
-    return () => {
-      if (profileRef.current) {
-        observer.unobserve(profileRef.current);
-      }
-    };
-  }, [sparkProfile.uid, onViewed]);
 
 
   const isNotEmpty = (value) => {
@@ -567,4 +546,4 @@ const SparkProfile = ({ sparkProfile, onViewed, sparkUser }) => {
   );
 };
 
-export default SparkProfile;
+export default SparkProfileLite;
