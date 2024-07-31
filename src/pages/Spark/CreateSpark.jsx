@@ -17,6 +17,7 @@ import {
   CloseButton,
   useBreakpointValue,
   Textarea,
+  IconButton
 } from "@chakra-ui/react";
 import useAuthStore from "../../store/authStore";
 import useCreateSparkProfile from "../../hooks/useCreateSparkProfile";
@@ -33,6 +34,8 @@ import CreateSparkPic from "./CreateSparkPic";
 import useGetSparkImagesById from "../../hooks/useGetSparkImagesById";
 import DeleteSparkPic from "./DeleteSparkPic";
 import DragAndDropGrid from "./DragAndDropGrid";
+import SparkProfileModal from "../SparkMatches/SparkProfileModal";
+import useSparkProfileStore from "../../store/sparkProfileStore";
 
 
 
@@ -882,9 +885,44 @@ const handlePronounsClick = (pronouns) => {
   
   return (
     <Container maxW="container.md" mt={{ base: "5vh", md: "30px" }} mb={{ base: "10vh", md: "60px" }}>
-      <Heading as="h1" textAlign="center" mb={4} >
+      <Box position="sticky" top="0" bg="black" zIndex="1" py={4}>
+      <Box position="fixed" top="0" right={{base: "0", md: "15vw"}} p={4} zIndex="docked" width="100%">
+        
+      <Flex justifyContent="flex-end" alignItems="center">
+      <Box position="relative">
+          <IconButton
+                icon={<FontAwesomeIcon icon={faUser} />}
+                aria-label="View Profile"
+                onClick={handleProfileClick}
+                variant="outline"
+                mr={2} // Adds horizontal margin between the icons
+                position="relative"
+                />
+          {/* <AvatarGroup size={{ base: "md", md: "lg" }} justifySelf={"left"} p={0} alignSelf={"center"} >
+            {matchedProfile.profilePics.length > 0 &&
+              <Avatar src={matchedProfile.profilePics[0].imageURL} alt='This user has no pictures'  />
+            }
+            {matchedProfile.profilePics.length === 0 &&
+              <Avatar alt='This user has no pictures' />
+            }
+          </AvatarGroup>   */}
+          {!isLoading && sparkProfileView &&
+          <SparkProfileModal
+        isOpen={isModalOpen}
+        onClose={handleModalClose}
+        sparkProfile={sparkProfileView}
+        //onViewed={() => console.log(`Viewed profile: ${match.uid}`)}
+        sparkUser={sparkProfileView}
+      />
+          }
+      </Box>
+      </Flex>
+        </Box>
+        <Heading as="h1" textAlign="center" mb={4} >
         Spark Dating Profile
       </Heading>
+      </Box>
+
       <Box as="form" onSubmit={handleSubmit} p={4} boxShadow="md" borderRadius="md">
         <Stack spacing={4}>
         <Button
