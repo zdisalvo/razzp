@@ -112,7 +112,7 @@ const CreateSparkPic = ({onUpload}) => {
         <Modal isOpen={isOpen} onClose={onClose} size='md'>
             <ModalOverlay />
 
-            <ModalContent bg={"black"} border={"1px solid gray"}>
+            <ModalContent bg={"black"} border={"1px solid gray"} maxW={{ base: "75vw", md: "300px" }}>
                 <ModalHeader>Upload Picture</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody pb={6}>
@@ -122,8 +122,8 @@ const CreateSparkPic = ({onUpload}) => {
 
                     <BsFillImageFill
                         onClick={() => imageRef.current.click()}
-                        style={{ marginTop: "15px", marginLeft: "5px", cursor: "pointer" }}
-                        size={16}
+                        style={{ marginTop: "15px", marginLeft: "45px", cursor: "pointer" }}
+                        size={40}
                     />
                     {selectedFile && (
                         <Flex mt={5} w={"full"} position={"relative"} justifyContent={"center"}>

@@ -51,7 +51,7 @@ const DragAndDropGrid = ({ images, onDragEnd }) => {
                     h={{base: "60px", md: "100px"}}
                     
                   >
-                    <Image src={imageURL} alt={`Image ${id}`} objectFit="cover" maxW="100px" maxH="100px" />
+                    <Image src={imageURL} alt={`Image ${id}`} objectFit="cover" maxW={{base: "60px", md: "100px"}} maxH={{base: "60px", md: "100px"}} />
                   </Box>
                 )}
               </Draggable>
