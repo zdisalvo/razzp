@@ -86,6 +86,16 @@ const CreateSpark = () => {
     }
   }, [fetchSparkProfile]);
 
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+  };
+    
+  const handleProfileClick = () => {
+    // setSparkProfile(profileData);
+    // setSparkUser(match); // Assuming match contains user data
+    setIsModalOpen(true);
+  };
+
   
   useEffect(() => {
     if (fetchedImages) {
