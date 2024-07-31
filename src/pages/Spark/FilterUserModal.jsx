@@ -236,10 +236,10 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>Filter Users</ModalHeader>
+      <ModalContent bg={"black"} border={"1px solid gray"} maxW={{ base: "90vw", md: "400px" }} px={0}>
+        <ModalHeader>Apply Filters</ModalHeader>
         <ModalCloseButton />
-        <ModalBody>
+        <ModalBody pb={6}>
         <Box mb={4}>
             <Text mb={4}>Age Range:</Text>
             <Flex alignItems="center" mb={4}>
@@ -249,15 +249,17 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
                 step={1}
                 min={18}
                 max={80}
+
                 onChange={handleAgeRangeChange}
                 renderTrack={({ props, children }) => (
                   <div
                     {...props}
                     style={{
                       ...props.style,
-                      height: "6px",
+                      height: "7px",
                       width: "100%",
                       backgroundColor: "#ccc",
+                      borderRadius: '8px',
                     }}
                   >
                     {children}
@@ -281,7 +283,7 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
 
           <Box mb={4}>
             <Text mb={1}>Show users within:</Text>
-            <Text mb={4} mr={3}>{radiusInMiles === 100 ? "Any" : `${radiusInMiles} miles`}</Text>
+            <Text mb={4} mr={3}>{radiusInMiles === 100 ? "Any Range" : `${radiusInMiles} miles`}</Text>
             <Flex alignItems="center" mb={4}>
               <Slider
                 min={5}
@@ -291,10 +293,10 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
                 onChange={handleDistanceChange}
                 width="100%"
               >
-                <SliderTrack>
-                  <SliderFilledTrack />
+                <SliderTrack height="7px" borderRadius="8px" bg="gray.800">
+                  <SliderFilledTrack bg="gray.200" />
                 </SliderTrack>
-                <SliderThumb />
+                <SliderThumb boxSize={5} />
               </Slider>
             </Flex>
           </Box>

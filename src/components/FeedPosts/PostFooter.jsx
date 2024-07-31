@@ -164,7 +164,8 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
                         </Text>
                     )}
                     {/* COMMENTS MODAL ONLY IN THE HOME PAGE */}
-                    {isOpen ? <CommentsModal isOpen={isOpen} onClose={onClose} post={post} userProfile={creatorProfile} /> : null}
+                    {isOpen ? <CommentsModal isOpen={isOpen} onClose={onClose} post={post}  /> : null}
+                    {/* userProfile={creatorProfile}  */}
                 </>
             )}
 

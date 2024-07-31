@@ -7,10 +7,10 @@ import useAuthStore from "../../store/authStore";
 import { doc, getDoc, setDoc, updateDoc, arrayUnion } from "firebase/firestore";
 import { firestore } from "../../firebase/firebase";
 import { NotificationsLogo, UnlikeLogo } from "../../assets/constants";
-//import useGetUserProfileById from "../../hooks/useGetUserProfileById";
+import useGetUserProfileById from "../../hooks/useGetUserProfileById";
 //import useScrubBlockedUsersComments from "../../hooks/useScrubBlockedUsersComments";
 
-const CommentsModal = ({ isOpen, onClose, post, userProfile }) => {
+const CommentsModal = ({ isOpen, onClose, post }) => {
     const { handlePostComment, isCommenting } = usePostComment();
     const { handleLikeComment } = useLikeComment();
     const [comments, setComments] = useState(post.comments);
@@ -20,8 +20,10 @@ const CommentsModal = ({ isOpen, onClose, post, userProfile }) => {
     const authUser = useAuthStore((state) => state.user);
     const [userCommentLikes, setUserCommentLikes] = useState(new Set());
     const [userScrolled, setUserScrolled] = useState(false);
-    //const { userProfile } = useGetUserProfileById(post.createdBy);
+    const { userProfile } = useGetUserProfileById(post.createdBy);
     //const [comments, setComments] = useScrubBlockedUsersComments(post);
+
+    //console.log(userProfile);
 
     //console.log(post);
 
