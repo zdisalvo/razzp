@@ -60,6 +60,7 @@ const CreateSpark = () => {
   //const [profilePics, setProfilePics] = useState([]);
   const { sparkImages: fetchedImages, isLoading: imagesLoadingFromHook } = useGetSparkImagesById(authUser.uid);
  // const { profilePics: fetchedProfilePics, isLoading: profilePicsLoadingFromHook } = useGetSparkImagesById(authUser.uid);
+ const [newContent, setNewContent] = useState(false);
 
   
 
