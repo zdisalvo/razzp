@@ -241,9 +241,9 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
         <ModalCloseButton />
         <ModalBody pb={6}>
         <Box mb={4}>
-            <Text mb={4}>Age Range:</Text>
+            <Text mb={4} color="#eb7734">Age Range:</Text>
             <Flex alignItems="center" mb={4}>
-              <Text mr={4}>{`${ageRange[0]} - ${ageRange[1]} years`}</Text>
+              <Text fontSize="sm" mr={4}>{`${ageRange[0]} - ${ageRange[1]} years`}</Text>
               <Range
                 values={ageRange}
                 step={1}
@@ -262,6 +262,25 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
                       borderRadius: '8px',
                     }}
                   >
+                    <div
+                style={{
+                  position: 'absolute',
+                  height: '7px',
+                  width: '100%',
+                  backgroundColor: '#1A202C',
+                  borderRadius: '8px',
+                }}
+              />
+              <div
+                style={{
+                  position: 'absolute',
+                  height: '7px',
+                  backgroundColor: '#A0AEC0',
+                  borderRadius: '8px',
+                  left: `${((ageRange[0] - 18) / (62)) * 100}%`,
+                  right: `${100 - ((ageRange[1] - 18) / (62)) * 100}%`,
+                }}
+              />
                     {children}
                   </div>
                 )}
@@ -273,7 +292,7 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
                       height: "20px",
                       width: "20px",
                       borderRadius: "50%",
-                      backgroundColor: "#999",
+                      backgroundColor: "#eb7734",
                     }}
                   />
                 )}
@@ -282,8 +301,8 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
           </Box>
 
           <Box mb={4}>
-            <Text mb={1}>Show users within:</Text>
-            <Text mb={4} mr={3}>{radiusInMiles === 100 ? "Any Range" : `${radiusInMiles} miles`}</Text>
+            <Text mb={1} color="#eb7734">Show people within:</Text>
+            <Text mb={4} fontSize="sm" mr={3}>{radiusInMiles === 100 ? "Any Range" : `${radiusInMiles} miles`}</Text>
             <Flex alignItems="center" mb={4}>
               <Slider
                 min={5}
@@ -294,27 +313,33 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
                 width="100%"
               >
                 <SliderTrack height="7px" borderRadius="8px" bg="gray.800">
-                  <SliderFilledTrack bg="gray.200" />
+                  <SliderFilledTrack bg="gray.400" />
                 </SliderTrack>
-                <SliderThumb boxSize={5} />
+                <SliderThumb boxSize={5} backgroundColor="#eb7734" />
               </Slider>
             </Flex>
           </Box>
 
 
           <Box mb={4}>
-            <Text mb={4}>Filter by Height:</Text>
+            <Text mb={4} color="#eb7734">Filter by Height:</Text>
             <Flex justifyContent="space-between" alignItems="center" mb={4}>
               <Button
-                colorScheme={shorterThan ? "blue" : "gray"}
+                colorScheme={shorterThan ? "orange" : "gray"}
+                bg={shorterThan ? "#eb7734" : "gray.800"}
+                _active={{ bg: shorterThan ? "#eb7734" : "gray.800" }}
                 onClick={handleShorterThanClick}
+                size="sm"
               >
                 Shorter Than
               </Button>
               <Text mx={4}>{formatHeight(selectedHeight)}</Text>
               <Button
-                colorScheme={tallerThan ? "blue" : "gray"}
+                colorScheme={tallerThan ? "orange" : "gray"}
+                bg={tallerThan ? "#eb7734" : "gray.800"}
+                _active={{ bg: tallerThan ? "#eb7734" : "gray.800" }}
                 onClick={handleTallerThanClick}
+                size="sm"
               >
                 Taller Than
               </Button>
@@ -326,10 +351,10 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
               value={selectedHeight}
               onChange={handleHeightChange}
             >
-              <SliderTrack>
-                <SliderFilledTrack />
+              <SliderTrack height="7px" borderRadius="8px" bg={shorterThan ? "gray.800" :  "gray.400"}>
+              <SliderFilledTrack bg={shorterThan ? "gray.400" : (tallerThan ? "gray.800" : "gray.400")} />
               </SliderTrack>
-              <SliderThumb />
+              <SliderThumb boxSize={5} backgroundColor="#eb7734" />
             </Slider>
           </Box>
 
@@ -457,11 +482,11 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
           <Button variant="ghost" mr={3} onClick={onClose}>
             Cancel
           </Button>
-          <Button colorScheme="blue" mr={3} onClick={resetFilters}>
-            Reset
+          <Button backgroundColor="#eb7734" textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)" mr={3} onClick={resetFilters}>
+            Clear
           </Button>
-          <Button colorScheme="blue" onClick={saveFilters}>
-            Save
+          <Button backgroundColor="#eb7734" textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)" onClick={saveFilters}>
+            Apply
           </Button>
         </ModalFooter>
       </ModalContent>
