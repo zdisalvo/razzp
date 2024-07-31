@@ -6,6 +6,8 @@ import { timeAgo } from "../../utils/timeAgo";
 const Comment = ({ comment }) => {
 	const { userProfile, isLoading } = useGetUserProfileById(comment.createdBy);
 
+	console.log(userProfile);
+
 	if (isLoading) return <CommentSkeleton />;
 	return (
 		<Container width="80%">

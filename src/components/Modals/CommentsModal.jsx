@@ -36,6 +36,21 @@ const CommentsModal = ({ isOpen, onClose, post }) => {
         await updateComments();
     };
 
+    const updateComments = async (userLikes = new Set()) => {
+        const postRef = doc(firestore, "posts", post.id);
+        const postDoc = await getDoc(postRef);
+        if (postDoc.exists() && userProfile) {
+            //console.log(userProfile);
+            const postData = postDoc.data();
+            //const filteredComments = useScrubBlockedUsersComments({ userProfile, comments: postData.comments });
+            //setComments(filteredComments);
+            const filteredComments = post.comments.filter(comment => 
+                !userProfile.blocked.includes(comment.createdBy));
+            setComments(filteredComments);
+            //setComments(postData.comments);
+        }
+    };
+
     const scrollToBottom = () => {
         if (commentsContainerRef.current && !userScrolled) {
             commentsContainerRef.current.scrollTop = commentsContainerRef.current.scrollHeight;

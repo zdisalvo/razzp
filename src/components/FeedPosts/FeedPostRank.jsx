@@ -1,5 +1,5 @@
 import React, { forwardRef } from "react";
-import { Box, Container, Image } from "@chakra-ui/react";
+import { Box, Container, Image, Text } from "@chakra-ui/react";
 import PostFooter from "./PostFooter";
 import PostHeader from "./PostHeader";
 import useGetUserProfileById from "../../hooks/useGetUserProfileById";
@@ -25,20 +25,38 @@ const FeedPost = forwardRef(({ post, rank, isFollowing, onFollowClick }, ref) =>
         <Box position="relative" borderRadius={4} overflow="hidden">
           {/* Ranking Badge */}
           {rank && (
-            <Box
-              position="absolute"
-              bottom={3} // Adjust this value to move the badge up or down
-              right={3}
-              color="#eb7734" // Firetruck red color
-              fontWeight="bold"
-              fontSize="3xl"
-              fontStyle="italic" // Italicize the text
-              textAlign="center"
-              //maxHeight="450px"
-              px={2} // Optional: Add some padding for better visibility
-            >
-              #{rank}
-            </Box>
+             <Box position="absolute" display="inline-block" bottom={1} // Adjust this value to move the text up or down
+             right={1}>
+             <Image
+                 src="/trophy-gold.png" // Your icon
+                 alt="Trophy Icon"
+                 width="90px" // Adjust the size as needed
+                 height="auto" // Maintain aspect ratio
+             />
+             <Box
+                 position="absolute"
+                 bottom="73px" // Adjust this value to move the text up or down
+                 right="31px" // Adjust this value to move the text left or right
+                 color="d4af37" // Firetruck red color
+                 //color="red"
+                 fontWeight="bold"
+                 fontSize="xl"
+                 //fontStyle="italic" // Italicize the text
+                 textAlign="center"
+                 px={2} // Add some padding for better visibility
+                 //bg="rgba(0, 0, 0, 0.5)" // Optional: Add a semi-transparent background
+                 //borderRadius="md" // Optional: Rounded corners for background
+                 whiteSpace="nowrap" // Prevent text wrapping
+                 sx={{
+                  // Custom CSS for text shadow
+                  textShadow: "2px 2px 4px rgba(212, 175, 55, 0.6)" // Gold color shadow
+              }}
+             >
+                 <Text display="inline" verticalAlign="middle">
+                     {rank}
+                 </Text>
+             </Box>
+         </Box>
           )}
           
           <Image src={post.imageURL} alt={"FEED POST IMG"} width="100%" objectFit="cover" maxHeight="450px" height="auto" />
