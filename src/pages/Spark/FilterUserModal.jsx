@@ -241,7 +241,7 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
         <ModalCloseButton />
         <ModalBody pb={6}>
         <Box mb={4}>
-            <Text mb={4} color="#eb7734">Age Range:</Text>
+            <Text mb={1} color="#eb7734">Age Range:</Text>
             <Flex alignItems="center" mb={4}>
               <Text fontSize="sm" mr={4}>{`${ageRange[0]} - ${ageRange[1]} years`}</Text>
               <Range
@@ -302,7 +302,7 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
 
           <Box mb={4}>
             <Text mb={1} color="#eb7734">Show people within:</Text>
-            <Text mb={4} fontSize="sm" mr={3}>{radiusInMiles === 100 ? "Any Range" : `${radiusInMiles} miles`}</Text>
+            <Text mb={4} fontSize="sm" mr={3}>{radiusInMiles === 100 ? "Any Distance" : `${radiusInMiles} miles`}</Text>
             <Flex alignItems="center" mb={4}>
               <Slider
                 min={5}
@@ -322,7 +322,7 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
 
 
           <Box mb={4}>
-            <Text mb={4} color="#eb7734">Filter by Height:</Text>
+            <Text mb={1} color="#eb7734">Filter by Height:</Text>
             <Flex justifyContent="space-between" alignItems="center" mb={4}>
               <Button
                 colorScheme={shorterThan ? "orange" : "gray"}

@@ -11,17 +11,30 @@ import FilterUserModal from "./FilterUserModal";
 import { useState, useEffect, useCallback } from "react";
 import { storeSparkUserLocation } from "../../hooks/storeSparkUserLocation";
 import { useNavigate } from 'react-router-dom';
+import useSparkProfileStore from "../../store/sparkProfileStore";
 
 const Spark = () => {
     const authUser = useAuthStore((state) => state.user);
     
 
-    const { isLoading: profileLoading, sparkProfile } = useGetSparkProfileById(authUser?.uid);
+    //const { isLoading: profileLoading, sparkProfile } = useGetSparkProfileById(authUser?.uid);
     const [refreshKey, setRefreshKey] = useState(0); // State variable to trigger refresh
-    const { isLoading, sparkProfiles } = useGetSparkProfiles(sparkProfile, refreshKey);
+    
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [isFetchingLocation, setIsFetchingLocation] = useState(false);
+    const { sparkProfile, isLoading: profileLoading, error, fetchSparkProfile } = useSparkProfileStore((state) => ({
+      sparkProfile: state.sparkProfile,
+      isLoading: state.isLoading,
+      error: state.error,
+      fetchSparkProfile: state.fetchSparkProfile,
+    }));
+    
+    useEffect(() => {
+      
+      fetchSparkProfile();
+    }, [fetchSparkProfile]);
 
+    const { isLoading, sparkProfiles } = useGetSparkProfiles(sparkProfile, refreshKey);
     //console.log(sparkProfile);
 
     const navigate = useNavigate();
