@@ -129,7 +129,7 @@ const Comment = ({ comment, post, postUser }) => {
 	if (blocked) return null;
 
     return (
-        <Container width="80%">
+        <Container width="95%">
             <Flex gap={4} align="center">
                 <Link to={`/${userProfile.username}`}>
                     <Avatar src={userProfile.profilePicURL} size="sm" />
@@ -151,8 +151,7 @@ const Comment = ({ comment, post, postUser }) => {
                         {comment.comment}
                     </Text>
                 </Flex>
-            </Flex>
-            <Box flex="1" ml={2} display="flex" alignItems="center" justifyContent="flex-start" mr={5}>
+				<Box flex="1" ml={2} display="flex" alignItems="center" justifyContent="flex-start" mr={5}>
                 <Flex direction="row" alignItems="center" gap={1}>
                     <Button
                         onClick={() => handleCommentLike(comment.id)}
@@ -166,6 +165,8 @@ const Comment = ({ comment, post, postUser }) => {
                     </Text>
                 </Flex>
             </Box>
+            </Flex>
+            
         </Container>
     );
 };
