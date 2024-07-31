@@ -9,6 +9,7 @@ const Comment = ({ comment }) => {
 	if (isLoading) return <CommentSkeleton />;
 	return (
 		<Container width="80%">
+
 		<Flex gap={4} align="center" >
 		<Link to={`/${userProfile.username}`}>
 			<Avatar src={userProfile.profilePicURL} size={"sm"} />

@@ -1,10 +1,11 @@
 import { Button, Flex, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Text, Box } from "@chakra-ui/react";
+import { CloseIcon } from "@chakra-ui/icons";
 import Comment from "../Comment/Comment";
 import usePostComment from "../../hooks/usePostComment";
 import useLikeComment from "../../hooks/useLikeComment";
 import { useRef, useState, useEffect } from "react";
 import useAuthStore from "../../store/authStore";
-import { doc, getDoc, setDoc, updateDoc, arrayUnion } from "firebase/firestore";
+import { doc, getDoc, setDoc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
 import { firestore } from "../../firebase/firebase";
 import { NotificationsLogo, UnlikeLogo } from "../../assets/constants";
 import useGetUserProfileById from "../../hooks/useGetUserProfileById";
@@ -46,7 +47,7 @@ const CommentsModal = ({ isOpen, onClose, post }) => {
         const postRef = doc(firestore, "posts", post.id);
         const postDoc = await getDoc(postRef);
         if (postDoc.exists() && userProfile) {
-            console.log(userProfile);
+            //console.log(userProfile);
             const postData = postDoc.data();
             //const filteredComments = useScrubBlockedUsersComments({ userProfile, comments: postData.comments });
             //setComments(filteredComments);
@@ -178,6 +179,19 @@ const CommentsModal = ({ isOpen, onClose, post }) => {
 		}
 	};
 
+    const handleDeleteComment = async (commentId) => {
+        // Handle comment deletion logic
+        try {
+            const postRef = doc(firestore, "posts", post.id);
+            await updateDoc(postRef, {
+                comments: arrayRemove(comments.find(comment => comment.id === commentId))
+            });
+            setComments(prevComments => prevComments.filter(comment => comment.id !== commentId));
+        } catch (error) {
+            console.error("Failed to delete comment:", error);
+        }
+    };
+
     return (
         
         <Modal isOpen={isOpen} onClose={onClose} motionPreset='slideInLeft'>
@@ -187,8 +201,8 @@ const CommentsModal = ({ isOpen, onClose, post }) => {
                 <ModalCloseButton />
                 <ModalBody pb={6}>
                     <Flex
-                        mb={4}
-                        gap={4}
+                        mt={0}
+                        gap={0}
                         flexDir={"column"}
                         maxH={"250px"}
                         overflowY={"auto"}
@@ -196,18 +210,33 @@ const CommentsModal = ({ isOpen, onClose, post }) => {
                         onScroll={handleScroll}
                     >
                         {userProfile && comments.map((comment, idx) => (
-                            <Flex key={idx} direction="column" borderBottom="1px" borderStyle="groove" borderColor="gray.600" pb={2} mb={2}>
-                                <Flex alignItems={"left"} gap={0} mt={0} mb={2}>
+                            
+                            <Flex key={idx} direction="column" borderBottom="1px" borderStyle="groove" borderColor="gray.600" pb={0} mb={0} position="relative">
+                                 <Box position="absolute" top={0} right={1} m={0} p={0}>
+                                    <Button
+                                        onClick={() => handleDeleteComment(comment.id)}
+                                        variant="unstyled"
+                                        aria-label="Delete Comment"
+                                    >
+                                        <CloseIcon color="red.500" boxSize={2} />
+                                    </Button>
+                                </Box>
+                                <Flex alignItems={"left"} gap={0} mt={6} mb={6}>
                                     <Comment comment={comment} />
                                     <Box flex="1" ml={2} display="flex" alignItems="center" justifyContent="flex-start" mr={5}>
+                                    
                                         <Flex direction="row" alignItems="center" gap={1}> {/* Arrange items in a row with space between them */}
+                                        
                                             <Button
                                                 onClick={() => handleCommentLike(comment.id)}
                                                 variant="unstyled"
                                                 aria-label={userCommentLikes.has(comment.id) ? "Unlike" : "Like"}
                                             >
-                                                {userCommentLikes.has(comment.id) ? <UnlikeLogo /> : <NotificationsLogo />}
+                                                
+                                                {userCommentLikes.has(comment.id) ? <UnlikeLogo  /> : <NotificationsLogo  />}
+                                                
                                             </Button>
+                                            
                                             <Text fontSize="sm" ml={0} >
                                                 {comment.likes || 0}
                                             </Text>
