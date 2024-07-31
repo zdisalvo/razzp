@@ -67,10 +67,26 @@ const CreateSpark = () => {
   //const{ sparkImages, isLoading: imagesLoading } = useGetSparkImagesById(authUser.uid);
 
   const isMobile = useBreakpointValue({ base: true, md: false });
+
+  const { sparkProfile: sparkProfileView, isLoading, error, fetchSparkProfile } = useSparkProfileStore((state) => ({
+    sparkProfile: state.sparkProfile,
+    isLoading: state.isLoading,
+    error: state.error,
+    fetchSparkProfile: state.fetchSparkProfile,
+  }));
+  
+  useEffect(() => {
+    if (newContent) {
+    fetchSparkProfile();
+    setNewContent(false);
+    }
+  }, [fetchSparkProfile]);
+
   
   useEffect(() => {
     if (fetchedImages) {
       setSparkImages(fetchedImages);
+      setNewContent(true);
     // if (fetchedImages)
     //   setProfilePics([...fetchedImages, ...formData.selectedImages]);
     }
