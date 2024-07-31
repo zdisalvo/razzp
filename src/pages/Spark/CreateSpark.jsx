@@ -36,7 +36,8 @@ import DeleteSparkPic from "./DeleteSparkPic";
 import DragAndDropGrid from "./DragAndDropGrid";
 import SparkProfileModal from "../SparkMatches/SparkProfileModal";
 import useSparkProfileStore from "../../store/sparkProfileStore";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUser } from "@fortawesome/free-solid-svg-icons";
 
 
 const CreateSpark = () => {
