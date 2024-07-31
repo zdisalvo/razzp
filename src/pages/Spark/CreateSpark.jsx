@@ -1157,7 +1157,12 @@ const handlePronounsClick = (pronouns) => {
 
           
           <FormControl id="profilePics">
-            <FormLabel>Profile Pics</FormLabel>
+          <Stack direction="row" align="baseline">
+            <FormLabel>Set Profile Picture Order</FormLabel>
+            <Text fontSize="sm" color="gray.500">
+            Drag pictures to your desired ordering
+          </Text>
+          </Stack>
             {!imagesLoadingFromHook && (
             <DragAndDropGrid images={formData.profilePics} onDragEnd={handleDragEnd}/>
             )}
