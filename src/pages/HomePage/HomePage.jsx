@@ -10,6 +10,7 @@ import authStore from "../../store/authStore";
 import { useNavigate } from "react-router-dom";
 import useIncomingReadCount from "../../hooks/useIncomingReadCount";
 import useNewNotificationsCount from "../../hooks/useNewNotificationsCount";
+import useGetSparkProfileById from "../../hooks/useGetSparkProfileById";
 
 const HomePage = () => {
   const userAuth = authStore((state) => state.user);
@@ -17,6 +18,7 @@ const HomePage = () => {
   const navigate = useNavigate();
   const incomingReadCount = useIncomingReadCount(userAuth.uid);
   const newNotificationsCount = useNewNotificationsCount();
+  const { isLoading: profileLoading, sparkProfile } = useGetSparkProfileById(userAuth?.uid);
 
 
   const handleTop5Click = () => {

@@ -12,7 +12,7 @@ const Messages = () => {
   const navigate = useNavigate();
 
   const handleGoBack = () => {
-    navigate(-1); // Navigate to the previous page
+    navigate("/"); // Navigate to the previous page
   };
 
   // Sort conversations by the most recent last message

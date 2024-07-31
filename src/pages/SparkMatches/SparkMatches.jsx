@@ -17,7 +17,7 @@ const SparkMatches = () => {
   const navigate = useNavigate();
 
   const handleGoBack = () => {
-    navigate(-1); // Navigate to the previous page
+    navigate("/spark"); // Navigate to the previous page
 };
 
 

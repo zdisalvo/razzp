@@ -17,6 +17,8 @@ const useSparkProfileStore = create((set, get) => ({
             return;
         }
 
+        //console.log(user)
+
         const uid = user.uid;
         set({ isLoading: true, error: null });
 

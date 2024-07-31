@@ -22,7 +22,8 @@ import { auth } from "./firebase/firebase";
 import useAuthStore from "./store/authStore";
 
 function App() {
-	const [authUser] = useAuthState(auth);
+	//const [authUser] = useAuthState(auth);
+	const authUser = useAuthStore((state) => state.user);
 	const authUserProf = useAuthStore(state => state.user);
 	const [showSpark, setShowSpark] = useState(false);
 	const [showHome, setShowHome ] = useState(false);
@@ -64,7 +65,8 @@ function App() {
 	return (
 		<PageLayout>
 			<Routes>
-				<Route path='/' element={authUser ? (authUser && showHome ? <HomePage /> : <Navigate to='/top5' /> ): <Navigate to='/auth' />} />
+				{/* <Route path='/' element={authUser ? (authUser && showHome ? <HomePage /> : <Navigate to='/top5' /> ): <Navigate to='/auth' />} /> */}
+				<Route path='/' element={authUser ? <HomePage /> : <Navigate to='/auth' />} />
 				<Route path='/top5' element={<TopFivePosts />} />
 				<Route path='/auth' element={!authUser ? <AuthPage /> : <Navigate to='/' />} />
 				<Route path='/spark' element={authUser ? (!showSpark  ? <Navigate to='/spark/edit' /> : <Spark />) : <Navigate to='/' /> } />
