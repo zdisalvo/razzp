@@ -6,7 +6,7 @@ import { arrayRemove, arrayUnion, doc, updateDoc, increment, getDoc, setDoc } fr
 import { firestore } from "../firebase/firebase";
 import useGetSparkProfileById from "./useGetSparkProfileById";
 
-const MAX_LIKES = 2;
+const MAX_LIKES = 30;
 
 const useLikeSpark = (sparkProfile) => {
   const [isUpdating, setIsUpdating] = useState(false);
@@ -195,7 +195,7 @@ const useLikeSpark = (sparkProfile) => {
         const likeClockTime = new Date(likeClock);
         const timeDiff = (currentTime - likeClockTime) / 1000; // Time difference in seconds
 
-        if (timeDiff < 60) { // 60 seconds = 1 minute
+        if (timeDiff < 60) { // 60 seconds = 1 minute //
           showToast("Message", "Please wait for your likes to refresh", "warning");
           return false; // Not allowed to like
         }

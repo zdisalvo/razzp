@@ -1,0 +1,32 @@
+.profilePic {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    transition: transform 1s ease;
+}
+
+.profilePic1 {
+    left: -100px; /* Start position off-screen */
+}
+
+.profilePic2 {
+    right: -100px; /* Start position off-screen */
+}
+
+.moveLeft {
+    transform: translateX(100px); /* Move to the center */
+}
+
+.moveRight {
+    transform: translateX(-100px); /* Move to the center */
+}
+
+.matchText {
+    opacity: 0;
+    transition: opacity 1s ease;
+    text-align: center;
+}
+
+.matchText.show {
+    opacity: 1;
+}

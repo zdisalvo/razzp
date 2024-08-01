@@ -24,6 +24,7 @@
     "country-flag-emoji": "^1.0.3",
     "date-fns": "^3.6.0",
     "firebase": "^10.12.2",
+    "fireworks-js": "^2.10.8",
     "framer-motion": "^10.18.0",
     "geofire": "^6.0.0",
     "geofire-common": "^6.0.0",

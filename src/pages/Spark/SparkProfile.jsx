@@ -13,6 +13,7 @@ import SparkCrown from './SparkCrown';
 import useGetSparkLocationAndDistance from '../../hooks/useGetSparkLocationAndDistance';
 import useAuthStore from '../../store/authStore';
 import useGetSparkProfileById from '../../hooks/useGetSparkProfileById';
+import MatchAnimation from '../SparkMatches/MatchAnimation';
 
 
 
@@ -370,10 +371,10 @@ const SparkProfile = ({ sparkProfile, onViewed, sparkUser }) => {
 
   return (
     <Container ref={profileRef} width={{ base: "100vw", md: "auto" }} height={{ base: "auto", md: "100%" }} mb={{ base: "60px", md: "100px" }} px={0} mx={0} >
-      <Box >
-      {isSparkLikeMatch && (
+      <Box position="relative" width="100%" height="100%">
+      {(isSparkLikeMatch || isSparkCrownMatch) && (
         <Box
-          //position="absolute"
+          position="absolute"
           top="0"
           left="0"
           width="100%"
@@ -387,26 +388,7 @@ const SparkProfile = ({ sparkProfile, onViewed, sparkUser }) => {
           fontWeight="bold"
           zIndex="10"
         >
-          You Matched!
-        </Box>
-      )}
-      {isSparkCrownMatch && (
-        <Box
-          //position="absolute"
-          top="0"
-          left="0"
-          width="100%"
-          height="100%"
-          backgroundColor="rgba(0, 0, 0, 0.6)"
-          color="white"
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-          fontSize="2xl"
-          fontWeight="bold"
-          zIndex="10"
-        >
-          You Matched!
+        <MatchAnimation profilePic1={sparkUser.profilePics[0].imageURL} profilePic2={profilePics[0].imageURL} />
         </Box>
       )}
       <Box width="100%" display="flex" justifyContent="center" mb={2} my={1} px="2px">
@@ -483,6 +465,7 @@ const SparkProfile = ({ sparkProfile, onViewed, sparkUser }) => {
             )
           }
         >
+
           {profilePics.length > 0  &&
             <Box key={0} mx={1} style={{ maxHeight: '275px' }} >
               <Image src={profilePics[0].imageURL} alt={`Profile picture ${1}`} objectFit="cover" maxHeight="450px" height="100%" width="100%" />
@@ -566,6 +549,7 @@ const SparkProfile = ({ sparkProfile, onViewed, sparkUser }) => {
           </Box>
         }
         </Carousel>
+        </Box>
         <Box bg="#eb7734" p={2} textAlign="center" mx={1} borderBottomRadius="3px" alignItems="baseline">
         <Flex align="center" justify="center" direction="row" wrap="nowrap" >
           
@@ -586,7 +570,7 @@ const SparkProfile = ({ sparkProfile, onViewed, sparkUser }) => {
             </Box>
           </Flex>
         </Box>
-      </Box>
+      
     </Container>
   );
 };
