@@ -1,11 +1,13 @@
-import { Container, Box, Flex, Text, AvatarGroup, Avatar } from "@chakra-ui/react";
+import { Container, Box, Flex, Text, AvatarGroup, Avatar, IconButton, Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc, arrayUnion } from "firebase/firestore";
 import { firestore } from "../../firebase/firebase";
 import useMatchStore from "../../store/matchStore";
 import useGetSparkProfileById from "../../hooks/useGetSparkProfileById";
 import SparkProfileModal from "./SparkProfileModal";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faEllipsis } from '@fortawesome/free-solid-svg-icons'; 
 
 const SparkMatch = ({ userId, matchedUserId }) => {
   
@@ -107,6 +109,70 @@ const SparkMatch = ({ userId, matchedUserId }) => {
     return null;
   }
 
+
+
+  const handleBlockUser = async () => {
+    try {
+      // Get reference to the document
+      const userDocRef = doc(firestore, "spark", userId);
+      const userDoc = await getDoc(userDocRef);
+  
+      if (userDoc.exists()) {
+
+        await updateDoc(userDocRef, {
+          blocked: arrayUnion(matchedUserId)
+        });
+
+
+      console.log("User blocked successfully.");
+
+      handleUnmatchUser();
+
+      } else {
+        console.log("No matches found for this user.");
+      }
+  } catch (error) {
+    console.error("Error removing match: ", error);
+  }
+  };
+
+
+
+  const handleUnmatchUser = async () => {
+    try {
+      // Get reference to the document
+      const matchesDocRef = doc(firestore, "sparkMatches", userId);
+      const matchesDoc = await getDoc(matchesDocRef);
+
+      const matchedDocRef = doc(firestore, "sparkMatches", matchedUserId);
+      const matchedDoc = await getDoc(matchedDocRef);
+  
+      if (matchesDoc.exists() && matchedDoc.exists()) {
+        const matchesData = matchesDoc.data();
+        const updatedMatches = matchesData.matches.filter(match => match.matchedUserId !== matchedUserId);
+
+        const matchedData = matchedDoc.data();
+        const updatedMatched = matchedData.matches.filter(match => match.userId !== userId);
+  
+        // Update the document with the new matches array
+        await updateDoc(matchesDocRef, {
+          matches: updatedMatches
+        });
+
+        await updateDoc(matchedDocRef, {
+          matches: updatedMatched
+        });
+  
+        console.log("Match removed successfully.");
+      } else {
+        console.log("No matches found for this user.");
+      }
+    } catch (error) {
+      console.error("Error removing match: ", error);
+    }
+  };
+
+
   const handleAvatarClick = () => {
     // setSparkProfile(profileData);
     // setSparkUser(match); // Assuming match contains user data
@@ -170,10 +236,63 @@ const SparkMatch = ({ userId, matchedUserId }) => {
 
         </Box>
         {!lastMessage && (
-          <Box display="flex-end" mr={10}>
+          <Box display="flex-end" mr={4}>
             <Text >This match expires in {timeRemaining}</Text>
           </Box>
         )}
+        <Box>
+        <Menu>
+        <MenuButton
+            as={IconButton}
+            icon={<FontAwesomeIcon icon={faEllipsis} />}
+            aria-label="Other options"
+            size="sm"
+            variant="outline"
+            mx={2} // Adds horizontal margin between the icons
+            pt={-5}
+            mt={-5}
+            pb={0}
+            mb={0}
+          />
+          
+          <MenuList
+            bg="black" // Sets the background color to black
+            borderRadius="md" // Optional: for rounded corners
+            //borderBottom="1px groove #1B2328" // Adds the border at the bottom
+            color="white" // Sets the text color to white for better contrast
+            fontSize="sm"
+            width="auto"
+            minWidth="75px"
+            maxWdith="75px"
+            py={1}
+            my={0}
+            position="absolute"
+            right="100%" // Align to the left of the button
+            top="-55px" // Align with the top of the button
+            transform="translateX(-8px)"
+            _focus={{ boxShadow: 'none' }} // Optional: Removes box shadow on focus
+          >
+            <MenuItem
+              bg="black"
+              _hover={{ bg: '#2e2e2e' }} // Changes background color to charcoal on hover
+              px={4} // Adds padding inside MenuItem
+                      //width="100%"
+                whiteSpace="nowrap"
+                color="white"
+                onClick={handleUnmatchUser}
+              >Unmatch User</MenuItem>
+             <MenuItem
+              bg="black"
+              _hover={{ bg: '#2e2e2e' }} // Changes background color to charcoal on hover
+              px={4} // Adds padding inside MenuItem
+                      //width="100%"
+                whiteSpace="nowrap"
+                color="#c8102e"
+                onClick={handleBlockUser}
+              >Block User</MenuItem>
+            </MenuList>
+            </Menu>
+        </Box>
       </Flex>
     </Container>
   );
