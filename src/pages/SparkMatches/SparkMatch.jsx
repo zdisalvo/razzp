@@ -122,7 +122,7 @@ const SparkMatch = ({ userId, matchedUserId }) => {
           cursor="pointer"
         >
           <Text fontWeight="bold">{matchedProfile.name}</Text>
-          <Text>{lastMessage ? `${lastMessage.substring(0, 37)}${lastMessage.length > 37 ? "..." : ""}` : "Say hi"}</Text>
+          <Text fontWeight={!lastMessage ? "bold" : "regular"}>{lastMessage ? `${lastMessage.substring(0, 37)}${lastMessage.length > 37 ? "..." : ""}` : "Say hi"}</Text>
         </Box>
       </Flex>
     </Container>
