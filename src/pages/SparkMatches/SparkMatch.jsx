@@ -16,18 +16,25 @@ const SparkMatch = ({ userId, matchedUserId }) => {
   const setMatchedUserId = useMatchStore((state) => state.setMatchedUserId);
   const { sparkProfile, isLoading: profileLoading } = useGetSparkProfileById(userId);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [matchItem, setMatchItem] = useState(null);
+  const [timeRemaining, setTimeRemaining] = useState("");
+  const [matchExpired, setMatchExpired] = useState(false);
+
+  
 
   
 
   //if (profileLoading) return <div>Loading...</div>;
 
   const handleClick = () => {
-    setUserId(userId);
-    setMatchedUserId(matchedUserId);
-    // Store IDs in localStorage
-    localStorage.setItem("userId", userId);
-    localStorage.setItem("matchedUserId", matchedUserId);
-    navigate("/spark/matches/msg");
+    if (!matchExpired) {
+      setUserId(userId);
+      setMatchedUserId(matchedUserId);
+      // Store IDs in localStorage
+      localStorage.setItem("userId", userId);
+      localStorage.setItem("matchedUserId", matchedUserId);
+      navigate("/spark/matches/msg");
+    }
   };
 
   useEffect(() => {
@@ -39,6 +46,9 @@ const SparkMatch = ({ userId, matchedUserId }) => {
         if (matchesDoc.exists()) {
           const matchesData = matchesDoc.data();
           const match = matchesData.matches.find(match => match.matchedUserId === matchedUserId);
+          setMatchItem(match);
+
+          //console.log(matchItem);
 
           if (match) {
             const profileDocRef = doc(firestore, "spark", matchedUserId);
@@ -60,6 +70,38 @@ const SparkMatch = ({ userId, matchedUserId }) => {
 
     fetchMatchDetails();
   }, [userId, matchedUserId]);
+
+
+  useEffect(() => {
+    const calculateTimeRemaining = () => {
+      if (!matchItem)
+        return;
+      const createdAt = new Date(matchItem.createdAt);
+      const expirationDate = new Date(createdAt);
+      expirationDate.setDate(createdAt.getDate() + 3);
+
+      const now = new Date();
+      const timeDiff = expirationDate - now;
+
+      if (timeDiff <= 0) {
+        setMatchExpired(true);
+        setTimeRemaining("This match has expired");
+      } else {
+        const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+        setTimeRemaining(`${days}d ${hours}h`);
+      }
+    };
+
+    calculateTimeRemaining();
+    const interval = setInterval(calculateTimeRemaining, 1000); // Update every second
+
+    return () => clearInterval(interval);
+  }, [matchItem]);
+
+
 
   if (!matchedProfile) {
     return null;
@@ -121,9 +163,17 @@ const SparkMatch = ({ userId, matchedUserId }) => {
           onClick={handleClick}
           cursor="pointer"
         >
+          {lastMessage &&(
           <Text fontWeight="bold">{matchedProfile.name}</Text>
-          <Text fontWeight={!lastMessage ? "bold" : "regular"}>{lastMessage ? `${lastMessage.substring(0, 37)}${lastMessage.length > 37 ? "..." : ""}` : "Say hi"}</Text>
+        )}
+          <Text fontWeight={!lastMessage ? "bold" : "regular"}>{lastMessage ? `${lastMessage.substring(0, 37)}${lastMessage.length > 37 ? "..." : ""}` : `Say hi to ${matchedProfile.name}`}</Text>
+
         </Box>
+        {!lastMessage && (
+          <Box display="flex-end" mr={10}>
+            <Text >This match expires in {timeRemaining}</Text>
+          </Box>
+        )}
       </Flex>
     </Container>
   );
