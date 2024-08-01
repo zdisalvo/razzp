@@ -161,7 +161,8 @@ const SparkMessage = () => {
             }}
           >
             <Text>{msg.message}</Text>
-            <Text fontSize="xs" color="gray.500"
+            <Text fontSize="xs" 
+            color={msg.sendingUser === userId ? "white" : "gray.500"}
             textAlign={msg.sendingUser === userId ? "right" : "left"}
             >
               {(formatTime(msg.timeStamp) !== "12:NaN AM") ? formatTime(msg.timeStamp) : ""} {/* Display formatted time */}

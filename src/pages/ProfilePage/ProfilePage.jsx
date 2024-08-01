@@ -47,6 +47,11 @@ const ProfilePage = () => {
     }
   }, [isLoading]);
 
+  useEffect(() => {
+    // Scroll to the top of the page on component mount
+    window.scrollTo(0, 0);
+  }, []);
+
   // useEffect(() => {
   //   if (authUser && userProfile) {
   //     console.log(authUser.uid);

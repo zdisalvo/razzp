@@ -1,6 +1,7 @@
 import { Box, Link, Tooltip, Image } from "@chakra-ui/react";
 import { NotificationsLogo } from "../../assets/constants";
 import { Link as RouterLink } from "react-router-dom";
+import ExplosionIcon from "./ExplosionIcon";
 
 const SparkMenu = () => {
 	return (
@@ -17,18 +18,19 @@ const SparkMenu = () => {
 				to={"/spark"}
 				as={RouterLink}
 				alignItems={"center"}
-				gap={3}
+				gap={2}
 				_hover={{ bg: "whiteAlpha.400" }}
 				borderRadius={6}
 				p={1}
 				w={{ base: 10, md: "full" }}
 				justifyContent={{ base: "center", md: "flex-start" }}
 			>
-				<Box >
+				{/* <Box >
 				<Image 
 				width="100px"
 				src="/firework3.png" />
-                </Box>
+                </Box> */}
+				<ExplosionIcon />
 				<Box display={{ base: "none", md: "block" }}>Spark</Box>
 			</Link>
 		</Tooltip>
