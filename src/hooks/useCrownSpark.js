@@ -47,6 +47,7 @@ const useCrownSpark = (sparkProfile) => {
   
     const matchObject = {
       matchedUserId: matchedWith.uid,
+      createdAt: new Date().getTime(),
       messages: []
     };
 

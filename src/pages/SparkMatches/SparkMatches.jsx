@@ -1,3 +1,4 @@
+import React, { useEffect } from "react";
 import { Box, Container, Flex, Skeleton, SkeletonCircle, Text, VStack, IconButton, Heading } from "@chakra-ui/react";
 import useAuthStore from "../../store/authStore";
 import useGetSparkProfileById from "../../hooks/useGetSparkProfileById";
@@ -6,6 +7,8 @@ import useGetSparkMatchesById from "../../hooks/useGetSparkMatchesById";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretLeft } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
+import { doc, updateDoc } from "firebase/firestore";
+import { firestore } from "../../firebase/firebase";
 
 
 const SparkMatches = () => {
@@ -19,6 +22,24 @@ const SparkMatches = () => {
   const handleGoBack = () => {
     navigate("/spark"); // Navigate to the previous page
 };
+
+useEffect(() => {
+  const updateCheckedMatches = async () => {
+    //console.log(authUser);
+      if (authUser && authUser.uid) {
+          try {
+              const userRef = doc(firestore, "spark", authUser.uid);
+              await updateDoc(userRef, {
+                  checkedMatches: new Date().getTime()
+              });
+          } catch (error) {
+              console.error("Error updating checkedMatches:", error);
+          }
+      }
+  };
+
+  updateCheckedMatches();
+}, [authUser]);
 
 const sortedMatches = sparkMatches.slice().sort((a, b) => {
   const lastMessageA = a.messages[a.messages.length - 1];
