@@ -83,7 +83,7 @@ const SparkMatch = ({ userId, matchedUserId }) => {
       const now = new Date();
       const timeDiff = expirationDate - now;
 
-      if (timeDiff <= 0) {
+      if (timeDiff <= 0 && !lastMessage) {
         setMatchExpired(true);
         setTimeRemaining("This match has expired");
       } else {
