@@ -105,7 +105,7 @@ const useGetSparkProfiles = (refreshKey) => {
                 // Apply filters from sparkProfile
                 const filteredDocs = allDocs.filter(doc => {
                     // Exclude profiles that are blocked, viewed 2x, or own profile
-                    if (sparkProfile.blocked.includes(doc.uid)  ) {
+                    if (sparkProfile.blocked.includes(doc.uid) || sparkProfile.matched.includes(doc.uid)  ) {
                         return false;
                     }
 					//REPLACE IN THE ABOVE IF STATEMENT

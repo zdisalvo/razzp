@@ -45,7 +45,20 @@ const sortedMatches = sparkMatches.slice().sort((a, b) => {
   const lastMessageA = a.messages[a.messages.length - 1];
   const lastMessageB = b.messages[b.messages.length - 1];
   
-  return (lastMessageB?.timeStamp?.seconds || 0) - (lastMessageA?.timeStamp?.seconds || 0);
+  // Convert timestamps to seconds if needed
+  const createdAtA = a.createdAt / 1000;
+  const createdAtB = b.createdAt / 1000;
+
+  // Get the timestamp of the last message, if available, otherwise use the createdAt timestamp
+  const lastMessageTimeA = lastMessageA?.timeStamp?.seconds ? lastMessageA.timeStamp.seconds : createdAtA;
+  const lastMessageTimeB = lastMessageB?.timeStamp?.seconds ? lastMessageB.timeStamp.seconds : createdAtB;
+
+  // Determine the latest timestamp to sort by newest first
+  const latestA = Math.max(createdAtA, lastMessageTimeA);
+  const latestB = Math.max(createdAtB, lastMessageTimeB);
+
+  // Sort in descending order (newest first)
+  return latestB - latestA;
 });
 
 
