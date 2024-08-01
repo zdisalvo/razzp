@@ -105,11 +105,11 @@ const useGetSparkProfiles = (refreshKey) => {
                 // Apply filters from sparkProfile
                 const filteredDocs = allDocs.filter(doc => {
                     // Exclude profiles that are blocked, viewed 2x, or own profile
-                    if (sparkProfile.blocked.includes(doc.uid) || sparkProfile.matched.includes(doc.uid)  ) {
+                    if (sparkProfile.blocked.includes(doc.uid)  ) {
                         return false;
                     }
 					//REPLACE IN THE ABOVE IF STATEMENT
-					//|| sparkProfile.viewed2x.includes(doc.uid) || sparkProfile.uid === doc.uid
+					//|| sparkProfile.matched.includes(doc.uid) || sparkProfile.viewed2x.includes(doc.uid) || sparkProfile.uid === doc.uid
 
                     //INTERESTED IN
                 if (sparkProfile.interested_in) {
@@ -161,10 +161,10 @@ const useGetSparkProfiles = (refreshKey) => {
                         const height = doc.height; // Assuming height is stored as a number
 
                         if (height !== undefined && height !== null && height !== "" && height !== 0) {
-                            if (shorterThan && height >= value) {
+                            if (shorterThan && height > value) {
                                 matchesFilters = false;
                             }
-                            if (tallerThan && height <= value) {
+                            if (tallerThan && height < value) {
                                 matchesFilters = false;
                             }
 							
@@ -283,7 +283,15 @@ const useGetSparkProfiles = (refreshKey) => {
                     return matchesFilters;
                 });
 
-                setSparkProfiles(filteredDocs);
+                ///SORTED PROFILES
+
+                const sortedMatches = filteredDocs.slice().sort((a, b) => {
+                    return b.totalScore - a.totalScore;
+                });
+
+                setSparkProfiles(sortedMatches);
+
+                //setSparkProfiles(filteredDocs);
             } catch (error) {
                 showToast("Error", error.message, "error");
                 setSparkProfiles([]);
