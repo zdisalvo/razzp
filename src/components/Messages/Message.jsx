@@ -202,7 +202,7 @@ const Message = () => {
         </Flex>
       )}
       <VStack
-        spacing={0}
+        spacing={1}
         p={4}
         border="1px solid #e2e8f0"
         borderRadius="md"
@@ -220,10 +220,22 @@ const Message = () => {
             alignSelf={msg.sendingUser === userId ? "flex-end" : "flex-start"}
             bg={msg.sendingUser === userId ? "#0099ff" : "white"}
             color={msg.sendingUser === userId ? "white" : "black"}
-            p={3}
-            mb={index !== messages.length - 1 ? 3: 1}
-            borderRadius="20px"
+            p={4}
+            borderRadius="full" // Fully rounded corners for a bubble effect
             maxW="80%"
+            position="relative"
+            boxShadow="0px 4px 6px rgba(0, 0, 0, 0.1)" // Add shadow for a more 3D effect
+            _before={{
+              content: '""',
+              position: "absolute",
+              bottom: "-12px", // Adjust this value to position the triangle
+              left: msg.sendingUser === userId ? "auto" : "10px",
+              right: msg.sendingUser === userId ? "10px" : "auto",
+              borderWidth: "12px", // Make the tail larger
+              borderStyle: "solid",
+              borderColor: msg.sendingUser === userId ? "#0099ff transparent transparent transparent" : "white transparent transparent transparent", // Darker creamy orange for the tail
+              transform: "rotate(45deg)"
+            }}
           >
             <Text fontSize={{base: "lg", md: "md"}}
               textShadow={msg.sendingUser === userId ? "1px 1px 2px rgba(0, 0, 0, 0.2)" : "none"}

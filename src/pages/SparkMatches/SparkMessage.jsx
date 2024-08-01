@@ -114,6 +114,7 @@ const SparkMessage = () => {
             icon={<FontAwesomeIcon fontSize={32} icon={faCaretLeft} />}
             aria-label="Go back"
             variant="ghost"
+            color="#eb7734"
             />
           </Link>
           <Avatar ml={2} size="lg" src={matchedProfile.profilePics[0]?.imageURL || ""} alt="Matched User Avatar" />
@@ -125,7 +126,7 @@ const SparkMessage = () => {
         </Flex>
       )}
       <VStack
-        spacing={4}
+        spacing={3}
         p={4}
         border="1px solid #e2e8f0"
         borderRadius="md"
@@ -140,15 +141,30 @@ const SparkMessage = () => {
           <Box
             key={index}
             alignSelf={msg.sendingUser === userId ? "flex-end" : "flex-start"}
-            bg={msg.sendingUser === userId ? "orange.100" : "white"}
+            bg={msg.sendingUser === userId ? "#e5b85c" : "white"} // Darker creamy orange background
             color="black"
-            p={3}
-            borderRadius="6px"
+            p={4}
+            borderRadius="full" // Fully rounded corners for a bubble effect
             maxW="80%"
+            position="relative"
+            boxShadow="0px 4px 6px rgba(0, 0, 0, 0.1)" // Add shadow for a more 3D effect
+            _before={{
+              content: '""',
+              position: "absolute",
+              bottom: "-12px", // Adjust this value to position the triangle
+              left: msg.sendingUser === userId ? "auto" : "10px",
+              right: msg.sendingUser === userId ? "10px" : "auto",
+              borderWidth: "12px", // Make the tail larger
+              borderStyle: "solid",
+              borderColor: msg.sendingUser === userId ? "#e5b85c transparent transparent transparent" : "white transparent transparent transparent", // Darker creamy orange for the tail
+              transform: "rotate(45deg)"
+            }}
           >
             <Text>{msg.message}</Text>
-            <Text fontSize="xs" color="gray.500">
-              {formatTime(msg.timeStamp)} {/* Display formatted time */}
+            <Text fontSize="xs" color="gray.500"
+            textAlign={msg.sendingUser === userId ? "right" : "left"}
+            >
+              {(formatTime(msg.timeStamp) !== "12:NaN AM") ? formatTime(msg.timeStamp) : ""} {/* Display formatted time */}
             </Text>
           </Box>
         ))}
@@ -158,6 +174,10 @@ const SparkMessage = () => {
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
           placeholder="Type your message..."
+          _focus={{ 
+            borderColor: 'transparent', // Make the border transparent
+            boxShadow: '0 0 0 2px rgba(244, 164, 96, 0.5)' // Simulate a thinner border with box-shadow
+          }} 
         />
         <Button ml={2} onClick={handleSendMessage}>
           Send

@@ -121,7 +121,7 @@ import {
               onChange={handleSearchChange}
               _focus={{ 
                 borderColor: 'transparent', // Make the border transparent
-                boxShadow: '0 0 0 1px rgba(244, 164, 96, 0.5)' // Simulate a thinner border with box-shadow
+                boxShadow: '0 0 0 2px rgba(244, 164, 96, 0.5)' // Simulate a thinner border with box-shadow
               }} 
             />
           </FormControl>

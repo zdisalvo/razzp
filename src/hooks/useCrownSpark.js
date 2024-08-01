@@ -188,8 +188,11 @@ const useCrownSpark = (sparkProfile) => {
         const likeClockTime = new Date(likeClock);
         const timeDiff = (currentTime - likeClockTime) / 1000; // Time difference in seconds
 
-        if (timeDiff < 60) { // 60 seconds = 1 minute
-          showToast("Message", "Please wait for your crowns to refresh", "warning");
+        let timeRemaining = 24 - timeDiff / 3600;
+            timeRemaining = Math.round(timeRemaining);
+
+        if (timeDiff < 86400) { // 60 seconds = 1 minute // 86400 seconds = 1 day
+          showToast("Message", "Please wait " + timeRemaining + " hours for your crowns to refresh", "warning");
           return false; // Not allowed to like
         }
       }
