@@ -160,6 +160,19 @@ const CommentsModal = ({ isOpen, onClose, post }) => {
                         {userProfile && filtComments && filtComments.map((comment, idx) => (
                             
                             <Flex key={idx} direction="column" borderBottom="1px" borderStyle="groove" borderColor="gray.600" pb={0} mb={0} position="relative">
+
+                                {(authUser.uid === comment.createdBy || authUser.uid === post.createdBy) &&
+                                 <Box position="absolute" top={-2} right={1} m={0} p={0}>
+                                    <Button
+                                        onClick={() => handleDeleteComment(comment.id)}
+                                        variant="unstyled"
+                                        aria-label="Delete Comment"
+                                    >
+                                        <CloseIcon color="red.500" boxSize={2} />
+                                    </Button>
+                                </Box>
+                                }
+                                {/* {authUser.uid === post.createdBy && authUser.uid !== comment.createdBy &&
                                  <Box position="absolute" top={0} right={1} m={0} p={0}>
                                     <Button
                                         onClick={() => handleDeleteComment(comment.id)}
@@ -169,6 +182,7 @@ const CommentsModal = ({ isOpen, onClose, post }) => {
                                         <CloseIcon color="red.500" boxSize={2} />
                                     </Button>
                                 </Box>
+                                } */}
                                 <Flex alignItems={"left"} gap={0} mt={6} mb={6}>
                                     <Comment comment={comment} post={post} postUser={userProfile} />
                                     
