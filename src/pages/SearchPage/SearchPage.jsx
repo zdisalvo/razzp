@@ -114,7 +114,7 @@ import {
               </Box>
             </Flex>
           </Flex>
-          <FormControl>
+          <FormControl px={6}>
             <Input
               placeholder="Search for users..."
               value={searchQuery}

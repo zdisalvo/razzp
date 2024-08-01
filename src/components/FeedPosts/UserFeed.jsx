@@ -18,7 +18,7 @@ const UserFeed = () => {
   const postId = location.state?.postId;
   const { isLoading, posts } = useGetUserFeed(username);
   const postRefs = useRef({});
-  const [shouldScroll, setShouldScroll] = useState(false);
+  const [shouldScroll, setShouldScroll] = useState(true);
   const [followStates, setFollowStates] = useState({});
   const { isLoading: userProfileLoading, userProfile } = useGetUserProfileByUsername(username);
   const { isUpdating, handleFollowUser } = useFollowUserFP();
@@ -27,7 +27,7 @@ const UserFeed = () => {
   const userNotFound = !isLoading && !userProfile;
 
   useEffect(() => {
-    if (!isLoading && postId && postRefs.current[postId]) {
+    if (!isLoading && postId && postRefs.current[postId] && shouldScroll) {
       setTimeout(() => {
         postRefs.current[postId].scrollIntoView();
       }, 500);

@@ -97,7 +97,7 @@ const MatchAnimation = ({ profilePic1, profilePic2 }) => {
                     textShadow: "2px 2px 4px rgba(0, 0, 0, 0.6)"
                 }}
                 
-                >You matched!</Text>
+                >You Matched!</Text>
             </Box>
         </Box>
     );
