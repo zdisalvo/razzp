@@ -237,7 +237,7 @@ const SparkMatch = ({ userId, matchedUserId }) => {
         </Box>
         {!lastMessage && (
           <Box display="flex-end" mr={4}>
-            <Text >This match expires in {timeRemaining}</Text>
+            <Text fontSize="sm" color="gray.400" >Expiring in {timeRemaining}</Text>
           </Box>
         )}
         <Box>

@@ -59,6 +59,9 @@ const MatchAnimation = ({ profilePic1, profilePic2 }) => {
                     src={profilePic1}
                     borderRadius="100%"
                     boxSize="100px"
+                    width="100%"
+                    height="100%"
+                    objectFit="cover"
                 />
             </Box>
             <Box
@@ -77,6 +80,9 @@ const MatchAnimation = ({ profilePic1, profilePic2 }) => {
                     src={profilePic2}
                     borderRadius="100%"
                     boxSize="100px"
+                    width="100%"
+                    height="100%"
+                    objectFit="cover"
                 />
             </Box>
             <Box

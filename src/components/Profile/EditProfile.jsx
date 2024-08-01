@@ -52,10 +52,17 @@ const EditProfile = ({ isOpen, onClose }) => {
     const handleInputChange = (e) => {
         const { name, value } = e.target;
 
-        setFormData((prevState) => ({
-            ...prevState,
-            [name]: value,
-        }));
+		if (name === "username") {
+			setFormData((prevState) => ({
+				...prevState,
+				[name]: value.trim(),
+			}));
+		} else {
+			setFormData((prevState) => ({
+				...prevState,
+				[name]: value,
+			}));
+		}
 
 		
 
@@ -74,7 +81,7 @@ const EditProfile = ({ isOpen, onClose }) => {
 				const q = query(usersRef, where("username", "==", formData.username));
 				const querySnapshot = await getDocs(q);
 
-				console.log(formData.username);
+				//console.log(formData.username);
 	
 				if (!querySnapshot.empty) {
 					showToast("Error", "This username is taken", "error");
