@@ -134,7 +134,7 @@ const SparkMessage = () => {
         maxH={{base: "50vh", md: "60vh"}}
         overflowY="scroll"
         ref={containerRef}
-        bg="gray.100"
+        bg="#d3e3f5"
         onScroll={handleScroll} // Attach scroll event listener
       >
         {messages.length > 0 && messages.map((msg, index) => (

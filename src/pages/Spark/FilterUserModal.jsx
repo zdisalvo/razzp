@@ -374,6 +374,7 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
                     key={option}
                     isChecked={selectedOpenTo.includes(option)}
                     onChange={() => handleCheckboxChange(option, setSelectedOpenTo)}
+                    ml={4}
                   >
                     {option}
                   </Checkbox>
@@ -386,6 +387,7 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
                     key={option}
                     isChecked={selectedEthnicity.includes(option)}
                     onChange={() => handleCheckboxChange(option, setSelectedEthnicity)}
+                    ml={4}
                   >
                     {option}
                   </Checkbox>
@@ -398,6 +400,7 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
                     key={option}
                     isChecked={selectedExercise.includes(option)}
                     onChange={() => handleCheckboxChange(option, setSelectedExercise)}
+                    ml={4}
                   >
                     {option}
                   </Checkbox>
@@ -410,6 +413,7 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
                     key={option}
                     isChecked={selectedDrinking.includes(option)}
                     onChange={() => handleCheckboxChange(option, setSelectedDrinking)}
+                    ml={4}
                   >
                     {option}
                   </Checkbox>
@@ -422,6 +426,7 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
                     key={option}
                     isChecked={selectedCannabis.includes(option)}
                     onChange={() => handleCheckboxChange(option, setSelectedCannabis)}
+                    ml={4}
                   >
                     {option}
                   </Checkbox>
@@ -434,6 +439,7 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
                     key={option}
                     isChecked={selectedHaveKids.includes(option)}
                     onChange={() => handleCheckboxChange(option, setSelectedHaveKids)}
+                    ml={4}
                   >
                     {option}
                   </Checkbox>
@@ -446,6 +452,7 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
                     key={option}
                     isChecked={selectedFamilyPlans.includes(option)}
                     onChange={() => handleCheckboxChange(option, setSelectedFamilyPlans)}
+                    ml={4}
                   >
                     {option}
                   </Checkbox>
@@ -458,6 +465,7 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
                     key={option}
                     isChecked={selectedPolitics.includes(option)}
                     onChange={() => handleCheckboxChange(option, setSelectedPolitics)}
+                    ml={4}
                   >
                     {option}
                   </Checkbox>
@@ -470,6 +478,7 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
                     key={option}
                     isChecked={selectedReligion.includes(option)}
                     onChange={() => handleCheckboxChange(option, setSelectedReligion)}
+                    ml={4}
                   >
                     {option}
                   </Checkbox>

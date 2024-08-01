@@ -210,7 +210,7 @@ const Message = () => {
         maxH={{ base: "50vh", md: "60vh" }}
         overflowY="scroll"
         ref={containerRef}
-        bg="#f3f5e0"
+        bg="#d3e3f5"
         onScroll={handleScroll}
       >
         {messages.length > 0 && messages.map((msg, index) => (
