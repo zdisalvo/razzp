@@ -43,7 +43,7 @@ const UserFeed = ({ username, postId }) => {
       }
 
       {!isLoading && posts.length === 0 && (
-        <Text fontSize={"md"} color={"red.400"}>
+        <Text fontSize={"md"} color={"red.400"} ml={5}>
           Follow some people to see their posts in your feed.
         </Text>
       )}
