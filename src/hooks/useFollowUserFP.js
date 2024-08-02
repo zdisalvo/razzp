@@ -22,7 +22,7 @@ const useFollowUserFP = () => {
         const userToFollowRef = doc(firestore, 'users', userId);
 
         try {
-            if (isFollowing) {
+            if (isFollowing && userProfile) {
                 // Unfollow
                 await updateDoc(currentUserRef, {
                     following: arrayRemove(userId),
@@ -41,8 +41,9 @@ const useFollowUserFP = () => {
 				const notifications = userNotificationsSnap.exists()
 					? userNotificationsSnap.data().notifications || []
 					: [];
+                console.log(notifications.includes);
 				const updatedNotifications = notifications.filter(
-					(notification) => !(notification.userId === authUser.uid && notification.type === "follow")
+					(notification) => !(notification.userId === authUser.uid && (notification.type === "follow" || notification.type == "followPrivate"))
 				);
 				await setDoc(userNotificationsRef, { notifications: updatedNotifications }, { merge: true });
 
@@ -69,7 +70,7 @@ const useFollowUserFP = () => {
                 setUserIdGlobal(userId);
 				setIsFollowingUser(false);
 
-            } else {
+            } else if (userProfile) {
                 // Follow
                 await updateDoc(currentUserRef, {
                     following: arrayUnion(userId),
@@ -93,7 +94,7 @@ const useFollowUserFP = () => {
                         type: "follow",
                     };
                     setNotification(notificationObj);
-                } else {
+                } else  {
                     const notificationObj = {
                         userId: authUser.uid,
                         username: authUser.username,

@@ -8,6 +8,7 @@ import { getDoc, doc, updateDoc } from "firebase/firestore";
 import { firestore } from "../../firebase/firebase";
 import useAuthStore from "../../store/authStore";
 import { formatDistanceToNow } from "date-fns";
+import useFollowPrivateUser from "../../hooks/useFollowPrivateUser";
 
 // Convert Firestore Timestamp or numeric seconds to JavaScript Date object
 const convertToDate = (timestamp) => {
@@ -37,10 +38,13 @@ const formatNotificationTime = (timestamp) => {
 };
 
 
+
+
 const NotificationsPage = () => {
     const notifications = useNotifications();
     const authUser = useAuthStore((state) => state.user);
     const navigate = useNavigate();
+    const followPrivateUser = useFollowPrivateUser();
 
 
     useEffect(() => {
@@ -107,6 +111,14 @@ const NotificationsPage = () => {
         }
     };
 
+    const handleAcceptFollow = async () => {
+        try {
+            await followPrivateUser(userId);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
     return (
         <Container pt={6} px={0} w={['100vw', null, '80vh']} pb={{base: "10vh", md: "60px"}}>
                 <Flex align="center" mb={4}>
@@ -153,6 +165,39 @@ const NotificationsPage = () => {
                                     </Text>
                                     {" followed you."}
                                 </Text>
+                            );
+                        } else if (notification.type === "followPrivate") {
+                            notificationText = (
+                                <Flex alignItems="baseline">
+                                <Text>
+                                    <Text as="span" fontWeight="bold">
+                                        {notification.username || 'Unknown User'}
+                                    </Text>
+                                    {" requested to follow you."}
+                                </Text>
+                                <Button
+                                    bg={"red.400"}
+                                    color={"white"}
+                                    w='full'
+                                    size='sm'
+                                    _hover={{ bg: "red.500" }}
+                                    //onClick={removeFollowNotification}
+                                >
+                                    Reject
+                                </Button>
+                                <Button
+                                    bg={"blue.400"}
+                                    color={"white"}
+                                    size='sm'
+                                    w='full'
+                                    _hover={{ bg: "blue.500" }}
+                                    userId={notification.userId}
+                                    onClick={handleAcceptFollow}
+                                    
+                                >
+                                    Accept
+                                </Button>
+                                </Flex>
                             );
                         } else if (notification.type === "crown") {
                             notificationText = (
