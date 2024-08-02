@@ -12,6 +12,7 @@ const useFollowUserFP = () => {
     const setAuthUser = useAuthStore((state) => state.setUser);
     const { userProfile, setUserProfile } = useUserProfileStore();
     const [userIdGlobal, setUserIdGlobal] = useState("");
+    const [notification, setNotification ] = useState(null);
 
     const handleFollowUser = async (userId, isFollowing) => {
         if (!authUser || !userId || isUpdating) return;
@@ -83,13 +84,25 @@ const useFollowUserFP = () => {
 
                 // Add notification
 				const userNotificationsRef = doc(firestore, "users", userId);
-				const notification = {
-					userId: authUser.uid,
-					username: authUser.username,
-					profilePic: authUser.profilePicURL,
-					time: new Date().getTime(),
-					type: "follow",
-				};
+                if (!userProfile.private) {
+                    const notificationObj = {
+                        userId: authUser.uid,
+                        username: authUser.username,
+                        profilePic: authUser.profilePicURL,
+                        time: new Date().getTime(),
+                        type: "follow",
+                    };
+                    setNotification(notificationObj);
+                } else {
+                    const notificationObj = {
+                        userId: authUser.uid,
+                        username: authUser.username,
+                        profilePic: authUser.profilePicURL,
+                        time: new Date().getTime(),
+                        type: "followPrivate",
+                    };
+                    setNotification(notificationObj);
+                }
 				const userNotificationsSnap = await getDoc(userNotificationsRef);
 				const notifications = userNotificationsSnap.exists()
 					? userNotificationsSnap.data().notifications || []

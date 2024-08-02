@@ -22,6 +22,8 @@ const useIncomingReadCount = (userId) => {
           }
 
           setIncomingReadCount(count);
+        } else {
+          setIncomingReadCount(0);
         }
       } catch (error) {
         console.error('Error fetching incoming read status:', error);

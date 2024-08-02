@@ -74,15 +74,17 @@ function App() {
 				<Route path='/spark/edit' element={authUser ? <CreateSpark /> : <Navigate to='/' />} />
 				<Route path='/spark/matches' element={authUser ? (!showSpark  ? <Navigate to='/spark/edit' /> : <SparkMatches />) : <Navigate to='/' /> } />
 				<Route path='/spark/matches/msg' element={authUser ? (!showSpark  ? <Navigate to='/spark/edit' /> : <SparkMessage />) : <Navigate to='/' /> } />
+				
 				<Route path='/:username' element={<ProfilePage />} />
-				<Route path="/:username/feed" element={<ProfilePageFeed />} />
-				<Route path="/:username/messages" element={<Message />} />
-				<Route path="/messages" element={<Messages />} />
-				<Route path="/notifications" element={<NotificationsPage />} />
-				<Route path="/:username/followers" element={<FollowersPage />} />
-				<Route path="/:username/following" element={<FollowingPage />} />
+				<Route path="/:username/feed" element={<ProfilePageFeed />} /> 
+
+				<Route path="/:username/messages" element={authUser ? <Message /> : <Navigate to='/auth' />} />
+				<Route path="/messages" element={authUser ? <Messages /> : <Navigate to='/auth' />} />
+				<Route path="/notifications" element={authUser ? <NotificationsPage /> : <Navigate to='/auth' />} />
+				<Route path="/:username/followers" element={authUser ? <FollowersPage /> : <Navigate to='/auth' />} />
+				<Route path="/:username/following" element={authUser ? <FollowingPage /> : <Navigate to='/auth' />} />
 				<Route path="/search" element={<SearchPage />} />
-				<Route path="/blocked" element={<BlockPage />} />
+				<Route path="/blocked" element={authUser ? <BlockPage /> : <Navigate to='/auth' />} />
 
 			</Routes>
 		</PageLayout>

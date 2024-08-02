@@ -17,6 +17,8 @@ const useFollowUser = (userId) => {
 		if (isUpdating) return;
 		setIsUpdating(true);
 
+		console.log("handleFollowUser is being used");
+
 		try {
 			const currentUserRef = doc(firestore, "users", authUser.uid);
 			const userToFollowOrUnfollowRef = doc(firestore, "users", userId);
