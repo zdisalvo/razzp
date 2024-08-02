@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import { Box, Image, Text } from "@chakra-ui/react";
 import Fireworks from "fireworks-js";
+import { Link as RouterLink } from "react-router-dom";
 
 const MatchAnimation = ({ profilePic1, profilePic2 }) => {
     const fireworksRef = useRef(null);
@@ -97,13 +98,15 @@ const MatchAnimation = ({ profilePic1, profilePic2 }) => {
                     textAlign: 'center'
                 }}
             >
+                <RouterLink to="/spark/matches" >
                 <Text fontSize="3xl" fontWeight="bold"
-                color="#c32935"
+                color="white"
                 style={{
                     textShadow: "2px 2px 4px rgba(0, 0, 0, 0.6)"
                 }}
                 
                 >You Matched!</Text>
+                </RouterLink>
             </Box>
         </Box>
     );
