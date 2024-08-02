@@ -19,6 +19,8 @@ import { firestore } from '../../firebase/firebase';
 import useUnblockUser from "../../hooks/useUnblockUser";
 import useGetUserProfileByUsername from "../../hooks/useGetUserProfileByUsername";
 import useDeleteUser from "../../hooks/useDeleteUser";
+import useSetPrivateProfile from "../../hooks/useSetPrivateProfile";
+import useSetPublicProfile from "../../hooks/useSetPublicProfile";
 
 
 const ProfileHeader = ({ username, page }) => {
@@ -55,6 +57,8 @@ const ProfileHeader = ({ username, page }) => {
 	const [latitudeLoc, setLatitudeLoc] = useState('');
 	const [longitudeLoc, setLongitudeLoc] = useState('');
 	const locationData = useUserLocation(latitudeLoc, longitudeLoc);
+	const { setPrivate, isLoading: settingPrivate} = useSetPrivateProfile();
+	const { setPublic, isLoading: settingPublic } = useSetPublicProfile();
 
 
 	useEffect(() => {
@@ -156,6 +160,22 @@ const ProfileHeader = ({ username, page }) => {
 		// Handle errors here, such as showing a toast notification
 	  }
 	};
+
+	const handleMakePrivate = async () => {
+		try {
+			await setPrivate();
+		} catch (error) {
+			console.error(error);
+		}
+	}
+
+	const handleMakePublic = async () => {
+		try {
+			await setPublic();
+		} catch (error) {
+			console.error(error);
+		}
+	}
 	
 
 	useEffect(() => {
@@ -375,6 +395,28 @@ const ProfileHeader = ({ username, page }) => {
 			  color="white"
 			  onClick={handleShare}
 			>Invite my Contacts</MenuItem>
+			{authUser && !authUser.private && (
+			<MenuItem
+			bg="black"
+			_hover={{ bg: '#2e2e2e' }} // Changes background color to charcoal on hover
+			px={4} // Adds padding inside MenuItem
+              //width="100%"
+			  whiteSpace="nowrap"
+			  color="white"
+			  onClick={handleMakePrivate}
+			>Make Private</MenuItem>
+			)}
+			{authUser && authUser.private && (
+			<MenuItem
+			bg="black"
+			_hover={{ bg: '#2e2e2e' }} // Changes background color to charcoal on hover
+			px={4} // Adds padding inside MenuItem
+              //width="100%"
+			  whiteSpace="nowrap"
+			  color="white"
+			  onClick={handleMakePublic}
+			>Make Public</MenuItem>
+			)}
           {authUser && authUser.blocked && (
             <MenuItem
 			bg="black"

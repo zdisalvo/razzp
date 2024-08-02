@@ -16,7 +16,7 @@ const HomePage = () => {
   const userAuth = authStore((state) => state.user);
   const [isFetchingLocation, setIsFetchingLocation] = useState(false);
   const navigate = useNavigate();
-  const incomingReadCount = useIncomingReadCount(userAuth.uid);
+  const incomingReadCount = useIncomingReadCount(userAuth?.uid);
   const newNotificationsCount = useNewNotificationsCount();
   const { isLoading: profileLoading, sparkProfile } = useGetSparkProfileById(userAuth?.uid);
 
