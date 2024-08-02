@@ -372,7 +372,7 @@ const SparkProfile = ({ sparkProfile, onViewed, sparkUser }) => {
   return (
     <Container ref={profileRef} width={{ base: "100vw", md: "auto" }} height={{ base: "auto", md: "100%" }} mb={{ base: "60px", md: "100px" }} px={0} mx={0} >
       <Box position="relative" width="100%" height="100%">
-      {(isSparkLikeMatch || isSparkCrownMatch) && (
+      {sparkUser && (isSparkLikeMatch || isSparkCrownMatch) && (
         <Box
           position="absolute"
           top="0"

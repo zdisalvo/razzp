@@ -25,12 +25,19 @@ const useCrownSpark = (sparkProfile) => {
   const showToast = useShowToast();
 
   useEffect(() => {
-    if (!isLoading && sparkUser && !crownCount) {
+    if (!isLoading && sparkUser) {
       setIsLiked(sparkUser.liked.includes(sparkProfile.uid) || sparkUser.crowned.includes(sparkProfile.uid));
       setSparkLikesUser(sparkUser.likedMe.includes(sparkProfile.uid) || sparkUser.crownedMe.includes(sparkProfile.uid));
-      setCrownCount(sparkUser.dayCrowns);
     }
   }, [isLoading, sparkUser, sparkProfile.uid]);
+
+  useEffect(() => {
+    if (!crownCount && !isLoading && sparkUser) {
+       setCrownCount(sparkUser.dayCrowns);
+    }
+  }, [crownCount, isLoading, sparkUser, sparkProfile.uid]);
+
+  //console.log(crownCount);
 
 //   useEffect(() => {
 //     if (!isLoading && sparkUser) {

@@ -24,12 +24,24 @@ const useLikeSpark = (sparkProfile) => {
   const showToast = useShowToast();
 
   useEffect(() => {
-    if (!isLoading && sparkUser && !likeCount) {
+
+    //console.log(sparkUser);
+    if (!isLoading && sparkUser) {
       setIsLiked(sparkUser.liked.includes(sparkProfile.uid) || sparkUser.crowned.includes(sparkProfile.uid));
       setSparkLikesUser(sparkUser.likedMe.includes(sparkProfile.uid) || sparkUser.crownedMe.includes(sparkProfile.uid));
-      setLikeCount(sparkUser.dayLikes);
+      //setLikeCount(sparkUser.dayLikes);
     }
   }, [isLoading, sparkUser, sparkProfile.uid]);
+
+  useEffect(() => {
+
+    //console.log(sparkUser);
+    if (!isLoading && sparkUser && !likeCount) {
+      setLikeCount(sparkUser.dayLikes);
+    }
+  }, [likeCount, isLoading, sparkUser, sparkProfile.uid]);
+
+  //console.log(sparkLikesUser);
 
 //   useEffect(() => {
 //     if (!isLoading && sparkUser) {
@@ -127,6 +139,7 @@ const useLikeSpark = (sparkProfile) => {
 
       //MATCH
       //console.log(authUser);
+      //console.log(sparkLikesUser);
 
       if (sparkLikesUser && !isLiked) {
         setMatch(true);
