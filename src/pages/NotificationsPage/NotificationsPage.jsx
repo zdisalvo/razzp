@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Avatar, Box, List, ListItem, Text, Container, Image, Heading, Flex, IconButton } from "@chakra-ui/react";
+import { Avatar, Box, List, ListItem, Text, Container, Image, Heading, Flex, IconButton, Button } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretLeft } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
@@ -111,7 +111,7 @@ const NotificationsPage = () => {
         }
     };
 
-    const handleAcceptFollow = async () => {
+    const handleAcceptFollow = async (userId) => {
         try {
             await followPrivateUser(userId);
         } catch (error) {
@@ -178,8 +178,9 @@ const NotificationsPage = () => {
                                 <Button
                                     bg={"red.400"}
                                     color={"white"}
-                                    w='full'
+                                    //w='full'
                                     size='sm'
+                                    ml={2}
                                     _hover={{ bg: "red.500" }}
                                     //onClick={removeFollowNotification}
                                 >
@@ -189,10 +190,11 @@ const NotificationsPage = () => {
                                     bg={"blue.400"}
                                     color={"white"}
                                     size='sm'
-                                    w='full'
+                                    ml={2}
+                                    //w='full'
                                     _hover={{ bg: "blue.500" }}
-                                    userId={notification.userId}
-                                    onClick={handleAcceptFollow}
+                                    //userId={notification.userId}
+                                    onClick={() => handleAcceptFollow(notification.userId)}
                                     
                                 >
                                     Accept

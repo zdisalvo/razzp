@@ -21,6 +21,7 @@ import useGetUserProfileByUsername from "../../hooks/useGetUserProfileByUsername
 import useDeleteUser from "../../hooks/useDeleteUser";
 import useSetPrivateProfile from "../../hooks/useSetPrivateProfile";
 import useSetPublicProfile from "../../hooks/useSetPublicProfile";
+import useUnrequestFollow from "../../hooks/useUnrequestFollow";
 
 
 const ProfileHeader = ({ username, page }) => {
@@ -59,7 +60,14 @@ const ProfileHeader = ({ username, page }) => {
 	const locationData = useUserLocation(latitudeLoc, longitudeLoc);
 	const { setPrivate, isLoading: settingPrivate} = useSetPrivateProfile();
 	const { setPublic, isLoading: settingPublic } = useSetPublicProfile();
+	const [requested, setRequested ] = useState(false);
+	const unrequestFollow = useUnrequestFollow();
 
+	useState(() => {
+		if (userProfile && authUser && userProfile.requested) {
+		  setRequested(userProfile.requested.includes(authUser.uid)); // Ensure the user data is up-to-date
+		}
+	  }, [authUser, fetchUserData]);
 
 	useEffect(() => {
 		if (authUser) {
@@ -239,11 +247,25 @@ const ProfileHeader = ({ username, page }) => {
 
 	const handleFollowClick = async () => {
 		// Optimistically update the UI
-		setIsFollowing(prev => !prev);
-		setIsOptimisticUpdate(true);
+		
+
+		if (userProfile.private && !requested) {
+			setRequested(true);
+			//console.log(requested);
+		} else if (userProfile.private && requested) {
+			unrequestFollow(userProfile.uid);
+			setRequested(false);
+			
+		} else {
+			setIsFollowing(prev => !prev);
+			setIsOptimisticUpdate(true);
+		}
+		
+		//console.log(requested);
 
 		try {
-			await handleFollowUser(userProfile.uid, isFollowing); // Handle server request
+			//console.log(!requested);
+			await handleFollowUser(userProfile.uid, isFollowing, !requested); // Handle server request
 		} catch (error) {
 			// Revert optimistic update if needed
 			setIsFollowing(prev => !prev);
@@ -577,7 +599,7 @@ const ProfileHeader = ({ username, page }) => {
 								isDisabled={isOptimisticUpdate} // Disable button during optimistic update
 								
 							>
-								{isFollowing ? "Unfollow" : "Follow"}
+								{isFollowing ? "Unfollow" : (requested ? "Requested" : "Follow")}
 							</Button>
 							<Button
 								bg={"#eb7734"}

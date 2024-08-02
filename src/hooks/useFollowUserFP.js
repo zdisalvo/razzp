@@ -12,9 +12,9 @@ const useFollowUserFP = () => {
     const setAuthUser = useAuthStore((state) => state.setUser);
     const { userProfile, setUserProfile } = useUserProfileStore();
     const [userIdGlobal, setUserIdGlobal] = useState("");
-    const [notification, setNotification ] = useState(null);
+    //const [notification, setNotification ] = useState(null);
 
-    const handleFollowUser = async (userId, isFollowing) => {
+    const handleFollowUser = async (userId, isFollowing, requested) => {
         if (!authUser || !userId || isUpdating) return;
 
         setIsUpdating(true);
@@ -22,7 +22,7 @@ const useFollowUserFP = () => {
         const userToFollowRef = doc(firestore, 'users', userId);
 
         try {
-            if (isFollowing && userProfile) {
+            if ((!requested || isFollowing) && userProfile && authUser) {
                 // Unfollow
                 await updateDoc(currentUserRef, {
                     following: arrayRemove(userId),
@@ -41,7 +41,7 @@ const useFollowUserFP = () => {
 				const notifications = userNotificationsSnap.exists()
 					? userNotificationsSnap.data().notifications || []
 					: [];
-                console.log(notifications.includes);
+                //console.log(notifications.includes);
 				const updatedNotifications = notifications.filter(
 					(notification) => !(notification.userId === authUser.uid && (notification.type === "follow" || notification.type == "followPrivate"))
 				);
@@ -70,7 +70,7 @@ const useFollowUserFP = () => {
                 setUserIdGlobal(userId);
 				setIsFollowingUser(false);
 
-            } else if (userProfile) {
+            } else if (userProfile && authUser && !userProfile.private) {
                 // Follow
                 await updateDoc(currentUserRef, {
                     following: arrayUnion(userId),
@@ -85,25 +85,16 @@ const useFollowUserFP = () => {
 
                 // Add notification
 				const userNotificationsRef = doc(firestore, "users", userId);
-                if (!userProfile.private) {
-                    const notificationObj = {
+                
+                    const notification = {
                         userId: authUser.uid,
                         username: authUser.username,
                         profilePic: authUser.profilePicURL,
                         time: new Date().getTime(),
                         type: "follow",
                     };
-                    setNotification(notificationObj);
-                } else  {
-                    const notificationObj = {
-                        userId: authUser.uid,
-                        username: authUser.username,
-                        profilePic: authUser.profilePicURL,
-                        time: new Date().getTime(),
-                        type: "followPrivate",
-                    };
-                    setNotification(notificationObj);
-                }
+                    //setNotification(notificationObj);
+                
 				const userNotificationsSnap = await getDoc(userNotificationsRef);
 				const notifications = userNotificationsSnap.exists()
 					? userNotificationsSnap.data().notifications || []
@@ -133,6 +124,37 @@ const useFollowUserFP = () => {
                 //isFollowing = !isFollowing;
                 setUserIdGlobal(userId);
 				setIsFollowingUser(true);
+
+            } else if (userProfile && authUser && userProfile.private) {
+                const userNotificationsRef = doc(firestore, "users", userId);
+
+                //console.log(authUser);
+                if (requested && authUser) {
+                    await updateDoc(userToFollowRef, {
+                        requested: arrayUnion(authUser.uid),
+                    });
+                } else if (!requested && authUser) {
+                    await updateDoc(userToFollowRef, {
+                        requested: arrayRemove(authUser.uid),
+                    });
+                }
+
+                
+                    const notification = {
+                        userId: authUser.uid,
+                        username: authUser.username,
+                        profilePic: authUser.profilePicURL,
+                        time: new Date().getTime(),
+                        type: "followPrivate",
+                    };
+                    //setNotification(notificationObj);
+                
+				const userNotificationsSnap = await getDoc(userNotificationsRef);
+				const notifications = userNotificationsSnap.exists()
+					? userNotificationsSnap.data().notifications || []
+					: [];
+				notifications.push(notification);
+				await setDoc(userNotificationsRef, { notifications }, { merge: true });
 
             }
         } catch (error) {
