@@ -527,7 +527,10 @@ const ProfileHeader = ({ username, page }) => {
 						</Text>
 						Posts
 					</Text>
-					{authUser && userProfile && ((userProfile.private && userProfile.followers.includes(authUser.uid)) || (userProfile.uid === authUser.uid) || (!userProfile.private)) && (
+					{(authUser && userProfile) && 
+					((userProfile.private && userProfile.followers.includes(authUser.uid)) || 
+					(userProfile.uid === authUser.uid) || 
+					(!userProfile.private)) ? (
 					<Text color="#eb7734" fontSize={{ base: "md", md: "sm" }}>
 					<Link to={`/${username}/followers`} style={{ textDecoration: 'none', color: 'inherit' }}>
                         <Text as='span' fontWeight={"bold"} mr={2}>
@@ -536,8 +539,8 @@ const ProfileHeader = ({ username, page }) => {
                         Followers
                     </Link>
 					</Text>
-					)}
-					{authUser && userProfile && ((userProfile.private && !userProfile.followers.includes(authUser.uid)) || (userProfile.private && !authUser)) && (userProfile.uid !== authUser.uid) && (
+					) : (
+					// {authUser && userProfile && ((userProfile.private && !userProfile.followers.includes(authUser.uid)) || (userProfile.private && !authUser)) && (userProfile.uid !== authUser.uid) && (
 					<Text color="#eb7734" fontSize={{ base: "md", md: "sm" }}>
                         <Text as='span' fontWeight={"bold"} mr={2}>
                             {userProfile.followers.length}
@@ -545,24 +548,26 @@ const ProfileHeader = ({ username, page }) => {
                         Followers
 					</Text>
 					)}
-					{authUser && userProfile && ((userProfile.private && userProfile.followers.includes(authUser.uid)) || (userProfile.uid === authUser.uid) || (!userProfile.private)) && (
-					<Text color="#eb7734" fontSize={{ base: "md", md: "sm" }}>
-					<Link to={`/${username}/following`} style={{ textDecoration: 'none', color: 'inherit' }}>
-						<Text as='span' fontWeight={"bold"} mr={2}>
-							{userProfile.following.length}
-						</Text>
-						Following
-					</Link>
-					</Text>
-					)}
-					{authUser && userProfile && ((userProfile.private && !userProfile.followers.includes(authUser.uid)) || (userProfile.private && !authUser)) && (userProfile.uid !== authUser.uid) && (
-					<Text color="#eb7734" fontSize={{ base: "md", md: "sm" }}>
 					
+					{(authUser && userProfile) && 
+					((userProfile.private && userProfile.followers.includes(authUser.uid)) || 
+					(userProfile.uid === authUser.uid) || 
+					(!userProfile.private)) ? (
+						<Text color="#eb7734" fontSize={{ base: "md", md: "sm" }}>
+						<Link to={`/${username}/following`} style={{ textDecoration: 'none', color: 'inherit' }}>
+							<Text as='span' fontWeight={"bold"} mr={2}>
+							{userProfile.following.length}
+							</Text>
+							Following
+						</Link>
+						</Text>
+					) : (
+						<Text color="#eb7734" fontSize={{ base: "md", md: "sm" }}>
 						<Text as='span' fontWeight={"bold"} mr={2}>
 							{userProfile.following.length}
 						</Text>
 						Following
-					</Text>
+						</Text>
 					)}
 				</Flex>
 				{/* <Flex alignItems={"center"} gap={4}>

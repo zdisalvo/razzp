@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Box, Container, Flex, Text, Link } from "@chakra-ui/react";
-import { useParams, useLocation, Link as RouterLink } from "react-router-dom";
+import { useParams, useLocation, Link as RouterLink, useNavigate } from "react-router-dom";
 import UserFeed from "../../components/FeedPosts/UserFeed";
 import SuggestedUsers from "../../components/SuggestedUsers/SuggestedUsers";
 import useAuthStore from "../../store/authStore";
 import useGetUserProfileByUsername from "../../hooks/useGetUserProfileByUsername";
+
 
 const ProfilePageFeed = () => {
   const { username } = useParams();
@@ -12,11 +13,16 @@ const ProfilePageFeed = () => {
   const authUser = useAuthStore((state) => state.user);
   const { isLoading, userProfile } = useGetUserProfileByUsername(username);
   const [authChecked, setAuthChecked] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Check if authUser exists when component mounts
     setAuthChecked(true);
-  }, []);
+
+  if ((userProfile?.private && !userProfile.followers.includes(authUser?.uid)) || !authUser) {
+    navigate(`/${username}`);
+  }
+}, [authUser, userProfile, navigate, username]);
 
   const userNotFound = !isLoading && !userProfile;
   if (userNotFound) return <UserNotFound />;
