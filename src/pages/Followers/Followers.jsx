@@ -9,6 +9,7 @@ import useFollowUserFP from '../../hooks/useFollowUserFP';
 import { useNavigate, useParams, Link } from 'react-router-dom'; 
 import useGetUserProfileByUsername from '../../hooks/useGetUserProfileByUsername';
 import FollowButton from '../Following/FollowButton';
+import useRemoveFollower from '../../hooks/useRemoveFollower';
 
 const FollowersPage = () => {
     const [followers, setFollowers] = useState([]);
@@ -21,6 +22,7 @@ const FollowersPage = () => {
     const { handleFollowUser } = useFollowUserFP();
     const navigate = useNavigate(); 
     const { username } = useParams(); 
+    const { removeFollower, isRemoving } = useRemoveFollower();
 
     const { userProfile, isLoading: profileLoading, error: profileError } = useGetUserProfileByUsername(username);
 
@@ -137,6 +139,13 @@ const FollowersPage = () => {
         }
     };
 
+
+    const handleRemoveFollower = async (followerId) => {
+        await removeFollower(followerId);
+        setFollowers(followers.filter((follower) => follower.uid === followerId));
+      };
+
+
     const handleAvatarClick = async (userId) => {
         try {
             const userRef = doc(firestore, 'users', userId);
@@ -211,6 +220,20 @@ const FollowersPage = () => {
                             >
                                 {isFollowing ? 'Unfollow' : 'Follow'}
                             </Button> */}
+                            {authUser && (authUser.uid === userProfile.uid) &&  (
+                                <Button
+                                ml="auto"
+                                onClick={() => handleRemoveFollower(userId)}
+                                bg={"red.400"}
+                                color={"white"}
+                                textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)"
+                                _hover={{ bg: "#c75e1f" }}
+                                size={{ base: "sm", md: "sm" }}
+                            >
+                                Remove
+                            </Button>
+
+                            )}
                             <FollowButton
                                 userProfile={profile}
                                 isFollowing={isFollowing}
