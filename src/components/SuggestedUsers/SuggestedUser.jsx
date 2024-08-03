@@ -4,6 +4,7 @@ import useFollowUser from "../../hooks/useFollowUser";
 import useAuthStore from "../../store/authStore";
 import { Link } from "react-router-dom";
 import useFollowUserFP from "../../hooks/useFollowUserFP";
+import FollowButton from '../../pages/Following/FollowButton';
 
 const SuggestedUser = ({ user, setUser }) => {
 	const { isFollowing, isUpdating } = useFollowUser(user.uid);
@@ -44,8 +45,8 @@ const SuggestedUser = ({ user, setUser }) => {
     };
 
 	return (
-		<Flex justifyContent={"space-between"} alignItems={"center"} w={"full"}>
-			<Flex alignItems={"center"} gap={2} ml={4}>
+		<Flex justifyContent={"space-between"} alignItems={"center"} w={"full"} >
+			<Flex alignItems={"center"} gap={2} ml={4} >
 				<Link to={`/${user.username}`}>
 					<Avatar src={user.profilePicURL} size={"md"} />
 				</Link>
@@ -72,18 +73,23 @@ const SuggestedUser = ({ user, setUser }) => {
 				</VStack>
 			</Flex>
 			{authUser.uid !== user.uid && (
-				<Button
-				ml="auto"
-				onClick={() => handleFollowClick(user.uid)}
-				isDisabled={isOptimisticUpdate}
-				bg={"#eb7734"}
-				color={"white"}
-				textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)"
-				_hover={{ bg: "#c75e1f" }}
-				size={{ base: "sm", md: "sm" }}
-			>
-				{isFollowingInit ? 'Unfollow' : 'Follow'}
-			</Button>
+			// 	<Button
+			// 	ml="auto"
+			// 	onClick={() => handleFollowClick(user.uid)}
+			// 	isDisabled={isOptimisticUpdate}
+			// 	bg={"#eb7734"}
+			// 	color={"white"}
+			// 	textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)"
+			// 	_hover={{ bg: "#c75e1f" }}
+			// 	size={{ base: "sm", md: "sm" }}
+			// >
+			// 	{isFollowingInit ? 'Unfollow' : 'Follow'}
+			// </Button>
+			<FollowButton
+                                userProfile={user}
+                                isFollowing={isFollowingInit}
+                                requested={authUser && user.requested && user.requested.includes(authUser.uid)}
+                            />
 			)}
 		</Flex>
 	);

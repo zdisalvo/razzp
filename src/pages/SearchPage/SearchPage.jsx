@@ -127,7 +127,7 @@ import {
           </FormControl>
           {(isLoadingNearby || isLoadingSearch) && <Spinner mt={4} />}
           {!isLoadingNearby && !isLoadingSearch && (
-            <VStack mt={4} spacing={4}>
+            <VStack mt={4} spacing={4} ml={4} mr={8}>
               {(isToggled && userLocation.latitude && userLocation.longitude ? nearbyUsers : searchedUsers).length > 0 ? (
                 (isToggled && userLocation.latitude && userLocation.longitude ? nearbyUsers : searchedUsers).map((user) => (
                   <SuggestedUser key={user.userId} user={user} />
