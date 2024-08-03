@@ -4,11 +4,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretLeft } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import useNotifications from "../../hooks/useNotifications";
-import { getDoc, doc, updateDoc } from "firebase/firestore";
+import { getDoc, doc, updateDoc, onSnapshot, arrayRemove } from "firebase/firestore";
 import { firestore } from "../../firebase/firebase";
 import useAuthStore from "../../store/authStore";
 import { formatDistanceToNow } from "date-fns";
 import useFollowPrivateUser from "../../hooks/useFollowPrivateUser";
+import useShowToast from "../../hooks/useShowToast";
 
 // Convert Firestore Timestamp or numeric seconds to JavaScript Date object
 const convertToDate = (timestamp) => {
@@ -41,10 +42,39 @@ const formatNotificationTime = (timestamp) => {
 
 
 const NotificationsPage = () => {
-    const notifications = useNotifications();
+    const [notifications, setNotifications] = useState([]);
     const authUser = useAuthStore((state) => state.user);
     const navigate = useNavigate();
     const followPrivateUser = useFollowPrivateUser();
+    const showToast = useShowToast();
+
+    useEffect(() => {
+        if (authUser && authUser.uid) {
+          const userRef = doc(firestore, "users", authUser.uid);
+    
+          // Set up real-time listener for notifications
+          const unsubscribe = onSnapshot(
+            userRef,
+            (doc) => {
+              const data = doc.data();
+              if (data && data.notifications) {
+                const filteredNotifications = data.notifications.filter(
+                  (notification) => notification !== null
+                );
+                setNotifications(filteredNotifications);
+              }
+            },
+            (error) => {
+              console.error("Error fetching notifications:", error);
+            }
+          );
+    
+          // Clean up listener on unmount
+          return () => unsubscribe();
+        }
+      }, [authUser]);
+    
+
 
 
     useEffect(() => {
@@ -111,13 +141,43 @@ const NotificationsPage = () => {
         }
     };
 
-    const handleAcceptFollow = async (userId) => {
+    const handleAcceptFollow = async (userId, username, profilePicURL) => {
         try {
-            await followPrivateUser(userId);
+            await followPrivateUser(userId, username, profilePicURL);
         } catch (error) {
             console.error(error);
         }
     }
+
+    const handleRejectFollow = async (userId) => {
+        try {
+            const userDocRef = doc(firestore, "users", authUser.uid);
+            const userDoc = await getDoc(userDocRef);
+        
+        
+            if (userDoc.exists()) {
+              const notifications = userDoc.data().notifications || []; // Default to an empty array if not defined
+        
+              // Filter out the followPrivate notification
+              const updatedNotifications = notifications.filter(
+                (notif) => !(notif.userId === userId && notif.type === "followPrivate")
+              );
+        
+              // Use updateDoc to update only the necessary fields
+              await updateDoc(userDocRef, {
+                requested: arrayRemove(userId),
+                notifications: updatedNotifications,
+              });
+    
+            showToast("Success", "Removed follow request successfully", "success");
+          } else {
+            showToast("Error", "User document does not exist", "error");
+          }
+        } catch (error) {
+          showToast("Error", error.message, "error");
+        }
+      };
+    
 
     return (
         <Container pt={6} px={0} w={['100vw', null, '80vh']} pb={{base: "10vh", md: "60px"}}>
@@ -182,7 +242,7 @@ const NotificationsPage = () => {
                                     size='sm'
                                     ml={2}
                                     _hover={{ bg: "red.500" }}
-                                    //onClick={removeFollowNotification}
+                                    onClick={() => handleRejectFollow(notification.userId)}
                                 >
                                     Reject
                                 </Button>
@@ -194,7 +254,7 @@ const NotificationsPage = () => {
                                     //w='full'
                                     _hover={{ bg: "blue.500" }}
                                     //userId={notification.userId}
-                                    onClick={() => handleAcceptFollow(notification.userId)}
+                                    onClick={() => handleAcceptFollow(notification.userId, notification.username, notification.profilePic)}
                                     
                                 >
                                     Accept

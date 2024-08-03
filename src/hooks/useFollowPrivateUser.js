@@ -3,34 +3,47 @@ import { doc, updateDoc, arrayUnion, arrayRemove, getDoc, setDoc } from 'firebas
 import { firestore } from '../firebase/firebase'; // Adjust the import path
 import useAuthStore from '../store/authStore'; // Adjust the import path
 import useShowToast from './useShowToast'; // Adjust the import path
+//import useGetUserProfileById from './useGetUserProfileById';
 
 const useFollowPrivateUser = () => {
   const authUser = useAuthStore((state) => state.user);
   const showToast = useShowToast();
 
-  const followPrivateUser = async (userId) => {
+  const followPrivateUser = async (userId, username, profilePicURL) => {
     if (!authUser) {
       showToast("Error", "User not authenticated", "error");
       return;
     }
 
     try {
-      const userDocRef = doc(firestore, "users", authUser.uid);
-      const userDoc = await getDoc(userDocRef);
-
-      if (userDoc.exists()) {
-        await updateDoc(userDocRef, {
-          followers: arrayUnion(userId),
-          requested: arrayRemove(userId)
-        });
-
-        const notifications = userDoc.data().notifications || []; // Default to an empty array if not defined
-        const updatedNotifications = notifications.filter(
-          (notification) => !(notification.userId === userId && (notification.type === "follow" || notification.type === "followPrivate"))
-        );
+        const userDocRef = doc(firestore, "users", authUser.uid);
+        const userDoc = await getDoc(userDocRef);
     
-        // Use updateDoc to update only the notifications field
-        await updateDoc(userDocRef, { notifications: updatedNotifications });
+        const notification = {
+          userId: userId,
+          username: username,
+          profilePic: profilePicURL,
+          time: new Date().getTime(),
+          type: "follow",
+        };
+
+        //console.log(notification);
+    
+        if (userDoc.exists()) {
+          const notifications = userDoc.data().notifications || []; // Default to an empty array if not defined
+    
+          // Filter out the followPrivate notification
+          const updatedNotifications = notifications.filter(
+            (notif) => !(notif.userId === userId && notif.type === "followPrivate")
+          );
+          updatedNotifications.push(notification);
+    
+          // Use updateDoc to update only the necessary fields
+          await updateDoc(userDocRef, {
+            followers: arrayUnion(userId),
+            requested: arrayRemove(userId),
+            notifications: updatedNotifications,
+          });
 
         showToast("Success", "User followed successfully", "success");
       } else {
