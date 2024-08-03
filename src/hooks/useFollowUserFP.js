@@ -77,7 +77,7 @@ const useFollowUserFP = () => {
 
             } else if (userProfile && authUser && (!userProfile.private || userProfile.uid === authUser.uid)) {
 
-                console.log(userProfile.private);
+                //console.log(userProfile.private);
                 // Follow
                 await updateDoc(currentUserRef, {
                     following: arrayUnion(userId),

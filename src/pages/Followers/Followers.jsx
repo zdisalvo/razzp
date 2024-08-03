@@ -8,6 +8,7 @@ import useAuthStore from '../../store/authStore';
 import useFollowUserFP from '../../hooks/useFollowUserFP';
 import { useNavigate, useParams, Link } from 'react-router-dom'; 
 import useGetUserProfileByUsername from '../../hooks/useGetUserProfileByUsername';
+import FollowButton from '../Following/FollowButton';
 
 const FollowersPage = () => {
     const [followers, setFollowers] = useState([]);
@@ -199,7 +200,7 @@ const FollowersPage = () => {
                                     <Text fontSize="sm">{profile?.fullName}</Text>
                                 </Link>
                             </VStack>
-                            <Button
+                            {/* <Button
                                 ml="auto"
                                 onClick={() => handleFollowClick(userId)}
                                 bg={"#eb7734"}
@@ -209,7 +210,12 @@ const FollowersPage = () => {
                                 size={{ base: "sm", md: "sm" }}
                             >
                                 {isFollowing ? 'Unfollow' : 'Follow'}
-                            </Button>
+                            </Button> */}
+                            <FollowButton
+                                userProfile={profile}
+                                isFollowing={isFollowing}
+                                requested={authUser && profile.requested && profile.requested.includes(authUser.uid)}
+                            />
                         </Flex>
                     );
                 })}
