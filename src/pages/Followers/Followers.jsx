@@ -20,6 +20,7 @@ const FollowersPage = () => {
 
     const authUser = useAuthStore((state) => state.user);
     const { handleFollowUser } = useFollowUserFP();
+    const [authChecked, setAuthChecked] = useState(false);
     const navigate = useNavigate(); 
     const { username } = useParams(); 
     const { removeFollower, isRemoving } = useRemoveFollower();
@@ -27,8 +28,17 @@ const FollowersPage = () => {
     const { userProfile, isLoading: profileLoading, error: profileError } = useGetUserProfileByUsername(username);
 
     const handleGoBack = () => {
-        navigate(-1); // Navigate to the previous page
+        navigate(`/${username}`); // Navigate to the previous page
     };
+
+    useEffect(() => {
+        // Check if authUser exists when component mounts
+        setAuthChecked(true);
+    
+      if ((userProfile?.private && !userProfile.followers.includes(authUser?.uid)) || !authUser) {
+        navigate(`/${username}`);
+      }
+    }, [authUser, userProfile, navigate, username]);
 
     // Function to validate and filter out invalid followers
     const validateFollowers = async (followerIds) => {
