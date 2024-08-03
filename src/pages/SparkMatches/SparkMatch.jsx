@@ -29,6 +29,8 @@ const SparkMatch = ({ userId, matchedUserId }) => {
   //if (profileLoading) return <div>Loading...</div>;
 
   const handleClick = () => {
+    //console.log(userId);
+    //console.log(matchItem.messages[0].sendingUser);
     if (matchExpired || (matchItem.messages.length === 1 && matchItem.messages[0].sendingUser === userId))
       return;
 
@@ -87,7 +89,7 @@ const SparkMatch = ({ userId, matchedUserId }) => {
       const now = new Date();
       const timeDiff = expirationDate - now;
 
-      if (timeDiff <= 0 && !lastMessage) {
+      if (timeDiff <= 0 && (!lastMessage || matchItem.messages.length <= 1)) {
         setMatchExpired(true);
         setTimeRemaining("This match has expired");
       } else {
@@ -236,12 +238,12 @@ const SparkMatch = ({ userId, matchedUserId }) => {
           {lastMessage &&(
           <Text fontWeight="bold">{matchedProfile.name}</Text>
         )}
-          <Text fontWeight={!lastMessage ? "bold" : "regular"}>{lastMessage ? `${lastMessage.substring(0, 37)}${lastMessage.length > 37 ? "..." : ""}` : `Say hi to ${matchedProfile.name}`}</Text>
+          <Text fontWeight={(!lastMessage || lastMessage.sendingUser !== userId) ? "bold" : "regular"}>{lastMessage ? `${lastMessage.substring(0, 37)}${lastMessage.length > 37 ? "..." : ""}` : `Say hi to ${matchedProfile.name}`}</Text>
 
         </Box>
-        {!lastMessage && (
+        {matchItem.messages.length <= 1 && (
           <Box display="flex-end" mr={4}>
-            <Text fontSize="sm" color="gray.400" >Expiring in {timeRemaining}</Text>
+            <Text fontSize="sm" color="gray.400" >Expires in {timeRemaining}</Text>
           </Box>
         )}
         <Box>

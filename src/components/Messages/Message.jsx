@@ -262,19 +262,19 @@ const Message = () => {
             bg={msg.sendingUser === userId ? "#0099ff" : "white"}
             color={msg.sendingUser === userId ? "white" : "black"}
             p={4}
-            borderRadius="full" // Fully rounded corners for a bubble effect
+            borderRadius="full"
             maxW="80%"
             position="relative"
-            boxShadow="0px 4px 6px rgba(0, 0, 0, 0.1)" // Add shadow for a more 3D effect
+            boxShadow={msg.sendingUser === userId ? "0px 4px 10px rgba(0, 0, 0, 0.3)" : "0px 4px 6px rgba(0, 0, 0, 0.1)"}
             _before={{
               content: '""',
               position: "absolute",
-              bottom: "-12px", // Adjust this value to position the triangle
+              bottom: "-12px",
               left: msg.sendingUser === userId ? "auto" : "10px",
               right: msg.sendingUser === userId ? "10px" : "auto",
-              borderWidth: "12px", // Make the tail larger
+              borderWidth: "12px",
               borderStyle: "solid",
-              borderColor: msg.sendingUser === userId ? "#0099ff transparent transparent transparent" : "white transparent transparent transparent", // Darker creamy orange for the tail
+              borderColor: msg.sendingUser === userId ? "#0099ff transparent transparent transparent" : "white transparent transparent transparent",
               transform: "rotate(45deg)"
             }}
           >
