@@ -29,14 +29,16 @@ const SparkMatch = ({ userId, matchedUserId }) => {
   //if (profileLoading) return <div>Loading...</div>;
 
   const handleClick = () => {
-    if (!matchExpired) {
+    if (matchExpired || (matchItem.messages.length === 1 && matchItem.messages[0].sendingUser === userId))
+      return;
+
       setUserId(userId);
       setMatchedUserId(matchedUserId);
       // Store IDs in localStorage
       localStorage.setItem("userId", userId);
       localStorage.setItem("matchedUserId", matchedUserId);
       navigate("/spark/matches/msg");
-    }
+    
   };
 
   useEffect(() => {
@@ -174,6 +176,8 @@ const SparkMatch = ({ userId, matchedUserId }) => {
 
 
   const handleAvatarClick = () => {
+    if (matchExpired)
+      return;
     // setSparkProfile(profileData);
     // setSparkUser(match); // Assuming match contains user data
     setIsModalOpen(true);

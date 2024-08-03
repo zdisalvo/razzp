@@ -38,6 +38,8 @@ import SparkProfileModal from "../SparkMatches/SparkProfileModal";
 import useSparkProfileStore from "../../store/sparkProfileStore";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { firestore } from '../../firebase/firebase';
 
 
 const CreateSpark = () => {
@@ -79,6 +81,7 @@ const CreateSpark = () => {
     error: state.error,
     fetchSparkProfile: state.fetchSparkProfile,
   }));
+  
   
   useEffect(() => {
     if (newContent) {
@@ -207,6 +210,40 @@ const CreateSpark = () => {
 
   const [preview, setPreview] = useState(null);
 
+  const removeDuplicates = (arr) => {
+    const seen = new Map();
+    arr.forEach(item => seen.set(item.id, item));
+    return Array.from(seen.values());
+  };
+
+
+  const deduplicateProfilePics = async (userId) => {
+    const docRef = doc(firestore, 'spark', userId);
+    const docSnap = await getDoc(docRef);
+  
+    if (docSnap.exists()) {
+      const userData = docSnap.data();
+      const profilePics = userData.profilePics || [];
+  
+      const uniqueProfilePics = removeDuplicates(profilePics);
+  
+      if (uniqueProfilePics.length !== profilePics.length) {
+        await updateDoc(docRef, { profilePics: uniqueProfilePics });
+        console.log('Duplicates removed and Firestore updated successfully.');
+      } else {
+        console.log('No duplicates found.');
+      }
+    } else {
+      console.log('No such document!');
+    }
+  };
+
+  useEffect(() => {
+    if (authUser) {
+      deduplicateProfilePics(authUser.uid);
+    }
+  }, [authUser]);
+
 
   //stripping images from posts
 
@@ -215,6 +252,8 @@ const CreateSpark = () => {
     const selectedImagesRaw = formData.selectedImages.map((post) => ({ id: post.id, imageURL: post.imageURL }));
     const sparkImagesRaw = sparkImages.map((image) => ({ id: image.id, imageURL: image.imageURL }));
     const allImages = [...sparkImagesRaw, ...selectedImagesRaw];
+
+
     
     // Only update if the profilePics are different
     if (!sparkProfile.profilePics && formData.profilePics.length === 0) {
