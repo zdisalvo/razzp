@@ -10,12 +10,17 @@ const useFollowUserFP = () => {
     const [isFollowingUser, setIsFollowingUser] = useState(false);
     const authUser = useAuthStore((state) => state.user);
     const setAuthUser = useAuthStore((state) => state.setUser);
-    const { userProfile, setUserProfile } = useUserProfileStore();
+    //const { userProfile: userProfileRef, setUserProfile } = useUserProfileStore();
     const [userIdGlobal, setUserIdGlobal] = useState("");
     //const [notification, setNotification ] = useState(null);
+    //const [userId, setUserId] = useState("");
 
-    const handleFollowUser = async (userId, isFollowing, requested) => {
-        if (!authUser || !userId || isUpdating) return;
+    
+
+    const handleFollowUser = async (userProfile, userId, isFollowing, requested) => {
+        if (!authUser || !userProfile || isUpdating) return;
+
+        //setUserId(userProfile.uid);
 
         setIsUpdating(true);
         const currentUserRef = doc(firestore, 'users', authUser.uid);
@@ -51,12 +56,12 @@ const useFollowUserFP = () => {
 					...authUser,
 					following: authUser.following.filter((uid) => uid !== userId),
 				});
-				if (userProfile) {
-					setUserProfile({
-						...userProfile,
-						followers: userProfile.followers.filter((uid) => uid !== authUser.uid),
-					});
-				}
+				// if (userProfile) {
+				// 	setUserProfile({
+				// 		...userProfile,
+				// 		followers: userProfile.followers.filter((uid) => uid !== authUser.uid),
+				// 	});
+				// }
 
 				localStorage.setItem(
 					"user-info",
@@ -70,7 +75,9 @@ const useFollowUserFP = () => {
                 setUserIdGlobal(userId);
 				setIsFollowingUser(false);
 
-            } else if (userProfile && authUser && !userProfile.private) {
+            } else if (userProfile && authUser && (!userProfile.private || userProfile.uid === authUser.uid)) {
+
+                console.log(userProfile.private);
                 // Follow
                 await updateDoc(currentUserRef, {
                     following: arrayUnion(userId),
@@ -106,12 +113,12 @@ const useFollowUserFP = () => {
 					...authUser,
 					following: [...authUser.following, userId],
 				});
-				if (userProfile) {
-					setUserProfile({
-						...userProfile,
-						followers: [...userProfile.followers, authUser.uid],
-					});
-				}
+				// if (userProfile) {
+				// 	setUserProfile({
+				// 		...userProfile,
+				// 		followers: [...userProfile.followers, authUser.uid],
+				// 	});
+				// }
 
 				localStorage.setItem(
 					"user-info",

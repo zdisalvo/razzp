@@ -265,7 +265,7 @@ const ProfileHeader = ({ username, page }) => {
 
 		try {
 			//console.log(!requested);
-			await handleFollowUser(userProfile.uid, isFollowing, !requested); // Handle server request
+			await handleFollowUser(userProfile, userProfile.uid, isFollowing, !requested); // Handle server request
 		} catch (error) {
 			// Revert optimistic update if needed
 			setIsFollowing(prev => !prev);
