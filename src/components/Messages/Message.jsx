@@ -157,21 +157,58 @@ const Message = () => {
     }
   };
 
+  // const formatTime = (timestamp) => {
+  //   if (timestamp) {
+  //     const date = new Date(timestamp.seconds * 1000);
+  //     let hours = date.getHours();
+  //     const minutes = date.getMinutes();
+      
+  //     const formattedHours = (hours % 12 || 12).toString();
+  //     const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+      
+  //     const period = hours >= 12 ? 'PM' : 'AM';
+      
+  //     return `${formattedHours}:${formattedMinutes} ${period}`;
+  //   }
+  //   return "Unknown time";
+  // };
+
+
+
+
   const formatTime = (timestamp) => {
-    if (timestamp) {
-      const date = new Date(timestamp.seconds * 1000);
-      let hours = date.getHours();
-      const minutes = date.getMinutes();
-      
-      const formattedHours = (hours % 12 || 12).toString();
-      const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
-      
-      const period = hours >= 12 ? 'PM' : 'AM';
-      
+    const date = new Date(timestamp.seconds * 1000);
+    const now = new Date();
+    
+    const isSameDay = date.toDateString() === now.toDateString();
+    const isWithinLastWeek = date > new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+  
+    let hours = date.getHours();
+    const minutes = date.getMinutes();
+    const formattedHours = (hours % 12 || 12).toString();
+    const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+    const period = hours >= 12 ? 'PM' : 'AM';
+  
+    if (isSameDay) {
       return `${formattedHours}:${formattedMinutes} ${period}`;
     }
-    return "Unknown time";
+  
+    if (isWithinLastWeek) {
+      const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+      return `${daysOfWeek[date.getDay()]} ${formattedHours}:${formattedMinutes} ${period}`;
+    }
+  
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    return `${months[date.getMonth()]} ${date.getDate()} ${formattedHours}:${formattedMinutes} ${period}`;
   };
+
+
+  const showTime = (prevTimestamp, currTimestamp) => {
+    //console.log(currTimestamp);
+    //console.log(prevTimestamp);
+    return Math.abs(currTimestamp.seconds - prevTimestamp.seconds) >= 3600; // 3600000 ms = 1 hour
+};
+  
 
   return (
     <Container  w={['100vw', null, '80vh']} mt={{ base: "3vh", md: "30px" }} mb={{ base: "10vh", md: "60px" }}>
@@ -213,7 +250,11 @@ const Message = () => {
         bg="#d3e3f5"
         onScroll={handleScroll}
       >
-        {messages.length > 0 && messages.map((msg, index) => (
+         {messages.map((msg, index) => {
+                const prevMsg = index > 0 ? messages[index - 1] : null;
+                const showTimestamp = prevMsg && showTime(prevMsg.timeStamp, msg.timeStamp);
+                
+                return (
           <React.Fragment key={index}>
           <Box
             key={index}
@@ -245,7 +286,7 @@ const Message = () => {
             textAlign={msg.sendingUser === userId ? "right" : "left"}
             
             >
-              {(formatTime(msg.timeStamp) !== "12:NaN AM") ? formatTime(msg.timeStamp) : ""}
+              {(formatTime(msg.timeStamp) !== "12:NaN AM" && (showTimestamp || index === 0)) ? formatTime(msg.timeStamp) : ""}
             </Text>
           </Box>
           {(index === messages.length - 1) && (msg.sendingUser === userId) && outgoingRead && (
@@ -254,7 +295,8 @@ const Message = () => {
             </Text>
           )}
           </React.Fragment>
-        ))}
+        );
+      })}
       </VStack>
       <Flex mt={4}>
         <Input
