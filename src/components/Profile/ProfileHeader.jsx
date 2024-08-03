@@ -545,8 +545,7 @@ const ProfileHeader = ({ username, page }) => {
                         Followers
 					</Text>
 					)}
-
-
+					{authUser && userProfile && ((userProfile.private && userProfile.followers.includes(authUser.uid)) || (userProfile.uid === authUser.uid) || (!userProfile.private)) && (
 					<Text color="#eb7734" fontSize={{ base: "md", md: "sm" }}>
 					<Link to={`/${username}/following`} style={{ textDecoration: 'none', color: 'inherit' }}>
 						<Text as='span' fontWeight={"bold"} mr={2}>
@@ -555,6 +554,16 @@ const ProfileHeader = ({ username, page }) => {
 						Following
 					</Link>
 					</Text>
+					)}
+					{authUser && userProfile && ((userProfile.private && !userProfile.followers.includes(authUser.uid)) || (userProfile.private && !authUser)) && (userProfile.uid !== authUser.uid) && (
+					<Text color="#eb7734" fontSize={{ base: "md", md: "sm" }}>
+					
+						<Text as='span' fontWeight={"bold"} mr={2}>
+							{userProfile.following.length}
+						</Text>
+						Following
+					</Text>
+					)}
 				</Flex>
 				{/* <Flex alignItems={"center"} gap={4}>
 					<Text fontSize={"sm"} fontWeight={"bold"}>
