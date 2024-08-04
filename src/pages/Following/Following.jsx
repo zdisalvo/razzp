@@ -130,10 +130,9 @@ const FollowingPage = () => {
 
     if (profileLoading || loading) {
         return (
-            <Container py={6} px={0} w={['100vw', null, '80vh']}>
-                <Spinner size="xl" />
-                <Text>Loading...</Text>
-            </Container>
+            <Flex flexDir='column' h='100vh' alignItems='center' justifyContent='center'>
+			<Spinner size='xl' />
+		    </Flex>
         );
     }
 

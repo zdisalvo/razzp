@@ -106,8 +106,13 @@ const useFollowUserFP = () => {
 				const notifications = userNotificationsSnap.exists()
 					? userNotificationsSnap.data().notifications || []
 					: [];
-				notifications.push(notification);
-				await setDoc(userNotificationsRef, { notifications }, { merge: true });
+                
+                const updatedNotifications = notifications.filter(
+                    (notif) => !(notif.userId === authUser.uid && notif.type === "follow")
+                    );
+                
+				updatedNotifications.push(notification);
+				await setDoc(userNotificationsRef, { updatedNotifications }, { merge: true });
 
 				setAuthUser({
 					...authUser,

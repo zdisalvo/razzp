@@ -20,6 +20,7 @@ const Signup = () => {
 				fontSize={16}
 				type='email'
 				size={"sm"}
+				bg={"charcoal"}
 				value={inputs.email}
 				onChange={(e) => setInputs({ ...inputs, email: e.target.value })}
 				_focus={{ 
@@ -32,6 +33,7 @@ const Signup = () => {
 				fontSize={16}
 				type='text'
 				size={"sm"}
+				bg={"charcoal"}
 				value={inputs.username}
 				onChange={(e) => setInputs({ ...inputs, username: e.target.value })}
 				_focus={{ 
@@ -44,6 +46,7 @@ const Signup = () => {
 				fontSize={16}
 				type='text'
 				size={"sm"}
+				bg={"charcoal"}
 				value={inputs.fullName}
 				onChange={(e) => setInputs({ ...inputs, fullName: e.target.value })}
 				_focus={{ 
@@ -58,6 +61,7 @@ const Signup = () => {
 					type={showPassword ? "text" : "password"}
 					value={inputs.password}
 					size={"sm"}
+					bg={"charcoal"}
 					onChange={(e) => setInputs({ ...inputs, password: e.target.value })}
 					_focus={{ 
 						borderColor: 'transparent', // Make the border transparent

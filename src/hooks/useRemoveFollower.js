@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { doc, updateDoc, arrayRemove } from "firebase/firestore";
+import { doc, updateDoc, getDoc, arrayRemove } from "firebase/firestore";
 import { firestore } from "../firebase/firebase";
 import useAuthStore from "../store/authStore";
 
@@ -20,9 +20,26 @@ const useRemoveFollower = () => {
 
     try {
       const userDocRef = doc(firestore, "users", authUser.uid);
+      const userDoc = await getDoc(userDocRef);
+      const followerDocRef = doc(firestore, "users", userId);
+
+      const notifications = userDoc.data().notifications || []; // Default to an empty array if not defined
+    
+          
+          const updatedNotifications = notifications.filter(
+            (notif) => !(notif.userId === userId && notif.type === "follow")
+          );
+          
+
       await updateDoc(userDocRef, {
         followers: arrayRemove(userId),
+        notifications: updatedNotifications,
       });
+
+      await updateDoc(followerDocRef, {
+        following: arrayRemove(authUser.uid),
+      });
+
     } catch (err) {
       console.error("Error removing follower:", err);
       setError(err.message);

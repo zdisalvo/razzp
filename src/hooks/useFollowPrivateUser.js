@@ -18,6 +18,9 @@ const useFollowPrivateUser = () => {
     try {
         const userDocRef = doc(firestore, "users", authUser.uid);
         const userDoc = await getDoc(userDocRef);
+
+        const followerDocRef = doc(firestore, "users", userId);
+        const followerDoc = await getDoc(followerDocRef);
     
         const notification = {
           userId: userId,
@@ -43,6 +46,10 @@ const useFollowPrivateUser = () => {
             followers: arrayUnion(userId),
             requested: arrayRemove(userId),
             notifications: updatedNotifications,
+          });
+
+          await updateDoc(followerDocRef, {
+            following: arrayUnion(authUser.uid),
           });
 
         showToast("Success", "User followed successfully", "success");

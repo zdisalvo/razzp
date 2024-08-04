@@ -15,6 +15,7 @@ const Login = () => {
 				fontSize={16}
 				type='email'
 				size={"sm"}
+				bg={"charcoal"}
 				value={inputs.email}
 				onChange={(e) => setInputs({ ...inputs, email: e.target.value })}
 				_focus={{ 
@@ -26,6 +27,7 @@ const Login = () => {
 				placeholder='Password'
 				fontSize={16}
 				size={"sm"}
+				bg={"charcoal"}
 				type='password'
 				value={inputs.password}
 				onChange={(e) => setInputs({ ...inputs, password: e.target.value })}

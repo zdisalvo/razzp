@@ -95,7 +95,7 @@ try {
         await setDoc(readRef, {
           [receivingUserId]: { 
             outgoingRead: false,
-            incomingRead: false,
+            incomingRead: true,
           }
         });
       }
