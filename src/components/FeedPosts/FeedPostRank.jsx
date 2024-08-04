@@ -4,7 +4,7 @@ import PostFooter from "./PostFooter";
 import PostHeader from "./PostHeader";
 import useGetUserProfileById from "../../hooks/useGetUserProfileById";
 
-const FeedPost = forwardRef(({ post, rank, isFollowing, onFollowClick }, ref) => {
+const FeedPost = forwardRef(({ post, rank, isFollowing, requested, isPrivate, onFollowClick }, ref) => {
   const { userProfile } = useGetUserProfileById(post.createdBy);
 
   return (
@@ -19,6 +19,8 @@ const FeedPost = forwardRef(({ post, rank, isFollowing, onFollowClick }, ref) =>
       >
         <PostHeader post={post} creatorProfile={userProfile} 
         initialIsFollowing={isFollowing}
+        initialIsRequested={requested}
+        isPrivate={isPrivate}
         onFollowClick={onFollowClick}
         />
         

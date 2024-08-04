@@ -20,10 +20,11 @@ import useSparkProfileStore from "../../store/sparkProfileStore";
 
 
 
-const PostHeader = ({ post, initialIsFollowing, onFollowClick, creatorProfile }) => {
+const PostHeader = ({ post, initialIsFollowing, initialIsRequested, onFollowClick, creatorProfile, isPrivate }) => {
   
   const { userProfile } = useGetUserProfileById(post.createdBy);
   const [isFollowing, setIsFollowing] = useState(initialIsFollowing);
+  const [requested, setRequested] = useState(initialIsRequested);
 	//const { isFollowing: initialIsFollowing, handleFollowUser } = useFollowUserFP();
 	//const [isFollowing, setIsFollowing] = useState(initialIsFollowing);
   const [isOptimisticUpdate, setIsOptimisticUpdate] = useState(false);
@@ -40,7 +41,8 @@ const PostHeader = ({ post, initialIsFollowing, onFollowClick, creatorProfile })
   }));
   
 
-
+// console.log(requested);
+// console.log(post.createdBy);
 //   console.log(userProfile.uid);
 //   console.log(authUser.uid);
 
@@ -65,14 +67,28 @@ useEffect(() => {
   setIsFollowing(initialIsFollowing);
 }, [initialIsFollowing]);
 
+useEffect(() => {
+  setRequested(initialIsRequested);
+}, [initialIsRequested]);
+
+
+
 const handleFollowClick = async () => {
-  setIsFollowing(prev => !prev);
+  if (!isPrivate) {
+    setIsFollowing(prev => !prev);
+  } else {
+    setRequested(prev => !prev);
+  }
   setIsOptimisticUpdate(true);
   try {
     await onFollowClick(); // Use the passed handler
   } catch (error) {
     // Optionally revert optimistic update if necessary
-    setIsFollowing(prev => !prev);
+    if (!isPrivate) {
+      setIsFollowing(prev => !prev);
+    } else {
+      setRequested(prev => !prev);
+    }
     console.error('Error updating follow status:', error);
   } finally {
     setIsOptimisticUpdate(false);
@@ -145,7 +161,7 @@ const handleFollowClick = async () => {
 								isDisabled={isOptimisticUpdate} // Disable button during optimistic update
 								
 							>
-								{isFollowing ? "Unfollow" : "Follow"}
+								{isFollowing ? "Unfollow" : (requested ? "Requested" : "Follow")}
 							</Button>
         </Box>
       )}

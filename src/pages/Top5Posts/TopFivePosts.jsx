@@ -11,6 +11,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBolt, faCommentDots } from "@fortawesome/free-solid-svg-icons";
 import useIncomingReadCount from "../../hooks/useIncomingReadCount";
 import useNewNotificationsCount from "../../hooks/useNewNotificationsCount";
+import useGetUserProfileById from "../../hooks/useGetUserProfileById";
+import useUnrequestFollow from "../../hooks/useUnrequestFollow";
 
 
 
@@ -22,6 +24,12 @@ const TopFivePosts = () => {
   const incomingReadCount = useIncomingReadCount(authUser.uid);
   const newNotificationsCount = useNewNotificationsCount();
   const navigate = useNavigate();
+  const [requestedStates, setRequestedStates] = useState({});
+  const [privateStates, setPrivateStates] = useState({});
+  //const [userIsPrivate, setUserIsPrivate] = useState(false);
+  const [userProfile, setUserProfile] = useState(null);
+  //const [requested, setRequested ] = useState(false);
+  const unrequestFollow = useUnrequestFollow();
 
   const handleMessagesClick = () => {
     navigate("/messages");
@@ -30,6 +38,28 @@ const TopFivePosts = () => {
   const handleNotificationsClick = useCallback(() => {
     navigate("/notifications");
   }, [navigate]);
+
+
+  useEffect(() => {
+    const fetchRequestedStates = async () => {
+      const states = {};
+      for (const post of posts) {
+        try {
+          const userDoc = doc(firestore, 'users', post.createdBy);
+          const userSnap = await getDoc(userDoc);
+          const userData = userSnap.data();
+          states[post.createdBy] = userData.requested.includes(authUser.uid);
+        } catch (error) {
+          console.error(`Error fetching requested state for user ${post.createdBy}:`, error);
+        }
+      }
+      setRequestedStates(states);
+    };
+    if (authUser && posts.length > 0) {
+      fetchRequestedStates();
+    }
+  }, [posts, authUser]);
+
 
   useEffect(() => {
     const fetchFollowStates = async () => {
@@ -53,14 +83,74 @@ const TopFivePosts = () => {
   }, [posts, authUser]);
 
 
+  useEffect(() => {
+    const fetchPrivateStates = async () => {
+      const states = {};
+      for (const post of posts) {
+        try {
+          const userDoc = doc(firestore, 'users', post.createdBy);
+          const userSnap = await getDoc(userDoc);
+          const userData = userSnap.data();
+          states[post.createdBy] = userData.private || false;
+        } catch (error) {
+          console.error(`Error fetching follow state for user ${post.createdBy}:`, error);
+        }
+      }
+      setPrivateStates(states);
+    };
+
+    if (authUser && posts.length > 0) {
+      fetchPrivateStates();
+    }
+  }, [posts, authUser]);
+
+
+  // const handleFollowClick = async (userId) => {
+  //   const currentlyFollowing = followStates[userId];
+  //   await handleFollowUser(userId, currentlyFollowing);
+  //   setFollowStates(prevStates => ({
+  //     ...prevStates,
+  //     [userId]: !currentlyFollowing,
+  //   }));
+  // };
+
   const handleFollowClick = async (userId) => {
-    const currentlyFollowing = followStates[userId];
-    await handleFollowUser(userId, currentlyFollowing);
-    setFollowStates(prevStates => ({
-      ...prevStates,
-      [userId]: !currentlyFollowing,
-    }));
+    
+    const currentlyFollowed = followStates[userId];
+    const currentlyRequested = requestedStates[userId];
+    const isPrivate = privateStates[userId];
+
+    try {
+      const userDocRef = doc(firestore, "users", userId);
+      const userDocSnap = await getDoc(userDocRef);
+
+      if (userDocSnap.exists()) {
+        const profileData = userDocSnap.data();
+        setUserProfile(profileData);
+      } else {
+        console.error("User profile not found");
+      }
+
+      if (isPrivate) {
+        if (currentlyRequested)
+          unrequestFollow(userId);
+        setRequestedStates((prevStates) => ({
+          ...prevStates,
+          [userId]: !currentlyRequested,
+        }));
+      } else {
+        setFollowStates((prevStates) => ({
+          ...prevStates,
+          [userId]: !currentlyFollowed,
+        }));
+      }
+
+      await handleFollowUser(userProfile, userId, currentlyFollowed, !currentlyRequested);
+    } catch (error) {
+      console.error("Error updating follow status:", error);
+    }
   };
+
 
   return (
     <Container py={6} px={0} w={['100vw', null, '60vh']} pb={{base: "10vh", md: "60px"}} pt={{base: "2vh", md: "5px"}}>
@@ -151,6 +241,8 @@ const TopFivePosts = () => {
       {!isLoading && posts.length > 0 && posts.map((post, index) => (
         <FeedPostRank key={post.id} post={post} rank={index + 1} 
           isFollowing={followStates[post.createdBy] || false}
+          requested={requestedStates[post.createdBy] || false}
+          isPrivate={privateStates[post.createdBy] || false}
             onFollowClick={() => handleFollowClick(post.createdBy)}
         />
       ))}

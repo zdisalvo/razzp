@@ -146,7 +146,7 @@ const useFollowUserFP = () => {
 
             } else if (userProfile && authUser && userProfile.private) {
                 const userNotificationsRef = doc(firestore, "users", userId);
-
+                console.log(requested);
                 //console.log(authUser);
                 if (requested && authUser) {
                     await updateDoc(userToFollowRef, {
