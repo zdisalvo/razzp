@@ -115,7 +115,7 @@ const Convo = ({ userId, receivingUserId }) => {
           onClick={handleClick}
           cursor="pointer"
         >
-          <Text fontSize="lg" fontWeight="bold" color="#36454F">{receivingProfile.username}</Text>
+          <Text fontSize="lg" fontWeight="bold" color="gray.400">{receivingProfile.username}</Text>
           <Text fontSize="sm" fontWeight={incomingRead === false || incomingRead === null ? 'bold' : 'normal'}>
             {lastMessage ? `${lastMessage.substring(0, 37)}${lastMessage.length > 37 ? "..." : ""}` : "Say hi"}
           </Text>
