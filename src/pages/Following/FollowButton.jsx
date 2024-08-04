@@ -31,6 +31,8 @@ const FollowButton = ({ userProfile, isFollowing: initialIsFollowing, requested:
             setIsOptimisticUpdate(true);
         }
 
+        //console.log(userProfile);
+
         try {
             await handleFollowUser(userProfile, userProfile.uid, isFollowing, !requested);
         } catch (error) {
