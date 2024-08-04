@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Avatar, Button, Flex, Text, VStack, Container, IconButton, Heading, Spinner } from '@chakra-ui/react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretLeft } from "@fortawesome/free-solid-svg-icons";
@@ -19,7 +19,6 @@ const FollowingPage = () => {
 
     const authUser = useAuthStore((state) => state.user);
     const { handleFollowUser } = useFollowUserFP();
-    const [authChecked, setAuthChecked] = useState(false);
     const navigate = useNavigate();
     const { username } = useParams();
 
@@ -30,22 +29,18 @@ const FollowingPage = () => {
     };
 
     useEffect(() => {
-        // Check if authUser exists when component mounts
-        setAuthChecked(true);
-    
-      if ((userProfile?.private && !userProfile.followers.includes(authUser?.uid)) || !authUser) {
-        navigate(`/${username}`);
-      }
+        if ((userProfile?.private && !userProfile.followers.includes(authUser?.uid) && !(authUser?.uid === userProfile?.uid)) || !authUser) {
+            navigate(`/${username}`);
+        }
     }, [authUser, userProfile, navigate, username]);
 
-    // Function to validate and filter out invalid following users
-    const validateFollowing = async (followingIds) => {
-        const validFollowing = [];
-        const profiles = {};
-        const followState = {};
+    const validateFollowing = useCallback(async (followingIds) => {
+        try {
+            const validFollowing = [];
+            const profiles = {};
+            const followState = {};
 
-        for (const followingId of followingIds) {
-            try {
+            const promises = followingIds.map(async (followingId) => {
                 const followingRef = doc(firestore, 'users', followingId);
                 const followingDoc = await getDoc(followingRef);
 
@@ -54,23 +49,24 @@ const FollowingPage = () => {
                     followState[followingId] = authUser.following.includes(followingId);
                     validFollowing.push(followingId);
                 } else {
-                    //console.log("test");
-                    // Remove non-existent user from authUser's following list
                     const userRef = doc(firestore, 'users', userProfile.uid);
                     await updateDoc(userRef, {
-                        following: arrayRemove(followingId)
+                        following: arrayRemove(followingId),
                     });
                 }
-            } catch (error) {
-                console.error('Error fetching following user data:', error);
-                setError('Failed to validate following users');
-            }
-        }
+            });
 
-        setUserProfiles(profiles);
-        setFollowStates(followState);
-        return validFollowing;
-    };
+            await Promise.all(promises);
+
+            setUserProfiles(profiles);
+            setFollowStates(followState);
+            return validFollowing;
+        } catch (error) {
+            console.error('Error validating following users:', error);
+            setError('Failed to validate following users');
+            return [];
+        }
+    }, [authUser, userProfile]);
 
     useEffect(() => {
         const fetchFollowing = async () => {
@@ -78,6 +74,7 @@ const FollowingPage = () => {
                 try {
                     const userRef = doc(firestore, 'users', userProfile.uid);
                     const userDoc = await getDoc(userRef);
+
                     if (userDoc.exists()) {
                         const followingIds = userDoc.data().following || [];
                         const validFollowing = await validateFollowing(followingIds.reverse());
@@ -86,36 +83,6 @@ const FollowingPage = () => {
                 } catch (error) {
                     console.error('Error fetching following users:', error);
                     setError('Failed to fetch following users');
-                }
-            }
-        };
-
-        if (!profileLoading && userProfile) {
-            fetchFollowing();
-        }
-    }, [authUser, userProfile, profileLoading]);
-
-    useEffect(() => {
-        const fetchUserProfiles = async () => {
-            if (following.length > 0) {
-                try {
-                    const profiles = {};
-                    const followState = {};
-                    
-                    for (const followingId of following) {
-                        const followingRef = doc(firestore, 'users', followingId);
-                        const followingDoc = await getDoc(followingRef);
-                        if (followingDoc.exists()) {
-                            profiles[followingId] = followingDoc.data();
-                            followState[followingId] = authUser.following.includes(followingId);
-                        }
-                    }
-                    
-                    setUserProfiles(profiles);
-                    setFollowStates(followState);
-                } catch (error) {
-                    console.error('Error fetching user profiles:', error);
-                    setError('Failed to fetch user profiles');
                 } finally {
                     setLoading(false);
                 }
@@ -124,26 +91,26 @@ const FollowingPage = () => {
             }
         };
 
-        fetchUserProfiles();
-    }, [following, authUser]);
+        if (!profileLoading && userProfile) {
+            fetchFollowing();
+        }
+    }, [authUser, userProfile, profileLoading, validateFollowing]);
 
     const handleFollowClick = async (userId) => {
         const isCurrentlyFollowing = followStates[userId];
-        
-        // Optimistically update the state
-        setFollowStates(prevStates => ({
+
+        setFollowStates((prevStates) => ({
             ...prevStates,
-            [userId]: !isCurrentlyFollowing
+            [userId]: !isCurrentlyFollowing,
         }));
-        
+
         try {
             await handleFollowUser(userId, isCurrentlyFollowing);
         } catch (error) {
             console.error('Error updating follow status:', error);
-            // Rollback optimistic update in case of error
-            setFollowStates(prevStates => ({
+            setFollowStates((prevStates) => ({
                 ...prevStates,
-                [userId]: isCurrentlyFollowing
+                [userId]: isCurrentlyFollowing,
             }));
         }
     };
@@ -211,17 +178,6 @@ const FollowingPage = () => {
                                     <Text fontSize="sm">{profile?.fullName}</Text>
                                 </Link>
                             </VStack>
-                            {/* <Button
-                                ml="auto"
-                                onClick={() => handleFollowClick(userId)}
-                                bg={"#eb7734"}
-                                color={"white"}
-                                textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)"
-                                _hover={{ bg: "#c75e1f" }}
-                                size={{ base: "sm", md: "sm" }}
-                            >
-                                {isFollowing ? 'Unfollow' : 'Follow'}
-                            </Button> */}
                             <FollowButton
                                 userProfile={profile}
                                 isFollowing={isFollowing}

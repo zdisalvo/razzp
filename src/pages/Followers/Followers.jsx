@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Avatar, Button, Flex, Text, VStack, Container, Box, IconButton, Heading, Spinner } from '@chakra-ui/react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretLeft } from "@fortawesome/free-solid-svg-icons";
@@ -15,8 +15,8 @@ const FollowersPage = () => {
     const [followers, setFollowers] = useState([]);
     const [userProfiles, setUserProfiles] = useState({});
     const [followStates, setFollowStates] = useState({});
-    const [loading, setLoading] = useState(true); 
-    const [error, setError] = useState(null); // Add error state
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     const authUser = useAuthStore((state) => state.user);
     const { handleFollowUser } = useFollowUserFP();
@@ -28,19 +28,18 @@ const FollowersPage = () => {
     const { userProfile, isLoading: profileLoading, error: profileError } = useGetUserProfileByUsername(username);
 
     const handleGoBack = () => {
-        navigate(`/${username}`); // Navigate to the previous page
+        navigate(`/${username}`);
     };
 
     useEffect(() => {
-        // Check if authUser exists when component mounts
         setAuthChecked(true);
+        //console.log(!authUser || !(authUser.uid === userProfile.uid));
     
-      if ((userProfile?.private && !userProfile.followers.includes(authUser?.uid)) || !authUser || !(authUser.uid === userProfile.uid)) {
-        navigate(`/${username}`);
-      }
+        if ((userProfile?.private && !userProfile.followers.includes(authUser?.uid) && !(authUser.uid === userProfile.uid)) || !authUser ) {
+            navigate(`/${username}`);
+        }
     }, [authUser, userProfile, navigate, username]);
 
-    // Function to validate and filter out invalid followers
     const validateFollowers = async (followerIds) => {
         const validFollowers = [];
         const profiles = {};
@@ -56,7 +55,6 @@ const FollowersPage = () => {
                     followState[followerId] = authUser.following.includes(followerId);
                     validFollowers.push(followerId);
                 } else {
-                    // Remove non-existent follower from authUser's followers list
                     const userRef = doc(firestore, 'users', userProfile.uid);
                     await updateDoc(userRef, {
                         followers: arrayRemove(followerId)
@@ -73,65 +71,34 @@ const FollowersPage = () => {
         return validFollowers;
     };
 
-    useEffect(() => {
-        const fetchFollowers = async () => {
-            if (authUser && userProfile) {
-                try {
-                    const userRef = doc(firestore, 'users', userProfile.uid);
-                    const userDoc = await getDoc(userRef);
-                    if (userDoc.exists()) {
-                        const followerIds = userDoc.data().followers || [];
-                        const validFollowers = await validateFollowers(followerIds.reverse());
-                        setFollowers(validFollowers); // Update state to only include valid followers
-                    }
-                } catch (error) {
-                    console.error('Error fetching followers:', error);
-                    setError('Failed to fetch followers');
+    const fetchFollowers = useCallback(async () => {
+        if (authUser && userProfile) {
+            try {
+                const userRef = doc(firestore, 'users', userProfile.uid);
+                const userDoc = await getDoc(userRef);
+                if (userDoc.exists()) {
+                    const followerIds = userDoc.data().followers || [];
+                    const validFollowers = await validateFollowers(followerIds.reverse());
+                    setFollowers(validFollowers);
                 }
+            } catch (error) {
+                console.error('Error fetching followers:', error);
+                setError('Failed to fetch followers');
+            } finally {
+                setLoading(false);
             }
-        };
+        }
+    }, [authUser, userProfile]);
 
+    useEffect(() => {
         if (!profileLoading && userProfile) {
             fetchFollowers();
         }
-    }, [authUser, userProfile, profileLoading]);
-
-    useEffect(() => {
-        const fetchUserProfiles = async () => {
-            if (followers.length > 0) {
-                try {
-                    const profiles = {};
-                    const followState = {};
-                    
-                    for (const followerId of followers) {
-                        const followerRef = doc(firestore, 'users', followerId);
-                        const followerDoc = await getDoc(followerRef);
-                        if (followerDoc.exists()) {
-                            profiles[followerId] = followerDoc.data();
-                            followState[followerId] = authUser.following.includes(followerId);
-                        }
-                    }
-                    
-                    setUserProfiles(profiles);
-                    setFollowStates(followState);
-                } catch (error) {
-                    console.error('Error fetching user profiles:', error);
-                    setError('Failed to fetch user profiles');
-                } finally {
-                    setLoading(false);
-                }
-            } else {
-                setLoading(false);
-            }
-        };
-
-        fetchUserProfiles();
-    }, [followers, authUser]);
+    }, [authUser, userProfile, profileLoading, fetchFollowers]);
 
     const handleFollowClick = async (userId) => {
         const isCurrentlyFollowing = followStates[userId];
         
-        // Optimistically update the state
         setFollowStates(prevStates => ({
             ...prevStates,
             [userId]: !isCurrentlyFollowing
@@ -141,7 +108,6 @@ const FollowersPage = () => {
             await handleFollowUser(userId, isCurrentlyFollowing);
         } catch (error) {
             console.error('Error updating follow status:', error);
-            // Rollback optimistic update in case of error
             setFollowStates(prevStates => ({
                 ...prevStates,
                 [userId]: isCurrentlyFollowing
@@ -149,12 +115,10 @@ const FollowersPage = () => {
         }
     };
 
-
     const handleRemoveFollower = async (followerId) => {
         await removeFollower(followerId);
-        setFollowers(followers.filter((follower) => follower.uid === followerId));
-      };
-
+        setFollowers(followers.filter((follower) => follower !== followerId));
+    };
 
     const handleAvatarClick = async (userId) => {
         try {
@@ -219,37 +183,27 @@ const FollowersPage = () => {
                                     <Text fontSize="sm">{profile?.fullName}</Text>
                                 </Link>
                             </VStack>
-                            {/* <Button
-                                ml="auto"
-                                onClick={() => handleFollowClick(userId)}
-                                bg={"#eb7734"}
-                                color={"white"}
-                                textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)"
-                                _hover={{ bg: "#c75e1f" }}
-                                size={{ base: "sm", md: "sm" }}
-                            >
-                                {isFollowing ? 'Unfollow' : 'Follow'}
-                            </Button> */}
-                            {authUser && (authUser.uid === userProfile.uid) &&  (
-                                <Button
-                                ml="auto"
-                                onClick={() => handleRemoveFollower(userId)}
-                                bg={"red.400"}
-                                color={"white"}
-                                textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)"
-                                _hover={{ bg: "#c75e1f" }}
-                                size={{ base: "sm", md: "sm" }}
-                            >
-                                Remove
-                            </Button>
-
-                            )}
+                            <Flex ml="auto" gap={2}>
                             <FollowButton
                                 userProfile={profile}
                                 isFollowing={isFollowing}
                                 requested={authUser && profile.requested && profile.requested.includes(authUser.uid)}
-                                
                             />
+                            {authUser && (authUser.uid === userProfile.uid) && (
+                                <Button
+                                    ml="auto"
+                                    onClick={() => handleRemoveFollower(userId)}
+                                    bg={"red.400"}
+                                    color={"white"}
+                                    textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)"
+                                    _hover={{ bg: "#c75e1f" }}
+                                    size={{ base: "sm", md: "sm" }}
+                                >
+                                    Remove
+                                </Button>
+                            )}
+                            
+                            </Flex>
                         </Flex>
                     );
                 })}
