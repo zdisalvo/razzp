@@ -35,7 +35,7 @@ const FollowersPage = () => {
         // Check if authUser exists when component mounts
         setAuthChecked(true);
     
-      if ((userProfile?.private && !userProfile.followers.includes(authUser?.uid)) || !authUser) {
+      if ((userProfile?.private && !userProfile.followers.includes(authUser?.uid)) || !authUser || !(authUser.uid === userProfile.uid)) {
         navigate(`/${username}`);
       }
     }, [authUser, userProfile, navigate, username]);
@@ -248,6 +248,7 @@ const FollowersPage = () => {
                                 userProfile={profile}
                                 isFollowing={isFollowing}
                                 requested={authUser && profile.requested && profile.requested.includes(authUser.uid)}
+                                
                             />
                         </Flex>
                     );
