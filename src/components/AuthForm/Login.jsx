@@ -12,6 +12,8 @@ const Login = () => {
 		<>
 			<Input
 				placeholder='Email'
+				_placeholder={{ color: 'gray.500' }}
+				border="1px groove #888888"
 				fontSize={16}
 				type='email'
 				size={"sm"}
@@ -20,11 +22,13 @@ const Login = () => {
 				onChange={(e) => setInputs({ ...inputs, email: e.target.value })}
 				_focus={{ 
 					borderColor: 'transparent', // Make the border transparent
-					boxShadow: '0 0 0 1px rgba(244, 164, 96, 0.5)' // Simulate a thinner border with box-shadow
+					boxShadow: '0 0 0 2px rgba(244, 164, 96, 0.5)' // Simulate a thinner border with box-shadow
 				  }} 
 			/>
 			<Input
 				placeholder='Password'
+				_placeholder={{ color: 'gray.500' }}
+				border="1px groove #888888"
 				fontSize={16}
 				size={"sm"}
 				bg={"charcoal"}
@@ -33,7 +37,7 @@ const Login = () => {
 				onChange={(e) => setInputs({ ...inputs, password: e.target.value })}
 				_focus={{ 
 					borderColor: 'transparent', // Make the border transparent
-					boxShadow: '0 0 0 1px rgba(244, 164, 96, 0.5)' // Simulate a thinner border with box-shadow
+					boxShadow: '0 0 0 2px rgba(244, 164, 96, 0.5)' // Simulate a thinner border with box-shadow
 				  }} 
 			/>
 			{error && (
