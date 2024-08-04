@@ -97,7 +97,7 @@ const Spark = () => {
     }, [onClose]);
 
     return (
-        <Container py={6} px={0} w={['100vw', null, '60vh']} pb={{base: "5vh", md: "30px"}} pt={{base: "4vh", md: "20px"}}>
+        <Container py={6} px={0} w={['100vw', null, '60vh']} pb={{base: "5vh", md: "30px"}} pt={{base: "4vh", md: "20px"}} mt={{base: "10vh", md: "60px"}}>
             <Box position="fixed" top="0" right={{base: "0", md: "15vw"}} p={4} zIndex="docked" width="100%">
                 <Flex justifyContent="flex-end">
                 <IconButton

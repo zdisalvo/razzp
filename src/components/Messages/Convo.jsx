@@ -12,10 +12,15 @@ const Convo = ({ userId, receivingUserId }) => {
   const navigate = useNavigate();
   const setUserId = useMsgStore((state) => state.setUserId);
   const setReceivingUserId = useMsgStore((state) => state.setReceivingUserId);
+  const [convoItem, setConvoItem] = useState(null);
 
   const incomingRead = useIncomingReadStatus(userId, receivingUserId);
 
   const handleClick = () => {
+
+    if ((convoItem.messages.length === 1 && convoItem.messages[0].sendingUser === userId))
+      return;
+
     setUserId(userId);
     setReceivingUserId(receivingUserId);
     // Store IDs in localStorage
@@ -50,6 +55,7 @@ const Convo = ({ userId, receivingUserId }) => {
         if (messagesDoc.exists()) {
           const messagesData = messagesDoc.data();
           const convo = messagesData.messages.find(convo => convo.receivingUserId === receivingUserId);
+          setConvoItem(convo);
 
           if (convo) {
             const profileDocRef = doc(firestore, "users", receivingUserId);

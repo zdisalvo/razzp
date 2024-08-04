@@ -89,21 +89,37 @@ const SparkMessage = () => {
 
   // Format date to show only hours and minutes, removing leading zero for single-digit hours
   const formatTime = (timestamp) => {
-    if (timestamp) {
-      const date = new Date(timestamp.seconds * 1000);
-      let hours = date.getHours();
-      const minutes = date.getMinutes();
-      
-      // Format hours to remove leading zero for single-digit hours
-      const formattedHours = (hours % 12 || 12).toString(); // Convert 24-hour format to 12-hour format, ensuring 12-hour format shows 12 instead of 0
-      const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes; // Ensure minutes are always two digits
-      
-      const period = hours >= 12 ? 'PM' : 'AM'; // Determine AM/PM period
-      
+    const date = new Date(timestamp.seconds * 1000);
+    const now = new Date();
+    
+    const isSameDay = date.toDateString() === now.toDateString();
+    const isWithinLastWeek = date > new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+  
+    let hours = date.getHours();
+    const minutes = date.getMinutes();
+    const formattedHours = (hours % 12 || 12).toString();
+    const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+    const period = hours >= 12 ? 'PM' : 'AM';
+  
+    if (isSameDay) {
       return `${formattedHours}:${formattedMinutes} ${period}`;
     }
-    return "Unknown time";
+  
+    if (isWithinLastWeek) {
+      const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+      return `${daysOfWeek[date.getDay()]} ${formattedHours}:${formattedMinutes} ${period}`;
+    }
+  
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    return `${months[date.getMonth()]} ${date.getDate()} ${formattedHours}:${formattedMinutes} ${period}`;
   };
+
+
+  const showTime = (prevTimestamp, currTimestamp) => {
+    //console.log(currTimestamp);
+    //console.log(prevTimestamp);
+    return Math.abs(currTimestamp.seconds - prevTimestamp.seconds) >= 3600; // 3600000 ms = 1 hour
+};
 
   return (
     <Container  w={['100vw', null, '80vh']} mt={{ base: "3vh", md: "30px" }} mb={{ base: "10vh", md: "60px" }}>
@@ -137,7 +153,11 @@ const SparkMessage = () => {
         bg="#d3e3f5"
         onScroll={handleScroll} // Attach scroll event listener
       >
-        {messages.length > 0 && messages.map((msg, index) => (
+        {messages.map((msg, index) => {
+                const prevMsg = index > 0 ? messages[index - 1] : null;
+                const showTimestamp = prevMsg && showTime(prevMsg.timeStamp, msg.timeStamp);
+                
+                return (
           <Box
             key={index}
             alignSelf={msg.sendingUser === userId ? "flex-end" : "flex-start"}
@@ -165,10 +185,11 @@ const SparkMessage = () => {
             color={msg.sendingUser === userId ? "white" : "gray.500"}
             textAlign={msg.sendingUser === userId ? "right" : "left"}
             >
-              {(formatTime(msg.timeStamp) !== "12:NaN AM") ? formatTime(msg.timeStamp) : ""} {/* Display formatted time */}
+              {(formatTime(msg.timeStamp) !== "12:NaN AM" && (showTimestamp || index === 0)) ? formatTime(msg.timeStamp) : ""} {/* Display formatted time */}
             </Text>
           </Box>
-        ))}
+        );
+      })}
       </VStack>
       <Flex mt={4}>
         <Input

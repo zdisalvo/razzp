@@ -235,15 +235,15 @@ const SparkMatch = ({ userId, matchedUserId }) => {
           onClick={handleClick}
           cursor="pointer"
         >
-          {lastMessage &&(
+          {(lastMessage || matchExpired) &&(
           <Text fontWeight="bold">{matchedProfile.name}</Text>
         )}
-          <Text fontWeight={(!lastMessage || lastMessage.sendingUser !== userId) ? "bold" : "regular"}>{lastMessage ? `${lastMessage.substring(0, 37)}${lastMessage.length > 37 ? "..." : ""}` : `Say hi to ${matchedProfile.name}`}</Text>
+          <Text fontWeight={(!lastMessage || lastMessage.sendingUser !== userId) ? "bold" : "regular"}>{lastMessage ? `${lastMessage.substring(0, 37)}${lastMessage.length > 37 ? "..." : ""}` : (!matchExpired ? `Say hi to ${matchedProfile.name}` : "")}</Text>
 
         </Box>
         {matchItem.messages.length <= 1 && (
           <Box display="flex-end" mr={4}>
-            <Text fontSize="sm" color="gray.400" >Expires in {timeRemaining}</Text>
+            <Text fontSize="sm" color="gray.400" >{!matchExpired ? "Expires in " : ""} {timeRemaining}</Text>
           </Box>
         )}
         <Box>
