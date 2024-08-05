@@ -41,8 +41,7 @@ const PostHeader = ({ post, initialIsFollowing, initialIsRequested, onFollowClic
   }));
   
 
-// console.log(requested);
-// console.log(post.createdBy);
+
 //   console.log(userProfile.uid);
 //   console.log(authUser.uid);
 
@@ -73,7 +72,11 @@ useEffect(() => {
 
 
 
+
 const handleFollowClick = async () => {
+  console.log(isPrivate);
+  console.log(post.createdBy);
+
   if (!isPrivate) {
     setIsFollowing(prev => !prev);
   } else {

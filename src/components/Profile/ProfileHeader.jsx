@@ -22,6 +22,7 @@ import useDeleteUser from "../../hooks/useDeleteUser";
 import useSetPrivateProfile from "../../hooks/useSetPrivateProfile";
 import useSetPublicProfile from "../../hooks/useSetPublicProfile";
 import useUnrequestFollow from "../../hooks/useUnrequestFollow";
+import useHasRequestedFollow from "../../hooks/useHasRequestedFollow";
 
 
 const ProfileHeader = ({ username, page }) => {
@@ -62,12 +63,15 @@ const ProfileHeader = ({ username, page }) => {
 	const { setPublic, isLoading: settingPublic } = useSetPublicProfile();
 	const [requested, setRequested ] = useState(false);
 	const unrequestFollow = useUnrequestFollow();
+	//const hasRequested = useHasRequestedFollow(userProfile.uid);
 
 	useState(() => {
 		if (userProfile && authUser && userProfile.requested) {
 		  setRequested(userProfile.requested.includes(authUser.uid)); // Ensure the user data is up-to-date
 		}
 	  }, [authUser, fetchUserData]);
+
+	  //console.log(requested);
 
 	useEffect(() => {
 		if (authUser) {
