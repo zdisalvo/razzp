@@ -6,6 +6,7 @@ import useFollowUserFP from "../../hooks/useFollowUserFP";
 import { firestore } from "../../firebase/firebase";
 import { doc, getDoc } from "firebase/firestore";
 import useAuthStore from "../../store/authStore";
+import useUnrequestFollow from "../../hooks/useUnrequestFollow";
 
 
 const FeedPostsOrig = () => {
@@ -13,6 +14,10 @@ const FeedPostsOrig = () => {
   const { isLoading, posts } = useGetFeedPosts();
   const { isUpdating, handleFollowUser } = useFollowUserFP();
   const [followStates, setFollowStates] = useState({});
+  const [requestedStates, setRequestedStates] = useState({});
+  const [privateStates, setPrivateStates] = useState({});
+  const unrequestFollow = useUnrequestFollow();
+  const [userProfile, setUserProfile] = useState(null);
 
 
   useEffect(() => {
@@ -37,14 +42,89 @@ const FeedPostsOrig = () => {
   }, [posts, authUser]);
 
 
-  const handleFollowClick = async (userId) => {
-    const currentlyFollowing = followStates[userId];
-    await handleFollowUser(userId, currentlyFollowing);
-    setFollowStates(prevStates => ({
-      ...prevStates,
-      [userId]: !currentlyFollowing,
-    }));
+  useEffect(() => {
+    const fetchRequestedStates = async () => {
+      const states = {};
+      for (const post of posts) {
+        try {
+          const userDoc = doc(firestore, 'users', post.createdBy);
+          const userSnap = await getDoc(userDoc);
+          const userData = userSnap.data();
+          states[post.createdBy] = userData.requested.includes(authUser.uid);
+        } catch (error) {
+          console.error(`Error fetching requested state for user ${post.createdBy}:`, error);
+        }
+      }
+      setRequestedStates(states);
+    };
+
+  if (authUser && posts.length > 0) {
+    fetchRequestedStates();
+  }
+}, [posts, authUser]);
+
+
+useEffect(() => {
+  const fetchPrivateStates = async () => {
+    const states = {};
+    for (const post of posts) {
+      try {
+        const userDoc = doc(firestore, 'users', post.createdBy);
+        const userSnap = await getDoc(userDoc);
+        const userData = userSnap.data();
+        states[post.createdBy] = userData.private || false;
+      } catch (error) {
+        console.error(`Error fetching follow state for user ${post.createdBy}:`, error);
+      }
+    }
+    setPrivateStates(states);
   };
+
+  if (authUser && posts.length > 0) {
+    fetchPrivateStates();
+  }
+}, [posts, authUser]);
+
+
+const handleFollowClick = async (userId) => {
+    
+  const currentlyFollowed = followStates[userId];
+  const currentlyRequested = requestedStates[userId];
+  const isPrivate = privateStates[userId];
+
+  //console.log("t5posts");
+  //console.log(isPrivate);
+
+  try {
+    const userDocRef = doc(firestore, "users", userId);
+    const userDocSnap = await getDoc(userDocRef);
+
+    if (userDocSnap.exists()) {
+      const profileData = userDocSnap.data();
+      setUserProfile(profileData);
+    } else {
+      console.error("User profile not found");
+    }
+
+    if (isPrivate) {
+      if (currentlyRequested)
+        unrequestFollow(userId);
+      setRequestedStates((prevStates) => ({
+        ...prevStates,
+        [userId]: !currentlyRequested,
+      }));
+    } else {
+      setFollowStates((prevStates) => ({
+        ...prevStates,
+        [userId]: !currentlyFollowed,
+      }));
+    }
+
+    await handleFollowUser(userProfile, userId, currentlyFollowed, !currentlyRequested);
+  } catch (error) {
+    console.error("Error updating follow status:", error);
+  }
+};
 
 
 
@@ -69,6 +149,8 @@ const FeedPostsOrig = () => {
       {!isLoading && posts.length > 0 && posts.map((post) => 
       <FeedPost key={post.id} post={post}  
       isFollowing={followStates[post.createdBy] || false}
+      requested={requestedStates[post.createdBy] || false}
+      isPrivate={privateStates[post.createdBy] || false}
       onFollowClick={() => handleFollowClick(post.createdBy)}
       
       />)}

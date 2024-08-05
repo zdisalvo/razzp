@@ -30,6 +30,7 @@ const TopFivePosts = () => {
   const [userProfile, setUserProfile] = useState(null);
   //const [requested, setRequested ] = useState(false);
   const unrequestFollow = useUnrequestFollow();
+  const [pageLoaded, setPageLoaded] = useState(false);
 
   const handleMessagesClick = () => {
     navigate("/messages");
@@ -40,67 +41,74 @@ const TopFivePosts = () => {
   }, [navigate]);
 
 
+  // useEffect(() => {
+  //   const fetchRequestedStates = async () => {
+  //     const states = {};
+  //     for (const post of posts) {
+  //       try {
+  //         const userDoc = doc(firestore, 'users', post.createdBy);
+  //         const userSnap = await getDoc(userDoc);
+  //         const userData = userSnap.data();
+  //         states[post.createdBy] = userData.requested.includes(authUser.uid);
+  //       } catch (error) {
+  //         console.error(`Error fetching requested state for user ${post.createdBy}:`, error);
+  //       }
+  //     }
+  //     setRequestedStates(states);
+  //   };
+  //   if (authUser && posts.length > 0) {
+  //     fetchRequestedStates();
+  //   }
+  // }, [posts, authUser]);
+
+
+  // useEffect(() => {
+  //   const fetchFollowStates = async () => {
+  //     const states = {};
+  //     for (const post of posts) {
+  //       try {
+  //         const userDoc = doc(firestore, 'users', post.createdBy);
+  //         const userSnap = await getDoc(userDoc);
+  //         const userData = userSnap.data();
+  //         states[post.createdBy] = userData.followers.includes(authUser.uid);
+  //       } catch (error) {
+  //         console.error(`Error fetching follow state for user ${post.createdBy}:`, error);
+  //       }
+  //     }
+  //     setFollowStates(states);
+  //   };
+
+  //   if (authUser && posts.length > 0) {
+  //     fetchFollowStates();
+  //   }
+  // }, [posts, authUser]);
+
+
   useEffect(() => {
-    const fetchRequestedStates = async () => {
-      const states = {};
+    const fetchStates = async () => {
+      const pStates = {};
+      const fStates = {};
+      const rStates = {};
       for (const post of posts) {
         try {
           const userDoc = doc(firestore, 'users', post.createdBy);
           const userSnap = await getDoc(userDoc);
           const userData = userSnap.data();
-          states[post.createdBy] = userData.requested.includes(authUser.uid);
-        } catch (error) {
-          console.error(`Error fetching requested state for user ${post.createdBy}:`, error);
-        }
-      }
-      setRequestedStates(states);
-    };
-    if (authUser && posts.length > 0) {
-      fetchRequestedStates();
-    }
-  }, [posts, authUser]);
-
-
-  useEffect(() => {
-    const fetchFollowStates = async () => {
-      const states = {};
-      for (const post of posts) {
-        try {
-          const userDoc = doc(firestore, 'users', post.createdBy);
-          const userSnap = await getDoc(userDoc);
-          const userData = userSnap.data();
-          states[post.createdBy] = userData.followers.includes(authUser.uid);
+          pStates[post.createdBy] = userData.private || false;
+          fStates[post.createdBy] = userData.followers.includes(authUser.uid);
+          rStates[post.createdBy] = userData.requested.includes(authUser.uid);
         } catch (error) {
           console.error(`Error fetching follow state for user ${post.createdBy}:`, error);
         }
       }
-      setFollowStates(states);
+      setPrivateStates(pStates);
+      setFollowStates(fStates);
+      setRequestedStates(rStates);
+      setPageLoaded(true);
     };
 
     if (authUser && posts.length > 0) {
-      fetchFollowStates();
-    }
-  }, [posts, authUser]);
-
-
-  useEffect(() => {
-    const fetchPrivateStates = async () => {
-      const states = {};
-      for (const post of posts) {
-        try {
-          const userDoc = doc(firestore, 'users', post.createdBy);
-          const userSnap = await getDoc(userDoc);
-          const userData = userSnap.data();
-          states[post.createdBy] = userData.private || false;
-        } catch (error) {
-          console.error(`Error fetching follow state for user ${post.createdBy}:`, error);
-        }
-      }
-      setPrivateStates(states);
-    };
-
-    if (authUser && posts.length > 0) {
-      fetchPrivateStates();
+      fetchStates();
     }
   }, [posts, authUser]);
 
@@ -115,6 +123,9 @@ const TopFivePosts = () => {
   // };
 
   const handleFollowClick = async (userId) => {
+
+    if (!pageLoaded)
+      return;
     
     const currentlyFollowed = followStates[userId];
     const currentlyRequested = requestedStates[userId];
@@ -124,17 +135,20 @@ const TopFivePosts = () => {
     //console.log(isPrivate);
 
     try {
-      const userDocRef = doc(firestore, "users", userId);
-      const userDocSnap = await getDoc(userDocRef);
+    //   const userDocRef = doc(firestore, "users", userId);
+    //   const userDocSnap = await getDoc(userDocRef);
 
-      if (userDocSnap.exists()) {
-        const profileData = userDocSnap.data();
-        setUserProfile(profileData);
-      } else {
-        console.error("User profile not found");
-      }
+    //   if (userDocSnap.exists()) {
+    //     const profileData = userDocSnap.data();
+    //     setUserProfile(profileData);
+    //   } else {
+    //     console.error("User profile not found");
+    //   }
+    //   if (!userProfile)
+    //     return;
 
       if (isPrivate) {
+        console.log("test1");
         if (currentlyRequested)
           unrequestFollow(userId);
         setRequestedStates((prevStates) => ({
@@ -142,13 +156,18 @@ const TopFivePosts = () => {
           [userId]: !currentlyRequested,
         }));
       } else {
+        console.log("test2");
         setFollowStates((prevStates) => ({
           ...prevStates,
           [userId]: !currentlyFollowed,
         }));
       }
-
-      await handleFollowUser(userProfile, userId, currentlyFollowed, !currentlyRequested);
+      console.log(userProfile);
+      console.log(userId);
+      console.log(currentlyFollowed);
+      console.log(!currentlyRequested);
+      //await handleFollowUser(userProfile, userId, currentlyFollowed, !currentlyRequested);
+      console.log("test3");
     } catch (error) {
       console.error("Error updating follow status:", error);
     }
@@ -243,9 +262,9 @@ const TopFivePosts = () => {
 
       {!isLoading && posts.length > 0 && posts.map((post, index) => (
         <FeedPostRank key={post.id} post={post} rank={index + 1} 
-          isFollowing={followStates[post.createdBy] || false}
-          requested={requestedStates[post.createdBy] || false}
-          isPrivate={privateStates[post.createdBy] || false}
+          isFollowing={followStates[post.createdBy]}
+          requested={requestedStates[post.createdBy]}
+          isPrivate={privateStates[post.createdBy]}
             onFollowClick={() => handleFollowClick(post.createdBy)}
         />
       ))}

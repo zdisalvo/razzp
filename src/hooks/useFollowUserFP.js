@@ -26,6 +26,8 @@ const useFollowUserFP = () => {
         const currentUserRef = doc(firestore, 'users', authUser.uid);
         const userToFollowRef = doc(firestore, 'users', userId);
 
+        
+
         try {
             if ((!requested || isFollowing) && userProfile && authUser) {
                 // Unfollow
@@ -36,6 +38,8 @@ const useFollowUserFP = () => {
                     followers: arrayRemove(authUser.uid),
                     requested: arrayRemove(authUser.uid),
                 });
+
+                console.log("unfollow");
                 // setAuthUser((prevUser) => ({
                 //     ...prevUser,
                 //     following: prevUser.following.filter((id) => id !== userId),

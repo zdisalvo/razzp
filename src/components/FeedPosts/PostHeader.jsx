@@ -16,6 +16,7 @@ import useShowToast from "../../hooks/useShowToast";
 import { firestore, storage } from "../../firebase/firebase"; 
 import useSparkProfileStore from "../../store/sparkProfileStore";
 //import useDeleteSelectedImage from "../../hooks/useDeleteSelectedImage";
+import useUnrequestFollow from "../../hooks/useUnrequestFollow";
 
 
 
@@ -28,6 +29,7 @@ const PostHeader = ({ post, initialIsFollowing, initialIsRequested, onFollowClic
 	//const { isFollowing: initialIsFollowing, handleFollowUser } = useFollowUserFP();
 	//const [isFollowing, setIsFollowing] = useState(initialIsFollowing);
   const [isOptimisticUpdate, setIsOptimisticUpdate] = useState(false);
+  const { isUpdating, handleFollowUser } = useFollowUserFP();
 
   const authUser = useAuthStore((state) => state.user);
   const showToast = useShowToast();
@@ -39,6 +41,7 @@ const PostHeader = ({ post, initialIsFollowing, initialIsRequested, onFollowClic
   const { deleteSelectedImage } = useSparkProfileStore((state) => ({
     deleteSelectedImage: state.deleteSelectedImage
   }));
+  const unrequestFollow = useUnrequestFollow;
   
 
 
@@ -85,6 +88,13 @@ const handleFollowClick = async () => {
   setIsOptimisticUpdate(true);
   try {
     await onFollowClick(); // Use the passed handler
+    await handleFollowUser(creatorProfile, post.createdBy, initialIsFollowing, !initialIsRequested);
+    // if (!initialIsRequested)
+    //   unrequestFollow();
+    //setIsFollowing(!isFollowing);
+    //setRequested(!requested);
+
+    //console.log("header");
   } catch (error) {
     // Optionally revert optimistic update if necessary
     if (!isPrivate) {
