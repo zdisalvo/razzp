@@ -83,7 +83,11 @@ const EditProfile = ({ isOpen, onClose }) => {
 
 				//console.log(formData.username);
 	
-				if (!querySnapshot.empty) {
+				if (!querySnapshot.empty || formData.username === "notifications"
+                    || formData.username === "top5" || formData.username === "auth"
+                    || formData.username === "spark" || formData.username === "messages"
+                    || formData.username === "search" || formData.username === "blocked"
+                ) {
 					showToast("Error", "This username is taken", "error");
 					return;
 				}
