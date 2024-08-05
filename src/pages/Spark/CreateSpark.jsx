@@ -17,7 +17,9 @@ import {
   CloseButton,
   useBreakpointValue,
   Textarea,
-  IconButton
+  IconButton,
+  Collapse,
+  useDisclosure,
 } from "@chakra-ui/react";
 import useAuthStore from "../../store/authStore";
 import useCreateSparkProfile from "../../hooks/useCreateSparkProfile";
@@ -40,6 +42,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { firestore } from '../../firebase/firebase';
+import { FaPlus, FaMinus } from "react-icons/fa";
 
 
 const CreateSpark = () => {
@@ -71,6 +74,7 @@ const CreateSpark = () => {
  const today = new Date();
   const minAgeDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
   const maxDate = minAgeDate.toISOString().split("T")[0];
+  const { isOpen: isInterestsOpen, onToggle: toggleInterests } = useDisclosure();
 
   
 
@@ -763,7 +767,7 @@ const handleLookingForClick = (lookingForSelection) => {
 
 //FAMILY PLANS
 
-const familyPlansOptions = ["Don't want", "Open to kids", "Want kids", "Not sure"];
+const familyPlansOptions = ["Don't want kids", "Open to kids", "Want kids", "Not sure"];
 
 const handleFamilyPlansClick = (family_plans) => {
   setFormData((prevState) => ({
@@ -990,7 +994,7 @@ const handlePronounsClick = (pronouns) => {
           Save Profile
         </Button>
           <FormControl id="name" mb={4}>
-            <FormLabel>Name</FormLabel>
+            <FormLabel color="#eb7734">Name</FormLabel>
             <Input
               type="text"
               name="name"
@@ -1006,7 +1010,7 @@ const handlePronounsClick = (pronouns) => {
           </FormControl>
 
           <FormControl id="bio" mb={4}>
-            <FormLabel>Bio</FormLabel>
+            <FormLabel color="#eb7734">Bio</FormLabel>
             <Textarea
               name="bio"
               rows={5}
@@ -1032,7 +1036,7 @@ const handlePronounsClick = (pronouns) => {
 
             <FormControl id="uploadedImages" mb={4}>
             <Stack direction="row" align="baseline">
-            <FormLabel>Upload Pictures</FormLabel>
+            <FormLabel color="#eb7734">Upload Pictures</FormLabel>
             <Text fontSize="sm" color="gray.500">
             (Select up to 7)
           </Text>
@@ -1166,7 +1170,7 @@ const handlePronounsClick = (pronouns) => {
           
           <FormControl id="selectedImages" mb={4}>
           <Stack direction="row" align="baseline">
-            <FormLabel>Select from Razzp Profile</FormLabel>
+            <FormLabel color="#eb7734">Select from Razzp Profile</FormLabel>
             <Text fontSize="sm" color="gray.500">
             (Select up to 5)
           </Text>
@@ -1267,7 +1271,7 @@ const handlePronounsClick = (pronouns) => {
           
           <FormControl id="profilePics">
           <Stack direction="row" align="baseline">
-            <FormLabel>Set Order</FormLabel>
+            <FormLabel color="#eb7734">Set Order</FormLabel>
             <Text fontSize="sm" color="gray.500">
             Drag pics to change ordering
           </Text>
@@ -1280,7 +1284,7 @@ const handlePronounsClick = (pronouns) => {
           
             {sparkProfileView && !sparkProfileView.birthday &&
           <FormControl id="birthday">
-            <FormLabel>Birthday</FormLabel>
+            <FormLabel color="#eb7734">Birthday</FormLabel>
             <Input
               type="date"
               name="birthday"
@@ -1297,7 +1301,7 @@ const handlePronounsClick = (pronouns) => {
         }
 
           <FormControl id="work" >
-            <FormLabel>Work</FormLabel>
+            <FormLabel color="#eb7734">Work</FormLabel>
             <Input
               type="text"
               name="work"
@@ -1312,7 +1316,7 @@ const handlePronounsClick = (pronouns) => {
           </FormControl>
 
           <FormControl id="school" mb={4}>
-            <FormLabel>School</FormLabel>
+            <FormLabel color="#eb7734">School</FormLabel>
             <Input
               type="text"
               name="school"
@@ -1327,7 +1331,7 @@ const handlePronounsClick = (pronouns) => {
           </FormControl>
 
           <FormControl id="gender" mb={4}>
-        <FormLabel>Gender</FormLabel>
+        <FormLabel color="#eb7734">Gender</FormLabel>
         <Box display="flex" flexWrap="wrap">
           {genderOptions.map((gender) => (
             <Button
@@ -1357,7 +1361,7 @@ const handlePronounsClick = (pronouns) => {
 
           <FormControl id="interested_in" mb={4}>
           <Stack direction="row" align="baseline">
-          <FormLabel>Interested In</FormLabel>
+          <FormLabel color="#eb7734">Interested In</FormLabel>
           <Text fontSize="sm" color="gray.500">
             (Won't show on profile)
           </Text>
@@ -1383,7 +1387,7 @@ const handlePronounsClick = (pronouns) => {
           </FormControl>
 
           <FormControl id="location" mb={4}>
-            <FormLabel>Location</FormLabel>
+            <FormLabel color="#eb7734">Location</FormLabel>
             <Select
                 name="location"
                 isClearable
@@ -1399,7 +1403,7 @@ const handlePronounsClick = (pronouns) => {
         </FormControl>
 
           <FormControl id="hometown" mb={4}>
-            <FormLabel>Hometown</FormLabel>
+            <FormLabel color="#eb7734">Hometown</FormLabel>
             <Select
                 name="location"
                 isClearable
@@ -1415,7 +1419,7 @@ const handlePronounsClick = (pronouns) => {
           </FormControl>
 
           <FormControl id="languages" mb={4}>
-  <FormLabel>Languages</FormLabel>
+  <FormLabel color="#eb7734">Languages</FormLabel>
   <Select
     isMulti
     name="languages"
@@ -1494,7 +1498,7 @@ const handlePronounsClick = (pronouns) => {
 
           <FormControl id="ethnicity" mb={4}>
           <Stack direction="row" align="baseline">
-            <FormLabel>Ethnicity</FormLabel>
+            <FormLabel color="#eb7734">Ethnicity</FormLabel>
             <Text fontSize="sm" color="gray.500">
             (Select up to 5)
           </Text>
@@ -1520,7 +1524,7 @@ const handlePronounsClick = (pronouns) => {
           </FormControl>
 
           <FormControl id="height" mb={4}>
-            <FormLabel>Height</FormLabel>
+            <FormLabel color="#eb7734">Height</FormLabel>
             <Select
              
             name="height"
@@ -1592,7 +1596,7 @@ const handlePronounsClick = (pronouns) => {
           </FormControl>
 
           <FormControl id="exercise" mb={4}>
-            <FormLabel>Exercise</FormLabel>
+            <FormLabel color="#eb7734">Exercise</FormLabel>
             <Box display="flex" flexWrap="wrap">
           {exerciseOptions.map((exercise) => (
             <Button
@@ -1614,7 +1618,7 @@ const handlePronounsClick = (pronouns) => {
           </FormControl>
 
           <FormControl id="education_level" mb={4}>
-            <FormLabel>Education Level</FormLabel>
+            <FormLabel color="#eb7734">Education Level</FormLabel>
             <Box display="flex" flexWrap="wrap">
           {educationOptions.map((education_level) => (
             <Button
@@ -1636,7 +1640,7 @@ const handlePronounsClick = (pronouns) => {
           </FormControl>
 
           <FormControl id="drinking" mb={4}>
-            <FormLabel>Drinking</FormLabel>
+            <FormLabel color="#eb7734">Drinking</FormLabel>
             <Box display="flex" flexWrap="wrap">
           {drinkingOptions.map((drinking) => (
             <Button
@@ -1658,7 +1662,7 @@ const handlePronounsClick = (pronouns) => {
           </FormControl>
 
           <FormControl id="smoking" mb={4}>
-            <FormLabel>Smoking</FormLabel>
+            <FormLabel color="#eb7734">Smoking</FormLabel>
             <Box display="flex" flexWrap="wrap">
           {smokingOptions.map((smoking) => (
             <Button
@@ -1680,7 +1684,7 @@ const handlePronounsClick = (pronouns) => {
           </FormControl>
 
           <FormControl id="cannabis" mb={4}>
-            <FormLabel>Cannabis</FormLabel>
+            <FormLabel color="#eb7734">Cannabis</FormLabel>
             <Box display="flex" flexWrap="wrap">
           {cannabisOptions.map((cannabis) => (
             <Button
@@ -1703,7 +1707,7 @@ const handlePronounsClick = (pronouns) => {
 
           <FormControl id="looking_for" mb={4}>
           <Stack direction="row" align="baseline">
-            <FormLabel>Open To</FormLabel>
+            <FormLabel color="#eb7734">Open To</FormLabel>
             <Text fontSize="sm" color="gray.500">
             (Select up to 3)
           </Text>
@@ -1729,7 +1733,7 @@ const handlePronounsClick = (pronouns) => {
           </FormControl>
 
           <FormControl id="family_plans" mb={4}>
-            <FormLabel>Family Plans</FormLabel>
+            <FormLabel color="#eb7734">Family Plans</FormLabel>
             <Box display="flex" flexWrap="wrap">
           {familyPlansOptions.map((family_plans) => (
             <Button
@@ -1751,7 +1755,7 @@ const handlePronounsClick = (pronouns) => {
           </FormControl>
 
           <FormControl id="have_kids" mb={4}>
-            <FormLabel>Have Kids</FormLabel>
+            <FormLabel color="#eb7734">Have Kids</FormLabel>
             <Box display="flex" flexWrap="wrap">
           {haveKidsOptions.map((have_kids) => (
             <Button
@@ -1773,7 +1777,7 @@ const handlePronounsClick = (pronouns) => {
           </FormControl>
 
           <FormControl id="star_sign" mb={4}>
-            <FormLabel>Zodiac Sign</FormLabel>
+            <FormLabel color="#eb7734">Zodiac Sign</FormLabel>
             <Box display="flex" flexWrap="wrap">
           {starSignOptions.map((star_sign) => (
             <Button
@@ -1795,7 +1799,7 @@ const handlePronounsClick = (pronouns) => {
           </FormControl>
 
           <FormControl id="politics" mb={4}>
-            <FormLabel>Politics</FormLabel>
+            <FormLabel color="#eb7734">Politics</FormLabel>
             <Box display="flex" flexWrap="wrap">
           {politicsOptions.map((politics) => (
             <Button
@@ -1817,7 +1821,7 @@ const handlePronounsClick = (pronouns) => {
           </FormControl>
 
           <FormControl id="religion" mb={4}>
-            <FormLabel>Religion</FormLabel>
+            <FormLabel color="#eb7734">Religion</FormLabel>
             <Box display="flex" flexWrap="wrap">
           {religionOptions.map((religion) => (
             <Button
@@ -1839,7 +1843,7 @@ const handlePronounsClick = (pronouns) => {
           </FormControl>
 
           <FormControl id="pronouns" mb={4}>
-            <FormLabel>Pronouns</FormLabel>
+            <FormLabel color="#eb7734">Pronouns</FormLabel>
             <Box display="flex" flexWrap="wrap">
           {pronounsOptions.map((pronouns) => (
             <Button
@@ -1861,15 +1865,21 @@ const handlePronounsClick = (pronouns) => {
           </FormControl>
 
           
-
-
+          <Box mb={6} display="flex" justifyContent="flex-start">
+          <Button size="md" onClick={toggleInterests} leftIcon={isInterestsOpen ? <FaMinus /> : <FaPlus />}>
+            Interests
+          </Button>
+          </Box>
+          <Collapse in={isInterestsOpen} animateOpacity>
           <FormControl id="interests" mb={2}>
           <Stack direction="row" align="baseline">
-            <FormLabel>Interests</FormLabel>
+            <FormLabel color="#eb7734">Interests</FormLabel>
             <Text fontSize="sm" color="gray.500">
             (Select up to 6)
           </Text>
           </Stack>
+
+
             <Box>
       {Object.entries(emojiCategories).map(([category, emojis]) => (
         <Box key={category} mb={8}>
@@ -1898,6 +1908,7 @@ const handlePronounsClick = (pronouns) => {
       ))}
     </Box>
           </FormControl>
+          </Collapse>
 
           <Button
           type="submit"
