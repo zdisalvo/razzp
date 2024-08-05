@@ -77,8 +77,8 @@ useEffect(() => {
 
 
 const handleFollowClick = async () => {
-  console.log(isPrivate);
-  console.log(post.createdBy);
+  // console.log(isPrivate);
+  // console.log(post.createdBy);
 
   if (!isPrivate) {
     setIsFollowing(prev => !prev);

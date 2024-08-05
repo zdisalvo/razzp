@@ -20,68 +20,32 @@ const FeedPostsOrig = () => {
   const [userProfile, setUserProfile] = useState(null);
 
 
-  useEffect(() => {
-    const fetchFollowStates = async () => {
-      const states = {};
-      for (const post of posts) {
-        try {
-          const userDoc = doc(firestore, 'users', post.createdBy);
-          const userSnap = await getDoc(userDoc);
-          const userData = userSnap.data();
-          states[post.createdBy] = userData.followers.includes(authUser.uid);
-        } catch (error) {
-          console.error(`Error fetching follow state for user ${post.createdBy}:`, error);
-        }
-      }
-      setFollowStates(states);
-    };
-
-    if (authUser && posts.length > 0) {
-      fetchFollowStates();
-    }
-  }, [posts, authUser]);
-
-
-  useEffect(() => {
-    const fetchRequestedStates = async () => {
-      const states = {};
-      for (const post of posts) {
-        try {
-          const userDoc = doc(firestore, 'users', post.createdBy);
-          const userSnap = await getDoc(userDoc);
-          const userData = userSnap.data();
-          states[post.createdBy] = userData.requested.includes(authUser.uid);
-        } catch (error) {
-          console.error(`Error fetching requested state for user ${post.createdBy}:`, error);
-        }
-      }
-      setRequestedStates(states);
-    };
-
-  if (authUser && posts.length > 0) {
-    fetchRequestedStates();
-  }
-}, [posts, authUser]);
-
 
 useEffect(() => {
-  const fetchPrivateStates = async () => {
-    const states = {};
+  const fetchStates = async () => {
+    const pStates = {};
+    const fStates = {};
+    const rStates = {};
     for (const post of posts) {
       try {
         const userDoc = doc(firestore, 'users', post.createdBy);
         const userSnap = await getDoc(userDoc);
         const userData = userSnap.data();
-        states[post.createdBy] = userData.private || false;
+        pStates[post.createdBy] = userData.private || false;
+        fStates[post.createdBy] = userData.followers.includes(authUser.uid);
+        rStates[post.createdBy] = userData.requested.includes(authUser.uid);
       } catch (error) {
         console.error(`Error fetching follow state for user ${post.createdBy}:`, error);
       }
     }
-    setPrivateStates(states);
+    setPrivateStates(pStates);
+    setFollowStates(fStates);
+    setRequestedStates(rStates);
+    //setPageLoaded(true);
   };
 
   if (authUser && posts.length > 0) {
-    fetchPrivateStates();
+    fetchStates();
   }
 }, [posts, authUser]);
 
@@ -96,15 +60,15 @@ const handleFollowClick = async (userId) => {
   //console.log(isPrivate);
 
   try {
-    const userDocRef = doc(firestore, "users", userId);
-    const userDocSnap = await getDoc(userDocRef);
+    // const userDocRef = doc(firestore, "users", userId);
+    // const userDocSnap = await getDoc(userDocRef);
 
-    if (userDocSnap.exists()) {
-      const profileData = userDocSnap.data();
-      setUserProfile(profileData);
-    } else {
-      console.error("User profile not found");
-    }
+    // if (userDocSnap.exists()) {
+    //   const profileData = userDocSnap.data();
+    //   setUserProfile(profileData);
+    // } else {
+    //   console.error("User profile not found");
+    // }
 
     if (isPrivate) {
       if (currentlyRequested)
@@ -120,7 +84,7 @@ const handleFollowClick = async (userId) => {
       }));
     }
 
-    await handleFollowUser(userProfile, userId, currentlyFollowed, !currentlyRequested);
+    //await handleFollowUser(userProfile, userId, currentlyFollowed, !currentlyRequested);
   } catch (error) {
     console.error("Error updating follow status:", error);
   }

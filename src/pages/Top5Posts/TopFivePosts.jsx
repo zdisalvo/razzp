@@ -30,7 +30,7 @@ const TopFivePosts = () => {
   const [userProfile, setUserProfile] = useState(null);
   //const [requested, setRequested ] = useState(false);
   const unrequestFollow = useUnrequestFollow();
-  const [pageLoaded, setPageLoaded] = useState(false);
+  //const [pageLoaded, setPageLoaded] = useState(false);
 
   const handleMessagesClick = () => {
     navigate("/messages");
@@ -104,7 +104,7 @@ const TopFivePosts = () => {
       setPrivateStates(pStates);
       setFollowStates(fStates);
       setRequestedStates(rStates);
-      setPageLoaded(true);
+      //setPageLoaded(true);
     };
 
     if (authUser && posts.length > 0) {
@@ -124,8 +124,8 @@ const TopFivePosts = () => {
 
   const handleFollowClick = async (userId) => {
 
-    if (!pageLoaded)
-      return;
+    // if (!pageLoaded)
+    //   return;
     
     const currentlyFollowed = followStates[userId];
     const currentlyRequested = requestedStates[userId];
@@ -148,7 +148,7 @@ const TopFivePosts = () => {
     //     return;
 
       if (isPrivate) {
-        console.log("test1");
+        //console.log("test1");
         if (currentlyRequested)
           unrequestFollow(userId);
         setRequestedStates((prevStates) => ({
@@ -156,18 +156,18 @@ const TopFivePosts = () => {
           [userId]: !currentlyRequested,
         }));
       } else {
-        console.log("test2");
+        //console.log("test2");
         setFollowStates((prevStates) => ({
           ...prevStates,
           [userId]: !currentlyFollowed,
         }));
       }
-      console.log(userProfile);
-      console.log(userId);
-      console.log(currentlyFollowed);
-      console.log(!currentlyRequested);
+      // console.log(userProfile);
+      // console.log(userId);
+      // console.log(currentlyFollowed);
+      // console.log(!currentlyRequested);
       //await handleFollowUser(userProfile, userId, currentlyFollowed, !currentlyRequested);
-      console.log("test3");
+      //console.log("test3");
     } catch (error) {
       console.error("Error updating follow status:", error);
     }
