@@ -120,6 +120,9 @@ const TopFivePosts = () => {
     const currentlyRequested = requestedStates[userId];
     const isPrivate = privateStates[userId];
 
+    console.log("t5posts");
+    console.log(isPrivate);
+
     try {
       const userDocRef = doc(firestore, "users", userId);
       const userDocSnap = await getDoc(userDocRef);

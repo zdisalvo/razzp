@@ -34,6 +34,7 @@ const useFollowUserFP = () => {
                 });
                 await updateDoc(userToFollowRef, {
                     followers: arrayRemove(authUser.uid),
+                    requested: arrayRemove(authUser.uid),
                 });
                 // setAuthUser((prevUser) => ({
                 //     ...prevUser,
