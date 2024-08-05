@@ -115,10 +115,12 @@ const useFollowUser = (userId) => {
 		}
 	};
 
-	useEffect(() => {
+	useState(() => {
 		if (authUser) {
-			const isFollowing = authUser.following.includes(userId);
-			setIsFollowing(isFollowing);
+			
+			const isCurrentlyFollowing = authUser.following.includes(userId);
+			//console.log(isCurrentlyFollowing);
+			setIsFollowing(isCurrentlyFollowing);
 		}
 	}, [authUser, userId]);
 

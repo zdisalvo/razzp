@@ -188,9 +188,10 @@ const useFollowUserFP = () => {
         }
     };
 
-    useEffect(() => {
+    useState(() => {
 		if (authUser) {
 			const isFollowingUser = authUser.following.includes(userIdGlobal);
+            //console.log(userIdGlobal);
 			setIsFollowingUser(isFollowingUser);
 		}
 	}, [authUser, userIdGlobal]);

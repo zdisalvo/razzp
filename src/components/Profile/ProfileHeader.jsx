@@ -23,7 +23,7 @@ import useSetPrivateProfile from "../../hooks/useSetPrivateProfile";
 import useSetPublicProfile from "../../hooks/useSetPublicProfile";
 import useUnrequestFollow from "../../hooks/useUnrequestFollow";
 import useHasRequestedFollow from "../../hooks/useHasRequestedFollow";
-
+import useFollowUser from "../../hooks/useFollowUser";
 
 const ProfileHeader = ({ username, page }) => {
 	//const { userProfile } = useUserProfileStore();
@@ -34,8 +34,9 @@ const ProfileHeader = ({ username, page }) => {
 	  }));
 	//const {authUserDoc} = useGetUserProfileById(authUser.uid)
 	const { isOpen, onOpen, onClose } = useDisclosure();
-	const { isFollowing: initialIsFollowing, handleFollowUser } = useFollowUserFP();
-	const [isFollowing, setIsFollowing] = useState(initialIsFollowing);
+	const { isFollowing: initialIsFollowing } = useFollowUser(userProfile?.uid);
+	const { handleFollowUser } = useFollowUserFP();
+	const [isFollowing, setIsFollowing] = useState(!initialIsFollowing);
 	const [isOptimisticUpdate, setIsOptimisticUpdate] = useState(false);
 
 	const visitingOwnProfileAndAuth = authUser && authUser.username === userProfile.username;
@@ -64,6 +65,8 @@ const ProfileHeader = ({ username, page }) => {
 	const [requested, setRequested ] = useState(false);
 	const unrequestFollow = useUnrequestFollow();
 	//const hasRequested = useHasRequestedFollow(userProfile.uid);
+
+	//console.log(isFollowing);
 
 	useState(() => {
 		if (userProfile && authUser && userProfile.requested) {
