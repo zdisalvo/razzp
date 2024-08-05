@@ -68,6 +68,9 @@ const CreateSpark = () => {
  // const { profilePics: fetchedProfilePics, isLoading: profilePicsLoadingFromHook } = useGetSparkImagesById(authUser.uid);
  const [newContent, setNewContent] = useState(false);
  const [isModalOpen, setIsModalOpen] = useState(false);
+ const today = new Date();
+  const minAgeDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+  const maxDate = minAgeDate.toISOString().split("T")[0];
 
   
 
@@ -1275,7 +1278,7 @@ const handlePronounsClick = (pronouns) => {
             </FormControl>
           
           
-
+            {!sparkProfileView.birthday &&
           <FormControl id="birthday">
             <FormLabel>Birthday</FormLabel>
             <Input
@@ -1288,8 +1291,10 @@ const handlePronounsClick = (pronouns) => {
               onBlur={textBoxStyle.onBlur}
               onMouseEnter={textBoxStyle.onMouseEnter}
               onMouseLeave={textBoxStyle.onMouseLeave}
+              max={maxDate}
             />
           </FormControl>
+        }
 
           <FormControl id="work" >
             <FormLabel>Work</FormLabel>
