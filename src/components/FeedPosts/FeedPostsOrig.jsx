@@ -94,7 +94,7 @@ const handleFollowClick = async (userId) => {
 
   return (
     <Container py={6}   px={0} w={['100vw', null, '60vh']} >
-      {isLoading &&
+      {/* {isLoading &&
         [0, 1, 2].map((_, idx) => (
           <VStack key={idx} gap={4} alignItems={"flex-start"} mb={10}>
             <Flex gap='2'>
@@ -108,9 +108,9 @@ const handleFollowClick = async (userId) => {
               <Box h={"400px"}>contents wrapped</Box>
             </Skeleton>
           </VStack>
-        ))}
+        ))} */}
       
-      {!isLoading && posts.length > 0 && posts.map((post) => 
+      {posts.length > 0 && posts.map((post) => 
       <FeedPost key={post.id} post={post}  
       isFollowing={followStates[post.createdBy] || false}
       requested={requestedStates[post.createdBy] || false}

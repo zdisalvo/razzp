@@ -31,7 +31,7 @@ const UserFeed = () => {
 
   const userNotFound = !isLoading && !userProfile;
 
-  console.log(isLoading);
+  //console.log(isLoading);
 
   useEffect(() => {
     if (!isLoading && postId && postRefs.current[postId] && shouldScroll) {
