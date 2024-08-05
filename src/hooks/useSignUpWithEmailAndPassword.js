@@ -77,7 +77,6 @@ const useSignUpWithEmailAndPassword = () => {
 					crownClock: "",
 					likedMe: [],
 					matched: [],
-					blocked: [],
 					ratings: [],
 					totalScore: 0,
 					filters: [],

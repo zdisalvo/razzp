@@ -27,6 +27,58 @@ const GoogleAuth = ({ prefix }) => {
 				loginUser(userDoc);
 			} else {
 				// signup
+				const spark = {
+					uid: newUser.user.uid,
+					name: "",
+					bio: "",
+					created: false,
+					birthday: "",
+					work: "",
+					school: "",
+					gender: "",
+					interested_in: [],
+					location: "",
+					hometown: "",
+					ethnicity: "",
+					height: 0,
+					exercise: "",
+					education_level: "",
+					drinking: "",
+					smoking: "",
+					cannabis: "",
+					looking_for: "",
+					family_plans: "",
+					have_kids: "",
+					star_sign: "",
+					politics: "",
+					religion: "",
+					pronouns: [],
+					languages: [],
+					photos: [],
+					interests: [],
+					profilePics: [],
+					uploadedImages: [],
+					selectedImages: [],
+
+					viewed1x: [],
+					viewed2x: [],
+					viewed3x: [],
+					liked: [],
+					crowned: [],
+					crownedMe: [],
+					dayLikes: 0,
+					likeClock: "",
+					dayCrowns: 0,
+					crownClock: "",
+					likedMe: [],
+					matched: [],
+					ratings: [],
+					totalScore: 0,
+					filters: [],
+					blocked: [],
+					blockedMe: [],
+				}
+
 				const userDoc = {
 					uid: newUser.user.uid,
 					email: newUser.user.email,
@@ -38,7 +90,15 @@ const GoogleAuth = ({ prefix }) => {
 					following: [],
 					posts: [],
 					createdAt: Date.now(),
+					geohash: "",
+					spark: false,
+					dayCrowns: 0,
+					private: false,
 				};
+
+				await setDoc(doc(firestore, "spark", newUser.user.uid), spark);
+				localStorage.setItem("spark-profile", JSON.stringify(spark));
+
 				await setDoc(doc(firestore, "users", newUser.user.uid), userDoc);
 				localStorage.setItem("user-info", JSON.stringify(userDoc));
 				loginUser(userDoc);

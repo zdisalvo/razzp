@@ -1278,7 +1278,7 @@ const handlePronounsClick = (pronouns) => {
             </FormControl>
           
           
-            {!sparkProfileView.birthday &&
+            {sparkProfileView && !sparkProfileView.birthday &&
           <FormControl id="birthday">
             <FormLabel>Birthday</FormLabel>
             <Input
