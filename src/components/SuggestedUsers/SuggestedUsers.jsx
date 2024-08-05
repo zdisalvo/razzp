@@ -7,7 +7,7 @@ const SuggestedUsers = () => {
 	const { isLoading, suggestedUsers } = useGetSuggestedUsers();
 
 	// optional: render loading skeleton
-	if (isLoading) return null;
+	//if (isLoading) return null;
 
 	return (
 		<VStack py={8} px={6} gap={4}>
