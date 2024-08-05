@@ -19,7 +19,9 @@ const ProfilePageFeed = () => {
     // Check if authUser exists when component mounts
     setAuthChecked(true);
 
-  if ((userProfile?.private && !userProfile.followers.includes(authUser?.uid)) || !authUser) {
+    console.log((userProfile?.private && !userProfile.followers.includes(authUser?.uid) && !(authUser.uid === userProfile.uid)) || !authUser );
+
+    if ((userProfile?.private && !userProfile.followers.includes(authUser?.uid) && !(authUser.uid === userProfile.uid)) || !authUser ) {
     navigate(`/${username}`);
   }
 }, [authUser, userProfile, navigate, username]);
