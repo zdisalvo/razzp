@@ -4,7 +4,7 @@ import useFollowUser from "../../hooks/useFollowUser";
 import useAuthStore from "../../store/authStore";
 import { Link } from "react-router-dom";
 import useFollowUserFP from "../../hooks/useFollowUserFP";
-import FollowButton from '../../pages/Following/FollowButton';
+import FollowButtonSuggested from "../../pages/Following/FollowButtonSuggested";
 
 const SuggestedUser = ({ user, setUser }) => {
 	const { isFollowing, isUpdating } = useFollowUser(user.uid);
@@ -53,16 +53,16 @@ const SuggestedUser = ({ user, setUser }) => {
 				<VStack spacing={2} alignItems={"flex-start"}>
 				<Link to={`/${user.username}`}>
 					<Flex justifyContent="center" alignItems="baseline">
-						<Box fontSize={12} fontWeight={"bold"}>
+						<Box fontSize={15} fontWeight={"bold"}>
 							{user.username}
 						</Box>
 						
-						<Box fontSize={11} color={"gray.500"} ml={2}>
+						<Box fontSize={13} color={"gray.500"} ml={2}>
 							{user.fullName}
 						</Box>
 					
 					</Flex>
-						<Box fontSize={11} color={"gray.500"}>
+						<Box fontSize={13} color={"gray.500"}>
 						{user.followers.length} {user.followers.length == 1 ? 'follower' : 'followers' }
 						</Box>
 					</Link>
@@ -85,7 +85,7 @@ const SuggestedUser = ({ user, setUser }) => {
 			// >
 			// 	{isFollowingInit ? 'Unfollow' : 'Follow'}
 			// </Button>
-			<FollowButton
+			<FollowButtonSuggested
                                 userProfile={user}
                                 isFollowing={isFollowingInit}
                                 requested={authUser && user.requested && user.requested.includes(authUser.uid)}

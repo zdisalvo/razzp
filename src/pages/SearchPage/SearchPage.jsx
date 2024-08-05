@@ -117,6 +117,8 @@ import {
           <FormControl px={6}>
             <Input
               placeholder="Search for users..."
+              _placeholder={{ color: 'gray.500' }}
+				      border="1px groove #888888"
               value={searchQuery}
               onChange={handleSearchChange}
               _focus={{ 

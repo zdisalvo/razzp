@@ -4,6 +4,7 @@ import useFollowUser from "../../hooks/useFollowUser";
 import useAuthStore from "../../store/authStore";
 import { Link } from "react-router-dom";
 import useFollowUserFP from "../../hooks/useFollowUserFP";
+import FollowButtonSuggested from "../../pages/Following/FollowButtonSuggested";
 
 const SuggestedUser = ({ user, setUser }) => {
 	const { isFollowing, isUpdating } = useFollowUser(user.uid);
@@ -53,7 +54,7 @@ const SuggestedUser = ({ user, setUser }) => {
 				<VStack spacing={2} alignItems={"flex-start"}>
 				<Link to={`/${user.username}`}>
 					<Flex justifyContent="center" alignItems="baseline">
-						<Box fontSize={12} fontWeight={"bold"}>
+						<Box fontSize={15} fontWeight={"bold"}>
 							{user.username}
 						</Box>
 						
@@ -62,7 +63,7 @@ const SuggestedUser = ({ user, setUser }) => {
 						</Box> */}
 					
 					</Flex>
-						<Box fontSize={11} color={"gray.500"}>
+						<Box fontSize={13} color={"gray.500"}>
 						{user.followers.length} {user.followers.length == 1 ? 'follower' : 'followers' }
 						</Box>
 					</Link>
@@ -73,18 +74,25 @@ const SuggestedUser = ({ user, setUser }) => {
 				</VStack>
 			</Flex>
 			{authUser.uid !== user.uid && (
-				<Button
-				ml={5}
-				onClick={() => handleFollowClick(user.uid)}
-                isDisabled={isOptimisticUpdate}
-				bg={"#eb7734"}
-				color={"white"}
-				textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)"
-				_hover={{ bg: "#c75e1f" }}
-				size={{ base: "sm", md: "sm" }}
-			>
-				{isFollowingInit ? 'Unfollow' : 'Follow'}
-			</Button>
+			// 	<Button
+			// 	ml={5}
+			// 	onClick={() => handleFollowClick(user.uid)}
+            //     isDisabled={isOptimisticUpdate}
+			// 	bg={"#eb7734"}
+			// 	color={"white"}
+			// 	textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)"
+			// 	_hover={{ bg: "#c75e1f" }}
+			// 	size={{ base: "sm", md: "sm" }}
+			// >
+			// 	{isFollowingInit ? 'Unfollow' : 'Follow'}
+			// </Button>
+			<FollowButtonSuggested
+			ml={3}
+			userProfile={user}
+			isFollowing={isFollowingInit}
+			size="xs"
+			requested={authUser && user.requested && user.requested.includes(authUser.uid)}
+		/>
 			)}
 		</Flex>
 	);

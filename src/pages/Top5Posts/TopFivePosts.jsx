@@ -175,7 +175,7 @@ const TopFivePosts = () => {
 
 
   return (
-    <Container py={6} px={0} w={['100vw', null, '60vh']} pb={{base: "10vh", md: "60px"}} pt={{base: "2vh", md: "5px"}}>
+    <Container py={6} px={0} w={['100vw', null, '60vh']} pb={{base: "10vh", md: "60px"}} pt={{base: "2vh", md: "5px"}} mt={{base: "10vh", md: "60px"}}>
       <Box position="sticky" top="0" bg="black" zIndex="1" py={4}>
       <Box position="fixed" top="0" right={{base: "0", md: "15vw"}} p={4} zIndex="docked" width="100%">
                 <Flex justifyContent="flex-end" alignItems="center">
