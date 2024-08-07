@@ -7,7 +7,7 @@ import useLikePost from "../../hooks/useLikePost";
 import { timeAgo } from "../../utils/timeAgo";
 import CommentsModal from "../Modals/CommentsModal";
 import useCrownPost from "../../hooks/useCrownPost";
-import ShareButtonOverlay from "./ShareButtonOverlay";
+//import ShareButtonOverlay from "./ShareButtonOverlay";
 import ShareButton from "./ShareButton";
 import ShareButtonDL from "./ShareButtonDL";
 
@@ -144,7 +144,7 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
                 {creatorProfile && post && (
                 <Box cursor={"pointer"} fontSize={18}>
                     {/* <ShareButtonOverlay imageUrl={post.imageURL} overlayText={`@${creatorProfile.username}`} /> */}
-                    {/* <ShareButtonDL imageUrl={post.imageURL} overlayText={`@${creatorProfile.username}`} /> */}
+                    <ShareButtonDL imageUrl={post.imageURL} overlayText={`@${creatorProfile.username}`} />
                     {/* <ShareButton imageUrl={post.imageURL} /> */}
                 </Box>
                 )}
