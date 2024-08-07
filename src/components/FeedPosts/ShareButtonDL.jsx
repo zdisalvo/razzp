@@ -13,7 +13,7 @@ const ShareButtonDL = ({ imageUrl, overlayText }) => {
     const ctx = canvas.getContext('2d');
     const baseImage = new Image();
     const overlayImage = new Image();
-    const overlayImageUrl = '/razzp-mobile-logo-shadow.png';
+    const overlayImageUrl = '/razzp-logo-new.png';
 
     baseImage.crossOrigin = 'anonymous'; // Handle cross-origin images if needed
     overlayImage.crossOrigin = 'anonymous';
@@ -27,21 +27,29 @@ const ShareButtonDL = ({ imageUrl, overlayText }) => {
       ctx.drawImage(baseImage, 0, 0);
 
       // Overlay text
-      if (overlayText) {
-        ctx.font = '40px Arial';
-        ctx.fillStyle = 'white';
-        ctx.textAlign = 'center';
-        ctx.fillText(overlayText, canvas.width / 2, canvas.height / 2);
-      }
-
+      
+  
       overlayImage.onload = () => {
-        ctx.drawImage(overlayImage, 50, 50, 100, 100);
+        const overlayWidth = 100;
+        const overlayHeight = 100;
+        ctx.drawImage(overlayImage, canvas.width - overlayWidth - 20, canvas.height - overlayHeight - 20, overlayWidth, overlayHeight);
         uploadImageToFirebase();
       };
-
+  
       // Check if overlay image is already loaded
       if (overlayImage.complete) {
-        ctx.drawImage(overlayImage, 50, 50, 100, 100);
+        const overlayWidth = 100;
+        const overlayHeight = 100;
+        ctx.drawImage(overlayImage, canvas.width - overlayWidth - 20, canvas.height - overlayHeight - 20, overlayWidth, overlayHeight);
+        
+      }
+
+      if (overlayText) {
+        const textSize = 40;
+        ctx.font = `${textSize}px Arial`;
+        ctx.fillStyle = 'white';
+        ctx.textAlign = 'right';
+        ctx.fillText(overlayText, canvas.width - 20, canvas.height - 20);
         uploadImageToFirebase();
       }
     };
@@ -97,7 +105,7 @@ const ShareButtonDL = ({ imageUrl, overlayText }) => {
   return (
     <div>
       <canvas ref={canvasRef} style={{ display: 'none' }} />
-      <button onClick={prepareImage}>Prepare and Share to Instagram</button>
+      <button onClick={prepareImage}>Share</button>
     </div>
   );
 };
