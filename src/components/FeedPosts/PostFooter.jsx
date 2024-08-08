@@ -37,6 +37,15 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
     const[totalScore, setTotalScore] = useState(Math.round(calculateRankingScore(post)));
     //const age = useState(post.createdAt);
 
+    //const value = 2232333434;
+    const formattedScore = totalScore.toLocaleString();
+    const numFlames = formattedScore.replace(/,/g, '').length;
+
+    const flames = Array.from({ length: Math.max(numFlames /2 , 1) }, (_, index) => (
+        <Text key={index} fontSize="4xl" display="inline-block" mb={0} ml={0} mr={{base: -3, md: -7}}>
+          🔥
+        </Text>
+      ));
     
 
     useEffect(() => {
@@ -150,10 +159,36 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
                 </Box>
                 )}
             </Flex>
-            <Text fontWeight={600} fontSize={"sm"}  mb={1}>
-                {/* {totalScore === 1 ? `${totalScore} point` : `${totalScore} points`} */}
+            {/* <Text color="#eb7734" fontSize="xl" fontWeight="bold" 
+            sx={{ 
+                textShadow: "2px 2px 4px rgba(0, 0, 0, 0.5)",
+                fontStyle: "italic"
+              }}  
+            mb={1} ml={2}>
+                
                 {totalScore}°
-            </Text>
+            </Text> */}
+
+            <Box position="relative" display="inline-block" m={0} p={0}>
+                {flames}
+                <Text
+                    position="absolute"
+                    top="50%"
+                    left="50%"
+                    transform="translate(-50%, -50%)"
+                    fontSize="xl"
+                    ml={{base: 2, md: 4}}
+                    pt={2}
+                    fontWeight="bold"
+                    color="white"
+                    sx={{ 
+                    textShadow: "3px 3px 6px rgba(0, 0, 0, 1)",
+                    fontStyle: "italic"
+                    }}
+                >
+                    {formattedScore}°
+                </Text>
+                </Box>
 
             {isProfilePage && (
                 <Text fontSize="12" color={"gray"}>
