@@ -19,7 +19,7 @@ const useUnrequestFollow = () => {
       await updateDoc(userDocRef, {
         requested: arrayRemove(authUser.uid),
       });
-      showToast('Success', 'Follow request removed successfully', 'success');
+      //showToast('Success', 'Follow request removed successfully', 'success');
     } catch (error) {
       console.error('Error removing follow request:', error);
       showToast('Error', error.message, 'error');

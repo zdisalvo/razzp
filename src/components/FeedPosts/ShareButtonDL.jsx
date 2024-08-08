@@ -46,8 +46,8 @@ const ShareButtonDL = ({ imageUrl, overlayText }) => {
         // Draw username below the overlay image
         const usernameY = overlayY + overlayHeight + 24;
         ctx.font = 'italic bold 36px Lato';
-        ctx.fillStyle = 'white';
-        ctx.shadowColor = 'pink';
+        ctx.fillStyle = "#f75e06";
+        ctx.shadowColor = 'black';
         ctx.shadowBlur = 4;
         ctx.textAlign = 'right';
         ctx.fillText(authUser.username, canvas.width - 10, usernameY);
@@ -76,8 +76,8 @@ const ShareButtonDL = ({ imageUrl, overlayText }) => {
         if (overlayText) {
         const usernameY = overlayY + overlayHeight + 24;
         ctx.font = 'italic bold 36px Lato';
-        ctx.fillStyle = 'white';
-        ctx.shadowColor = 'pink';
+        ctx.fillStyle = "#f75e06";
+        ctx.shadowColor = 'black';
         ctx.shadowBlur = 4;
         ctx.textAlign = 'right';
         ctx.fillText(overlayText, canvas.width - 10, usernameY);

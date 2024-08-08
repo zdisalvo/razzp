@@ -117,6 +117,8 @@ const useFollowUser = (userId) => {
 
 	useState(() => {
 		if (authUser) {
+
+			console.log(userId);
 			
 			const isCurrentlyFollowing = authUser.following.includes(userId);
 			//console.log(isCurrentlyFollowing);

@@ -34,9 +34,9 @@ const ProfileHeader = ({ username, page }) => {
 	  }));
 	//const {authUserDoc} = useGetUserProfileById(authUser.uid)
 	const { isOpen, onOpen, onClose } = useDisclosure();
-	const { isFollowing: initialIsFollowing } = useFollowUser(userProfile?.uid);
+	//const { isFollowing: initialIsFollowing } = useFollowUser(userProfile?.uid);
 	const { handleFollowUser } = useFollowUserFP();
-	const [isFollowing, setIsFollowing] = useState(!initialIsFollowing);
+	const [isFollowing, setIsFollowing] = useState(false);
 	const [isOptimisticUpdate, setIsOptimisticUpdate] = useState(false);
 
 	const visitingOwnProfileAndAuth = authUser && authUser.username === userProfile.username;
@@ -71,6 +71,12 @@ const ProfileHeader = ({ username, page }) => {
 	useState(() => {
 		if (userProfile && authUser && userProfile.requested) {
 		  setRequested(userProfile.requested.includes(authUser.uid)); // Ensure the user data is up-to-date
+		}
+	  }, [authUser, fetchUserData]);
+
+	  useState(() => {
+		if (userProfile && authUser) {
+		  setIsFollowing(authUser.following.includes(userProfile.uid)); // Ensure the user data is up-to-date
 		}
 	  }, [authUser, fetchUserData]);
 
@@ -130,8 +136,8 @@ const ProfileHeader = ({ username, page }) => {
         if (navigator.share) {
             try {
                 await navigator.share({
-                    title: `What's Razzp?`,
-                    text: `Visit me and find out -${username}`,
+                    title: `What's new on Razzp?`,
+                    text: `Everything -@${username}`,
                     url: profileUrl,
                 });
                 console.log('Successfully shared');

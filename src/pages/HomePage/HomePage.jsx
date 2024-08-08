@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import useIncomingReadCount from "../../hooks/useIncomingReadCount";
 import useNewNotificationsCount from "../../hooks/useNewNotificationsCount";
 import useGetSparkProfileById from "../../hooks/useGetSparkProfileById";
+import SuggestedUsersBanner from "../../components/SuggestedUsers/SuggestedUsersBanner";
 
 const HomePage = () => {
   const userAuth = authStore((state) => state.user);
@@ -193,6 +194,7 @@ const HomePage = () => {
         justifyContent={{ base: "none", md: "center" }}
         alignItems="center"
       >
+        <SuggestedUsersBanner />
         {/* <Button 
           onClick={() => setIsFetchingLocation(true)} 
           isLoading={isFetchingLocation} 
@@ -203,11 +205,11 @@ const HomePage = () => {
           Get Current Location to find matches near you
         </Button> */}
 
-        <Flex gap={20} px={0} mx={0} justifyContent="center" mt={4}>
+        <Flex gap={20} px={0} mx={0} justifyContent="center" mt={0}>
           <Box flex={2} py={0} px={0} ml={{ base: "none", md: "20" }}>
             <FeedPostsOrig />
           </Box>
-          <Box 
+          {/* <Box 
             px={0} 
             ml={0} 
             flex={3} 
@@ -216,7 +218,7 @@ const HomePage = () => {
             maxW={{ base: "20vw", lg: "20vw" }}
           >
             <SuggestedUsers />
-          </Box>
+          </Box> */}
         </Flex>
       </Box>
     </Container>

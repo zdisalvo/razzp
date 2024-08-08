@@ -50,7 +50,7 @@ const FollowButton = ({ userProfile, isFollowing: initialIsFollowing, requested:
             color={"white"}
             _hover={{ bg: "#c75e1f" }}
             textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)"
-            size={{ base: "sm", md: "xs" }}
+            size={{ base: "sm", md: "sm" }}
             onClick={handleFollowClick}
             isDisabled={isOptimisticUpdate}
         >

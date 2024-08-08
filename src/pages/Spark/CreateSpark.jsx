@@ -237,9 +237,7 @@ const CreateSpark = () => {
       if (uniqueProfilePics.length !== profilePics.length) {
         await updateDoc(docRef, { profilePics: uniqueProfilePics });
         console.log('Duplicates removed and Firestore updated successfully.');
-      } else {
-        console.log('No duplicates found.');
-      }
+      } 
     } else {
       console.log('No such document!');
     }

@@ -7,15 +7,27 @@ import useFollowUserFP from "../../hooks/useFollowUserFP";
 import FollowButtonSuggested from "../../pages/Following/FollowButtonSuggested";
 
 const SuggestedUser = ({ user, setUser }) => {
-	const { isFollowing, isUpdating } = useFollowUser(user.uid);
+	//const { isFollowing, isUpdating } = useFollowUser(user.uid);
 	const { handleFollowUser } = useFollowUserFP();
-	const authUser = useAuthStore((state) => state.user);
-	const [isFollowingInit, setIsFollowingInit] = useState(isFollowing);
+	const { authUser, fetchUserData } = useAuthStore((state) => ({
+		authUser: state.user,
+		fetchUserData: state.fetchUserData,
+	  }));
+	const [isFollowing, setIsFollowing] = useState(false);
+	const [requested, setRequested ] = useState(false);
 	const [isOptimisticUpdate, setIsOptimisticUpdate] = useState(false);
 
-	useEffect(() => {
-        setIsFollowingInit(isFollowing);
-    }, [isFollowing]);
+	useState(() => {
+		if (user && authUser && user.requested) {
+		  setRequested(user.requested.includes(authUser.uid)); // Ensure the user data is up-to-date
+		}
+	  }, [authUser, fetchUserData]);
+
+	  useState(() => {
+		if (user && authUser) {
+		  setIsFollowing(authUser.following.includes(user.uid)); // Ensure the user data is up-to-date
+		}
+	  }, [authUser, fetchUserData]);
 
 	// const onFollowUser = async () => {
 	// 	await handleFollowUser();
@@ -87,7 +99,7 @@ const SuggestedUser = ({ user, setUser }) => {
 			// </Button>
 			<FollowButtonSuggested
                                 userProfile={user}
-                                isFollowing={isFollowingInit}
+                                isFollowing={isFollowing}
                                 requested={authUser && user.requested && user.requested.includes(authUser.uid)}
                             />
 			)}

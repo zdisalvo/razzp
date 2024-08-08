@@ -74,6 +74,15 @@ const useGetSparkProfiles = (refreshKey) => {
         error: state.error,
     }));
 
+    const shuffleArray = (array) => {
+        let shuffledArray = [...array];
+        for (let i = shuffledArray.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
+        }
+        return shuffledArray;
+      };
+
     useEffect(() => {
         const getSparkProfiles = async () => {
             if (!sparkProfile) return;
@@ -289,7 +298,9 @@ const useGetSparkProfiles = (refreshKey) => {
                     return b.totalScore - a.totalScore;
                 });
 
-                setSparkProfiles(sortedMatches);
+                const shuffledMatches = shuffleArray(sortedMatches);
+
+                setSparkProfiles(shuffledMatches);
 
                 //setSparkProfiles(filteredDocs);
             } catch (error) {
