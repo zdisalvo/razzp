@@ -324,7 +324,7 @@ const ProfileHeader = ({ username, page }) => {
             borderRadius="md" // Optional: for rounded corners
             //borderBottom="1px groove #1B2328" // Adds the border at the bottom
             color="white" // Sets the text color to white for better contrast
-			fontSize="md"
+			fontSize={{base: "md", md: "sm"}}
 			width="auto"
 			minWidth="75px"
 			maxWdith="75px"
@@ -387,7 +387,7 @@ const ProfileHeader = ({ username, page }) => {
             borderRadius="md" // Optional: for rounded corners
             //borderBottom="1px groove #1B2328" // Adds the border at the bottom
             color="white" // Sets the text color to white for better contrast
-			fontSize="sm"
+			fontSize={{base: "md", md: "sm"}}
 			width="auto"
 			minWidth="75px"
 			maxWdith="75px"
