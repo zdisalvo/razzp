@@ -1,4 +1,5 @@
 import React, { useRef } from 'react';
+import { Box, Image as ChakraImage } from "@chakra-ui/react";
 import { addDoc, arrayUnion, collection, doc, updateDoc } from "firebase/firestore";
 import { firestore, storage } from "../../firebase/firebase"; // Adjust path as necessary
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
@@ -26,30 +27,62 @@ const ShareButtonDL = ({ imageUrl, overlayText }) => {
       canvas.height = baseImage.height;
       ctx.drawImage(baseImage, 0, 0);
 
-      // Overlay text
-      
-  
       overlayImage.onload = () => {
         const overlayWidth = 100;
         const overlayHeight = 100;
-        ctx.drawImage(overlayImage, canvas.width - overlayWidth - 20, canvas.height - overlayHeight - 20, overlayWidth, overlayHeight);
+        const overlayX = canvas.width - overlayWidth - 20;
+        const overlayY = canvas.height - overlayHeight - 50;
+
+        ctx.drawImage(overlayImage, overlayX, overlayY, overlayWidth, overlayHeight);
+
+        // if (overlayText) {
+        //   const textSize = 50;
+        //   ctx.font = `${textSize}px Arial`;
+        //   ctx.fillStyle = 'white';
+        //   ctx.textAlign = 'center';
+        //   ctx.fillText(overlayText, overlayX + overlayWidth / 2, overlayY + overlayHeight / 2 + textSize / 2 + 5);
+        // }
+
+        // Draw username below the overlay image
+        const usernameY = overlayY + overlayHeight + 24;
+        ctx.font = 'italic bold 36px Lato';
+        ctx.fillStyle = 'white';
+        ctx.shadowColor = 'pink';
+        ctx.shadowBlur = 4;
+        ctx.textAlign = 'right';
+        ctx.fillText(authUser.username, canvas.width - 10, usernameY);
+
         uploadImageToFirebase();
       };
-  
+
       // Check if overlay image is already loaded
       if (overlayImage.complete) {
         const overlayWidth = 100;
         const overlayHeight = 100;
-        ctx.drawImage(overlayImage, canvas.width - overlayWidth - 20, canvas.height - overlayHeight - 20, overlayWidth, overlayHeight);
-        
-      }
+        const overlayX = canvas.width - overlayWidth - 20;
+        const overlayY = canvas.height - overlayHeight - 50;
 
-      if (overlayText) {
-        const textSize = 40;
-        ctx.font = `${textSize}px Arial`;
+        ctx.drawImage(overlayImage, overlayX, overlayY, overlayWidth, overlayHeight);
+
+        // if (overlayText) {
+        //   const textSize = 30;
+        //   ctx.font = `${textSize}px Arial`;
+        //   ctx.fillStyle = 'white';
+        //   ctx.textAlign = 'center';
+        //   ctx.fillText(overlayText, overlayX + overlayWidth / 2 - 20, overlayY + overlayHeight / 2 + textSize / 2 + 15);
+        // }
+
+        // Draw username below the overlay image
+        if (overlayText) {
+        const usernameY = overlayY + overlayHeight + 24;
+        ctx.font = 'italic bold 36px Lato';
         ctx.fillStyle = 'white';
+        ctx.shadowColor = 'pink';
+        ctx.shadowBlur = 4;
         ctx.textAlign = 'right';
-        ctx.fillText(overlayText, canvas.width - 20, canvas.height - 20);
+        ctx.fillText(overlayText, canvas.width - 10, usernameY);
+        }
+
         uploadImageToFirebase();
       }
     };
@@ -88,7 +121,7 @@ const ShareButtonDL = ({ imageUrl, overlayText }) => {
     const data = {
       files: [file],
       title: 'Image',
-      text: 'Check out this image!',
+      text: `Follow me at Razzp.com/${authUser.username}`,
     };
 
     try {
@@ -103,10 +136,10 @@ const ShareButtonDL = ({ imageUrl, overlayText }) => {
   };
 
   return (
-    <div>
+    <Box cursor={"pointer"} onClick={prepareImage}>
       <canvas ref={canvasRef} style={{ display: 'none' }} />
-      <button onClick={prepareImage}>Share</button>
-    </div>
+      <ChakraImage width="30px" src="/razzp-logo-new.png" alt="logo" />
+    </Box>
   );
 };
 

@@ -146,6 +146,7 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
                     {/* <ShareButtonOverlay imageUrl={post.imageURL} overlayText={`@${creatorProfile.username}`} /> */}
                     <ShareButtonDL imageUrl={post.imageURL} overlayText={`@${creatorProfile.username}`} />
                     {/* <ShareButton imageUrl={post.imageURL} /> */}
+                    
                 </Box>
                 )}
             </Flex>

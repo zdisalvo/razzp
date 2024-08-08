@@ -13,3 +13,8 @@
 ::-webkit-scrollbar-thumb:hover {
 	background: #555;
 }
+
+/* @font-face {
+	font-family: 'Haettenschweiler';
+	src: url('/path/to/Haettenschweiler.ttf') format('truetype');
+  } */
