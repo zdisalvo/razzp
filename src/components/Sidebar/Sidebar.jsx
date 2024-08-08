@@ -18,7 +18,7 @@ const Sidebar = () => {
 	
 	<Box
 		height={{base: "10vh", md: "60px"}}
-		width={{base: "100vw", md: "652px"}}
+		width={{base: "100vw", md: "672px"}}
 		//alignItems={"center"}
 		//justifyContent={"center"}
 		borderTop={"1px solid"}
@@ -40,30 +40,35 @@ const Sidebar = () => {
 
     >
       <Flex direction={"row"} justifyContent={"center"} alignItems={"center"} w='full' height="100%" gap={2}>
-        <Link ml={2} to={"/"} as={RouterLink} pl={2} display={{ base: "none", md: "none" }} cursor='pointer' >
+        {/* <Link ml={2} to={"/"} as={RouterLink} pl={2} display={{ base: "none", md: "none" }} cursor='pointer' >
           <Image src="/logo.png" />
-        </Link>
+        </Link> */}
         <Link
           to={"/"}
           as={RouterLink}
           p={1}
           ml={3}
+          mr={0}
           display={{ base: "block", md: "flex" }}
           borderRadius={6}
           _hover={{
             bg: "whiteAlpha.200",
           }}
-          w={10}
+          w={{ base: "40px", md: "50px" }}
           cursor='pointer'
         >
-          <Image src="/razzp-logo-matte.png" />
+          <Image src="/razzp-logo-matte.png" 
+          width={{ base: "40px", md: "50px" }} // Adjust image size
+          height={{ base: "40px", md: "50px" }} // Adjust height to match width
+          objectFit="contain" // Ensure the image scales properly
+          />
         </Link>
         <Flex direction={"row"} gap={5} cursor={"pointer"} justifyContent={"center"}>
           <SidebarItems />
         </Flex>
 
         {/* LOGOUT */}
-        <Tooltip
+        {/* <Tooltip
           hasArrow
           label={"Logout"}
           placement='top'
@@ -99,7 +104,7 @@ const Sidebar = () => {
               Logout
             </Button>
           </Flex>
-        </Tooltip>
+        </Tooltip> */}
       </Flex>
     </Box>
 	

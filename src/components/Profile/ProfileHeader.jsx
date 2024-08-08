@@ -24,6 +24,7 @@ import useSetPublicProfile from "../../hooks/useSetPublicProfile";
 import useUnrequestFollow from "../../hooks/useUnrequestFollow";
 import useHasRequestedFollow from "../../hooks/useHasRequestedFollow";
 import useFollowUser from "../../hooks/useFollowUser";
+import useLogout from "../../hooks/useLogout";
 
 const ProfileHeader = ({ username, page }) => {
 	//const { userProfile } = useUserProfileStore();
@@ -65,6 +66,7 @@ const ProfileHeader = ({ username, page }) => {
 	const [requested, setRequested ] = useState(false);
 	const unrequestFollow = useUnrequestFollow();
 	//const hasRequested = useHasRequestedFollow(userProfile.uid);
+	const { handleLogout, isLoggingOut } = useLogout();
 
 	//console.log(isFollowing);
 
@@ -137,7 +139,7 @@ const ProfileHeader = ({ username, page }) => {
             try {
                 await navigator.share({
                     title: `What's new on Razzp?`,
-                    text: `Everything -@${username}`,
+                    text: `Everything. -${userProfile.fullName}`,
                     url: profileUrl,
                 });
                 console.log('Successfully shared');
@@ -322,7 +324,7 @@ const ProfileHeader = ({ username, page }) => {
             borderRadius="md" // Optional: for rounded corners
             //borderBottom="1px groove #1B2328" // Adds the border at the bottom
             color="white" // Sets the text color to white for better contrast
-			fontSize="sm"
+			fontSize="md"
 			width="auto"
 			minWidth="75px"
 			maxWdith="75px"
@@ -473,7 +475,27 @@ const ProfileHeader = ({ username, page }) => {
 			  color="#c8102e"
 			  onClick={handleDeleteUser}
 			>Delete My Account</MenuItem>
-		  
+
+			<MenuItem
+			bg="black"
+			//_hover={{ bg: '#2e2e2e' }} // Changes background color to charcoal on hover
+			px={4} // Adds padding inside MenuItem
+              //width="100%"
+			  whiteSpace="nowrap"
+			  color="white"
+			  
+			></MenuItem>
+
+		  	<MenuItem
+			bg="black"
+			_hover={{ bg: '#2e2e2e' }} // Changes background color to charcoal on hover
+			px={4} // Adds padding inside MenuItem
+              //width="100%"
+			  whiteSpace="nowrap"
+			  color="white"
+			  onClick={handleLogout}
+			  isLoading={isLoggingOut}
+			>Logout</MenuItem>
             
           </MenuList>
         </Menu>
