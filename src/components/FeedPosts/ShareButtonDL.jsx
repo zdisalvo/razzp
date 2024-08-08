@@ -8,6 +8,7 @@ import useAuthStore from '../../store/authStore';
 const ShareButtonDL = ({ imageUrl, overlayText }) => {
   const canvasRef = useRef(null);
   const authUser = useAuthStore((state) => state.user);
+  // OVERLAY_RATIO = 0.133
 
   const prepareImage = () => {
     const canvas = canvasRef.current;
@@ -27,64 +28,66 @@ const ShareButtonDL = ({ imageUrl, overlayText }) => {
       canvas.height = baseImage.height;
       ctx.drawImage(baseImage, 0, 0);
 
+      const MULTIPLIER = canvas.width / 750;
+      const CROP = 1.25 * canvas.width;
+      //console.log(canvas.height);
+
       overlayImage.onload = () => {
-        const overlayWidth = 100;
-        const overlayHeight = 100;
-        const overlayX = canvas.width - overlayWidth - 20;
-        const overlayY = canvas.height - overlayHeight - 50;
+        const overlayWidth = 100 * MULTIPLIER;
+        const overlayHeight = 100 * MULTIPLIER;
+        const overlayX = canvas.width - overlayWidth - 60 * MULTIPLIER;
+        const overlayY = Math.min(canvas.height, CROP + (canvas.height - CROP) / 2) - overlayHeight - 50 * MULTIPLIER;
 
-        ctx.drawImage(overlayImage, overlayX, overlayY, overlayWidth, overlayHeight);
+        
 
-        // if (overlayText) {
-        //   const textSize = 50;
-        //   ctx.font = `${textSize}px Arial`;
-        //   ctx.fillStyle = 'white';
-        //   ctx.textAlign = 'center';
-        //   ctx.fillText(overlayText, overlayX + overlayWidth / 2, overlayY + overlayHeight / 2 + textSize / 2 + 5);
-        // }
-
-        // Draw username below the overlay image
-        const usernameY = overlayY + overlayHeight + 24;
-        ctx.font = 'italic bold 36px Lato';
-        ctx.fillStyle = "#f75e06";
-        ctx.shadowColor = 'black';
-        ctx.shadowBlur = 4;
-        ctx.textAlign = 'right';
-        ctx.fillText(authUser.username, canvas.width - 10, usernameY);
-
-        uploadImageToFirebase();
-      };
-
-      // Check if overlay image is already loaded
-      if (overlayImage.complete) {
-        const overlayWidth = 100;
-        const overlayHeight = 100;
-        const overlayX = canvas.width - overlayWidth - 20;
-        const overlayY = canvas.height - overlayHeight - 50;
-
-        ctx.drawImage(overlayImage, overlayX, overlayY, overlayWidth, overlayHeight);
-
-        // if (overlayText) {
-        //   const textSize = 30;
-        //   ctx.font = `${textSize}px Arial`;
-        //   ctx.fillStyle = 'white';
-        //   ctx.textAlign = 'center';
-        //   ctx.fillText(overlayText, overlayX + overlayWidth / 2 - 20, overlayY + overlayHeight / 2 + textSize / 2 + 15);
-        // }
-
-        // Draw username below the overlay image
         if (overlayText) {
-        const usernameY = overlayY + overlayHeight + 24;
-        ctx.font = 'italic bold 36px Lato';
-        ctx.fillStyle = "#f75e06";
-        ctx.shadowColor = 'black';
-        ctx.shadowBlur = 4;
-        ctx.textAlign = 'right';
-        ctx.fillText(overlayText, canvas.width - 10, usernameY);
-        }
+            const padding = 30 * MULTIPLIER; // Padding around the text
+            const radius = 30 * MULTIPLIER; // Radius for the rounded corners
+            const backgroundColor = 'rgba(235, 119, 52, .92)'; // Orange with 60% opacity
+            const fontSize = 36 * MULTIPLIER;
+            
+            // Calculate text width and height
+            ctx.font = `italic bold ${fontSize}px Lato`;
+            const textWidth = ctx.measureText(overlayText).width;
+            const textHeight = fontSize; // Assuming font size is 36px
+    
+            // Positioning
+            const usernameY = overlayY + overlayHeight + 24 * MULTIPLIER;
+            const backgroundX = canvas.width - textWidth - padding - 47 * MULTIPLIER; // Adjust based on text alignment
+            const backgroundY = usernameY - textHeight - padding + 17 * MULTIPLIER;
+    
+            // Draw the rounded background
+            ctx.beginPath();
+            ctx.moveTo(backgroundX + radius, backgroundY);
+            ctx.lineTo(backgroundX + textWidth + padding, backgroundY);
+            ctx.arcTo(backgroundX + textWidth + padding, backgroundY, backgroundX + textWidth + padding, backgroundY + textHeight + padding, radius);
+            ctx.lineTo(backgroundX + textWidth + padding, backgroundY + textHeight + padding);
+            ctx.arcTo(backgroundX + textWidth + padding, backgroundY + textHeight + padding, backgroundX, backgroundY + textHeight + padding, radius);
+            ctx.lineTo(backgroundX, backgroundY + textHeight + padding);
+            ctx.arcTo(backgroundX, backgroundY + textHeight + padding, backgroundX, backgroundY, radius);
+            ctx.closePath();
+            ctx.fillStyle = backgroundColor;
+            ctx.fill();
+    
+            // Draw the text on top of the background
+            ctx.font = `italic bold ${fontSize}px Lato`;
+            ctx.fillStyle = "#ffffff"; // White color for text
+            ctx.shadowColor = 'black'; // Shadow color
+            ctx.shadowBlur = 10 * MULTIPLIER; // Shadow blur
+            ctx.textAlign = 'right'; // Align text to the right
+            
+            ctx.fillText(overlayText, canvas.width - 50 * MULTIPLIER, usernameY);
+          }
 
-        uploadImageToFirebase();
-      }
+          ctx.drawImage(overlayImage, overlayX, overlayY, overlayWidth, overlayHeight);
+    
+          uploadImageToFirebase();
+        };
+    
+        // Check if overlay image is already loaded
+        if (overlayImage.complete) {
+          overlayImage.onload(); // Call onload if already loaded
+        }
     };
   };
 
