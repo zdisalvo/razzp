@@ -14,7 +14,7 @@ const ShareButtonDL = ({ imageUrl, overlayText }) => {
     const ctx = canvas.getContext('2d');
     const baseImage = new Image();
     const overlayImage = new Image();
-    const overlayImageUrl = '/razzp-logo-new.png';
+    const overlayImageUrl = '/razzp-logo-matte.png';
 
     baseImage.crossOrigin = 'anonymous'; // Handle cross-origin images if needed
     overlayImage.crossOrigin = 'anonymous';
@@ -138,7 +138,7 @@ const ShareButtonDL = ({ imageUrl, overlayText }) => {
   return (
     <Box cursor={"pointer"} onClick={prepareImage}>
       <canvas ref={canvasRef} style={{ display: 'none' }} />
-      <ChakraImage width="30px" src="/razzp-logo-new.png" alt="logo" />
+      <ChakraImage width="30px" src="/razzp-logo-matte.png" alt="logo" />
     </Box>
   );
 };

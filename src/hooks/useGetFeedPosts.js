@@ -5,6 +5,7 @@ import useShowToast from "./useShowToast";
 import useUserProfileStore from "../store/userProfileStore";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { firestore } from "../firebase/firebase";
+import useGetTop5Posts from "./useGetTop5Posts";
 
 const useGetFeedPosts = () => {
 	const [isLoading, setIsLoading] = useState(true);
@@ -12,6 +13,18 @@ const useGetFeedPosts = () => {
 	const authUser = useAuthStore((state) => state.user);
 	const showToast = useShowToast();
 	const { setUserProfile } = useUserProfileStore();
+	const { posts: top5Posts } = useGetTop5Posts();
+	const now = Date.now();
+    const oneDayAgo = now - 24 * 60 * 60 * 1000;
+
+	const shuffleArray = (array) => {
+		let shuffledArray = [...array];
+		for (let i = shuffledArray.length - 1; i > 0; i--) {
+		  const j = Math.floor(Math.random() * (i + 1));
+		  [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
+		}
+		return shuffledArray;
+	  };
 
 	useEffect(() => {
 		const getFeedPosts = async () => {
@@ -22,7 +35,10 @@ const useGetFeedPosts = () => {
 				return;
 			}
 			const q = query(collection(firestore, "posts"), where("createdBy", "in", authUser.following));
+			const r = query(collection(firestore, "posts"), where("createdAt", ">=", oneDayAgo));
+
 			try {
+				//User's followers
 				const querySnapshot = await getDocs(q);
 				const feedPosts = [];
 
@@ -30,8 +46,43 @@ const useGetFeedPosts = () => {
 					feedPosts.push({ id: doc.id, ...doc.data() });
 				});
 
-				feedPosts.sort((a, b) => b.createdAt - a.createdAt);
-				setPosts(feedPosts);
+				//Today's posts
+				const queryTodaySnapshot = await getDocs(r);
+
+				queryTodaySnapshot.forEach((doc) => {
+					feedPosts.push({ id: doc.id, ...doc.data() });
+				});
+
+				//
+
+				
+				
+				  
+					if (top5Posts && top5Posts.length > 0) {
+					  // Combine feedPosts and top5Posts
+					  const combinedPosts = [...feedPosts, ...top5Posts];
+				
+					  // Remove duplicates based on post id
+					  const uniquePosts = [];
+					  const postIds = new Set();
+					  combinedPosts.forEach(post => {
+						if (!postIds.has(post.id)) {
+						  postIds.add(post.id);
+						  uniquePosts.push(post);
+						}
+					  });
+				
+					  // Shuffle the unique posts
+					  const shuffledPosts = shuffleArray(uniquePosts);
+				
+					  // Update the feedPosts state
+					  setPosts(shuffledPosts);
+					}
+				  
+
+
+				//feedPosts.sort((a, b) => b.createdAt - a.createdAt);
+				//setPosts(feedPosts);
 			} catch (error) {
 				showToast("Error", error.message, "error");
 			} finally {

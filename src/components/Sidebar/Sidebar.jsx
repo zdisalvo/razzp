@@ -56,7 +56,7 @@ const Sidebar = () => {
           w={10}
           cursor='pointer'
         >
-          <Image src="/razzp-mobile-logo.png" />
+          <Image src="/razzp-logo-matte.png" />
         </Link>
         <Flex direction={"row"} gap={5} cursor={"pointer"} justifyContent={"center"}>
           <SidebarItems />
