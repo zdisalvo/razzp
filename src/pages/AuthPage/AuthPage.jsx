@@ -8,17 +8,17 @@ const AuthPage = () => {
 				<Flex justifyContent={"center"} alignItems={"center"} gap={10}>
 					{/* Left hand-side */}
 					<Box display={{ base: "none", md: "block" }}>
-						<Image src='/razzp-mobile-logo.png' h={250} alt='Mobile logo' />
+						<Image src='/razzp-logo-matte.png' h={250} alt='Mobile logo' />
 					</Box>
 
 					{/* Right hand-side */}
 					<VStack spacing={4} align={"stretch"}>
 						<AuthForm />
-						<Box textAlign={"center"}>Get the app.</Box>
+						{/* <Box textAlign={"center"}>Get the app.</Box>
 						<Flex gap={5} justifyContent={"center"}>
 							<Image src='/playstore.png' h={"10"} alt='Playstore logo' />
 							<Image src='/microsoft.png' h={"10"} alt='Microsoft logo' />
-						</Flex>
+						</Flex> */}
 					</VStack>
 				</Flex>
 			</Container>
