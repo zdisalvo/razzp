@@ -166,6 +166,7 @@ const handleFollowClick = async () => {
         <Box cursor={"pointer"}>
         <Button
 								bg={"#eb7734"}
+                //background={isFollowing ? "url('/button-bg.png')" : "#eb7734"}
 								color={"white"}
 								_hover={{ bg: "#c75e1f" }}
 								textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)"

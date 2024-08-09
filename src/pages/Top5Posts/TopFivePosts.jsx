@@ -18,7 +18,7 @@ import useUnrequestFollow from "../../hooks/useUnrequestFollow";
 
 const TopFivePosts = () => {
   const authUser = useAuthStore((state) => state.user);
-  const { isLoading, posts } = useGetTop5Posts();
+  const { isLoading, posts: fetchedPosts } = useGetTop5Posts();
   const { isUpdating, handleFollowUser } = useFollowUserFP();
   const [followStates, setFollowStates] = useState({});
   const incomingReadCount = useIncomingReadCount(authUser?.uid);
@@ -31,6 +31,16 @@ const TopFivePosts = () => {
   //const [requested, setRequested ] = useState(false);
   const unrequestFollow = useUnrequestFollow();
   //const [pageLoaded, setPageLoaded] = useState(false);
+  const [posts, setPosts] = useState([]);
+  const [initialized, setInitialized] = useState(false);
+
+  useEffect(() => {
+    if (!initialized && !isLoading && fetchedPosts.length > 0) {
+      setPosts(fetchedPosts); // Store fetched posts in local state
+      setInitialized(true);
+    }
+  }, [isLoading, fetchedPosts]);
+
 
   const handleMessagesClick = () => {
     navigate("/messages");
@@ -175,7 +185,7 @@ const TopFivePosts = () => {
 
 
   return (
-    <Container py={6} px={0} w={['100vw', null, '60vh']} pb={{base: "10vh", md: "60px"}} pt={{base: "2vh", md: "5px"}} mt={{base: "10vh", md: "60px"}}>
+    <Container py={6} px={0} w={['100vw', null, '60vh']} pb={{base: "10vh", md: "60px"}} pt={{base: "2vh", md: "5px"}} >
       <Box position="sticky" top="0" bg="black" zIndex="1" py={4}>
       <Box position="fixed" top="0" right={{base: "0", md: "15vw"}} p={4} zIndex="docked" width="100%">
                 <Flex justifyContent="flex-end" alignItems="center">

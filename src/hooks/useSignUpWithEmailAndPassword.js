@@ -87,7 +87,7 @@ const useSignUpWithEmailAndPassword = () => {
 				const userDoc = {
 					uid: newUser.user.uid,
 					email: inputs.email,
-					username: inputs.username,
+					username: inputs.username.toLowerCase(),
 					fullName: inputs.fullName,
 					bio: "",
 					profilePicURL: "",

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const Navbar = () => {
 	return (
-		<Container maxW={"container.lg"} my={4}>
+		<Container maxW={"container.lg"} mb={4} mt={6}>
 			<Flex w={"full"} justifyContent={{ base: "center", sm: "space-between" }} alignItems={"center"}>
 				<Link to='/top5'>
 				<Image src='/razzp-new-logo.png' h={20} display={{ base: "none", sm: "block" }} cursor={"pointer"} />
