@@ -4,11 +4,11 @@ import useShowToast from "./useShowToast";
 const usePreviewImg = () => {
 	const [selectedFile, setSelectedFile] = useState(null);
 	const showToast = useShowToast();
-	const maxFileSizeInBytes = 10 * 1024 * 1024; // 100MB
+	const maxFileSizeInBytes = 50 * 1024 * 1024; // 50MB
 
 	const handleImageChange = (e) => {
 		const file = e.target.files[0];
-		if (file && file.type.startsWith("image/")) {
+		if (file && file.type.startsWith("image/") || file.type.startsWith("video/")) {
 			if (file.size > maxFileSizeInBytes) {
 				showToast("Error", "File size must be less than 10MB", "error");
 				setSelectedFile(null);
@@ -17,12 +17,12 @@ const usePreviewImg = () => {
 			const reader = new FileReader();
 
 			reader.onloadend = () => {
-				setSelectedFile(reader.result);
+				setSelectedFile({ src: reader.result, type: file.type });
 			};
 
 			reader.readAsDataURL(file);
 		} else {
-			showToast("Error", "Please select an image file", "error");
+			showToast("Error", "Please select an image or video file", "error");
 			setSelectedFile(null);
 		}
 	};

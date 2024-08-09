@@ -34,6 +34,7 @@ const CreatePost = () => {
 	const [caption, setCaption] = useState("");
 	const imageRef = useRef(null);
 	const { handleImageChange, selectedFile, setSelectedFile } = usePreviewImg();
+	//const { handleMediaChange, selectedFile, setSelectedFile } = usePreviewMedia();
 	const showToast = useShowToast();
 	const { isLoading, handleCreatePost } = useCreatePost();
 
@@ -80,33 +81,37 @@ const CreatePost = () => {
 					<ModalHeader>Create Post</ModalHeader>
 					<ModalCloseButton />
 					<ModalBody pb={6}>
-						<Textarea
-							placeholder='Post caption...'
-							value={caption}
-							onChange={(e) => setCaption(e.target.value)}
-						/>
+                        <Textarea
+                            placeholder='Post caption...'
+                            value={caption}
+                            onChange={(e) => setCaption(e.target.value)}
+                        />
 
-						<Input type='file' hidden ref={imageRef} onChange={handleImageChange} />
+                        <Input type='file' hidden ref={imageRef} onChange={handleImageChange} />
 
-						<BsFillImageFill
-							onClick={() => imageRef.current.click()}
-							style={{ marginTop: "15px", marginLeft: "45px", cursor: "pointer" }}
-							size={40}
-						/>
-						{selectedFile && (
-							<Flex mt={5} w={"full"} position={"relative"} justifyContent={"center"}>
-								<Image src={selectedFile} alt='Selected img' />
-								<CloseButton
-									position={"absolute"}
-									top={2}
-									right={2}
-									onClick={() => {
-										setSelectedFile(null);
-									}}
-								/>
-							</Flex>
-						)}
-					</ModalBody>
+                        <BsFillImageFill
+                            onClick={() => mediaRef.current.click()}
+                            style={{ marginTop: "15px", marginLeft: "45px", cursor: "pointer" }}
+                            size={40}
+                        />
+                        {selectedFile && (
+                            <Flex mt={5} w={"full"} position={"relative"} justifyContent={"center"}>
+                                {selectedFile.type.startsWith("image/") ? (
+                                    <Image src={selectedFile.src} alt='Selected img' />
+                                ) : (
+                                    <video src={selectedFile.src} controls style={{ width: "100%" }} />
+                                )}
+                                <CloseButton
+                                    position={"absolute"}
+                                    top={2}
+                                    right={2}
+                                    onClick={() => {
+                                        setSelectedFile(null);
+                                    }}
+                                />
+                            </Flex>
+                        )}
+                    </ModalBody>
 
 					<ModalFooter>
 						<Button mr={3} onClick={handlePostCreation} isLoading={isLoading}>
@@ -131,9 +136,11 @@ function useCreatePost() {
 	const { pathname } = useLocation();
 
 	const handleCreatePost = async (selectedFile, caption) => {
-		if (isLoading || !authUser ) return;
-		if (!selectedFile) throw new Error("Please select an image");
+		if (isLoading || !authUser) return;
+		if (!selectedFile) throw new Error("Please select an image or video");
+	
 		setIsLoading(true);
+	
 		const newPost = {
 			caption: caption,
 			likes: [],
@@ -143,24 +150,25 @@ function useCreatePost() {
 			createdAt: Date.now(),
 			createdBy: authUser.uid,
 		};
-
+	
 		try {
 			const postDocRef = await addDoc(collection(firestore, "posts"), newPost);
 			const userDocRef = doc(firestore, "users", authUser.uid);
-			const imageRef = ref(storage, `posts/${postDocRef.id}`);
-
+			const mediaRef = ref(storage, `posts/${postDocRef.id}`);
+	
 			await updateDoc(userDocRef, { posts: arrayUnion(postDocRef.id) });
-			await uploadString(imageRef, selectedFile, "data_url");
-			const downloadURL = await getDownloadURL(imageRef);
-
-			await updateDoc(postDocRef, { imageURL: downloadURL });
-
-			newPost.imageURL = downloadURL;
-
+			await uploadString(mediaRef, selectedFile.src, "data_url");
+			const downloadURL = await getDownloadURL(mediaRef);
+	
+			await updateDoc(postDocRef, { mediaURL: downloadURL, mediaType: selectedFile.type });
+	
+			newPost.mediaURL = downloadURL;
+			newPost.mediaType = selectedFile.type;
+	
 			if (authUser) createPost({ ...newPost, id: postDocRef.id });
-
+	
 			if (authUser) addPost({ ...newPost, id: postDocRef.id });
-
+	
 			showToast("Success", "Post created successfully", "success");
 		} catch (error) {
 			showToast("Error", error.message, "error");
