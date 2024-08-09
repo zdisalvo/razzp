@@ -5,7 +5,9 @@ const Navbar = () => {
 	return (
 		<Container maxW={"container.lg"} my={4}>
 			<Flex w={"full"} justifyContent={{ base: "center", sm: "space-between" }} alignItems={"center"}>
-				<Image src='/razzp-logo-matte.png' h={20} display={{ base: "none", sm: "block" }} cursor={"pointer"} />
+				<Link to='/top5'>
+				<Image src='/razzp-new-logo.png' h={20} display={{ base: "none", sm: "block" }} cursor={"pointer"} />
+				</Link>
 				<Flex gap={4}>
 					<Link to='/auth'>
 						<Button colorScheme={"blue"} size={"sm"}>

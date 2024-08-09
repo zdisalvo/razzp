@@ -2,10 +2,19 @@ import { Box, Flex, Grid, Skeleton, Text, VStack } from "@chakra-ui/react";
 import ProfilePost from "./ProfilePost";
 import useGetUserPosts from "../../hooks/useGetUserPosts";
 import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 
 const ProfilePosts = ({ username }) => {
-  const { isLoading, posts } = useGetUserPosts();
+  const { isLoading, posts: fetchedPosts } = useGetUserPosts();
+  const [posts, setPosts] = useState([]);
   const navigate = useNavigate();
+  //const { userPosts, setUserPosts } = useState({});
+
+  useEffect(() => {
+    if (!isLoading && fetchedPosts.length > 0) {
+      setPosts(fetchedPosts); // Store fetched posts in local state
+    }
+  }, [isLoading, fetchedPosts]);
 
   const handlePostClick = (postId) => {
     navigate(`/${username}/feed`, { state: { postId } });
@@ -23,16 +32,16 @@ const ProfilePosts = ({ username }) => {
       gap={1}
       columnGap={1}
     >
-      {isLoading &&
+      {/* {isLoading &&
         [0, 1, 2].map((_, idx) => (
           <VStack key={idx} alignItems={"flex-start"} gap={4}>
             <Skeleton w={"full"}>
               <Box h='300px'>contents wrapped</Box>
             </Skeleton>
           </VStack>
-        ))}
+        ))} */}
 
-      {!isLoading &&
+      {
         posts.map((post) => (
           <ProfilePost
             post={post}

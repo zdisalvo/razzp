@@ -9,15 +9,19 @@ const useLogout = () => {
 	const [signOut, isLoggingOut, error] = useSignOut(auth);
 	const showToast = useShowToast();
 	const logoutUser = useAuthStore((state) => state.logout);
+	//const setUserNull = useAuthStore((state) => state.setUser(null));
 	const navigate = useNavigate();
 
 	const handleLogout = async () => {
 		try {
 			navigate('/auth');
-			await signOut();
-			
+			//setUserNull();
 			logoutUser();
 			localStorage.removeItem("user-info");
+
+			await signOut();
+			
+			
 		} catch (error) {
 			showToast("Error", error.message, "error");
 		}

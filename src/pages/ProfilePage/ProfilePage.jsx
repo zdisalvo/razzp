@@ -112,9 +112,12 @@ const ProfilePage = () => {
           alignItems="center"
         >
           {/* <ProfileTabs /> */}
-          {authUser && userProfile && ((!userProfile.private) || (authUser.uid === userProfile.uid)|| (userProfile.private && userProfile.followers.includes(authUser.uid))) && (
+          {authUser && userProfile && ((!userProfile.private) || (authUser.uid === userProfile.uid)|| (userProfile.private && userProfile.followers.includes(authUser.uid))) ? (
           <ProfilePosts username={username} />
-          )}
+          ) : 
+          ((userProfile && !userProfile.private) &&
+          <ProfilePosts username={username} />)
+          }
         </Flex>
       </Box>
     </Container>

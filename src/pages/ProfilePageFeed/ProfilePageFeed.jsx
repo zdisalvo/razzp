@@ -21,7 +21,7 @@ const ProfilePageFeed = () => {
 
     //console.log((userProfile?.private && !userProfile.followers.includes(authUser?.uid) && !(authUser.uid === userProfile.uid)) || !authUser );
 
-    if ((userProfile?.private && !userProfile.followers.includes(authUser?.uid) && !(authUser.uid === userProfile.uid)) || !authUser ) {
+    if ((userProfile?.private && !userProfile?.followers.includes(authUser?.uid) && !(authUser?.uid === userProfile?.uid)) || (userProfile?.private && !authUser) ) {
     navigate(`/${username}`);
   }
 }, [authUser, userProfile, navigate, username]);
@@ -51,7 +51,7 @@ const ProfilePageFeed = () => {
           <Box flex={2} py={0} px={0} ml={{ base: "none", md: "20" }}>
             <UserFeed username={username} postId={postId} />
           </Box>
-          {authUser && (
+          {/* {authUser && (
             <Box
               px={0}
               ml={0}
@@ -62,7 +62,7 @@ const ProfilePageFeed = () => {
             >
               <SuggestedUsers />
             </Box>
-          )}
+          )} */}
         </Flex>
       </Box>
     </Container>

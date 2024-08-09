@@ -21,7 +21,7 @@ const TopFivePosts = () => {
   const { isLoading, posts } = useGetTop5Posts();
   const { isUpdating, handleFollowUser } = useFollowUserFP();
   const [followStates, setFollowStates] = useState({});
-  const incomingReadCount = useIncomingReadCount(authUser.uid);
+  const incomingReadCount = useIncomingReadCount(authUser?.uid);
   const newNotificationsCount = useNewNotificationsCount();
   const navigate = useNavigate();
   const [requestedStates, setRequestedStates] = useState({});
@@ -179,7 +179,7 @@ const TopFivePosts = () => {
       <Box position="sticky" top="0" bg="black" zIndex="1" py={4}>
       <Box position="fixed" top="0" right={{base: "0", md: "15vw"}} p={4} zIndex="docked" width="100%">
                 <Flex justifyContent="flex-end" alignItems="center">
-                
+                {authUser && newNotificationsCount > 0 && (
                 <Box position="relative">
                 <IconButton
                 icon={<FontAwesomeIcon icon={faBolt} />}
@@ -189,7 +189,7 @@ const TopFivePosts = () => {
                 mr={2} // Adds horizontal margin between the icons
                 position="relative"
                 />
-                {newNotificationsCount > 0 && (
+                
                     <Box
                     position="absolute"
                     bottom={0}
@@ -207,9 +207,11 @@ const TopFivePosts = () => {
                   >
                         {newNotificationsCount}
                     </Box>
-                )}
+                
                 </Box>
-            
+                )}
+
+              {authUser && incomingReadCount > 0 && (
                 <Box position="relative">
                   <IconButton
                     icon={<FontAwesomeIcon icon={faCommentDots} />}
@@ -217,7 +219,7 @@ const TopFivePosts = () => {
                     onClick={handleMessagesClick}
                     variant="outline"
                   />
-                  {incomingReadCount > 0 && (
+                  
                     <Box
                       position="absolute"
                       bottom={0}
@@ -235,9 +237,9 @@ const TopFivePosts = () => {
                     >
                       {incomingReadCount}
                     </Box>
-                  )}
+                  
                   </Box>
-                
+                )}
                 </Flex>
             </Box>
         <Heading as="h1" size="lg" color="white" textAlign="center">

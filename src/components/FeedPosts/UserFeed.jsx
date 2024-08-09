@@ -182,7 +182,7 @@ const UserFeed = () => {
   if (userNotFound || isBlocked) return <UserNotFound />;
 
   return (
-    <Container mx={0} px={0} py={6}>
+    <Container py={2}   px={0} w={['100vw', null, '60vh']} >
       {/* {isLoading &&
         [0, 1, 2].map((_, idx) => (
           <VStack key={idx} gap={0} alignItems={"flex-start"} mb={{ base: "13vh", md: "60px" }}>
