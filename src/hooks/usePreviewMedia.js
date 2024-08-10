@@ -1,12 +1,12 @@
 import { useState } from "react";
 import useShowToast from "./useShowToast";
 
-const usePreviewImg = () => {
+const usePreviewMedia = () => {
 	const [selectedFile, setSelectedFile] = useState(null);
 	const showToast = useShowToast();
 	const maxFileSizeInBytes = 50 * 1024 * 1024; // 50MB
 
-	const handleImageChange = (e) => {
+	const handleMediaChange = (e) => {
 		const file = e.target.files[0];
 		if (file && file.type.startsWith("image/") || file.type.startsWith("video/")) {
 			if (file.size > maxFileSizeInBytes) {
@@ -27,7 +27,7 @@ const usePreviewImg = () => {
 		}
 	};
 
-	return { selectedFile, handleImageChange, setSelectedFile };
+	return { selectedFile, handleMediaChange, setSelectedFile };
 };
 
-export default usePreviewImg;
+export default usePreviewMedia;

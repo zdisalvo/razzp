@@ -19,7 +19,7 @@ import {
 import { CreatePostLogo } from "../../assets/constants";
 import { BsFillImageFill } from "react-icons/bs";
 import { useRef, useState } from "react";
-import usePreviewImg from "../../hooks/usePreviewImg";
+import usePreviewMedia from "../../hooks/usePreviewMedia";
 import useShowToast from "../../hooks/useShowToast";
 import useAuthStore from "../../store/authStore";
 import usePostStore from "../../store/postStore";
@@ -32,8 +32,8 @@ import { getDownloadURL, ref, uploadString } from "firebase/storage";
 const CreatePost = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const [caption, setCaption] = useState("");
-	const imageRef = useRef(null);
-	const { handleImageChange, selectedFile, setSelectedFile } = usePreviewImg();
+	const mediaRef = useRef(null);
+	const { handleMediaChange, selectedFile, setSelectedFile } = usePreviewMedia();
 	//const { handleMediaChange, selectedFile, setSelectedFile } = usePreviewMedia();
 	const showToast = useShowToast();
 	const { isLoading, handleCreatePost } = useCreatePost();
@@ -87,7 +87,7 @@ const CreatePost = () => {
                             onChange={(e) => setCaption(e.target.value)}
                         />
 
-                        <Input type='file' hidden ref={imageRef} onChange={handleImageChange} />
+                        <Input type='file' hidden ref={mediaRef} onChange={handleMediaChange} />
 
                         <BsFillImageFill
                             onClick={() => mediaRef.current.click()}
@@ -160,9 +160,9 @@ function useCreatePost() {
 			await uploadString(mediaRef, selectedFile.src, "data_url");
 			const downloadURL = await getDownloadURL(mediaRef);
 	
-			await updateDoc(postDocRef, { mediaURL: downloadURL, mediaType: selectedFile.type });
+			await updateDoc(postDocRef, { imageURL: downloadURL, mediaType: selectedFile.type });
 	
-			newPost.mediaURL = downloadURL;
+			newPost.imageURL = downloadURL;
 			newPost.mediaType = selectedFile.type;
 	
 			if (authUser) createPost({ ...newPost, id: postDocRef.id });

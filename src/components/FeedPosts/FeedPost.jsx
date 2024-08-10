@@ -25,7 +25,12 @@ const FeedPost = forwardRef(({ post, isFollowing, requested, isPrivate, onFollow
       onFollowClick={onFollowClick}
       />
       <Box my={2} borderRadius={4} overflow={"hidden"} px={0} >
+      {(!post.mediaType || post.mediaType.startsWith("image/")) && (
         <Image src={post.imageURL} alt={"FEED POST IMG"} width="100%" objectFit="cover" maxHeight="450px" height="auto"/>
+      )}
+      {(post.mediaType && post.mediaType.startsWith("video/")) && (
+        <video src={post.imageURL} alt={"FEED POST VIDEO"} width="100%" objectFit="cover" maxHeight="450px" height="auto"/>
+      )}
       </Box>
       <PostFooter post={post} creatorProfile={userProfile} />
       </Container>
