@@ -857,24 +857,23 @@ const handlePronounsClick = (pronouns) => {
       "🎹 Piano", "🎸 Guitar", "🎷 Saxophone", "🎭 Theatre", "🎺 Trumpet", "🎻 Violin", "📝 Writing"
     ],
     "Date Ideas": [
-      "🎡 Amusement Park", "🏹 Archery", "🖼️ Art Gallery", "🏖️ Beach Day", "🎳 Bowling", "🎧 Concert", "🚴 Cycling",    
-      "🍽️ Dinner", "🧩 Escape Room", "🎤 Karaoke", "🎬 Movie Night", "🏛️ Museum", "🏞️ Nature Walk", "🎨 Painting Class", "🌅 Sunsets", 
-      "🎭 Theatre"
+      "🎡 Amusement Park", "🏹 Archery", "🖼️ Art Gallery", "🏖️ Beach Day", "🎳 Bowling", "🎧 Concerts",    
+      "🍽️ Dinner", "🧩 Escape Room", "🎤 Karaoke", "🎬 Movie Night", "🏛️ Museum", "🏞️ Nature Walk", "🎨 Painting Class", "🌅 Sunsets",
     ],
     "Diet": [
       "🍱 Bento", "🍔 Burgers", "🥩 Carnivore", "🍫 Chocolate", "🍪 Cookies", "🍩 Donuts", "🍟 Fries",    
       "🌭 Hot Dogs", "🍝 Pasta", "🥙 Pita", "🍕 Pizza","🌱 Plant-based", "🍿 Popcorn", "🍜 Ramen", "🥪 Sandwiches", "🍣 Sushi",
-      "🌮 Tacos", "🥦 Vegan", "🥗 Vegetarian"
+      "🌮 Tacos", "🥦 Vegan", "🥗 Vegetarian",
     ],
     "Fitness": [
       "🚴 Cycling", "🤸 Gymnastics", "🤾 Handball",  
       "🧗 Climbing", "🥋 Martial Arts", "🏃 Running", "🚣 Rowing",  
-      "⛷️ Skiing", "🏊 Swimming", "🏋️ Weightlifting", "🧘 Yoga", 
+      "🏊 Swimming", "🏋️ Weightlifting", "🧘 Yoga", 
     ],
     "Hobbies": [
-      "🕹️ Arcade Games", "🍰 Baking", "♟️ Chess", "🎯 Darts", "🎣 Fishing", "🌱 Gardening", "⛰️ Hiking", "🎧 Listening to Music",  
-      "🎨 Painting", "💻 Programming", "🧩 Puzzles", "📚 Reading", 
-      "🧵 Sewing", "🎤 Singing", "🎭 Theatre", "🎮 Video Games", 
+      "🕹️ Arcade Games", "🍰 Baking", "♟️ Chess", "🎯 Darts", "🎣 Fishing", "🌱 Gardening", "⛰️ Hiking", "🎭 Improv", "🎧 Listening to Music",  
+      "💻 Programming", "🧩 Puzzles",
+      "🧵 Sewing", "🎤 Singing", 
     ],
     "Night In": [
       "🎲 Board Games", "👩‍🍳 Cooking", "🎥 Movies",   
@@ -882,7 +881,7 @@ const handlePronounsClick = (pronouns) => {
     ],
     "Going Out": [
       "🍺 Beer", "☕ Cafes", "🥂 Champagne", "🎛️ Clubs", "🍸 Cocktails", "💃 Dancing",
-      "🎪 Festivals", "🎭 Improv", "🎤 Karaoke", "🎉 Parties", "🎤 Stand-up Comedy",
+      "🎪 Festivals", "🎉 Parties", "🎤 Stand-up Comedy",
       "🥃 Whiskey",
     ],
     "Pets": [
@@ -891,15 +890,15 @@ const handlePronounsClick = (pronouns) => {
     ],
     "Self-care": [
       "🛁 Bubble Baths", "📝 Journaling", "💆 Massage", "🧘‍♀️ Meditation",
-      "🧖 Sauna", "🧘 Yoga"
+      "🧖 Sauna", 
     ],
     "Sports": [
-      "🏈 Football", "⚾️ Baseball", "🏀 Basketball", "🚴 Cycling", "⛳ Golf", "🏇 Horse Racing",   
+      "🏈 Football", "⚾️ Baseball", "🏀 Basketball", "⛳ Golf", "🏇 Horse Racing",   
       "🏒 Ice Hockey", "⛸️ Ice Skating", "🏓 Ping Pong", "🏉 Rugby", "⛷️ Skiing",
-      "⚽ Soccer", "🏂 Snowboarding", "🏄 Surfing", "🏊 Swimming", "🎾 Tennis", "🏐 Volleyball", 
+      "⚽ Soccer", "🏂 Snowboarding", "🏄 Surfing", "🎾 Tennis", "🏐 Volleyball", 
     ],
     "Travel": [
-      "🎒 Backpacking", "🏖️ Beaches", "🏕️ Camping", "🚢 Cruise", "🏜️ Desert", "🎪 Festivals", "🏝️ Islands", "⛰️ Mountains", "🏞️ National Parks", "✈️ New Cities", 
+      "🎒 Backpacking", "🏖️ Beaches", "🏕️ Camping", "🚢 Cruise", "🏜️ Desert", "🏝️ Islands", "⛰️ Mountains", "🏞️ National Parks", "✈️ New Cities", 
       "🚗 Road Trips", "🧖‍♀️ Spa Weekend", "🌌 Space" 
     ]
   };

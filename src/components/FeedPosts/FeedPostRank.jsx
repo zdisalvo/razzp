@@ -1,4 +1,4 @@
-import React, { forwardRef, useEffect, useRef } from "react";
+import React, { forwardRef, useEffect, useState, useRef } from "react";
 import { Box, Container, Image, Text } from "@chakra-ui/react";
 import PostFooter from "./PostFooter";
 import PostHeader from "./PostHeader";
@@ -7,6 +7,14 @@ import useGetUserProfileById from "../../hooks/useGetUserProfileById";
 const FeedPost = forwardRef(({ post, rank, isFollowing, requested, isPrivate, onFollowClick }, ref) => {
   const { userProfile } = useGetUserProfileById(post.createdBy);
   const videoRef = useRef(null);
+  const [isMuted, setIsMuted] = useState(true);
+
+  const toggleMute = () => {
+    if (videoRef.current) {
+      videoRef.current.muted = !videoRef.current.muted;
+      setIsMuted(videoRef.current.muted);
+    }
+  };
 
   useEffect(() => {
     const videoElement = videoRef.current;
@@ -20,7 +28,7 @@ const FeedPost = forwardRef(({ post, rank, isFollowing, requested, isPrivate, on
             videoElement.pause();
           }
         },
-        { threshold: 0.1 } // Adjust this value to control how much of the video needs to be visible to trigger playback
+        { threshold: 0.2 } // Adjust this value to control how much of the video needs to be visible to trigger playback
       );
 
       observer.observe(videoElement);
@@ -92,15 +100,18 @@ const FeedPost = forwardRef(({ post, rank, isFollowing, requested, isPrivate, on
         <Image src={post.imageURL} alt={"FEED POST IMG"} width="100%" objectFit="cover" maxHeight="450px" height="auto"/>
       )}
       {(post.mediaType && post.mediaType.startsWith("video/")) && (
-        <Box justifyContent="center" alignItems="center" m={0} p={0}>
+        <Box justifyContent="center" alignItems="center" m={0} p={0}
+        cursor="pointer"
+        >
         <video src={post.imageURL} 
         ref={videoRef} 
-        controls 
+        //controls 
         //autoPlay 
+        playsInline
         muted 
         loop
         alt={"FEED POST VIDEO"} 
-        
+        onClick={toggleMute}
         />
         </Box>
       )}

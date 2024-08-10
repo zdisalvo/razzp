@@ -1,12 +1,33 @@
-import React, { forwardRef, useEffect, useRef } from "react";
-import { Box, Container, Image } from "@chakra-ui/react";
+import React, { forwardRef, useEffect, useState, useRef } from "react";
+import { Box, Container, Image, Button, IconButton, useDisclosure } from "@chakra-ui/react";
 import PostFooter from "./PostFooter";
 import PostHeader from "./PostHeader";
 import useGetUserProfileById from "../../hooks/useGetUserProfileById";
+import { FaVolumeUp, FaVolumeMute } from "react-icons/fa";
 
 const FeedPost = forwardRef(({ post, isFollowing, requested, isPrivate, onFollowClick }, ref) => {
   const { userProfile } = useGetUserProfileById(post.createdBy);
   const videoRef = useRef(null);
+  const [isMuted, setIsMuted] = useState(true);
+  const { isOpen, onToggle } = useDisclosure(); // To handle video click
+
+  const toggleMute = () => {
+    if (videoRef.current) {
+      videoRef.current.muted = !videoRef.current.muted;
+      setIsMuted(videoRef.current.muted);
+    }
+  };
+
+  const handleVideoClick = () => {
+    if (videoRef.current) {
+      if (videoRef.current.paused) {
+        videoRef.current.play();
+      } else {
+        videoRef.current.pause();
+      }
+    }
+    onToggle(); // Toggle controls visibility
+  };
 
   useEffect(() => {
     const videoElement = videoRef.current;
@@ -55,18 +76,25 @@ const FeedPost = forwardRef(({ post, isFollowing, requested, isPrivate, onFollow
         <Image src={post.imageURL} alt={"FEED POST IMG"} width="100%" objectFit="cover" maxHeight="450px" height="auto"/>
       )}
       {(post.mediaType && post.mediaType.startsWith("video/")) && (
-        <Box justifyContent="center" alignItems="center" m={0} p={0}>
+        <Box justifyContent="center" alignItems="center" m={0} p={0}
+        //onClick={handleVideoClick}
+        cursor="pointer"
+        
+        >
         <video src={post.imageURL} 
         ref={videoRef} 
-        controls 
+        //controls 
+        playsInline
         //autoPlay 
-        muted 
+        muted={isMuted} 
         loop
         alt={"FEED POST VIDEO"} 
-        
+        onClick={toggleMute}
         />
+        
         </Box>
       )}
+      
       </Box>
       <PostFooter post={post} creatorProfile={userProfile} />
       </Container>

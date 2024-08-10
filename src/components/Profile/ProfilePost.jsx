@@ -123,9 +123,10 @@ import {
         <video src={post.imageURL} 
         w={"100%"} h={"100%"} objectFit={"cover"}
         //controls 
-        //autoPlay 
+        autoPlay 
         muted 
         loop
+		playsInline
         alt={"FEED POST VIDEO"} 
         style={{ 
 			width: "100%", 
