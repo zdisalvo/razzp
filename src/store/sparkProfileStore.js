@@ -65,7 +65,7 @@ const useSparkProfileStore = create((set, get) => ({
             return;
         }
         
-        console.log(sparkProfile);
+        //console.log(sparkProfile);
 
         try {
 

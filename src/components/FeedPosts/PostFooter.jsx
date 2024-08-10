@@ -222,6 +222,7 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
                             variant={"flushed"}
                             focusBorderColor="#eb7734"
                             placeholder={"Add a comment..."}
+                            _placeholder={{ color: 'gray.500' }}
                             fontSize={16}
                             
                             onChange={(e) => setComment(e.target.value)}
