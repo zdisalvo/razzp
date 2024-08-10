@@ -20,7 +20,7 @@ import {
 } from "@chakra-ui/react";
 import { BsFillImageFill } from "react-icons/bs";
 import { useRef, useState, useEffect } from "react";
-import usePreviewImg from "../../hooks/usePreviewMedia";
+import usePreviewImg from "../../hooks/usePreviewImg";
 import useShowToast from "../../hooks/useShowToast";
 import useAuthStore from "../../store/authStore";
 import usePostStore from "../../store/postStore";
