@@ -72,7 +72,7 @@ const ProfilePage = () => {
   if (userNotFound || isBlocked) return <UserNotFound />;
 
   return (
-    <Container top={0} p={0} maxW={{base: "100vw", md: "100vw"}} pb={{base: "10vh", md: "60px"}}  m={0}>
+    <Container top={0} p={0} maxW={{base: "100vw", md: "100vw"}} pb={{base: "23vh", md: "60px"}} mb={{base: "23vh", md: "60px"}}  m={0}>
       {/* <Box position="fixed" top="0" right={{base: "0", md: "15vw"}} p={4} zIndex="docked" width="100%">
                 <Flex justifyContent="flex-end">
                 <IconButton

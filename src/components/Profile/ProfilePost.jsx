@@ -8,6 +8,7 @@ import {
 	Image,
 	Text,
 	VStack,
+	Box,
   } from "@chakra-ui/react";
   import { AiFillHeart } from "react-icons/ai";
   import { FaComment } from "react-icons/fa";
@@ -106,8 +107,34 @@ import {
 			</Flex>
 		  </Flex>
 		</Flex>
-  
+		
+		{(!post.mediaType || post.mediaType.startsWith("image/")) && (
 		<Image src={post.imageURL} alt="profile post" w={"100%"} h={"100%"} objectFit={"cover"} />
+		)}
+		{(post.mediaType && post.mediaType.startsWith("video/")) && (
+        <Box 
+		display="flex" 
+		justifyContent="center" 
+		alignItems="center" 
+		height="100%" 
+		width="100%"
+		overflow="hidden"
+	  >
+        <video src={post.imageURL} 
+        w={"100%"} h={"100%"} objectFit={"cover"}
+        //controls 
+        //autoPlay 
+        muted 
+        loop
+        alt={"FEED POST VIDEO"} 
+        style={{ 
+			width: "100%", 
+			height: "100%", 
+			objectFit: "cover" 
+		  }} 
+        />
+        </Box>
+      )}
 	  </GridItem>
 	);
   };
