@@ -110,9 +110,16 @@ const useGetSparkProfiles = (refreshKey) => {
 					allDocs = allDocsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 				}
 
+                //more than 2 pictures and a name
+
+                const filteredUsers = allDocs.filter(user => 
+                    user.profilePics?.length > 1 && // Ensure profilePics is present and has more than 1 item
+                    user.name // Ensure name is present
+                  );
+
 
                 // Apply filters from sparkProfile
-                const filteredDocs = allDocs.filter(doc => {
+                const filteredDocs = filteredUsers.filter(doc => {
                     // Exclude profiles that are blocked, viewed 2x, or own profile
                     if (sparkProfile.blocked.includes(doc.uid)  ) {
                         return false;

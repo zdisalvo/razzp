@@ -23,7 +23,7 @@ const usePreviewMedia = () => {
 				
 				try {
 					const result = await checkImageForExplicitContent(base64Image);
-					console.log(result);
+					//console.log(result);
 					if (result === 'Explicit content detected') {
 		
 						showToast("Warning", "This image/video contains explicit content and will not be uploaded", "warning");
