@@ -9,6 +9,7 @@ import { doc, getDoc, onSnapshot } from "firebase/firestore";
 import { firestore } from "../../firebase/firebase";
 import useUpdateOutgoingReadStatus from "../../hooks/useUpdateOutgoingReadStatus";
 import useUpdateIncomingReadStatus from "../../hooks/useUpdateIncomingReadStatus";
+import useShowToast from "../../hooks/useShowToast";
 
 const Message = () => {
   const [messages, setMessages] = useState([]);
@@ -26,6 +27,7 @@ const Message = () => {
 
   const { previousReadData, updateReadStatus } = useUpdateOutgoingReadStatus(userId, receivingUserId);
   const { previousViewedData, updateViewedStatus } = useUpdateIncomingReadStatus(userId, receivingUserId);
+  const showToast = useShowToast();
 
 
   const { sendMessage } = useSendRazzpMsg();
@@ -126,6 +128,11 @@ const Message = () => {
 
   const handleSendMessage = async () => {
     if (!newMessage.trim()) return;
+
+    if ((receivingProfile && messages && messages.length === 1 && messages[0].sendingUser === userId)) {
+      showToast("Warning", `${receivingProfile.username} must reply first.`, "warning");
+      return;
+    }
 
     const newMessageObject = {
       sendingUser: userId,

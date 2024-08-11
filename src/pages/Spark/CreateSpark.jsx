@@ -1227,6 +1227,7 @@ const handlePronounsClick = (pronouns) => {
             //   key={post.id}
             //   onClick={() => handleImageClick(post.id)}
             // >
+            ((!post.mediaType || post.mediaType.startsWith("image/")) &&
             <Box
               key={post.id}
               onClick={() => handleImageClick(post.id, post.imageURL)}
@@ -1248,6 +1249,7 @@ const handlePronounsClick = (pronouns) => {
                 border={formData.selectedImages.some((image) => image.id === post.id ) ? "2px solid orange" : "none"}
               />
             </Box>
+            )
             //</Button>
           ))}
         </Box>

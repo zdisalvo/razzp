@@ -18,9 +18,6 @@ const Convo = ({ userId, receivingUserId }) => {
 
   const handleClick = () => {
 
-    if ((convoItem.messages.length === 1 && convoItem.messages[0].sendingUser === userId))
-      return;
-
     setUserId(userId);
     setReceivingUserId(receivingUserId);
     // Store IDs in localStorage
