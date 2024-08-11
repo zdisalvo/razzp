@@ -125,7 +125,7 @@ const useGetSparkProfiles = (refreshKey) => {
                         return false;
                     }
 					//REPLACE IN THE ABOVE IF STATEMENT
-					//|| sparkProfile.matched.includes(doc.uid) || sparkProfile.viewed2x.includes(doc.uid) || sparkProfile.uid === doc.uid
+					//|| sparkProfile.matched.includes(doc.uid) || (sparkProfile.viewed2x.includes(doc.uid) && !sparkProfile.liked.includes(doc.uid)) || sparkProfile.uid === doc.uid
 
                     //INTERESTED IN
                 if (sparkProfile.interested_in) {

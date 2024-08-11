@@ -6,7 +6,7 @@ import { arrayRemove, arrayUnion, doc, updateDoc, increment, getDoc, setDoc } fr
 import { firestore } from "../firebase/firebase";
 import useGetSparkProfileById from "./useGetSparkProfileById";
 
-const MAX_LIKES = 30;
+const MAX_LIKES = 15;
 
 const useLikeSpark = (sparkProfile) => {
   const [isUpdating, setIsUpdating] = useState(false);
