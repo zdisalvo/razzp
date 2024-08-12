@@ -12,6 +12,7 @@ import useIncomingReadCount from "../../hooks/useIncomingReadCount";
 import useNewNotificationsCount from "../../hooks/useNewNotificationsCount";
 import useGetSparkProfileById from "../../hooks/useGetSparkProfileById";
 import SuggestedUsersBanner from "../../components/SuggestedUsers/SuggestedUsersBanner";
+import Meta from "../../components/SEO/Meta";
 
 const HomePage = () => {
   const userAuth = authStore((state) => state.user);
@@ -81,6 +82,8 @@ const HomePage = () => {
   };
 
   return (
+    <div>
+      <Meta title="title" keywords="test, test2" description="description" />
     <Container p={0} maxW={{ base: "100vw", md: "100vw" }}  pb={{base: "5vh", md: "30px"}} pt={{base: "4vh", md: "20px"}} m={0}>
       <Box position="fixed" top="0" right={{base: "0", md: "15vw"}} p={4} zIndex="docked" width="100%">
                 <Flex justifyContent="flex-end" alignItems="center">
@@ -222,6 +225,7 @@ const HomePage = () => {
         </Flex>
       </Box>
     </Container>
+    </div>
   );
 };
 
