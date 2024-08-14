@@ -83,7 +83,7 @@ const HomePage = () => {
 
   return (
     <div>
-      <Meta title="title" keywords="test, test2" description="The ultimate platform for creating and sharing content. Connect with local users, increase your popularity, and maximize your brand on Razzp. No download required." />
+      <Meta title="Razzp - Enhanced Content Creation and Sharing" keywords="test, test2" description="The ultimate platform for creating and sharing content. Connect with local users, increase your popularity, and maximize your brand on Razzp. No download required." />
     <Container p={0} maxW={{ base: "100vw", md: "100vw" }}  pb={{base: "5vh", md: "30px"}} pt={{base: "4vh", md: "20px"}} m={0}>
       <Box position="fixed" top="0" right={{base: "0", md: "15vw"}} p={4} zIndex="docked" width="100%">
                 <Flex justifyContent="flex-end" alignItems="center">

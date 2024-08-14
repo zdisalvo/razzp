@@ -335,17 +335,20 @@ const NotificationsPage = () => {
                                     {(notification.postMediaType && notification.postMediaType.startsWith("video/")) && (
                                         <Box 
                                         display="flex" 
+                                        alt="Post Video"
+                                        onClick={() => handlePostClick(notification.postId)}
+                                        cursor="pointer"
                                         justifyContent="center" 
                                         alignItems="center" 
-                                        height="100%" 
-                                        width="100%"
+                                        height="40px"
+                                        width="40px"
                                         overflow="hidden"
-                                        //size="40px"
+                                        size="40px"
                                         borderRadius="5px"
                                         mr={3}
                                       >
-                                        <video src={notification.postimageURL} 
-                                        w={"100%"} h={"100%"} objectFit={"cover"}
+                                        <video src={notification.postImageURL} 
+                                        w={"100%"} h={"100%"} 
                                         //controls 
                                         autoPlay 
                                         muted 

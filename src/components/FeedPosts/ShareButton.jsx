@@ -15,7 +15,7 @@ const ShareButton = ({ imageUrl }) => {
   };
 
   return (
-    <button onClick={shareToInstagramApp}>
+    <button disabled={isLoading} onClick={shareToInstagramApp}>
       Share to Instagram
     </button>
   );

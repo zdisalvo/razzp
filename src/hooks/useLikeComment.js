@@ -61,6 +61,7 @@ const useLikeComment = () => {
                         time: new Date().getTime(),
                         postId: postId,
                         postImageURL: postImageURL,
+                        postMediaType: post.mediaType || "",
                         comment: comment.comment,
                         commentId: commentId,
                         type: "commentLike"

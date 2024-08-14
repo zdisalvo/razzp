@@ -10,6 +10,8 @@ import useCrownPost from "../../hooks/useCrownPost";
 //import ShareButtonOverlay from "./ShareButtonOverlay";
 import ShareButton from "./ShareButton";
 import ShareButtonDL from "./ShareButtonDL";
+import { doc, getDoc } from 'firebase/firestore';
+import { firestore } from '../../firebase/firebase';
 
 const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
     const { isCommenting, handlePostComment } = usePostComment();
@@ -25,6 +27,8 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
 
     const [isCrowned, setIsCrowned] = useState(initialIsCrowned); // Local state for isLiked
     const [crowns, setCrowns] = useState(initialCrowns);
+
+    const [postComments, setPostComments] = useState(post?.comments.length || 0);
 
     const calculateRankingScore = (post) => {
         const postTime = new Date(post.createdAt);
@@ -46,6 +50,23 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
           🔥
         </Text>
       ));
+
+      const getUpdatedComments = async () => {
+        if (post.id) {
+            try {
+                const postRef = doc(firestore, 'posts', post.id);
+                const postSnap = await getDoc(postRef);
+                if (postSnap.exists()) {
+                    const fetchedPost = postSnap.data();
+                    setPostComments(fetchedPost.comments.length);
+                } else {
+                    console.log("No such document!");
+                }
+            } catch (error) {
+                console.error("Error fetching post:", error);
+            }
+        }
+    };
     
 
     useEffect(() => {
@@ -134,6 +155,7 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
     const handleSubmitComment = async () => {
         await handlePostComment(post.id, comment);
         setComment("");
+        getUpdatedComments();
     };
 
     return (
@@ -204,9 +226,9 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
                             {post.caption}
                         </Text>
                     </Text>
-                    {post.comments.length > 0 && (
+                    {postComments > 0 && (
                         <Text fontSize="sm"  color={"gray"} cursor={"pointer"} onClick={onOpen}>
-                            View all {post.comments.length} comments
+                            View all {postComments} comments
                         </Text>
                     )}
                     {/* COMMENTS MODAL ONLY IN THE HOME PAGE */}

@@ -51,7 +51,7 @@ const useLikePost = (post) => {
                 time: new Date().getTime(),
                 postId: post.id,
 				postImageURL: post.imageURL,
-                postMediaType: post.mediaType,
+                postMediaType: post.mediaType || "",
                 type: "like"
             };
 

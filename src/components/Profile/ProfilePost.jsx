@@ -121,7 +121,7 @@ import {
 		overflow="hidden"
 	  >
         <video src={post.imageURL} 
-        w={"100%"} h={"100%"} objectFit={"cover"}
+        w={"100%"} h={"100%"} 
         //controls 
         autoPlay 
         muted 

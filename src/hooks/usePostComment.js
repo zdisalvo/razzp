@@ -49,6 +49,7 @@ const usePostComment = () => {
 				time: new Date().getTime(),
 				postId,
 				postImageURL: postData.imageURL,
+				postMediaType: postData.mediaType || "",
 				commentId: newComment.id,
 				comment: newComment.comment,
 				type: "comment",

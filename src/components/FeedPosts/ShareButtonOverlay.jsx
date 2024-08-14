@@ -66,7 +66,7 @@ const ShareButtonOverlay = ({ imageUrl, overlayText }) => {
   return (
     <div>
       <canvas ref={canvasRef} style={{ display: 'none' }} />
-      <button onClick={prepareImage}>Share to Instagram</button>
+      <button disabled={isLoading} onClick={prepareImage}>Share to Instagram</button>
     </div>
   );
 };
