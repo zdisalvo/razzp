@@ -1,4 +1,4 @@
-import create from 'zustand';
+import { create } from 'zustand';
 
 const useLikeStore = create((set) => ({
   likeCount: 0,

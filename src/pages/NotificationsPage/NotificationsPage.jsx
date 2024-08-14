@@ -340,11 +340,11 @@ const NotificationsPage = () => {
                                         height="100%" 
                                         width="100%"
                                         overflow="hidden"
-                                        size="40px"
+                                        //size="40px"
                                         borderRadius="5px"
                                         mr={3}
                                       >
-                                        <video src={post.imageURL} 
+                                        <video src={notification.postimageURL} 
                                         w={"100%"} h={"100%"} objectFit={"cover"}
                                         //controls 
                                         autoPlay 

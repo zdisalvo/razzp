@@ -12,7 +12,7 @@ const Meta = ({title, description, keywords}) =>  {
     );
 };
 
-Meta.PropTypes = {
+Meta.propTypes = {
     title: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
     keywords: PropTypes.string.isRequired,

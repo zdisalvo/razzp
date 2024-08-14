@@ -1,4 +1,4 @@
-import create from 'zustand';
+import { create } from 'zustand';
 
 const useMatchStore = create((set) => ({
   userId: null,
