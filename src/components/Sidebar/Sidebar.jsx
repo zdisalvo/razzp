@@ -58,6 +58,7 @@ const Sidebar = () => {
           cursor='pointer'
         >
           <Image src="/razzp-logo-matte.png" 
+          alt="Razzp Logo"
           width={{ base: "40px", md: "50px" }} // Adjust image size
           height={{ base: "40px", md: "50px" }} // Adjust height to match width
           objectFit="contain" // Ensure the image scales properly

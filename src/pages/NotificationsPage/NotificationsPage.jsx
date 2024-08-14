@@ -317,6 +317,8 @@ const NotificationsPage = () => {
                                     <Text fontSize="sm" color="gray.500">{formatNotificationTime(notification.time)}</Text>
                                 </Box>
                                 {notification.postImageURL && (
+                                    <>
+                                    {(!notification.postMediaType || notification.postMediaType.startsWith("image/")) && (
                                     <Image
                                         src={notification.postImageURL}
                                         alt="Post Image"
@@ -329,6 +331,36 @@ const NotificationsPage = () => {
                                         borderRadius="5px" // Optional: match Avatar's round shape
                                         mr={3}
                                     />
+                                    )}
+                                    {(notification.postMediaType && notification.postMediaType.startsWith("video/")) && (
+                                        <Box 
+                                        display="flex" 
+                                        justifyContent="center" 
+                                        alignItems="center" 
+                                        height="100%" 
+                                        width="100%"
+                                        overflow="hidden"
+                                        //size="40px"
+                                        borderRadius="5px"
+                                        mr={3}
+                                      >
+                                        <video src={notification.postimageURL} 
+                                        w={"100%"} h={"100%"} objectFit={"cover"}
+                                        //controls 
+                                        autoPlay 
+                                        muted 
+                                        loop
+                                        playsInline
+                                        alt={"FEED POST VIDEO"} 
+                                        style={{ 
+                                            width: "100%", 
+                                            height: "100%", 
+                                            objectFit: "cover" 
+                                          }} 
+                                        />
+                                        </Box>
+                                      )}
+                                      </>
                                 )}
                             </ListItem>
                         );

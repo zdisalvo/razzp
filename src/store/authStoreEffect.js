@@ -1,4 +1,4 @@
-import create from 'zustand';
+import { create } from 'zustand';
 
 const useAuthStoreEffect = create((set) => ({
   authUserDoc: null, // Initial state for authenticated user

@@ -1,5 +1,5 @@
 // src/stores/sparkStore.js
-import create from 'zustand';
+import { create } from 'zustand';
 import { collection, getDocs } from 'firebase/firestore';
 import { firestore } from '../firebase/firebase'; // Adjust path as necessary
 
