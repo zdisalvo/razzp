@@ -31,12 +31,13 @@ const usePreviewMedia = () => {
 					} else if (file.type.startsWith("video/")) {
 						// Check for explicit content in videos
 						const videoUri = URL.createObjectURL(file); // Temporarily create a URI for the video
+						//console.log(videoUri);
 						result = await checkVideoForExplicitContent(videoUri);
 					}
 					//console.log(result);
 
 
-					if (result === 'Explicit content detected') {
+					if (result === true) {
 		
 						showToast("Warning", "This image/video contains explicit content and will not be uploaded", "warning");
 						setSelectedFile(null);
