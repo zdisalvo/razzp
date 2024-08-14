@@ -1,6 +1,7 @@
 import { useState } from "react";
 import useShowToast from "./useShowToast";
 import { checkImageForExplicitContent } from "../utils/imageService";
+import { checkVideoForExplicitContent } from "../utils/videoService";
 
 const usePreviewMedia = () => {
 	const [selectedFile, setSelectedFile] = useState(null);
@@ -22,8 +23,19 @@ const usePreviewMedia = () => {
 				const base64Image = reader.result.split(',')[1];
 				
 				try {
-					const result = await checkImageForExplicitContent(base64Image);
+					let result;
+
+					if (file.type.startsWith("image/")) {
+						// Check for explicit content in images
+						result = await checkImageForExplicitContent(base64Image);
+					} else if (file.type.startsWith("video/")) {
+						// Check for explicit content in videos
+						const videoUri = URL.createObjectURL(file); // Temporarily create a URI for the video
+						result = await checkVideoForExplicitContent(videoUri);
+					}
 					//console.log(result);
+
+
 					if (result === 'Explicit content detected') {
 		
 						showToast("Warning", "This image/video contains explicit content and will not be uploaded", "warning");
