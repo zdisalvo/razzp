@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Helmet } from "react-helmet";
 
-const Meta = ({title, description, keywords}) =>  {
+const Meta = ({title, description, keywords, og}) =>  {
     return (
         <Helmet>
             <title>{title}</title>
