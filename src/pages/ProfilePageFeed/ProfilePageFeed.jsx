@@ -5,6 +5,7 @@ import UserFeed from "../../components/FeedPosts/UserFeed";
 import SuggestedUsers from "../../components/SuggestedUsers/SuggestedUsers";
 import useAuthStore from "../../store/authStore";
 import useGetUserProfileByUsername from "../../hooks/useGetUserProfileByUsername";
+import Meta from "../../components/SEO/Meta";
 
 
 const ProfilePageFeed = () => {
@@ -33,6 +34,17 @@ const ProfilePageFeed = () => {
   const postId = searchParams.get("postId");
 
   return (
+    <div>
+      {userProfile && (
+      <Meta
+      title={`${userProfile.fullName}${userProfile.city && !userProfile.private ? ` in ${userProfile.city}, ${userProfile.state}` : ""} on Razzp - Social Networking Reinvented`}
+      keywords={`${userProfile.fullName}${userProfile.city && !userProfile.private ? ` in ${userProfile.city}, ${userProfile.state}` : ""} on Razzp, Social network, Social media platform, Content creation, Online community, Connect with local friends, Share updates, Search by location, Messaging, Social media, Profile creation, Social sharing, Friend network, Social interaction, Content sharing, User engagement, Social connections, Follow and unfollow, Online profiles, News feed, Social networking site`}
+      description={userProfile.bio ? userProfile.bio : "The ultimate platform for creating and sharing content. Connect with local users, increase your popularity, and maximize your brand on Razzp. No download required."} 
+      ogTitle={`${userProfile.username} on Razzp - Social Networking Reinvented`}
+      ogDescription="The ultimate platform for creating and sharing content. No download required."
+      ogImage={userProfile.profilePicURL}
+      />
+      )}
     <Container px={0} maxW={{ base: "100vw", md: "100vw" }} mx={0} mb={{ base: "12vh", md: "20px" }}>
       <Box
         px={0}
@@ -66,6 +78,7 @@ const ProfilePageFeed = () => {
         </Flex>
       </Box>
     </Container>
+    </div>
   );
 };
 

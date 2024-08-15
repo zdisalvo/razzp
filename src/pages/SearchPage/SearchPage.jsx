@@ -22,6 +22,7 @@ import {
   import useAuthStore from "../../store/authStore";
   import { storeUserLocation } from "../../hooks/storeUserLocation";
   import { unstoreUserLocation } from "../../hooks/unstoreUserLocation";
+  import Meta from "../../components/SEO/Meta";
   
   const SearchPage = () => {
     const authUser = useAuthStore((state) => state.user);
@@ -89,6 +90,13 @@ import {
     }, []);
   
     return (
+      <div>
+        <Meta 
+          title="Search for friends on Razzp"
+          description="The ultimate platform for creating and sharing content. Connect with local users, increase your popularity, and maximize your brand on Razzp. No download required."
+          keywords="Search for friends by location, Social network, Social media platform, Content creation, Online community, Connect with local friends, Share updates, Messaging, Social media, Profile creation, Social sharing, Friend network, Social interaction, Content sharing, User engagement, Social connections, Follow and unfollow, Online profiles, News feed, Social networking site"
+        />
+      
         <Container py={6} px={0} w={['100vw', null, '80vh']}>
           <Flex align="center" mb={4} justify="space-between">
             <Flex align="center">
@@ -141,6 +149,7 @@ import {
           )}
         
       </Container>
+      </div>
     );
   };
   

@@ -13,6 +13,7 @@ import useIncomingReadCount from "../../hooks/useIncomingReadCount";
 import useNewNotificationsCount from "../../hooks/useNewNotificationsCount";
 import useGetUserProfileById from "../../hooks/useGetUserProfileById";
 import useUnrequestFollow from "../../hooks/useUnrequestFollow";
+import Meta from "../../components/SEO/Meta";
 
 
 
@@ -185,6 +186,15 @@ const TopFivePosts = () => {
 
 
   return (
+    <div>
+      <Meta title="Razzp - Top 5 Posts of the Week" 
+      keywords="trending posts, weekly top posts, popular posts this week, most liked posts of the week, highest ranked posts, top rated content, vote on posts, rate content, upvote content" 
+      description="Discover the top posts of the week, explore the highest ranked content, and cast your vote on the best posts. Engage with popular and trending content in our vibrant community." 
+      ogTitle="Razzp - Top 5 Posts of the Week"
+      ogDescription="Discover the top posts of the week, explore the highest ranked content, and cast your vote on the best posts. Engage with popular and trending content in our vibrant community."
+      ogImage="https://razz-p.web.app/trophy-gold.png"
+    
+      />
     <Container py={6} px={0} w={['100vw', null, '60vh']} pb={{base: "10vh", md: "60px"}} pt={{base: "2vh", md: "5px"}} >
       <Box position="sticky" top="0" bg="black" zIndex="1" py={4}>
       <Box position="fixed" top="0" right={{base: "0", md: "15vw"}} p={4} zIndex="docked" width="100%">
@@ -287,6 +297,7 @@ const TopFivePosts = () => {
         </Text>
       )}
     </Container>
+    </div>
   );
 };
 

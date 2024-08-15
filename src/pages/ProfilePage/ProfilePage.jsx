@@ -11,6 +11,7 @@ import { faComments } from '@fortawesome/free-solid-svg-icons';
 import useMsgStore from "../../store/msgStore";
 import useAuthStore from "../../store/authStore";
 import useCheckBlockedUser from "../../hooks/useCheckBlockedUser";
+import Meta from "../../components/SEO/Meta";
 
 const ProfilePage = () => {
   const { authUser, fetchUserData } = useAuthStore((state) => ({
@@ -72,6 +73,17 @@ const ProfilePage = () => {
   if (userNotFound || isBlocked) return <UserNotFound />;
 
   return (
+    <div>
+      {userProfile && (
+      <Meta
+      title={`${userProfile.fullName}${userProfile.city && !userProfile.private ? ` in ${userProfile.city}, ${userProfile.state}` : ""} on Razzp - Social Networking Reinvented`}
+      keywords={`${userProfile.fullName}${userProfile.city && !userProfile.private ? ` in ${userProfile.city}, ${userProfile.state}` : ""} on Razzp, Social network, Social media platform, Content creation, Online community, Connect with local friends, Share updates, Search by location, Messaging, Social media, Profile creation, Social sharing, Friend network, Social interaction, Content sharing, User engagement, Social connections, Follow and unfollow, Online profiles, News feed, Social networking site`}
+      description={userProfile.bio ? userProfile.bio : "The ultimate platform for creating and sharing content. Connect with local users, increase your popularity, and maximize your brand on Razzp. No download required."} 
+      ogTitle={`${userProfile.username} on Razzp - Social Networking Reinvented`}
+      ogDescription="The ultimate platform for creating and sharing content. No download required."
+      ogImage={userProfile.profilePicURL}
+      />
+      )}
     <Container top={0} p={0} maxW={{base: "100vw", md: "100vw"}} pb={{base: "23vh", md: "60px"}} mb={{base: "23vh", md: "60px"}}  m={0}>
       {/* <Box position="fixed" top="0" right={{base: "0", md: "15vw"}} p={4} zIndex="docked" width="100%">
                 <Flex justifyContent="flex-end">
@@ -121,6 +133,7 @@ const ProfilePage = () => {
         </Flex>
       </Box>
     </Container>
+    </div>
   );
 };
 
