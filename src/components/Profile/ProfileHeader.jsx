@@ -636,7 +636,7 @@ const ProfileHeader = ({ username, page }) => {
 						{userProfile.fullName}
 					</Text>
 				</Flex> */}
-				<Text fontSize={"sm"} whiteSpace="normal" overflowWrap="break-word" width="100%">{userProfile.bio}</Text>
+				<Text fontSize={"sm"} mb={3} whiteSpace="normal" overflowWrap="break-word" width="100%">{userProfile.bio}</Text>
 				{visitingOwnProfileAndAuth && (
 						<Flex	
 						gap={3}

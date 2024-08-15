@@ -4,7 +4,7 @@ import { doc, getDoc } from 'firebase/firestore';
 
 // Define the Zustand store
 const useAuthStore = create((set) => ({
-  user: JSON.parse(localStorage.getItem('user-info')),
+  user: JSON.parse(localStorage.getItem('user-info')) || null,
   login: (user) => {
     localStorage.setItem('user-info', JSON.stringify(user));
     set({ user });
@@ -25,6 +25,10 @@ const useAuthStore = create((set) => ({
         const userData = userDoc.data();
         localStorage.setItem('user-info', JSON.stringify(userData));
         set({ user: userData });
+      } else {
+        console.warn('User document does not exist');
+        localStorage.removeItem('user-info');
+        set({ user: null });
       }
     } catch (error) {
       console.error('Error fetching user data:', error);

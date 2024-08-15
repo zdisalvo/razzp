@@ -110,7 +110,7 @@ const ProfilePage = () => {
 			alignItems="center"
       >
         <Flex py={1} px={0} w="full" flexDirection="column" alignItems="center">
-          {!isLoading && userProfile && <ProfileHeader username={username} page="profile" />}
+          {userProfile && <ProfileHeader username={username} page="profile" />}
           {isLoading && <ProfileHeaderSkeleton />}
         </Flex>
         <Flex

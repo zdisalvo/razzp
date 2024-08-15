@@ -14,7 +14,7 @@ const storeSparkUserLocation = async (userId, latitude, longitude) => {
       geohash: geohash,
       pin: [latitude, longitude] // Optionally store location for easier querying or display
     });
-    console.log("Geohash and location stored successfully.");
+    //console.log("Geohash and location stored successfully.");
     return geohash; // Optionally return geohash for further processing
   } catch (error) {
     console.error("Error storing geohash and location:", error);

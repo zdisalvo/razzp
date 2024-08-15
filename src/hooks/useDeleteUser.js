@@ -4,12 +4,14 @@ import { ref, deleteObject } from 'firebase/storage';
 import { firestore, storage } from '../firebase/firebase';
 import useAuthStore from '../store/authStore';
 import useShowToast from './useShowToast'; // Assuming you have a custom hook for showing toasts
+import useLogout from './useLogout';
 
 const useDeleteUser = () => {
   const [isDeleting, setIsDeleting] = useState(false);
   const [error, setError] = useState(null);
   const authUser = useAuthStore((state) => state.user);
   const showToast = useShowToast();
+  const { handleLogout, isLoggingOut } = useLogout();
 
   const deleteUser = async () => {
     if (!authUser) {
@@ -59,7 +61,7 @@ const useDeleteUser = () => {
           // decrementPostsCount();
         } catch (error) {
           console.error(`Error deleting post ${postId}:`, error);
-          throw error;
+          //throw error;
         }
       });
 
@@ -74,8 +76,12 @@ const useDeleteUser = () => {
       showToast('Error', error.message, 'error');
     } finally {
       setIsDeleting(false);
+      handleLogout();
     }
   };
+
+  
+  
 
   return {
     deleteUser,

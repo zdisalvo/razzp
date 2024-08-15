@@ -45,7 +45,7 @@ const ProfilePageFeed = () => {
       ogImage={userProfile.profilePicURL}
       />
       )}
-    <Container px={0} maxW={{ base: "100vw", md: "100vw" }} mx={0} mb={{ base: "12vh", md: "20px" }}>
+    <Container px={0} py={6} maxW={{ base: "100vw", md: "100vw" }} mx={0} pb={{base: "10vh", md: "60px"}}>
       <Box
         px={0}
         mx="auto"
@@ -60,7 +60,7 @@ const ProfilePageFeed = () => {
         alignItems="center"
       >
         <Flex gap={20} px={0} mx={0} justifyContent="center">
-          <Box flex={2} py={0} px={0} ml={{ base: "none", md: "20" }}>
+          <Box flex={2} py={0} px={0} pb={{base: "6vh", md: "60px"}} ml={{ base: "none", md: "20" }}>
             <UserFeed username={username} postId={postId} />
           </Box>
           {/* {authUser && (

@@ -906,7 +906,7 @@ const handlePronounsClick = (pronouns) => {
       "🏊 Swimming", "🧘 Yoga", 
     ],
     "Hobbies": [
-      "🕹️ Arcade Games", "🍰 Baking", "♟️ Chess", "🎯 Darts", "🎣 Fishing", "🌱 Gardening", "⛰️ Hiking", "🎭 Improv", "🎧 Listening to Music",  
+      "🕹️ Arcade Games", "♟️ Chess", "🎯 Darts", "🎣 Fishing", "🌱 Gardening", "⛰️ Hiking", "🎭 Improv", "🎧 Listening to Music",  
       "💻 Programming", "🧩 Puzzles", "🛼 Rollerskating", "⛵ Sailing", "🤿 Scuba diving",
       "🧵 Sewing", "🎤 Singing", "🛹 Skateboarding", "💉 Tattooing", 
     ],
@@ -928,7 +928,7 @@ const handlePronounsClick = (pronouns) => {
       "🧠 Mindfullness", "🥑 Nutrition", "🎙️ Podcasts", "🧖 Sauna", "💤 Sleeping Well", "🛋️ Therapy", "🏔️ Time Offline", 
     ],
     "Sports": [
-      "🏸 Badminton", "⚾️ Baseball", "🏀 Basketball", "🎳 Bowling", "🥊 Boxing", "🚣‍♂️ Crew", "🏏 Cricket", "🏈 Football", "⛳ Golf", "🤸 Gymnastics", "🤾‍♀️ Handball", "🏇 Horse Racing",   
+      "🏸 Badminton", "⚾️ Baseball", "🏀 Basketball", "🥊 Boxing", "🚣‍♂️ Crew", "🏏 Cricket", "🏈 Football", "⛳ Golf", "🤸 Gymnastics", "🤾‍♀️ Handball", "🏇 Horse Racing",   
       "🏇 Horse Riding", "🏒 Ice Hockey", "⛸️ Ice Skating", "🛶 Kayaking", "🥍 Lacrosse", "🏍️ Motorbiking", "🥒 Pickleball", "🏓 Ping Pong", "🏉 Rugby", "⛷️ Skiing",
       "⚽ Soccer", "🥎 Softball", "🏂 Snowboarding", "🏄 Surfing", "🎾 Tennis", "🏐 Volleyball", 
     ],
@@ -1955,7 +1955,7 @@ const handlePronounsClick = (pronouns) => {
       {Object.entries(emojiCategories).map(([category, emojis]) => (
         <Box key={category} mb={8}>
           <Center>
-          <FormLabel fontSize="sm">{category}</FormLabel>
+          <FormLabel fontSize="md">{category}</FormLabel>
           </Center>
           <Box>
             {emojis.map((emoji) => (

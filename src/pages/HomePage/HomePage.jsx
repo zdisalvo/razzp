@@ -216,7 +216,7 @@ const HomePage = () => {
         </Button> */}
 
         <Flex gap={20} px={0} mx={0} justifyContent="center" mt={0}>
-          <Box flex={2} py={0} px={0} ml={{ base: "none", md: "none" }}>
+          <Box flex={2} py={0} pb={{base: "6vh", md: "60px"}} px={0} ml={{ base: "none", md: "none" }}>
             <FeedPostsOrig />
           </Box>
           {/* <Box 

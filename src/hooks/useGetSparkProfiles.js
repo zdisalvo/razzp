@@ -112,10 +112,14 @@ const useGetSparkProfiles = (refreshKey) => {
 
                 //more than 2 pictures and a name
 
+                //console.log(allDocs);
+
                 const filteredUsers = allDocs.filter(user => 
                     user.profilePics?.length > 1 && // Ensure profilePics is present and has more than 1 item
                     user.name // Ensure name is present
                   );
+
+                  
 
 
                 // Apply filters from sparkProfile
@@ -125,7 +129,7 @@ const useGetSparkProfiles = (refreshKey) => {
                         return false;
                     }
 					//REPLACE IN THE ABOVE IF STATEMENT
-					//|| sparkProfile.matched.includes(doc.uid) || (sparkProfile.viewed2x.includes(doc.uid) && !sparkProfile.liked.includes(doc.uid)) || sparkProfile.uid === doc.uid
+					//|| sparkProfile.matched.includes(doc.uid) || (sparkProfile.viewed2x.includes(doc.uid) && !sparkProfile.liked.includes(doc.uid)) || (sparkProfile.paused) || sparkProfile.uid === doc.uid
 
                     //INTERESTED IN
                 if (sparkProfile.interested_in) {
