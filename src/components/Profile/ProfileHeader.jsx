@@ -25,6 +25,7 @@ import useUnrequestFollow from "../../hooks/useUnrequestFollow";
 import useHasRequestedFollow from "../../hooks/useHasRequestedFollow";
 import useFollowUser from "../../hooks/useFollowUser";
 import useLogout from "../../hooks/useLogout";
+import SupportModal from "../Modals/SupportModal";
 
 const ProfileHeader = ({ username, page }) => {
 	//const { userProfile } = useUserProfileStore();
@@ -67,8 +68,20 @@ const ProfileHeader = ({ username, page }) => {
 	const unrequestFollow = useUnrequestFollow();
 	//const hasRequested = useHasRequestedFollow(userProfile.uid);
 	const { handleLogout, isLoggingOut } = useLogout();
+	const [isModalOpen, setIsModalOpen] = useState(false);
 
 	//console.log(isFollowing);
+
+	const handleModalClose = () => {
+		setIsModalOpen(false);
+	  };
+		
+	  const handleSupportClick = () => {
+		// setSparkProfile(profileData);
+		// setSparkUser(match); // Assuming match contains user data
+		setIsModalOpen(true);
+	  };
+
 
 	useState(() => {
 		if (userProfile && authUser && userProfile.requested) {
@@ -465,6 +478,18 @@ const ProfileHeader = ({ username, page }) => {
 			  onClick={navigateToBlocked}
 			>Blocked Users</MenuItem>
 		  )}
+			
+			<MenuItem
+			bg="black"
+			_hover={{ bg: '#2e2e2e' }} // Changes background color to charcoal on hover
+			px={4} // Adds padding inside MenuItem
+              //width="100%"
+			  whiteSpace="nowrap"
+			  color="white"
+			  onClick={handleSupportClick}
+			>Support</MenuItem>
+			
+			
 		  
             <MenuItem
 			bg="black"
@@ -667,8 +692,9 @@ const ProfileHeader = ({ username, page }) => {
 			</VStack>
 			</Container>
 			{isOpen && <EditProfile isOpen={isOpen} onClose={onClose} />}
-			
+			{isModalOpen && <SupportModal isOpen={isModalOpen} onClose={handleModalClose} />}
 		</Flex>
+		
 	);
 };
 
