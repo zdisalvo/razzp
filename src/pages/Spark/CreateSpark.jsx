@@ -39,11 +39,14 @@ import DragAndDropGrid from "./DragAndDropGrid";
 import SparkProfileModal from "../SparkMatches/SparkProfileModal";
 import useSparkProfileStore from "../../store/sparkProfileStore";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser } from "@fortawesome/free-solid-svg-icons";
+import { faUser, faPause, faPlay } from "@fortawesome/free-solid-svg-icons";
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { firestore } from '../../firebase/firebase';
 import { FaPlus, FaMinus } from "react-icons/fa";
 import Meta from "../../components/SEO/Meta";
+import usePauseSparkAccount from '../../hooks/usePauseSparkAccount';
+import useUnpauseSparkAccount from "../../hooks/useUnpauseSparkAccount";
+import useShowToast from "../../hooks/useShowToast";
 
 
 const CreateSpark = () => {
@@ -76,6 +79,11 @@ const CreateSpark = () => {
   const minAgeDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
   const maxDate = minAgeDate.toISOString().split("T")[0];
   const { isOpen: isInterestsOpen, onToggle: toggleInterests } = useDisclosure();
+  const pauseAccount = usePauseSparkAccount();
+  const unpauseAccount = useUnpauseSparkAccount();
+  const [ initialized, setInitialized ] = useState(false);
+  const showToast = useShowToast();
+  
 
   
 
@@ -89,6 +97,32 @@ const CreateSpark = () => {
     error: state.error,
     fetchSparkProfile: state.fetchSparkProfile,
   }));
+
+  const [paused, setPaused] = useState(sparkProfileView?.paused || false);
+
+  useEffect(() => {
+    if (sparkProfileView && sparkProfileView?.paused !== undefined && !initialized) {
+      setPaused(sparkProfileView.paused);
+      if (sparkProfileView.paused) {
+				showToast("Your profile is currently paused and not visible, click the play button in the top right to make it active");
+      }
+      setInitialized(true);
+    }
+  }, [sparkProfileView]);
+
+
+
+  const handlePauseAccount = () => {
+     
+    pauseAccount(authUser?.uid);
+    setPaused(true);
+  };
+
+  const handleUnpauseAccount = () => {
+     
+    unpauseAccount(authUser?.uid);
+    setPaused(false);
+  };
   
   
   useEffect(() => {
@@ -940,7 +974,7 @@ const handlePronounsClick = (pronouns) => {
   
   
   return (
-    <div>
+    <>
       <Meta title="Spark on Razzp - Instagram Style Dating App, Stop Swiping Today!" 
       keywords="dating app, Instagram style dating, no swiping dating, discrete messaging, gender fluid dating, extensive filtering options, fun new way to meet singles, local singles dating, secure chat, inclusive dating app" 
       description="Explore a unique dating app with an Instagram-style interface, no swiping required. Enjoy discrete messaging, gender fluid inclusivity, and extensive filtering options to find the perfect match. Discover a fun and innovative way to meet singles in your area." 
@@ -981,6 +1015,27 @@ const handlePronounsClick = (pronouns) => {
         sparkUser={sparkProfileView}
       />
           }
+          {sparkProfileView && authUser && !paused && (
+          <IconButton
+                icon={<FontAwesomeIcon icon={faPause} />}
+                aria-label="Pause Spark Account"
+                onClick={handlePauseAccount}
+                variant="outline"
+                mr={2} // Adds horizontal margin between the icons
+                position="relative"
+          />
+        )}
+        {sparkProfileView && authUser && paused && (
+          <IconButton
+                icon={<FontAwesomeIcon icon={faPlay} />}
+                aria-label="Make Spark Account Active"
+                onClick={handleUnpauseAccount}
+                variant="outline"
+                mr={2} // Adds horizontal margin between the icons
+                position="relative"
+          />
+        )}
+
       </Box>
       </Flex>
         </Box>
@@ -1933,7 +1988,7 @@ const handlePronounsClick = (pronouns) => {
         </Stack>
       </Box>
     </Container>
-    </div>
+    </>
   );
 };
 

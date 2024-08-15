@@ -12,7 +12,7 @@ const useGetNewMatchesCount = () => {
             if (!authUser || !authUser.uid) return;
 
             try {
-                const userRef = doc(firestore, "spark", authUser.uid);
+                const userRef = doc(firestore, "spark", authUser?.uid);
                 const userDoc = await getDoc(userRef);
 
                 const matchRef = doc(firestore, "sparkMatches", authUser.uid);
