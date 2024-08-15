@@ -52,16 +52,16 @@ const SupportModal = ({ isOpen, onClose }) => {
         bg={"black"} 
         border={"1px solid gray"} 
         maxW={{ base: "90vw", md: "400px" }}  
-        px={{ base: "0px", md: "8px" }} 
+        px={{ base: "8px", md: "8px" }} 
         pt={3} 
-        pb={0}
+        pb={4}
       >
         <ModalCloseButton />
         <ModalHeader>Contact Us</ModalHeader>
         <ModalBody 
-          px={{ base: "0px", md: "8px" }} 
+          px={{ base: "8px", md: "8px" }} 
           pt={{ base: 5, md: 8 }} 
-          pb={{ base: 0, md: 5 }}
+          pb={{ base: 4, md: 5 }}
         >
           <form onSubmit={handleSubmit}>
             <FormControl isRequired mb={3}>

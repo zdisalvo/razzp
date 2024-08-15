@@ -21,8 +21,9 @@ const usePreviewImg = () => {
 			reader.onloadend = async () => {
 				const imageBase64 = reader.result.split(",")[1]; // Remove data:image/jpeg;base64, part
 				try {
+					console.log("test");
 					const result = await checkImageForExplicitContent(imageBase64);
-					if (result === 'Explicit content detected') {
+					if (result === true) {
 						showToast("Warning", "Explicit content detected. Please select another image.", "warning");
 						setSelectedFile(null);
 					} else {

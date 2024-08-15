@@ -393,6 +393,7 @@ const SparkProfileLite = ({ sparkProfile, sparkUser }) => {
             hasPrev && (
               <button
                 type="button"
+                disabled={isLoading}
                 onClick={onClickHandler}
                 title={label}
                 style={{
@@ -418,6 +419,7 @@ const SparkProfileLite = ({ sparkProfile, sparkUser }) => {
             hasNext && (
               <button
                 type="button"
+                disabled={isLoading}
                 onClick={onClickHandler}
                 title={label}
                 style={{
