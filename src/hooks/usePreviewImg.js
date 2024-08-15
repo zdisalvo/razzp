@@ -16,6 +16,8 @@ const usePreviewImg = () => {
 				return;
 			}
 
+			console.log("file");
+
 			const reader = new FileReader();
 
 			reader.onloadend = async () => {
