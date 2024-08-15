@@ -29,15 +29,34 @@ const usePreviewMedia = () => {
 						// Check for explicit content in images
 						result = await checkImageForExplicitContent(base64Image);
 					} else if (file.type.startsWith("video/")) {
-						// Check for explicit content in videos
-						const videoUri = URL.createObjectURL(file); // Temporarily create a URI for the video
-						//console.log(videoUri);
-						result = await checkVideoForExplicitContent(videoUri);
+						result = await new Promise((resolve, reject) => {
+							const reader = new FileReader();
+
+							reader.onload = async () => {
+								const videoUri = reader.result;
+
+								try {
+									const checkResult = await checkVideoForExplicitContent(videoUri);
+									resolve(checkResult);
+								} catch (error) {
+									console.error("Error checking video content:", error);
+									reject(error);
+								}
+							};
+
+							reader.onerror = (error) => {
+								console.error("Error reading file:", error);
+								reject(error);
+							};
+
+							reader.readAsDataURL(file);
+						});
+						//console.log(result); 
 					}
-					//console.log(result);
 
 
 					if (result === true) {
+						console.log(result);
 		
 						showToast("Warning", "This image/video contains explicit content and will not be uploaded", "warning");
 						setSelectedFile(null);
