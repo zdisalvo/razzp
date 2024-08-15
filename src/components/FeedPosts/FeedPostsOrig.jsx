@@ -42,7 +42,7 @@ useEffect(() => {
         const userData = userSnap.data();
         pStates[post.createdBy] = userData.private || false;
         fStates[post.createdBy] = userData.followers.includes(authUser.uid);
-        rStates[post.createdBy] = userData.requested.includes(authUser.uid);
+        rStates[post.createdBy] = userData.requested ? userData.requested.includes(authUser.uid) : false;
       } catch (error) {
         console.error(`Error fetching follow state for user ${post.createdBy}:`, error);
       }

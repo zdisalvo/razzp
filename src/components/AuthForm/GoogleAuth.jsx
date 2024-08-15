@@ -88,6 +88,7 @@ const GoogleAuth = ({ prefix }) => {
 					profilePicURL: newUser.user.photoURL,
 					followers: [],
 					following: [],
+					requested: [],
 					posts: [],
 					createdAt: Date.now(),
 					geohash: "",

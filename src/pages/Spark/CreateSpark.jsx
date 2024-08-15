@@ -1349,7 +1349,13 @@ const handlePronounsClick = (pronouns) => {
           
             {sparkProfileView && !sparkProfileView.birthday &&
           <FormControl id="birthday">
+            
+            <Stack direction="row" align="baseline">
             <FormLabel color="#eb7734">Birthday</FormLabel>
+            <Text fontSize="sm" color="gray.500">
+            (This cannot be changed later)
+          </Text>
+          </Stack>
             <Input
               type="date"
               name="birthday"

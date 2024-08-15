@@ -355,7 +355,8 @@ const ProfileHeader = ({ username, page }) => {
 			  color="white"
 			  onClick={handleShare}
 			>Share to Contacts</MenuItem> */}
-          {authUser && authUser.blocked && !authUser.blocked.includes(userProfile.uid) && (
+          {((authUser && authUser.blocked && !authUser.blocked.includes(userProfile.uid)) 
+		  	|| (authUser && !authUser.blocked)) && (
             <MenuItem
 			bg="black"
 			_hover={{ bg: '#2e2e2e' }} // Changes background color to charcoal on hover
