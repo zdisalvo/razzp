@@ -12,6 +12,7 @@ import { useState, useEffect, useCallback } from "react";
 import { storeSparkUserLocation } from "../../hooks/storeSparkUserLocation";
 import { useNavigate } from 'react-router-dom';
 import useSparkProfileStore from "../../store/sparkProfileStore";
+import Meta from "../../components/SEO/Meta";
 
 const Spark = () => {
     const authUser = useAuthStore((state) => state.user);
@@ -97,6 +98,16 @@ const Spark = () => {
     }, [onClose]);
 
     return (
+      <div>
+        <Meta title="Spark on Razzp - Instagram Style Dating App, Stop Swiping Today!" 
+      keywords="dating app, Instagram style dating, no swiping dating, discrete messaging, gender fluid dating, extensive filtering options, fun new way to meet singles, local singles dating, secure chat, inclusive dating app" 
+      description="Explore a unique dating app with an Instagram-style interface, no swiping required. Enjoy discrete messaging, gender fluid inclusivity, and extensive filtering options to find the perfect match. Discover a fun and innovative way to meet singles in your area." 
+      ogTitle="Spark on Razzp - Instagram Style Dating App, Stop Swiping Today!"
+      ogDescription="Explore a unique dating app with an Instagram-style interface, no swiping required. Enjoy discrete messaging, gender fluid inclusivity, and extensive filtering options to find the perfect match. Discover a fun and innovative way to meet singles in your area."
+      ogImage="https://razz-p.web.app/firework3.png"
+    
+      />
+      
         <Container py={6} px={0} w={['100vw', null, '60vh']} pb={{base: "5vh", md: "30px"}} pt={{base: "4vh", md: "20px"}} mt={{base: "10vh", md: "60px"}}>
             <Box position="fixed" top="0" right={{base: "0", md: "15vw"}} p={4} zIndex="docked" width="100%">
                 <Flex justifyContent="flex-end">
@@ -149,6 +160,7 @@ const Spark = () => {
 
             <FilterUserModal isOpen={isOpen} onClose={onClose} onFiltersApplied={handleFiltersApplied} />
         </Container>
+        </div>
     );
 };
 

@@ -57,13 +57,13 @@ const useSparkProfileStore = create((set, get) => ({
         }
 
         set({ isLoading: true });
-        const { sparkProfile } = get(); // Get the latest state
+        //const { sparkProfile } = get(); // Get the latest state
 
-        if (!sparkProfile) {
-            console.error("Spark profile not found.");
-            set({ isLoading: false });
-            return;
-        }
+        // if (!sparkProfile) {
+        //     console.error("Spark profile not found.");
+        //     set({ isLoading: false });
+        //     return;
+        // }
         
         //console.log(sparkProfile);
 

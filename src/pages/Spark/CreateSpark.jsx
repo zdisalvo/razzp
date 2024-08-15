@@ -43,6 +43,7 @@ import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { firestore } from '../../firebase/firebase';
 import { FaPlus, FaMinus } from "react-icons/fa";
+import Meta from "../../components/SEO/Meta";
 
 
 const CreateSpark = () => {
@@ -853,12 +854,12 @@ const handlePronounsClick = (pronouns) => {
 
   const emojiCategories = {
     "Creativity": [
-      "🖌️ Art", "🎨 Painting", "📸 Photography", 
-      "🎹 Piano", "🎸 Guitar", "🎷 Saxophone", "🎭 Theatre", "🎺 Trumpet", "🎻 Violin", "📝 Writing"
+      "🖌️ Art", "📐 Design", "🧥 Fashion", "🎸 Guitar", "💄 Makeup", "🎨 Painting", "📸 Photography", 
+      "🎹 Piano", "🏺 Pottery", "🎷 Saxophone", "🎭 Theatre", "🎥 TikTok", "🎺 Trumpet", "🎻 Violin", "📝 Writing"
     ],
     "Date Ideas": [
       "🎡 Amusement Park", "🏹 Archery", "🖼️ Art Gallery", "🏖️ Beach Day", "🎳 Bowling", "🎧 Concerts",    
-      "🍽️ Dinner", "🧩 Escape Room", "🎤 Karaoke", "🎬 Movie Night", "🏛️ Museum", "🏞️ Nature Walk", "🎨 Painting Class", "🌅 Sunsets",
+      "🍽️ Dinner", "🧩 Escape Room", "🏎️ Go Karting", "🎤 Karaoke", "🎬 Movie Night", "🏛️ Museums & Galleries", "🏞️ Nature Walk", "🎨 Painting Class", "🌅 Sunsets",
     ],
     "Diet": [
       "🍱 Bento", "🍔 Burgers", "🥩 Carnivore", "🍫 Chocolate", "🍪 Cookies", "🍩 Donuts", "🍟 Fries",    
@@ -866,22 +867,22 @@ const handlePronounsClick = (pronouns) => {
       "🌮 Tacos", "🥦 Vegan", "🥗 Vegetarian",
     ],
     "Fitness": [
-      "🚴 Cycling", "🤸 Gymnastics", "🤾 Handball",  
-      "🧗 Climbing", "🥋 Martial Arts", "🏃 Running", "🚣 Rowing",  
-      "🏊 Swimming", "🏋️ Weightlifting", "🧘 Yoga", 
+      "🚴 Cycling", "🏋️ Gym", "🤾 Handball",  
+      "🧗 Climbing", "🥋 Martial Arts", "🤸‍♀️ Pilates", "🏃 Running", "🚣 Rowing",  
+      "🏊 Swimming", "🧘 Yoga", 
     ],
     "Hobbies": [
       "🕹️ Arcade Games", "🍰 Baking", "♟️ Chess", "🎯 Darts", "🎣 Fishing", "🌱 Gardening", "⛰️ Hiking", "🎭 Improv", "🎧 Listening to Music",  
-      "💻 Programming", "🧩 Puzzles",
-      "🧵 Sewing", "🎤 Singing", 
+      "💻 Programming", "🧩 Puzzles", "🛼 Rollerskating", "⛵ Sailing", "🤿 Scuba diving",
+      "🧵 Sewing", "🎤 Singing", "🛹 Skateboarding", "💉 Tattooing", 
     ],
     "Night In": [
-      "🎲 Board Games", "👩‍🍳 Cooking", "🎥 Movies",   
+      "🍰 Baking", "🎲 Board Games", "👩‍🍳 Cooking", "🎥 Movies",   
       "📚 Reading", "🎮 Video Games", "🍷 Wine", 
     ],
     "Going Out": [
-      "🍺 Beer", "☕ Cafes", "🥂 Champagne", "🎛️ Clubs", "🍸 Cocktails", "💃 Dancing",
-      "🎪 Festivals", "🎉 Parties", "🎤 Stand-up Comedy",
+      "🍺 Beer", "☕ Cafes", "🥂 Champagne", "🪩 Clubs", "🍸 Cocktails", "💃 Dancing",
+      "👑 Drag Shows", "🎪 Festivals", "🎉 Parties", "🎤 Stand-up Comedy",
       "🥃 Whiskey",
     ],
     "Pets": [
@@ -889,16 +890,16 @@ const handlePronounsClick = (pronouns) => {
       "🦎 Reptiles", "🐢 Turtles"
     ],
     "Self-care": [
-      "🛁 Bubble Baths", "📝 Journaling", "💆 Massage", "🧘‍♀️ Meditation",
-      "🧖 Sauna", 
+      "🛁 Bubble Baths", , "💬 Deep Chats", "📝 Journaling", "💆 Massage", "🧘‍♀️ Meditation",
+      "🧠 Mindfullness", "🥑 Nutrition", "🎙️ Podcasts", "🧖 Sauna", "💤 Sleeping Well", "🛋️ Therapy", "🏔️ Time Offline", 
     ],
     "Sports": [
-      "🏈 Football", "⚾️ Baseball", "🏀 Basketball", "⛳ Golf", "🏇 Horse Racing",   
-      "🏒 Ice Hockey", "⛸️ Ice Skating", "🏓 Ping Pong", "🏉 Rugby", "⛷️ Skiing",
-      "⚽ Soccer", "🏂 Snowboarding", "🏄 Surfing", "🎾 Tennis", "🏐 Volleyball", 
+      "🏸 Badminton", "⚾️ Baseball", "🏀 Basketball", "🎳 Bowling", "🥊 Boxing", "🚣‍♂️ Crew", "🏏 Cricket", "🏈 Football", "⛳ Golf", "🤸 Gymnastics", "🤾‍♀️ Handball", "🏇 Horse Racing",   
+      "🏇 Horse Riding", "🏒 Ice Hockey", "⛸️ Ice Skating", "🛶 Kayaking", "🥍 Lacrosse", "🏍️ Motorbiking", "🥒 Pickleball", "🏓 Ping Pong", "🏉 Rugby", "⛷️ Skiing",
+      "⚽ Soccer", "🥎 Softball", "🏂 Snowboarding", "🏄 Surfing", "🎾 Tennis", "🏐 Volleyball", 
     ],
     "Travel": [
-      "🎒 Backpacking", "🏖️ Beaches", "🏕️ Camping", "🚢 Cruise", "🏜️ Desert", "🏝️ Islands", "⛰️ Mountains", "🏞️ National Parks", "✈️ New Cities", 
+      "🎒 Backpacking", "🏖️ Beaches", "🏕️ Camping", "🚢 Cruises", "🏜️ Desert", "🏝️ Islands", "⛰️ Mountains", "🏞️ National Parks", "✈️ New Cities", 
       "🚗 Road Trips", "🧖‍♀️ Spa Weekend", "🌌 Space" 
     ]
   };
@@ -939,6 +940,15 @@ const handlePronounsClick = (pronouns) => {
   
   
   return (
+    <div>
+      <Meta title="Spark on Razzp - Instagram Style Dating App, Stop Swiping Today!" 
+      keywords="dating app, Instagram style dating, no swiping dating, discrete messaging, gender fluid dating, extensive filtering options, fun new way to meet singles, local singles dating, secure chat, inclusive dating app" 
+      description="Explore a unique dating app with an Instagram-style interface, no swiping required. Enjoy discrete messaging, gender fluid inclusivity, and extensive filtering options to find the perfect match. Discover a fun and innovative way to meet singles in your area." 
+      ogTitle="Spark on Razzp - Instagram Style Dating App, Stop Swiping Today!"
+      ogDescription="Explore a unique dating app with an Instagram-style interface, no swiping required. Enjoy discrete messaging, gender fluid inclusivity, and extensive filtering options to find the perfect match. Discover a fun and innovative way to meet singles in your area."
+      ogImage="https://razz-p.web.app/firework3.png"
+    
+      />
     
     <Container maxW="container.md" mt={{ base: "5vh", md: "30px" }} mb={{ base: "10vh", md: "60px" }}>
       <Box top="0" bg="black" zIndex="1" py={4}>
@@ -1923,6 +1933,7 @@ const handlePronounsClick = (pronouns) => {
         </Stack>
       </Box>
     </Container>
+    </div>
   );
 };
 
