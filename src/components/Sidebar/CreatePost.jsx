@@ -83,6 +83,9 @@ const CreatePost = () => {
 					<ModalBody pb={6}>
                         <Textarea
                             placeholder='Post caption...'
+							_placeholder={{ color: 'gray.500' }}
+							border="1px groove #888888"
+							fontSize={16}
                             value={caption}
                             onChange={(e) => setCaption(e.target.value)}
                         />
