@@ -11,7 +11,7 @@ const ShareButtonOverlay = ({ imageUrl, overlayText }) => {
     const overlayImage = new Image();
     const overlayImageUrl = "/razzp-mobile-logo-shadow.png"
 
-    console.log(imageUrl);
+    //console.log(imageUrl);
 
     baseImage.src = imageUrl;
     overlayImage.src = overlayImageUrl;

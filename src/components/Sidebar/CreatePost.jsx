@@ -131,7 +131,9 @@ function useCreatePost() {
 	const [isLoading, setIsLoading] = useState(false);
 	const authUser = useAuthStore((state) => state.user);
 	const createPost = usePostStore((state) => state.createPost);
+	const setUserProfile = useUserProfileStore((state) => state.setUserProfile);
 	const addPost = useUserProfileStore((state) => state.addPost);
+	//const setPosts = useU
 	//const userProfile = useUserProfileStore((state) => state.userProfile);
 	const { pathname } = useLocation();
 
@@ -155,6 +157,8 @@ function useCreatePost() {
 			const postDocRef = await addDoc(collection(firestore, "posts"), newPost);
 			const userDocRef = doc(firestore, "users", authUser.uid);
 			const mediaRef = ref(storage, `posts/${postDocRef.id}`);
+
+			if (authUser) setUserProfile(authUser);
 	
 			await updateDoc(userDocRef, { posts: arrayUnion(postDocRef.id) });
 			await uploadString(mediaRef, selectedFile.src, "data_url");
@@ -164,6 +168,8 @@ function useCreatePost() {
 	
 			newPost.imageURL = downloadURL;
 			newPost.mediaType = selectedFile.type;
+
+			
 	
 			if (authUser) createPost({ ...newPost, id: postDocRef.id });
 	

@@ -7,7 +7,7 @@ import useCrownStore from "../store/crownStore";
 
 const useCrownPost = (post) => {
 
-    const MAX_CROWNS = 1;
+    const MAX_CROWNS = 3;
 
 	const [isUpdating, setIsUpdating] = useState(false);
 	const authUser = useAuthStore((state) => state.user);
@@ -53,7 +53,16 @@ const useCrownPost = (post) => {
               
             });
             setCrownCount(0);
-            return showToast("Message", "You have reached your crown limit for the day", "warning");
+            
+          } else if (!isCrowned && crownCount < MAX_CROWNS) {
+            const currentTime = new Date().toISOString();
+            await updateDoc(userRef, {
+              crownClock: currentTime,
+              dayCrowns: 0,
+              
+            });
+            setCrownCount(0);
+            showToast("Message", "You have reached your crown limit for the day", "warning");
           }
 
         setIsUpdating(true);
@@ -125,14 +134,26 @@ const useCrownPost = (post) => {
 
           ///END OF NOTIFICATIONS LOGIC
 
-            await updateDoc(userRef, {
-                dayCrowns: !isCrowned ? increment(1) : increment(-1),
-            });
+          //REMOVED SO DOESN'T INTERFERE WITH SETTING CROWNS TO ZERO 
+          //SO WE CAN GO OFF THE CROWN CLOCK INSTEAD, DIFFERENT METHOD
+          //IF YOU RAISE MAX CROWNS ABOVE 1
+
+            // await updateDoc(userRef, {
+            //     dayCrowns: !isCrowned ? increment(1) : increment(-1),
+            // });
+
+
 
             
 
 			      setIsCrowned(!isCrowned);
-            isCrowned ? decrementCrownCount() : incrementCrownCount();
+
+            //MAKING INACTIVE FOR NOW BECAUSE CROWNS WILL ALWAYS BE AT ZERO
+            //WE WILL JUST GO OFF OF THE CLOCK TO SEE IF THEY CAN CROWN OR NOT
+
+            //isCrowned ? decrementCrownCount() : incrementCrownCount();
+
+
 			//isCrowned ? setCrowns(crowns - 1) : setCrowns(crowns + 1);
 		} catch (error) {
 			showToast("Error", error.message, "error");

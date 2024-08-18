@@ -109,7 +109,16 @@ const useCrownSpark = (sparkProfile) => {
           
         });
         setCrownCount(0);
-        return showToast("Message", "You have reached your crowns limit for the day", "warning");
+        
+      } else if (!isLiked && crownCount < MAX_CROWNS) {
+        const currentTime = new Date().toISOString();
+        await updateDoc(sparkUserRef, {
+          crownClock: currentTime,
+          dayCrowns: 0,
+          
+        });
+        setCrownCount(0);
+        showToast("Message", "You have reached your crowns limit for the day", "warning");
       }
 
     setIsUpdating(true);
@@ -165,7 +174,11 @@ const useCrownSpark = (sparkProfile) => {
 
       setIsLikedMe(!isLikedMe);
       setIsLiked(!isLiked);
-      isLiked ? decrementCrownCount() : incrementCrownCount();
+
+      //MAKING INACTIVE FOR NOW BECAUSE CROWNS WILL ALWAYS BE AT ZERO
+      //WE WILL JUST GO OFF OF THE CLOCK TO SEE IF THEY CAN CROWN OR NOT
+
+      //isLiked ? decrementCrownCount() : incrementCrownCount();
 
     //   console.log(likeCount);
     //     console.log(isLiked);
@@ -200,6 +213,7 @@ const useCrownSpark = (sparkProfile) => {
             timeRemaining = Math.round(timeRemaining);
 
         if (timeDiff < 86400) { // 60 seconds = 1 minute // 86400 seconds = 1 day
+          //setCrownCount(0);
           showToast("Message", "Please wait " + timeRemaining + " hours for your crowns to refresh", "warning");
           return false; // Not allowed to like
         }
