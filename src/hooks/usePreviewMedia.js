@@ -51,6 +51,8 @@ const usePreviewMedia = () => {
     return new Promise((resolve, reject) => {
       video.currentTime = currentTime;
 
+	  video.crossOrigin = 'anonymous'
+
 	  //showToast("captureFrame started");
 
       const onCanPlay = async () => {
@@ -63,7 +65,7 @@ const usePreviewMedia = () => {
           const imageBase64 = await canvas.toDataURL('image/jpeg').split(',')[1];
           const result = await checkImageForExplicitContent(imageBase64);
 		  
-		  showToast("result", result);
+		  //showToast("result", result);
 
           if (result === true) {
             resolve(true);
@@ -78,9 +80,11 @@ const usePreviewMedia = () => {
 
 	 // showToast("before canPlay listener");
 
-      //video.addEventListener('canplay', onCanPlay, { once: true });
-	  onCanPlay();
+      video.addEventListener('canplay', onCanPlay, { once: true });
+	  //onCanPlay();
       video.addEventListener('error', () => reject(new Error('Error seeking video')), { once: true });
+
+	  video.load();
     });
   };
 
