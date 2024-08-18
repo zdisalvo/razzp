@@ -7,6 +7,7 @@ const usePreviewMedia = () => {
 	const [selectedFile, setSelectedFile] = useState(null);
 	const showToast = useShowToast();
 	const maxFileSizeInBytes = 50 * 1024 * 1024; // 50MB
+	
 
 	const handleMediaChange = async (e) => {
 		const file = e.target.files[0];
@@ -20,48 +21,29 @@ const usePreviewMedia = () => {
 			const reader = new FileReader();
 
 			reader.onloadend = async () => {
-				const base64Image = reader.result.split(',')[1];
-				
+				const fileContent = reader.result;
+
 				try {
 					let result;
 
 					if (file.type.startsWith("image/")) {
-						// Check for explicit content in images
+						// Extract base64 content from the image and check for explicit content
+						const base64Image = fileContent.split(',')[1];
 						result = await checkImageForExplicitContent(base64Image);
 					} else if (file.type.startsWith("video/")) {
-						result = await new Promise((resolve, reject) => {
-							const reader = new FileReader();
-
-							reader.onload = async () => {
-								const videoUri = reader.result;
-
-								try {
-									const checkResult = await checkVideoForExplicitContent(videoUri);
-									resolve(checkResult);
-								} catch (error) {
-									console.error("Error checking video content:", error);
-									reject(error);
-								}
-							};
-
-							reader.onerror = (error) => {
-								console.error("Error reading file:", error);
-								reject(error);
-							};
-
-							reader.readAsDataURL(file);
-						});
-						//console.log(result); 
+						// Use the Data URL directly for checking explicit content in videos
+						showToast("starting video");
+						if (fileContent)
+							showToast("file content present");
+						result = await checkVideoForExplicitContent(fileContent);
 					}
-
 
 					if (result === true) {
 						console.log(result);
-		
 						showToast("Warning", "This image/video contains explicit content and will not be uploaded", "warning");
 						setSelectedFile(null);
 					} else {
-						setSelectedFile({ src: reader.result, type: file.type });
+						setSelectedFile({ src: file, type: file.type });
 					}
 				} catch (error) {
 					showToast("Error", "Error checking content", "error");
@@ -69,6 +51,7 @@ const usePreviewMedia = () => {
 				}
 			};
 
+			// Read the file content as a Data URL
 			reader.readAsDataURL(file);
 		} else {
 			showToast("Error", "Please select an image or video file", "error");
