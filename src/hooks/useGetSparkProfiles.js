@@ -125,11 +125,14 @@ const useGetSparkProfiles = (refreshKey) => {
                 // Apply filters from sparkProfile
                 const filteredDocs = filteredUsers.filter(doc => {
                     // Exclude profiles that are blocked, viewed 2x, or own profile
-                    if (sparkProfile.blocked.includes(doc.uid)  ) {
+                    if (sparkProfile.blocked.includes(doc.uid) || sparkProfile.matched.includes(doc.uid) || 
+                    (sparkProfile.viewed3x.includes(doc.uid) && !doc.liked.includes(sparkProfile.uid)) || 
+                    (sparkProfile.viewed3x.includes(doc.uid) && !doc.crowned.includes(sparkProfile.uid)) || 
+                    (sparkProfile.paused) || sparkProfile.uid === doc.uid ) {
                         return false;
                     }
 					//REPLACE IN THE ABOVE IF STATEMENT
-					//|| sparkProfile.matched.includes(doc.uid) || (sparkProfile.viewed2x.includes(doc.uid) && !sparkProfile.liked.includes(doc.uid)) || (sparkProfile.paused) || sparkProfile.uid === doc.uid
+					//|| sparkProfile.matched.includes(doc.uid) || (sparkProfile.viewed3x.includes(doc.uid) && !sparkProfile.liked.includes(doc.uid)) || (sparkProfile.paused) || sparkProfile.uid === doc.uid
 
                     //INTERESTED IN
                 if (sparkProfile.interested_in) {

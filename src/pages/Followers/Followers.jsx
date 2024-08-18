@@ -10,6 +10,7 @@ import { useNavigate, useParams, Link } from 'react-router-dom';
 import useGetUserProfileByUsername from '../../hooks/useGetUserProfileByUsername';
 import FollowButton from '../Following/FollowButton';
 import useRemoveFollower from '../../hooks/useRemoveFollower';
+import LoadingPage from '../../components/Loading/LoadingPage';
 
 const FollowersPage = () => {
     const [followers, setFollowers] = useState([]);
@@ -136,7 +137,8 @@ const FollowersPage = () => {
     if (profileLoading || loading) {
         return (
             <Flex flexDir='column' h='100vh' alignItems='center' justifyContent='center'>
-			<Spinner size='xl' />
+			{/* <Spinner size='xl' /> */}
+            <LoadingPage />
 		    </Flex>
         );
     }

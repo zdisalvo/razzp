@@ -9,6 +9,7 @@ import useFollowUserFP from '../../hooks/useFollowUserFP';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import useGetUserProfileByUsername from '../../hooks/useGetUserProfileByUsername';
 import FollowButton from './FollowButton';
+import LoadingPage from '../../components/Loading/LoadingPage';
 
 const FollowingPage = () => {
     const [following, setFollowing] = useState([]);
@@ -131,7 +132,8 @@ const FollowingPage = () => {
     if (profileLoading || loading) {
         return (
             <Flex flexDir='column' h='100vh' alignItems='center' justifyContent='center'>
-			<Spinner size='xl' />
+			{/* <Spinner size='xl' /> */}
+            <LoadingPage />
 		    </Flex>
         );
     }

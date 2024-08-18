@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { Box, Spinner } from "@chakra-ui/react";
 import ProfilePost from "../Profile/ProfilePost";
 import useGetUserPostsFeed from "../../hooks/useGetUserPostsFeed";
+import LoadingPage from "../Loading/LoadingPage";
 
 const UserFeedPosts = ({ username, postId }) => {
   const { isLoading, posts } = useGetUserPostsFeed(username, postId);
@@ -42,7 +43,8 @@ const UserFeedPosts = ({ username, postId }) => {
   return (
     <Box>
       {isLoading ? (
-        <Spinner size="xl" />
+        // <Spinner size="xl" />
+        <LoadingPage />
       ) : posts.length > 1 ? (
         posts.map((post) => (
 			<ProfilePost 

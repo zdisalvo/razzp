@@ -25,6 +25,7 @@ import { firestore } from "../../firebase/firebase"; // Import your Firestore in
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import useAuthStore from "../../store/authStore"; // Import your auth store
 import { FaPlus, FaMinus } from "react-icons/fa";
+import { storeSparkUserLocation } from "../../hooks/storeSparkUserLocation";
 
 const heightOptions = Array.from({ length: 19 }, (_, i) => 60 + i);
 const openToOptions = [
@@ -86,6 +87,7 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
   const [selectedReligion, setSelectedReligion] = useState([]);
   const [radiusInMiles, setRadiusInMiles] = useState(100); // Default distance
   const [ageRange, setAgeRange] = useState([18, 80]); // Default age range
+  const [isFetchingLocation, setIsFetchingLocation] = useState(false);
 
   const { isOpen: isAdvancedFiltersOpen, onToggle: toggleAdvancedFilters } = useDisclosure();
 
@@ -118,6 +120,30 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
     }
   }, [isOpen, authUser]);
 
+  const getCurrentLocation = () => {
+    if (navigator.geolocation && authUser) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          // Example: Update user location and find nearby users
+
+          storeSparkUserLocation(authUser.uid, latitude, longitude); 
+
+          setIsFetchingLocation(false); // Stop fetching location after getting it
+        },
+        (error) => {
+          console.error('Error getting current location:', error);
+          setIsFetchingLocation(false); // Stop fetching location in case of error
+          // Handle error appropriately
+        }
+      );
+    } else {
+      console.error('Geolocation is not supported by this browser.');
+      setIsFetchingLocation(false); // Stop fetching location if geolocation is not supported
+      // Handle geolocation not supported
+    }
+  };
+
   const handleHeightChange = (value) => {
     setSelectedHeight(value);
   };
@@ -146,6 +172,8 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
 
   const handleDistanceChange = (value) => {
     setRadiusInMiles(value);
+
+    getCurrentLocation();
   };
 
   const handleAgeRangeChange = (values) => {

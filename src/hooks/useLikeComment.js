@@ -9,7 +9,7 @@ const useLikeComment = () => {
     const authUser = useAuthStore((state) => state.user);
     const showToast = useShowToast();
 
-    const handleLikeComment = async (postId, commentId, postImageURL) => {
+    const handleLikeComment = async (postId, commentId, postImageURL, postMediaType) => {
         if (isLiking) return;
         if (!authUser) return showToast("Error", "You must be logged in to like a comment", "error");
 
@@ -21,6 +21,7 @@ const useLikeComment = () => {
 
         try {
             const postRef = doc(firestore, "posts", postId);
+            
             const postDoc = await getDoc(postRef);
 
             if (!postDoc.exists()) {
@@ -61,7 +62,7 @@ const useLikeComment = () => {
                         time: new Date().getTime(),
                         postId: postId,
                         postImageURL: postImageURL,
-                        postMediaType: post.mediaType || "",
+                        postMediaType: postMediaType || "",
                         comment: comment.comment,
                         commentId: commentId,
                         type: "commentLike"

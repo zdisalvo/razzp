@@ -73,12 +73,13 @@ const Comment = ({ comment, post, postUser }) => {
 
             try {
                 if (isLiked) {
-                    await handleLikeComment(post.id, commentId, post.imageURL);
+                    await handleLikeComment(post.id, commentId, post.imageURL, post.mediaType);
                     await updateDoc(doc(firestore, "users", authUser.uid), {
                         commentLikes: arrayRemove(commentId)
                     });
                 } else {
-                    await handleLikeComment(post.id, commentId, post.imageURL);
+                    await handleLikeComment(post.id, commentId, post.imageURL, post.mediaType);
+                    
                     await updateDoc(doc(firestore, "users", authUser.uid), {
                         commentLikes: arrayUnion(commentId)
                     });

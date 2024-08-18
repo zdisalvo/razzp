@@ -24,7 +24,7 @@ const useGetUserFeed = (username) => {
 			// 	setPosts([]);
 			// 	return;
 			// }
-			const q = query(collection(firestore, "posts"), where("createdBy", "==", userProfile.uid));
+			const q = query(collection(firestore, "posts"), where("createdBy", "==", userProfile?.uid));
 			try {
 				const querySnapshot = await getDocs(q);
 				const feedPosts = [];

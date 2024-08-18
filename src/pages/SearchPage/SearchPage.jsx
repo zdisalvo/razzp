@@ -135,7 +135,7 @@ import {
               }} 
             />
           </FormControl>
-          {(isLoadingNearby || isLoadingSearch) && <Spinner mt={4} />}
+          {(isLoadingNearby || isLoadingSearch) && <Spinner mt={4} ml={4} />}
           {!isLoadingNearby && !isLoadingSearch && (
             <VStack mt={4} spacing={4} ml={4} mr={8}>
               {(isToggled && userLocation.latitude && userLocation.longitude ? nearbyUsers : searchedUsers).length > 0 ? (

@@ -21,6 +21,7 @@ import useGetUserPosts from "../../hooks/useGetUserPosts";
 import { deleteObject, ref } from "firebase/storage";
 import { firestore, storage } from "../../firebase/firebase";
 import { arrayRemove, deleteDoc, doc, updateDoc } from "firebase/firestore";
+import LoadingPage from "../Loading/LoadingPage";
 
 const ProfilePostFeed = () => {
   const { isLoading, posts, selectedPost, selectPost } = useGetUserPosts();
@@ -56,7 +57,8 @@ const ProfilePostFeed = () => {
   };
 
   if (isLoading) {
-    return <Spinner />;
+    //return <Spinner />;
+    return <LoadingPage />
   }
 
   if (posts.length === 0) {

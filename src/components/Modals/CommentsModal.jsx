@@ -162,7 +162,7 @@ const CommentsModal = ({ isOpen, onClose, post }) => {
                             <Flex key={idx} direction="column" borderBottom="1px" borderStyle="groove" borderColor="gray.600" pb={0} mb={0} position="relative">
 
                                 {(authUser.uid === comment.createdBy || authUser.uid === post.createdBy) &&
-                                 <Box position="absolute" top={-2} right={1} m={0} p={0}>
+                                 <Box position="absolute" top={-2} right={0} m={0} p={0}>
                                     <Button
                                         onClick={() => handleDeleteComment(comment.id)}
                                         variant="unstyled"
@@ -193,6 +193,9 @@ const CommentsModal = ({ isOpen, onClose, post }) => {
                     <form onSubmit={handleSubmitComment} style={{ marginTop: "2rem" }}>
                         <Input 
                         placeholder='Comment' size={"sm"} fontSize={16} ref={commentRef} 
+                        _placeholder={{ color: 'gray.500' }}
+				        border="1px groove #888888"
+				 
                         _focus={{ 
                             borderColor: 'transparent', // Make the border transparent
                             boxShadow: '0 0 0 1px rgba(244, 164, 96, 0.5)' // Simulate a thinner border with box-shadow
