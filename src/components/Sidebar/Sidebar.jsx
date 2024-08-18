@@ -69,7 +69,7 @@ const Sidebar = () => {
         </Flex>
 
         {/* LOGOUT */}
-        <Tooltip
+        {/* <Tooltip
           hasArrow
           label={"Logout"}
           placement='top'
@@ -105,7 +105,7 @@ const Sidebar = () => {
               Logout
             </Button>
           </Flex>
-        </Tooltip>
+        </Tooltip> */}
       </Flex>
     </Box>
 	
