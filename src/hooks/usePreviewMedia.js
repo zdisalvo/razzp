@@ -57,7 +57,7 @@ const usePreviewMedia = () => {
 
       const onCanPlay = async () => {
         try {
-		  showToast("Before draw image");
+		  //showToast("Before draw image");
           await context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
 		  //showToast("drawimage");
@@ -109,7 +109,7 @@ const usePreviewMedia = () => {
       const canvas = document.createElement('canvas');
       const context = canvas.getContext('2d');
 
-      const interval = 2; // Capture every 5 seconds
+      const interval = 3; // Capture every 5 seconds
       let unsafeContentDetected = false;
 
       await new Promise((resolve, reject) => {
