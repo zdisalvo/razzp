@@ -31,7 +31,7 @@ const SparkMatch = ({ userId, matchedUserId }) => {
   const handleClick = () => {
     //console.log(userId);
     //console.log(matchItem.messages[0].sendingUser);
-    if (matchExpired || (matchItem.messages.length === 1 && matchItem.messages[0].sendingUser === userId))
+    if ((matchExpired && matchItem.messages.length <= 1) || (matchItem.messages.length === 1 && matchItem.messages[0].sendingUser === userId))
       return;
 
       setUserId(userId);
