@@ -35,7 +35,7 @@ const ShareButtonDL = ({ imageUrl, overlayText }) => {
       overlayImage.onload = () => {
         const overlayWidth = 100 * MULTIPLIER;
         const overlayHeight = 100 * MULTIPLIER;
-        const overlayX = canvas.width - overlayWidth - 60 * MULTIPLIER;
+        const overlayX = canvas.width - overlayWidth - 160 * MULTIPLIER;
         const overlayY = Math.min(canvas.height, CROP + (canvas.height - CROP) / 2) - overlayHeight - 50 * MULTIPLIER;
 
         
@@ -53,7 +53,7 @@ const ShareButtonDL = ({ imageUrl, overlayText }) => {
     
             // Positioning
             const usernameY = overlayY + overlayHeight + 24 * MULTIPLIER;
-            const backgroundX = canvas.width - textWidth - padding - 47 * MULTIPLIER; // Adjust based on text alignment
+            const backgroundX = canvas.width - textWidth - padding - 147 * MULTIPLIER; // Adjust based on text alignment
             const backgroundY = usernameY - textHeight - padding + 17 * MULTIPLIER;
     
             // Draw the rounded background
@@ -76,7 +76,7 @@ const ShareButtonDL = ({ imageUrl, overlayText }) => {
             ctx.shadowBlur = 10 * MULTIPLIER; // Shadow blur
             ctx.textAlign = 'right'; // Align text to the right
             
-            ctx.fillText(overlayText, canvas.width - 50 * MULTIPLIER, usernameY);
+            ctx.fillText(overlayText, canvas.width - 150 * MULTIPLIER, usernameY);
           }
 
           ctx.drawImage(overlayImage, overlayX, overlayY, overlayWidth, overlayHeight);

@@ -26,6 +26,8 @@ import useHasRequestedFollow from "../../hooks/useHasRequestedFollow";
 import useFollowUser from "../../hooks/useFollowUser";
 import useLogout from "../../hooks/useLogout";
 import SupportModal from "../Modals/SupportModal";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../../firebase/firebase";
 
 const ProfileHeader = ({ username, page }) => {
 	//const { userProfile } = useUserProfileStore();
@@ -69,6 +71,7 @@ const ProfileHeader = ({ username, page }) => {
 	//const hasRequested = useHasRequestedFollow(userProfile.uid);
 	const { handleLogout, isLoggingOut } = useLogout();
 	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [userAuth] = useAuthState(auth);
 
 	//console.log(isFollowing);
 
@@ -320,7 +323,7 @@ const ProfileHeader = ({ username, page }) => {
 		<Flex gap={{ base: 4, sm: 10 }} py={1} direction={{ base: "column", sm: "row" }} mb={4}>
 			
 			<Container width={{base: "50%", md: "35%"}} p={0}>
-			{visitingAnotherProfileAndAuth && (
+			{visitingAnotherProfileAndAuth && userAuth && (
 				<Box position="fixed" top="0" right={{base: "0", md: "15vw"}} p={4} zIndex="docked" width="100%">
                 <Flex justifyContent="flex-end">
                 <Menu>
@@ -384,7 +387,7 @@ const ProfileHeader = ({ username, page }) => {
 				</Flex>
 				</Box>
 			)}
-			{visitingOwnProfileAndAuth && (
+			{visitingOwnProfileAndAuth && userAuth && (
 				<Box position="fixed" top="0" right={{base: "0", md: "15vw"}} p={4} zIndex="docked" width="100%">
                 <Flex justifyContent="flex-end">
                 <Menu>

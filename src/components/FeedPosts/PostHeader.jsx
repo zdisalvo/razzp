@@ -145,7 +145,7 @@ const handleFollowClick = async () => {
           <SkeletonCircle size='10' />
         )}
 
-        <Flex  gap='2' alignItems="baseline">
+        <Flex  gap='3' alignItems="baseline">
           <Box fontSize={14} fontWeight={"bold"}>
           {/* {creatorProfile && userProfile ? (
             <Link to={`/${userProfile.username || ""}`} >{userProfile.username || "Deleted User"}</Link>
@@ -158,7 +158,7 @@ const handleFollowClick = async () => {
             <Skeleton w={"100px"} h={"10px"} />
           )}
           </Box>
-          <Box fontSize={12} fontWeight={"regular"} color={"gray.500"}>{timeAgo(post.createdAt)}</Box>
+          <Box fontSize={12} fontWeight={"regular"} color={"gray.300"}>{timeAgo(post.createdAt)}</Box>
         </Flex>
       </Flex>
       <Flex alignItems={"center"} gap={4} m={3}>

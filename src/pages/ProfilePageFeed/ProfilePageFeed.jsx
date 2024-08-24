@@ -45,7 +45,7 @@ const ProfilePageFeed = () => {
       ogImage={userProfile.profilePicURL}
       />
       )}
-    <Container px={0} py={6} maxW={{ base: "100vw", md: "100vw" }} mx={0} pb={{base: "10vh", md: "60px"}}>
+    <Container px={0} py={3} maxW={{ base: "100vw", md: "100vw" }} mx={0} pb={{base: "10vh", md: "60px"}}>
       <Box
         px={0}
         mx="auto"
