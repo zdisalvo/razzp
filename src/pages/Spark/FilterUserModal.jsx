@@ -264,10 +264,13 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
-      <ModalContent bg={"black"} border={"1px solid gray"} maxW={{ base: "90vw", md: "400px" }} px={0}>
+      <ModalContent bg={"black"} border={"1px solid gray"} maxW={{ base: "90vw", md: "400px" }} px={0}
+      position="absolute"
+      top="-45"
+      >
         <ModalHeader>Apply Filters</ModalHeader>
         <ModalCloseButton />
-        <ModalBody pb={6}>
+        <ModalBody pb={6} >
         <Box mb={4}>
             <Text mb={1} color="#eb7734">Age Range:</Text>
             <Flex alignItems="center" mb={4}>
@@ -403,6 +406,16 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
                     isChecked={selectedOpenTo.includes(option)}
                     onChange={() => handleCheckboxChange(option, setSelectedOpenTo)}
                     ml={4}
+                    sx={{
+                      ".chakra-checkbox__control": {
+                        bg: "black",
+                        borderColor: "#888888",
+                      },
+                      ".chakra-checkbox__control[data-checked]": {
+                        bg: "#eb7734",
+                        borderColor: "#888888",
+                      },
+                    }}
                   >
                     {option}
                   </Checkbox>
@@ -412,10 +425,21 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
                 <Text mb={2}>Ethnicity:</Text>
                 {ethnicityOptions.map((option) => (
                   <Checkbox
+                  
                     key={option}
                     isChecked={selectedEthnicity.includes(option)}
                     onChange={() => handleCheckboxChange(option, setSelectedEthnicity)}
                     ml={4}
+                    sx={{
+                      ".chakra-checkbox__control": {
+                        bg: "black",
+                        borderColor: "#888888",
+                      },
+                      ".chakra-checkbox__control[data-checked]": {
+                        bg: "#eb7734",
+                        borderColor: "#888888",
+                      },
+                    }}
                   >
                     {option}
                   </Checkbox>
@@ -429,6 +453,16 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
                     isChecked={selectedExercise.includes(option)}
                     onChange={() => handleCheckboxChange(option, setSelectedExercise)}
                     ml={4}
+                    sx={{
+                      ".chakra-checkbox__control": {
+                        bg: "black",
+                        borderColor: "#888888",
+                      },
+                      ".chakra-checkbox__control[data-checked]": {
+                        bg: "#eb7734",
+                        borderColor: "#888888",
+                      },
+                    }}
                   >
                     {option}
                   </Checkbox>
@@ -442,6 +476,16 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
                     isChecked={selectedDrinking.includes(option)}
                     onChange={() => handleCheckboxChange(option, setSelectedDrinking)}
                     ml={4}
+                    sx={{
+                      ".chakra-checkbox__control": {
+                        bg: "black",
+                        borderColor: "#888888",
+                      },
+                      ".chakra-checkbox__control[data-checked]": {
+                        bg: "#eb7734",
+                        borderColor: "#888888",
+                      },
+                    }}
                   >
                     {option}
                   </Checkbox>
@@ -455,6 +499,16 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
                     isChecked={selectedCannabis.includes(option)}
                     onChange={() => handleCheckboxChange(option, setSelectedCannabis)}
                     ml={4}
+                    sx={{
+                      ".chakra-checkbox__control": {
+                        bg: "black",
+                        borderColor: "#888888",
+                      },
+                      ".chakra-checkbox__control[data-checked]": {
+                        bg: "#eb7734",
+                        borderColor: "#888888",
+                      },
+                    }}
                   >
                     {option}
                   </Checkbox>
@@ -468,6 +522,16 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
                     isChecked={selectedHaveKids.includes(option)}
                     onChange={() => handleCheckboxChange(option, setSelectedHaveKids)}
                     ml={4}
+                    sx={{
+                      ".chakra-checkbox__control": {
+                        bg: "black",
+                        borderColor: "#888888",
+                      },
+                      ".chakra-checkbox__control[data-checked]": {
+                        bg: "#eb7734",
+                        borderColor: "#888888",
+                      },
+                    }}
                   >
                     {option}
                   </Checkbox>
@@ -481,6 +545,16 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
                     isChecked={selectedFamilyPlans.includes(option)}
                     onChange={() => handleCheckboxChange(option, setSelectedFamilyPlans)}
                     ml={4}
+                    sx={{
+                      ".chakra-checkbox__control": {
+                        bg: "black",
+                        borderColor: "#888888",
+                      },
+                      ".chakra-checkbox__control[data-checked]": {
+                        bg: "#eb7734",
+                        borderColor: "#888888",
+                      },
+                    }}
                   >
                     {option}
                   </Checkbox>
@@ -494,6 +568,16 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
                     isChecked={selectedPolitics.includes(option)}
                     onChange={() => handleCheckboxChange(option, setSelectedPolitics)}
                     ml={4}
+                    sx={{
+                      ".chakra-checkbox__control": {
+                        bg: "black",
+                        borderColor: "#888888",
+                      },
+                      ".chakra-checkbox__control[data-checked]": {
+                        bg: "#eb7734",
+                        borderColor: "#888888",
+                      },
+                    }}
                   >
                     {option}
                   </Checkbox>
@@ -507,6 +591,16 @@ const FilterUserModal = ({ isOpen, onClose, onFiltersApplied }) => {
                     isChecked={selectedReligion.includes(option)}
                     onChange={() => handleCheckboxChange(option, setSelectedReligion)}
                     ml={4}
+                    sx={{
+                      ".chakra-checkbox__control": {
+                        bg: "black",
+                        borderColor: "#888888",
+                      },
+                      ".chakra-checkbox__control[data-checked]": {
+                        bg: "#eb7734",
+                        borderColor: "#888888",
+                      },
+                    }}
                   >
                     {option}
                   </Checkbox>
