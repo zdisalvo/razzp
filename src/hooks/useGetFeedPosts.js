@@ -65,13 +65,14 @@ const useGetFeedPosts = () => {
 
 				
 					let combinedPosts = feedPosts;
+					let uniquePosts = feedPosts;
 				  
 					if (top5Posts && top5Posts.length > 0) {
 					  // Combine feedPosts and top5Posts
 					  combinedPosts = [...feedPosts, ...top5Posts];
 				
 					  // Remove duplicates based on post id
-					  const uniquePosts = [];
+					  uniquePosts = [];
 					  const postIds = new Set();
 					  combinedPosts.forEach(post => {
 						if (!postIds.has(post.id)) {
@@ -83,7 +84,7 @@ const useGetFeedPosts = () => {
 					  
 				
 					  // Shuffle the unique posts
-					  combinedPosts = shuffleArray(uniquePosts);
+					  
 
 					  //console.log(shuffledPosts.length)
 				
@@ -91,6 +92,8 @@ const useGetFeedPosts = () => {
 					  
 					  
 					}
+
+					combinedPosts = shuffleArray(uniquePosts);
 				  
 					setPosts(combinedPosts);
 

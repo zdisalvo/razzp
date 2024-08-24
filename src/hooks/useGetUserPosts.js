@@ -4,16 +4,18 @@ import useShowToast from "./useShowToast";
 import useUserProfileStore from "../store/userProfileStore";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { firestore } from "../firebase/firebase";
+import useGetUserProfileByUsername from "./useGetUserProfileByUsername";
 
-const useGetUserPosts = () => {
+const useGetUserPosts = ({ username }) => {
 	const [isLoading, setIsLoading] = useState(true);
 	const { posts, setPosts } = usePostStore();
 	const showToast = useShowToast();
-	const userProfile = useUserProfileStore((state) => state.userProfile);
+	//const userProfile = useUserProfileStore((state) => state.userProfile);
+	const { userProfile, isLoading: userProfileIsLoading } = useGetUserProfileByUsername(username);
 
 	useEffect(() => {
 		const getPosts = async () => {
-			if (!userProfile) return;
+			if (!userProfile || userProfileIsLoading) return;
 			setIsLoading(true);
 			setPosts([]);
 
@@ -29,7 +31,7 @@ const useGetUserPosts = () => {
 				posts.sort((a, b) => b.createdAt - a.createdAt);
 				setPosts(posts);
 			} catch (error) {
-				showToast("Error", error.message, "error");
+				//showToast("Error", error.message, "error");
 				setPosts([]);
 			} finally {
 				setIsLoading(false);

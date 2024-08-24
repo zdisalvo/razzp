@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 
 const ProfilePosts = ({ username }) => {
-  const { isLoading, posts: fetchedPosts } = useGetUserPosts();
+  const { isLoading, posts: fetchedPosts } = useGetUserPosts(username);
   const [posts, setPosts] = useState([]);
   const navigate = useNavigate();
   //const { userPosts, setUserPosts } = useState({});
