@@ -178,7 +178,7 @@ const SparkMatch = ({ userId, matchedUserId }) => {
 
 
   const handleAvatarClick = () => {
-    if (matchExpired)
+    if ((matchExpired && matchItem.messages.length <= 1) || (matchItem.messages.length === 1 && matchItem.messages[0].sendingUser === userId))
       return;
     // setSparkProfile(profileData);
     // setSparkUser(match); // Assuming match contains user data

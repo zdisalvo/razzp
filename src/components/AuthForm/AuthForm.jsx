@@ -1,11 +1,13 @@
-import { Box, Flex, Image, Text, VStack } from "@chakra-ui/react";
+import { Box, Flex, Image, Text, VStack, useDisclosure } from "@chakra-ui/react";
 import { useState } from "react";
 import Login from "./Login";
 import Signup from "./Signup";
 import GoogleAuth from "./GoogleAuth";
+import ForgotPasswordModal from "./ForgotPasswordModal";
 
 const AuthForm = () => {
 	const [isLogin, setIsLogin] = useState(true);
+	const { isOpen, onOpen, onClose } = useDisclosure();
 
 	return (
 		<>
@@ -35,6 +37,15 @@ const AuthForm = () => {
 					</Box>
 					<Box onClick={() => setIsLogin(!isLogin)} color={"blue.500"} cursor={"pointer"}>
 						{isLogin ? "Sign up" : "Log in"}
+					</Box>
+					
+				</Flex>
+				<Flex alignItems={"center"} justifyContent={"center"}>
+					<Box mt={3}>
+					{/* <Text onClick={onOpen} cursor="pointer" color="blue.500">
+						Forgot password?
+					</Text> */}
+						<ForgotPasswordModal isOpen={isOpen} onClose={onClose} />
 					</Box>
 				</Flex>
 			</Box>

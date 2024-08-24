@@ -443,7 +443,7 @@ const SparkProfileLite = ({ sparkProfile, sparkUser }) => {
           }
         >
           {profilePics.length > 0  &&
-            <Box key={0} mx={1} style={{ maxHeight: '275px' }} >
+            <Box key={0} mx={1} style={{ maxHeight: '450px' }} >
               <Image src={profilePics[0].imageURL} alt={`Profile picture ${1}`} objectFit="cover" maxHeight="450px" height="100%" width="100%" />
             </Box>
           }
@@ -490,7 +490,7 @@ const SparkProfileLite = ({ sparkProfile, sparkUser }) => {
           ))}
         </Box>
           {profilePics.length > 1 && profilePics.slice(1).map((pic, index) => (
-            <Box key={index} mx={1} style={{ maxHeight: '275px' }}>
+            <Box key={index} mx={1} style={{ maxHeight: '450px' }}>
             <Image src={pic.imageURL} alt={`Profile picture ${index + 2}`} objectFit="cover" maxHeight="450px" height="100%" width="100%" />
           </Box>
           ))}
