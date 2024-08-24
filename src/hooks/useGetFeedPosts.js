@@ -16,6 +16,7 @@ const useGetFeedPosts = () => {
 	const { posts: top5Posts } = useGetTop5Posts();
 	const now = Date.now();
     const oneDayAgo = now - 24 * 60 * 60 * 1000;
+	
 
 	const shuffleArray = (array) => {
 		let shuffledArray = [...array];
