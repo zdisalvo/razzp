@@ -11,22 +11,23 @@ import useUnrequestFollow from "../../hooks/useUnrequestFollow";
 
 const FeedPostsOrig = () => {
   const authUser = useAuthStore((state) => state.user);
-  const { isLoading, posts, setPosts } = useGetFeedPosts();
+  const { isLoading, posts: fetchedPosts} = useGetFeedPosts();
   const { isUpdating, handleFollowUser } = useFollowUserFP();
   const [followStates, setFollowStates] = useState({});
   const [requestedStates, setRequestedStates] = useState({});
   const [privateStates, setPrivateStates] = useState({});
   const unrequestFollow = useUnrequestFollow();
   const [userProfile, setUserProfile] = useState(null);
-  //const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState([]);
   const [initialized, setInitialized] = useState(false);
 
   useEffect(() => {
-    if (!initialized && !isLoading && posts.length > 0) {
-      //setPosts(fetchedPosts); // Store fetched posts in local state
+    if (!isLoading && fetchedPosts.length > 0) {
+      setPosts(fetchedPosts); // Store fetched posts in local state
+      //setPosts(posts);
       setInitialized(true);
     }
-  }, [isLoading, posts]);
+  }, [isLoading, fetchedPosts]);
 
   //console.log(fetchedPosts.length);
 

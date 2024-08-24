@@ -152,7 +152,7 @@ const FollowersPage = () => {
     }
 
     return (
-        <Container py={6} px={0} w={['100vw', null, '80vh']}>
+        <Container py={6} px={0} w={['100vw', null, '80vh']} pb={{base: "7vh", md: "30px"}}>
             <Flex align="center" mb={4}>
                 <IconButton
                     icon={<FontAwesomeIcon fontSize={32} icon={faCaretLeft} />}
@@ -165,7 +165,7 @@ const FollowersPage = () => {
                 />
                 <Heading as="h1" size="lg">Followers</Heading>
             </Flex>
-            <VStack spacing={4} align="stretch" p={4}>
+            <VStack spacing={4} align="stretch" p={4} pb={{base: "7vh", md: "30px"}}>
                 {followers.map((userId) => {
                     const profile = userProfiles[userId];
                     const isFollowing = followStates[userId];

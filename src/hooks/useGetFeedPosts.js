@@ -64,11 +64,11 @@ const useGetFeedPosts = () => {
 				//
 
 				
-				
+					let combinedPosts = feedPosts;
 				  
 					if (top5Posts && top5Posts.length > 0) {
 					  // Combine feedPosts and top5Posts
-					  const combinedPosts = [...feedPosts, ...top5Posts];
+					  combinedPosts = [...feedPosts, ...top5Posts];
 				
 					  // Remove duplicates based on post id
 					  const uniquePosts = [];
@@ -83,14 +83,16 @@ const useGetFeedPosts = () => {
 					  
 				
 					  // Shuffle the unique posts
-					  const shuffledPosts = shuffleArray(uniquePosts);
+					  combinedPosts = shuffleArray(uniquePosts);
 
 					  //console.log(shuffledPosts.length)
 				
 					  // Update the feedPosts state
-					  setPosts(shuffledPosts);
+					  
+					  
 					}
 				  
+					setPosts(combinedPosts);
 
 
 				//feedPosts.sort((a, b) => b.createdAt - a.createdAt);
@@ -105,7 +107,7 @@ const useGetFeedPosts = () => {
 		if (authUser) getFeedPosts();
 	}, [authUser, showToast, setPosts, setUserProfile]);
 
-	return { isLoading, posts };
+	return { isLoading, posts, setPosts };
 };
 
 export default useGetFeedPosts;
