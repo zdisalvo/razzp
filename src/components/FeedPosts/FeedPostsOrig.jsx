@@ -28,6 +28,8 @@ const FeedPostsOrig = () => {
     }
   }, [isLoading, fetchedPosts]);
 
+  //console.log(fetchedPosts.length);
+
 
 
 useEffect(() => {

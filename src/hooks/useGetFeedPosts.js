@@ -29,11 +29,12 @@ const useGetFeedPosts = () => {
 	useEffect(() => {
 		const getFeedPosts = async () => {
 			setIsLoading(true);
-			if (authUser.following.length === 0) {
-				setIsLoading(false);
-				setPosts([]);
-				return;
-			}
+			// if (authUser.following.length === 0) {
+			// 	setIsLoading(false);
+			// 	setPosts([]);
+			// 	return;
+			// }
+			//console.log(authUser.following.length);
 			const q = query(collection(firestore, "posts"), where("createdBy", "in", authUser.following));
 			const r = query(collection(firestore, "posts"), where("createdAt", ">=", oneDayAgo));
 
@@ -42,8 +43,11 @@ const useGetFeedPosts = () => {
 				const querySnapshot = await getDocs(q);
 				const feedPosts = [];
 
+
 				querySnapshot.forEach((doc) => {
 					feedPosts.push({ id: doc.id, ...doc.data() });
+					
+					//console.log(feedPosts.length);
 				});
 
 				//Today's posts
@@ -51,7 +55,10 @@ const useGetFeedPosts = () => {
 
 				queryTodaySnapshot.forEach((doc) => {
 					feedPosts.push({ id: doc.id, ...doc.data() });
+					
 				});
+
+				
 
 				//
 
@@ -71,9 +78,13 @@ const useGetFeedPosts = () => {
 						  uniquePosts.push(post);
 						}
 					  });
+
+					  
 				
 					  // Shuffle the unique posts
 					  const shuffledPosts = shuffleArray(uniquePosts);
+
+					  //console.log(shuffledPosts.length)
 				
 					  // Update the feedPosts state
 					  setPosts(shuffledPosts);

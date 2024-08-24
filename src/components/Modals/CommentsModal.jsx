@@ -78,10 +78,12 @@ const CommentsModal = ({ isOpen, onClose, post }) => {
             const postData = postDoc.data();
             //const filteredComments = useScrubBlockedUsersComments({ userProfile, comments: postData.comments });
             //setComments(filteredComments);
-            const filteredComments = postData.comments.filter(comment => 
+            const filteredComments = !userProfile.blocked ? postData.comments : postData.comments.filter(comment => 
                 !userProfile.blocked.includes(comment.createdBy));
             setComments(filteredComments);
             setFiltComments(filteredComments);
+
+            //console.log(filtComments.length);
             //setComments(postData.comments);
             
         }
