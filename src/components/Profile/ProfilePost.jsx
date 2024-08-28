@@ -97,7 +97,7 @@ import {
 			<Flex>
 			  <AiFillHeart size={20} />
 			  <Text fontWeight={"bold"} ml={2}>
-				{totalScore}°
+				{post.score}
 			  </Text>
 			</Flex>
   
