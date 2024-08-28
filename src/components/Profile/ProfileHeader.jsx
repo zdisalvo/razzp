@@ -28,6 +28,7 @@ import useLogout from "../../hooks/useLogout";
 import SupportModal from "../Modals/SupportModal";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../../firebase/firebase";
+import ImportInstagramModal from "../Modals/InstagramImportModal";
 
 const ProfileHeader = ({ username, page }) => {
 	//const { userProfile } = useUserProfileStore();
@@ -72,8 +73,19 @@ const ProfileHeader = ({ username, page }) => {
 	const { handleLogout, isLoggingOut } = useLogout();
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [userAuth] = useAuthState(auth);
+	const [isImportModalOpen, setIsImportModalOpen] = useState(false);
 
 	//console.log(isFollowing);
+
+	const handleImportInstagram = () => {
+		
+		setIsImportModalOpen(true); // If using a Chakra UI modal
+		
+	};
+
+	const handleImportInstagramClose = () => {
+		setIsImportModalOpen(false);
+	  };
 
 	const handleModalClose = () => {
 		setIsModalOpen(false);
@@ -442,6 +454,15 @@ const ProfileHeader = ({ username, page }) => {
               //width="100%"
 			  whiteSpace="nowrap"
 			  color="white"
+			  onClick={handleImportInstagram}
+			>Import Instagram Content</MenuItem>
+			<MenuItem
+			bg="black"
+			_hover={{ bg: '#2e2e2e' }} // Changes background color to charcoal on hover
+			px={4} // Adds padding inside MenuItem
+              //width="100%"
+			  whiteSpace="nowrap"
+			  color="white"
 			  onClick={goToSpark}
 			>💥 Spark Dating</MenuItem>
 			<MenuItem
@@ -701,6 +722,7 @@ const ProfileHeader = ({ username, page }) => {
 			</Container>
 			{isOpen && <EditProfile isOpen={isOpen} onClose={onClose} />}
 			{isModalOpen && <SupportModal isOpen={isModalOpen} onClose={handleModalClose} />}
+			{isImportModalOpen && <ImportInstagramModal isOpen={isImportModalOpen} onClose={handleImportInstagramClose} />}
 		</Flex>
 		
 	);

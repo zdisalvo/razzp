@@ -36,20 +36,30 @@ const useGetFeedPosts = () => {
 			// 	return;
 			// }
 			//console.log(authUser.following.length);
-			const q = query(collection(firestore, "posts"), where("createdBy", "in", authUser.following));
+			const q = authUser.following.length > 0 ? query(collection(firestore, "posts"), where("createdBy", "in", authUser.following)) : [];
 			const r = query(collection(firestore, "posts"), where("createdAt", ">=", oneDayAgo));
 
 			try {
 				//User's followers
-				const querySnapshot = await getDocs(q);
+				
 				const feedPosts = [];
 
+				let querySnapshot;
 
-				querySnapshot.forEach((doc) => {
-					feedPosts.push({ id: doc.id, ...doc.data() });
-					
-					//console.log(feedPosts.length);
-				});
+				if (authUser.following.length > 0) {
+
+					querySnapshot = await getDocs(q);
+
+				}
+				
+
+					querySnapshot.forEach((doc) => {
+						feedPosts.push({ id: doc.id, ...doc.data() });
+						
+						//console.log(feedPosts.length);
+					});
+				
+				
 
 				//Today's posts
 				const queryTodaySnapshot = await getDocs(r);
@@ -101,7 +111,7 @@ const useGetFeedPosts = () => {
 				//feedPosts.sort((a, b) => b.createdAt - a.createdAt);
 				//setPosts(feedPosts);
 			} catch (error) {
-				showToast("Error", error.message, "error");
+				//showToast("Error", error.message, "error");
 			} finally {
 				setIsLoading(false);
 			}

@@ -34,7 +34,7 @@ const useDeleteUser = () => {
       }
 
       const userData = userDoc.data();
-      const userPosts = userData.posts || [];
+      const userPosts = userData.posts;
 
       // Delete all the user's posts
       const deletePostPromises = userPosts.map(async (postId) => {
@@ -47,13 +47,19 @@ const useDeleteUser = () => {
           }
 
           const postData = postDoc.data();
+
+          //moved this from below deleteObject so it happens first
+          await deleteDoc(postDocRef);
+
           const imageRef = ref(storage, `posts/${postId}`);
           await deleteObject(imageRef);
-          await deleteDoc(postDocRef);
+          
 
           await updateDoc(userDocRef, {
             posts: arrayRemove(postId),
           });
+
+          await updateDoc(postDocRef)
 
           // Optional: Handle additional cleanup related to the post
           // deletePost(postId);
