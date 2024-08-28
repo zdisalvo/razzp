@@ -37,7 +37,7 @@ const UserFeed = () => {
     if (!isLoading && postId && postRefs.current[postId] && shouldScroll) {
       setTimeout(() => {
         postRefs.current[postId].scrollIntoView();
-      }, 500);
+      }, 1000);
       setShouldScroll(false);
     }
   }, [isLoading, postId, posts]);

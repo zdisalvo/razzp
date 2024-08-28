@@ -8,6 +8,7 @@ const useInstagramDataFetcher = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const { handleCreatePost } = useCreatePost();
+    const [progress, setProgress] = useState(0);
     
 
     const numDays = (dateString) => {
@@ -30,6 +31,7 @@ const useInstagramDataFetcher = () => {
         setLoading(true);
         setError(null);
         setItems([]);
+        setProgress(0);
 
         const client = new ApifyClient({
             token: 'apify_api_UceiCMkSoRcXxDjyK0X9ENtt7trEs933AJsl', // Replace with your actual API token
@@ -46,7 +48,17 @@ const useInstagramDataFetcher = () => {
             "addParentData": false
         };
 
+        let progressInterval;
+
         try {
+            progressInterval = setInterval(() => {
+                setProgress(oldProgress => {
+                    if (oldProgress < 100) return oldProgress + 1;
+                    clearInterval(progressInterval);
+                    return 100;
+                });
+            }, 1000);
+
             const run = await client.actor("shu8hvrXbJbY3Eb9W").call(input);
             const { items } = await client.dataset(run.defaultDatasetId).listItems();
             //console.log('Fetched items:', items); // Log the fetched items
@@ -70,6 +82,7 @@ const useInstagramDataFetcher = () => {
             console.error('Error fetching data:', err);
             setError(err);
         } finally {
+            clearInterval(progressInterval);
             setLoading(false);
         }
     };
@@ -89,6 +102,7 @@ const useInstagramDataFetcher = () => {
         items,
         loading,
         error,
+        progress,
         handleSubmit,
     };
 };

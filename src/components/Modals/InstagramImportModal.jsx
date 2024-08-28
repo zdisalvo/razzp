@@ -1,9 +1,9 @@
 import React from 'react';
-import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, FormLabel, Input, Button, Text, Spinner } from '@chakra-ui/react';
+import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, FormLabel, Input, Button, Text, Progress } from '@chakra-ui/react';
 import useInstagramDataFetcher from '../../hooks/useInstagramDataFetcher'; // Adjust the path as needed
 
 const ImportInstagramModal = ({ isOpen, onClose }) => {
-    const { username, setUsername, items, loading, error, handleSubmit } = useInstagramDataFetcher();
+    const { username, setUsername, items, loading, progress, error, handleSubmit } = useInstagramDataFetcher();
 
     return (
         <Modal isOpen={isOpen} onClose={onClose} p={0}>
@@ -41,9 +41,14 @@ const ImportInstagramModal = ({ isOpen, onClose }) => {
                         >
                             Fetch Data
                         </Button>
-                        {loading && <Spinner mt={3} />}
+                        {loading && (
+                            <div>
+                                <Text mt={3} mb={2}>Loading...</Text>
+                                <Progress value={progress} size="sm" colorScheme="blue" />
+                            </div>
+                        )}
                         {error && <Text color="red.500" mt={3}>{error.message}</Text>}
-                        {items.length > 0 && (
+                        {/* {items.length > 0 && (
                             <div>
                                 <Text mt={3} fontWeight="bold">Results for @{username}</Text>
                                 <ul>
@@ -54,7 +59,7 @@ const ImportInstagramModal = ({ isOpen, onClose }) => {
                                     ))}
                                 </ul>
                             </div>
-                        )}
+                        )} */}
                     </form>
                 </ModalBody>
             </ModalContent>
