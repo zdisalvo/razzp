@@ -86,17 +86,7 @@ const ProfileHeader = ({ username, page }) => {
 	  };
 
 
-	useState(() => {
-		if (userProfile && authUser && userProfile.requested) {
-		  setRequested(userProfile.requested.includes(authUser.uid)); // Ensure the user data is up-to-date
-		}
-	  }, [authUser, fetchUserData]);
-
-	  useState(() => {
-		if (userProfile && authUser) {
-		  setIsFollowing(authUser.following.includes(userProfile.uid)); // Ensure the user data is up-to-date
-		}
-	  }, [authUser, fetchUserData]);
+	
 
 	  //console.log(requested);
 
@@ -109,6 +99,20 @@ const ProfileHeader = ({ username, page }) => {
 	  const navigateToBlocked = () => {
 		navigate('/blocked');
 	  };
+
+
+	  useEffect(() => {
+		if (userProfile && authUser && userProfile.requested) {
+		  setRequested(userProfile.requested.includes(authUser.uid)); // Ensure the user data is up-to-date
+		}
+	  }, [authUser, fetchUserData]);
+
+	  useEffect(() => {
+		if (userProfile && authUser) {
+		  setIsFollowing(authUser.following.includes(userProfile.uid)); // Ensure the user data is up-to-date
+		}
+		//console.log(isFollowing);
+	  }, [authUser, fetchUserData]);
 
 	
 	// useEffect(() => {

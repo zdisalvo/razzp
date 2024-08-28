@@ -39,7 +39,7 @@ const useFollowUserFP = () => {
                     requested: arrayRemove(authUser.uid),
                 });
 
-                console.log("unfollow");
+                //console.log("unfollow");
                 // setAuthUser((prevUser) => ({
                 //     ...prevUser,
                 //     following: prevUser.following.filter((id) => id !== userId),

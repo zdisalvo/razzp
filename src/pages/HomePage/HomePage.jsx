@@ -86,7 +86,7 @@ const HomePage = () => {
       <Meta title="Razzp - Social Networking Reinvented" 
       keywords="Social network, Social media platform, Content creation, Online community, Connect with local friends, Share updates, Search by location, Messaging, Social media, Profile creation, Social sharing, Friend network, Social interaction, Content sharing, User engagement, Social connections, Follow and unfollow, Online profiles, News feed, Social networking site" 
       description="The ultimate platform for creating and sharing content. Connect with local users, increase your popularity, and maximize your brand on Razzp. No download required." 
-      ogTitle="Razzp - Social Networking Reinvented"
+      ogTitle="Razzp - Stardom Starts Here"
       ogDescription="The ultimate platform for creating and sharing content. Connect with local users, increase your popularity, and maximize your brand on Razzp. No download required."
       ogImage="https://razz-p.web.app/razzp-logo-matte.png"
     
