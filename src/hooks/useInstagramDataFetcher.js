@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ApifyClient } from 'apify-client';
 import useCreatePost from './useCreatePost';
 
@@ -95,6 +95,12 @@ const useInstagramDataFetcher = () => {
             setError({ message: "Please enter a valid Instagram username." });
         }
     };
+
+    useEffect(() => {
+        if (!loading && items.length > 0) {
+            window.location.reload(); // Reload the page
+        }
+    }, [loading, items]);
 
     return {
         username,

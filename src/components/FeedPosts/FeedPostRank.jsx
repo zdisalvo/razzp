@@ -8,8 +8,8 @@ const FeedPost = forwardRef(({ post, rank, isFollowing, requested, isPrivate, on
   const { userProfile } = useGetUserProfileById(post.createdBy);
   const videoRef = useRef(null);
   const [isMuted, setIsMuted] = useState(true);
-  const proxyURL = "https://radiant-retreat-87579-dcc979ba57be.herokuapp.com?url=";
-  const imageSrc = !post.imageURL.startsWith("https://firebase") ? `${proxyURL}${encodeURIComponent(post.imageURL)}` : post.imageURL;
+  //const proxyURL = "https://radiant-retreat-87579-dcc979ba57be.herokuapp.com?url=";
+  //const imageSrc = !post.imageURL.startsWith("https://firebase") ? `${proxyURL}${encodeURIComponent(post.imageURL)}` : post.imageURL;
 
   const toggleMute = () => {
     if (videoRef.current) {
@@ -99,7 +99,7 @@ const FeedPost = forwardRef(({ post, rank, isFollowing, requested, isPrivate, on
       justifyContent="center" 
       alignItems="center">
       {(!post.mediaType || post.mediaType.startsWith("image/")) && (
-        <Image src={imageSrc} alt={"FEED POST IMG"} width="100%" objectFit="cover" maxHeight="450px" height="auto"/>
+        <Image src={post.imageURL} alt={"FEED POST IMG"} width="100%" objectFit="cover" maxHeight="450px" height="auto"/>
       )}
       {(post.mediaType && post.mediaType.startsWith("video/")) && (
         <Box justifyContent="center" alignItems="center" m={0} p={0}

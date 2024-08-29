@@ -1,4 +1,4 @@
-import { Avatar, AvatarGroup, Button, Flex, Text, VStack, useDisclosure, Container, Box, Switch, IconButton, Menu, MenuButton, MenuList, MenuItem} from "@chakra-ui/react";
+import { Avatar, AvatarGroup, Button, Flex, Text, VStack, useDisclosure, Container, Box, Switch, IconButton, Menu, MenuButton, MenuList, MenuItem, Image} from "@chakra-ui/react";
 import useUserProfileStore from "../../store/userProfileStore";
 import useAuthStore from "../../store/authStore";
 import EditProfile from "./EditProfile";
@@ -450,12 +450,19 @@ const ProfileHeader = ({ username, page }) => {
 			<MenuItem
 			bg="black"
 			_hover={{ bg: '#2e2e2e' }} // Changes background color to charcoal on hover
-			px={4} // Adds padding inside MenuItem
+			pl={4} pr={7}// Adds padding inside MenuItem
               //width="100%"
 			  whiteSpace="nowrap"
 			  color="white"
 			  onClick={handleImportInstagram}
-			>Import Instagram Content</MenuItem>
+			>
+				<Image 
+                src="/instagram-black-back.png" // Replace with the path to your image
+                alt="Instagram Icon"
+                boxSize="20px" // Adjust size as needed
+                mr={1} // Margin right to create space between image and text
+            	/>
+				Import IG Content</MenuItem>
 			<MenuItem
 			bg="black"
 			_hover={{ bg: '#2e2e2e' }} // Changes background color to charcoal on hover

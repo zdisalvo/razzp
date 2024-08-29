@@ -32,8 +32,8 @@ import {
 	const [isDeleting, setIsDeleting] = useState(false);
 	const deletePost = usePostStore((state) => state.deletePost);
 	const decrementPostsCount = useUserProfileStore((state) => state.deletePost);
-	const proxyURL = "https://radiant-retreat-87579-dcc979ba57be.herokuapp.com?url=";
-    const imageSrc = post.imageURL && post.imageURL.startsWith("https://firebase") ? post.imageURL : `${proxyURL}${encodeURIComponent(post.imageURL)}` ;
+	//const proxyURL = "https://radiant-retreat-87579-dcc979ba57be.herokuapp.com?url=";
+    //const imageSrc = post.imageURL && post.imageURL.startsWith("https://firebase") ? post.imageURL : `${proxyURL}${encodeURIComponent(post.imageURL)}` ;
 
 	const calculateRankingScore = (post) => {
         const postTime = new Date(post.createdAt);
@@ -111,7 +111,7 @@ import {
 		</Flex>
 		
 		{(!post.mediaType || post.mediaType.startsWith("image/")) && (
-		<Image src={imageSrc} alt="profile post" w={"100%"} h={"100%"} objectFit={"cover"} />
+		<Image src={post.imageURL} alt="profile post" w={"100%"} h={"100%"} objectFit={"cover"} />
 		)}
 		{(post.mediaType && post.mediaType.startsWith("video/")) && (
         <Box 

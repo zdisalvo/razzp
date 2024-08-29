@@ -17,10 +17,16 @@ const ImportInstagramModal = ({ isOpen, onClose }) => {
                 pb={4}
             >
                 <ModalCloseButton />
-                <ModalHeader>Import Instagram Data</ModalHeader>
+                <ModalHeader>Import Instagram Content</ModalHeader>
+                <Text fontSize="sm" color="gray.500" mb={1} textAlign="center">
+                    This will take 1-2 minutes in the background
+                </Text>
+                <Text fontSize="sm" color="gray.500" mb={2} textAlign="center">
+                    Instagram profile must be public to import content
+                </Text>
                 <ModalBody 
                     px={{ base: "8px", md: "8px" }} 
-                    pt={{ base: 5, md: 8 }} 
+                    pt={{ base: 3, md: 5 }} 
                     pb={{ base: 4, md: 5 }}
                 >
                     <form onSubmit={handleSubmit}>
@@ -39,7 +45,7 @@ const ImportInstagramModal = ({ isOpen, onClose }) => {
                             color={"white"} 
                             width="full"
                         >
-                            Fetch Data
+                            Import Posts
                         </Button>
                         {loading && (
                             <div>

@@ -158,7 +158,7 @@ const handleFollowClick = async () => {
             <Skeleton w={"100px"} h={"10px"} />
           )}
           </Box>
-          <Box fontSize={12} fontWeight={"regular"} color={"gray.300"}>{timeAgo(post.createdAt)}</Box>
+          <Box fontSize={12} fontWeight={"regular"} color={"gray.300"}>{post.createdAt < Date.now() + timeAgo(post.createdAt)}</Box>
         </Flex>
       </Flex>
       <Flex alignItems={"center"} gap={4} m={3}>

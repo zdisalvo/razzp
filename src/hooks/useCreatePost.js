@@ -37,6 +37,7 @@ const useCreatePost = () => {
             const postDocRef = await addDoc(collection(firestore, "posts"), newPost);
             const userDocRef = doc(firestore, "users", authUser.uid);
             const mediaRef = ref(storage, `posts/${postDocRef.id}`);
+            const proxyURL = "https://radiant-retreat-87579-dcc979ba57be.herokuapp.com?url=";
     
             if (authUser) setUserProfile(authUser);
     
@@ -46,9 +47,9 @@ const useCreatePost = () => {
             
             const downloadURL = postSrc;
     
-            await updateDoc(postDocRef, { imageURL: downloadURL, mediaType: mediaType });
+            await updateDoc(postDocRef, { imageURL: mediaType === "image/jpeg" ? proxyURL + encodeURIComponent(downloadURL) : downloadURL, mediaType: mediaType });
     
-            newPost.imageURL = downloadURL;
+            newPost.imageURL = mediaType === "image/jpeg" ? proxyURL + downloadURL : downloadURL;
             newPost.mediaType = mediaType;
     
             if (authUser) createPost({ ...newPost, id: postDocRef.id });

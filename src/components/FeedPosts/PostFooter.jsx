@@ -220,10 +220,10 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
 
             {!isProfilePage && (
                 <>
-                    <Text fontSize="sm" fontWeight={700}  mb={1}>
+                    <Text fontSize="sm" fontWeight={700}  mb={1} >
                         {creatorProfile?.username}{" "}
-                        <Text as="span" fontWeight={400}>
-                            {post.caption}
+                        <Text as="span" fontWeight={400} ml={2}>
+                        {post.caption}
                         </Text>
                     </Text>
                     {postComments > 0 && (

@@ -101,7 +101,7 @@ const ProfilePage = () => {
 			mx="auto"
 			height={{ base: "100vh", md: "auto" }}
 			width={{ base: "100vw", md: "65vw" }}
-			bottom={{ base: "10vh", md: "60px" }}
+			bottom={{ base: "20vh", md: "60px" }}
 			top={0}
 			transform="none"
 			display="flex"
