@@ -1,9 +1,18 @@
 import React from 'react';
+import { useState, useEffect } from 'react';
 import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, FormControl, FormLabel, Input, Button, Text, Progress } from '@chakra-ui/react';
 import useInstagramDataFetcher from '../../hooks/useInstagramDataFetcher'; // Adjust the path as needed
 
 const ImportInstagramModal = ({ isOpen, onClose }) => {
     const { username, setUsername, items, loading, progress, error, handleSubmit } = useInstagramDataFetcher();
+    const [ isInitialized, setIsInitialized ] = useState(false);
+
+    useEffect(() => {
+        if (!loading && !isInitialized && items.length > 0) {
+            window.location.reload(); // Reload the page
+            setIsInitialized(true);
+        }
+    }, [loading, items]);
 
     return (
         <Modal isOpen={isOpen} onClose={onClose} p={0}>

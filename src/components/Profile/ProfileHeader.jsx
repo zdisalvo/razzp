@@ -668,7 +668,7 @@ const ProfileHeader = ({ username, page }) => {
 						</Text>
 					)}
 				</Flex>
-				{authUser && authUser.instagramUsername && (
+				{userProfile && userProfile.instagramUsername && (
 				<Flex 
 				justifyContent={{ base: "center", sm: "flex-start" }}
 				alignItems={"center"} gap={{ base: 2, sm: 2 }} w={"full"}>
@@ -679,7 +679,7 @@ const ProfileHeader = ({ username, page }) => {
 						mr={1} // Margin right to create space between image and text
 						/>
 					<Text>
-						{authUser.instagramUsername}
+						{userProfile.instagramUsername}
 					</Text>
 				</Flex>
 				)}

@@ -107,11 +107,7 @@ const useInstagramDataFetcher = () => {
         }
     };
 
-    useEffect(() => {
-        if (!loading && items.length > 0) {
-            window.location.reload(); // Reload the page
-        }
-    }, [loading, items]);
+    
 
     return {
         username,
