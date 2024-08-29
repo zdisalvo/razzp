@@ -18,7 +18,7 @@ import {
   import useUserProfileStore from "../../store/userProfileStore";
   import useAuthStore from "../../store/authStore";
   import useShowToast from "../../hooks/useShowToast";
-  import { useState } from "react";
+  import { useState, useEffect, useRef } from "react";
   import { deleteObject, ref } from "firebase/storage";
   import { firestore, storage } from "../../firebase/firebase";
   import { arrayRemove, deleteDoc, doc, updateDoc } from "firebase/firestore";
@@ -34,6 +34,53 @@ import {
 	const decrementPostsCount = useUserProfileStore((state) => state.deletePost);
 	//const proxyURL = "https://radiant-retreat-87579-dcc979ba57be.herokuapp.com?url=";
     //const imageSrc = post.imageURL && post.imageURL.startsWith("https://firebase") ? post.imageURL : `${proxyURL}${encodeURIComponent(post.imageURL)}` ;
+	const videoRef = useRef(null);
+	const [playCount, setPlayCount] = useState(0);
+
+	useEffect(() => {
+		const videoElement = videoRef.current;
+	
+		if (videoElement) {
+		  const observer = new IntersectionObserver(
+			([entry]) => {
+			  if (entry.isIntersecting) {
+				videoElement.play();
+			  } else {
+				videoElement.pause();
+			  }
+			},
+			{ threshold: 0.8 } // Adjust this value to control how much of the video needs to be visible to trigger playback
+		  );
+	
+		  observer.observe(videoElement);
+	
+		  return () => {
+			observer.unobserve(videoElement);
+		  };
+		}
+	  }, []);
+
+	//   useEffect(() => {
+	// 	const videoElement = videoRef.current;
+	
+	// 	if (videoElement) {
+	// 	  const handlePlay = () => {
+	// 		setPlayCount((prevPlayCount) => {
+	// 		  const newPlayCount = prevPlayCount + 1;
+	// 		  if (newPlayCount >= 2) {
+	// 			videoElement.pause();
+	// 		  }
+	// 		  return newPlayCount;
+	// 		});
+	// 	  };
+	
+	// 	  videoElement.addEventListener('play', handlePlay);
+	
+	// 	  return () => {
+	// 		videoElement.removeEventListener('play', handlePlay);
+	// 	  };
+	// 	}
+	//   }, []);
 
 	const calculateRankingScore = (post) => {
         const postTime = new Date(post.createdAt);
@@ -123,12 +170,13 @@ import {
 		overflow="hidden"
 	  >
         <video src={post.imageURL} 
+		ref={videoRef}
         w={"100%"} h={"100%"} 
         //controls 
-        autoPlay 
-        muted 
-        loop
+        //autoPlay 
 		playsInline
+        muted 
+        //loop
         alt={"FEED POST VIDEO"} 
         style={{ 
 			width: "100%", 

@@ -74,6 +74,7 @@ const ProfileHeader = ({ username, page }) => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [userAuth] = useAuthState(auth);
 	const [isImportModalOpen, setIsImportModalOpen] = useState(false);
+	//const [prevToggle, setPrevToggle] = useState(isToggled);
 
 	//console.log(isFollowing);
 
@@ -103,10 +104,11 @@ const ProfileHeader = ({ username, page }) => {
 	  //console.log(requested);
 
 	useEffect(() => {
-		if (authUser) {
+		if (city === '' && authUser && isToggled && authUser.username === username) {
 		  fetchUserData(authUser.uid); // Ensure the user data is up-to-date
+		  //setPrevToggle(!prevToggle);
 		}
-	  }, [authUser, fetchUserData]);
+	  }, [authUser, fetchUserData, isToggled]);
 
 	  const navigateToBlocked = () => {
 		navigate('/blocked');
@@ -171,7 +173,7 @@ const ProfileHeader = ({ username, page }) => {
             try {
                 await navigator.share({
                     title: `What's new on Razzp?`,
-                    text: `Everything. -${userProfile.fullName}`,
+                    text: `Crown me on Razzp. -${userProfile.fullName}`,
                     url: profileUrl,
                 });
                 console.log('Successfully shared');
@@ -265,30 +267,36 @@ const ProfileHeader = ({ username, page }) => {
 	      unstoreUserLocation(authUser.uid);
 		  setLatitudeLoc("");
 		  setLongitudeLoc("");
+		  setCity('');
+		  setState('');
 	    }
 	  }, [isToggled]);
 
 
 	  useEffect(() => {
 		const fetchUserLocation = async () => {
+		  
 		  try {
 			const userDocRef = doc(firestore, `users/${userProfile.uid}`);
 			const userDoc = await getDoc(userDocRef);
 	
-			if (userDoc.exists()) {
+			if (isToggled && userDoc.exists()) {
 			  const userData = userDoc.data();
 			  setCity(userData.city || '');
 			  setState(userData.state || '');
+			} else if (!isToggled) {
+				setCity('');
+			  	setState('');
 			}
 		  } catch (error) {
 			console.error('Error fetching user location:', error);
 		  }
 		};
 	
-		if (authUser && authUser.uid) {
+		if (isToggled && authUser && authUser.uid) {
 		  fetchUserLocation();
 		}
-	  }, [authUser]);
+	  }, [authUser, isToggled]);
 
 
 
@@ -572,7 +580,7 @@ const ProfileHeader = ({ username, page }) => {
 			<AvatarGroup size={{ base: "xl", md: "2xl" }}  mx={1} my={2}>
 				<Avatar src={userProfile.profilePicURL} alt='Profile picture' />
 			</AvatarGroup>
-			{city && state && authUser && userProfile && ((userProfile.private && userProfile.followers.includes(authUser.uid)) || (userProfile.uid === authUser.uid) || (!userProfile.private)) && (
+			{isToggled && city && state && authUser && userProfile && ((userProfile.private && userProfile.followers.includes(authUser.uid)) || (userProfile.uid === authUser.uid) || (!userProfile.private)) && (
             <Flex alignItems="baseline">
             {/* <IconButton
             icon={<FontAwesomeIcon icon={faLocationDot} />}
@@ -581,6 +589,7 @@ const ProfileHeader = ({ username, page }) => {
           <Box mr={2} mt={0}>
           <FontAwesomeIcon icon={faLocationDot}  />
           </Box>
+		  
             <Text fontSize="sm" >{city}, {state}</Text>
             </Flex>
             )}
