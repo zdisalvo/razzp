@@ -447,6 +447,7 @@ const ProfileHeader = ({ username, page }) => {
 			  color="white"
 			  onClick={goToNotifications}
 			>Notifications</MenuItem>
+			{authUser && !authUser.instagramImport && (
 			<MenuItem
 			bg="black"
 			_hover={{ bg: '#2e2e2e' }} // Changes background color to charcoal on hover
@@ -463,6 +464,7 @@ const ProfileHeader = ({ username, page }) => {
                 mr={1} // Margin right to create space between image and text
             	/>
 				Import IG Content</MenuItem>
+			)}
 			<MenuItem
 			bg="black"
 			_hover={{ bg: '#2e2e2e' }} // Changes background color to charcoal on hover
@@ -666,6 +668,21 @@ const ProfileHeader = ({ username, page }) => {
 						</Text>
 					)}
 				</Flex>
+				{authUser && authUser.instagramUsername && (
+				<Flex 
+				justifyContent={{ base: "center", sm: "flex-start" }}
+				alignItems={"center"} gap={{ base: 2, sm: 2 }} w={"full"}>
+					<Image 
+						src="/instagram-black-back.png" // Replace with the path to your image
+						alt="Instagram Icon"
+						boxSize="30px" // Adjust size as needed
+						mr={1} // Margin right to create space between image and text
+						/>
+					<Text>
+						{authUser.instagramUsername}
+					</Text>
+				</Flex>
+				)}
 				{/* <Flex alignItems={"center"} gap={4}>
 					<Text fontSize={"sm"} fontWeight={"bold"}>
 						{userProfile.fullName}

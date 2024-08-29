@@ -17,6 +17,7 @@ import { firestore, storage } from "../../firebase/firebase";
 import useSparkProfileStore from "../../store/sparkProfileStore";
 //import useDeleteSelectedImage from "../../hooks/useDeleteSelectedImage";
 import useUnrequestFollow from "../../hooks/useUnrequestFollow";
+import PostDate from "./PostDate";
 
 
 
@@ -116,19 +117,21 @@ const handleFollowClick = async () => {
     setIsDeleting(true);
     try {
       const imageRef = ref(storage, `posts/${post.id}`);
-      await deleteObject(imageRef);
+      
       await deleteDoc(doc(firestore, "posts", post.id));
 
       await updateDoc(doc(firestore, "users", authUser.uid), {
         posts: arrayRemove(post.id),
       });
 
+      await deleteObject(imageRef);
+
       deletePost(post.id);
       deleteSelectedImage(post.id);
       decrementPostsCount();
       showToast("Success", "Post deleted successfully", "success");
     } catch (error) {
-      showToast("Error", error.message, "error");
+      //showToast("Error", error.message, "error");
     } finally {
       setIsDeleting(false);
     }
@@ -158,7 +161,10 @@ const handleFollowClick = async () => {
             <Skeleton w={"100px"} h={"10px"} />
           )}
           </Box>
-          <Box fontSize={12} fontWeight={"regular"} color={"gray.300"}>{post.createdAt < Date.now() + timeAgo(post.createdAt)}</Box>
+          {/* <Box fontSize={12} fontWeight={"regular"} color={"gray.300"}>{post.createdAt < Date.now() + timeAgo(post.createdAt)}</Box> */}
+          <Box fontSize={12} fontWeight={"regular"} color={"gray.300"}>
+          <PostDate createdAt={post.createdAt} />
+          </Box>
         </Flex>
       </Flex>
       <Flex alignItems={"center"} gap={4} m={3}>

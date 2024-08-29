@@ -1,8 +1,12 @@
 import { useState, useEffect } from 'react';
 import { ApifyClient } from 'apify-client';
+import useAuthStore from '../store/authStore';
 import useCreatePost from './useCreatePost';
+import { addDoc, collection, doc, updateDoc, arrayUnion } from 'firebase/firestore';
+import { firestore, storage } from '../firebase/firebase';
 
 const useInstagramDataFetcher = () => {
+    const authUser = useAuthStore((state) => state.user);
     const [username, setUsername] = useState('');
     const [items, setItems] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -50,7 +54,10 @@ const useInstagramDataFetcher = () => {
 
         let progressInterval;
 
+        const userDocRef = doc(firestore, "users", authUser.uid);
+
         try {
+            
             progressInterval = setInterval(() => {
                 setProgress(oldProgress => {
                     if (oldProgress < 100) return oldProgress + 1;
@@ -82,6 +89,10 @@ const useInstagramDataFetcher = () => {
             console.error('Error fetching data:', err);
             setError(err);
         } finally {
+            await updateDoc(userDocRef, { 
+                instagramImport: true,
+                instagramUsername: username,
+            });
             clearInterval(progressInterval);
             setLoading(false);
         }
