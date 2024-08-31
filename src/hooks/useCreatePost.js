@@ -48,8 +48,11 @@ const useCreatePost = () => {
             const downloadURL = postSrc;
     
             await updateDoc(postDocRef, { imageURL: mediaType === "image/jpeg" ? proxyURL + encodeURIComponent(downloadURL) : downloadURL, mediaType: mediaType });
+            //await updateDoc(postDocRef, { imageURL: proxyURL + encodeURIComponent(downloadURL), mediaType: mediaType });
     
-            newPost.imageURL = mediaType === "image/jpeg" ? proxyURL + downloadURL : downloadURL;
+    
+            newPost.imageURL = mediaType === "image/jpeg" ? proxyURL + encodeURIComponent(downloadURL) : downloadURL;
+            //newPost.imageURL = proxyURL + encodeURIComponent(downloadURL);
             newPost.mediaType = mediaType;
     
             if (authUser) createPost({ ...newPost, id: postDocRef.id });

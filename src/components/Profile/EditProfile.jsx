@@ -206,7 +206,7 @@ const EditProfile = ({ isOpen, onClose }) => {
                                     onClick={handleEditProfile}
                                     isLoading={isUpdating}
                                 >
-                                    Submit
+                                    Save
                                 </Button>
                             </Stack>
                         </Stack>

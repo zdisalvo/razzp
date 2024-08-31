@@ -102,6 +102,7 @@ const ProfilePage = () => {
 			height={{ base: "100vh", md: "auto" }}
 			width={{ base: "100vw", md: "65vw" }}
 			bottom={{ base: "20vh", md: "60px" }}
+      //pb={{ base: "20vh", md: "60px" }}
 			top={0}
 			transform="none"
 			display="flex"
@@ -132,6 +133,7 @@ const ProfilePage = () => {
           }
         </Flex>
       </Box>
+      {/* <Box pb={{ base: "20vh", md: "60px" }}></Box> */}
     </Container>
     </div>
   );
