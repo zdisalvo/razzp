@@ -39,6 +39,8 @@ const useCreatePost = () => {
 
             if (authUser) setUserProfile(authUser);
 
+            await updateDoc(userDocRef, { posts: arrayUnion(postDocRef.id) });
+
             // Upload video if mediaType is 'video/mp4'
             if (mediaType === 'video/mp4') {
                 const response = await fetch(postSrc);
@@ -69,11 +71,14 @@ const useCreatePost = () => {
                 newPost.mediaType = mediaType;
             }
 
-            if (authUser) {
-                await updateDoc(userDocRef, { posts: arrayUnion(postDocRef.id) });
-                createPost({ ...newPost, id: postDocRef.id });
-                addPost({ ...newPost, id: postDocRef.id });
-            }
+            // if (authUser) {
+            //     await updateDoc(userDocRef, { posts: arrayUnion(postDocRef.id) });
+            //     createPost({ ...newPost, id: postDocRef.id });
+            //     addPost({ ...newPost, id: postDocRef.id });
+            // }
+
+            if (authUser) createPost({ ...newPost, id: postDocRef.id });
+            if (authUser) addPost({ ...newPost, id: postDocRef.id });
 
             //showToast("Success", "Post created successfully", "success");
         } catch (error) {
