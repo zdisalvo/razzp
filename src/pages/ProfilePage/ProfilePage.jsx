@@ -84,7 +84,7 @@ const ProfilePage = () => {
       ogImage={userProfile.profilePicURL}
       />
       )}
-    <Container top={0} p={0} maxW={{base: "100vw", md: "100vw"}} pb={{base: "23vh", md: "60px"}} mb={{base: "23vh", md: "60px"}}  m={0}>
+    <Container top={0} p={0} maxW={{base: "100vw", md: "100vw"}} pb={{base: "15vh", md: "60px"}} mb={{base: "15vh", md: "60px"}}  m={0}>
       {/* <Box position="fixed" top="0" right={{base: "0", md: "15vw"}} p={4} zIndex="docked" width="100%">
                 <Flex justifyContent="flex-end">
                 <IconButton
@@ -101,7 +101,7 @@ const ProfilePage = () => {
 			mx="auto"
 			height={{ base: "100vh", md: "auto" }}
 			width={{ base: "100vw", md: "65vw" }}
-			bottom={{ base: "20vh", md: "60px" }}
+			bottom={{ base: "15vh", md: "60px" }}
       //pb={{ base: "20vh", md: "60px" }}
 			top={0}
 			transform="none"

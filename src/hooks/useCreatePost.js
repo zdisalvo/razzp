@@ -59,7 +59,7 @@ const useCreatePost = () => {
             
                 const downloadURL = postSrc;
     
-                await updateDoc(postDocRef, { imageURL: proxyURL + encodeURIComponent(downloadURL)});
+                await updateDoc(postDocRef, { imageURL: proxyURL + encodeURIComponent(downloadURL), mediaType: mediaType });
                 //await updateDoc(postDocRef, { imageURL: proxyURL + encodeURIComponent(downloadURL), mediaType: mediaType });
     
     

@@ -2,8 +2,10 @@ import { useState } from 'react';
 import { doc, deleteDoc, getDoc, updateDoc, arrayRemove } from 'firebase/firestore';
 import { ref, deleteObject } from 'firebase/storage';
 import { firestore, storage } from '../firebase/firebase';
+import { auth } from '../firebase/firebase'; // Import the Firebase auth instance
+import { deleteUser as deleteAuthUser } from 'firebase/auth'; // Import deleteUser from Firebase Auth
 import useAuthStore from '../store/authStore';
-import useShowToast from './useShowToast'; // Assuming you have a custom hook for showing toasts
+import useShowToast from './useShowToast';
 import useLogout from './useLogout';
 
 const useDeleteUser = () => {
@@ -46,35 +48,37 @@ const useDeleteUser = () => {
             throw new Error(`Post with ID ${postId} not found`);
           }
 
-          const postData = postDoc.data();
-
-          //moved this from below deleteObject so it happens first
+          // Delete the post document first
           await deleteDoc(postDocRef);
 
+          // Delete the associated media from Firebase Storage
           const imageRef = ref(storage, `posts/${postId}`);
           await deleteObject(imageRef);
-          
 
+          // Remove the post ID from the user's posts array
           await updateDoc(userDocRef, {
             posts: arrayRemove(postId),
           });
 
-          await updateDoc(postDocRef)
-
-          // Optional: Handle additional cleanup related to the post
-          // deletePost(postId);
-          // deleteSelectedImage(postId);
-          // decrementPostsCount();
         } catch (error) {
-          console.error(`Error deleting post ${postId}:`, error);
-          //throw error;
+          if (error.code === 'storage/object-not-found') {
+            console.log("No media found to delete.");
+          } else {
+            console.error(`Error deleting post ${postId}:`, error);
+          }
         }
       });
 
       await Promise.all(deletePostPromises);
 
-      // Delete the user profile
+      // Delete the user profile document
       await deleteDoc(userDocRef);
+
+      // Delete the user's authentication account
+      const userAuth = auth.currentUser;
+      if (userAuth) {
+        await deleteAuthUser(userAuth);
+      }
 
       showToast('Success', 'User and all posts deleted successfully', 'success');
     } catch (error) {
@@ -85,9 +89,6 @@ const useDeleteUser = () => {
       handleLogout();
     }
   };
-
-  
-  
 
   return {
     deleteUser,

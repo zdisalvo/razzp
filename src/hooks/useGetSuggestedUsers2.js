@@ -61,8 +61,14 @@ const useGetSuggestedUsers2 = () => {
         // Combine and deduplicate the suggested users
         const combinedUsers = [...followersFollowingUsers, ...followingUsersResults];
 
+        // Remove duplicate users
+        const uniqueUsers = combinedUsers.filter(
+          (user, index, self) =>
+            index === self.findIndex((u) => u.id === user.id)
+        );
+
         // Filter out the authUser and users that the authUser is following
-        const uniqueSuggestedUsers = combinedUsers.filter(
+        const uniqueSuggestedUsers = uniqueUsers.filter(
           (user) => ![authUser.uid, ...authUser.following].includes(user.uid)
         );
 

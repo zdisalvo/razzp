@@ -31,6 +31,7 @@ const ProfilePosts = ({ username }) => {
       }}
       gap={1}
       columnGap={1}
+      pb={{ base: "15vh", md: "60px" }}
     >
       {/* {isLoading &&
         [0, 1, 2].map((_, idx) => (
