@@ -580,7 +580,7 @@ const ProfileHeader = ({ username, page }) => {
 			<AvatarGroup size={{ base: "xl", md: "2xl" }}  mx={1} my={2}>
 				<Avatar src={userProfile.profilePicURL} alt='Profile picture' />
 			</AvatarGroup>
-			{isToggled && city && state && authUser && userProfile && ((userProfile.private && userProfile.followers.includes(authUser.uid)) || (userProfile.uid === authUser.uid) || (!userProfile.private)) && (
+			{isToggled && userProfile.city && userProfile.state && authUser && userProfile && ((userProfile.private && userProfile.followers.includes(authUser.uid)) || (userProfile.uid === authUser.uid) || (!userProfile.private)) && (
             <Flex alignItems="baseline">
             {/* <IconButton
             icon={<FontAwesomeIcon icon={faLocationDot} />}

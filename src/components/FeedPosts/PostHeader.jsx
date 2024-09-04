@@ -167,7 +167,7 @@ const handleFollowClick = async () => {
           </Box>
         </Flex>
       </Flex>
-      <Flex alignItems={"center"} gap={4} m={3}>
+      <Flex alignItems={"center"} gap={4} mr={1}>
       {authUser && (
         <Box cursor={"pointer"}>
         <Button

@@ -115,9 +115,9 @@ const useGetFeedPosts = () => {
 					  
 					}
 
-					combinedPosts = shuffleArray(uniquePosts);
+					const shuffledPosts = shuffleArray(uniquePosts);
 				  
-					setPosts(combinedPosts);
+					setPosts(shuffledPosts);
 
 
 				//feedPosts.sort((a, b) => b.createdAt - a.createdAt);
