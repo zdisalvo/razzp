@@ -590,7 +590,7 @@ const ProfileHeader = ({ username, page }) => {
           <FontAwesomeIcon icon={faLocationDot}  />
           </Box>
 		  
-            <Text fontSize="sm" >{city}, {state}</Text>
+            <Text fontSize="sm" >{userProfile.city}, {userProfile.state}</Text>
             </Flex>
             )}
 			{visitingOwnProfileAndAuth && (
