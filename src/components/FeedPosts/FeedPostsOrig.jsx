@@ -20,6 +20,7 @@ const FeedPostsOrig = () => {
   const [userProfile, setUserProfile] = useState(null);
   const [posts, setPosts] = useState([]);
   const [initialized, setInitialized] = useState(false);
+  
 
   useEffect(() => {
     if (!isLoading && fetchedPosts.length > 0) {
@@ -38,7 +39,11 @@ useEffect(() => {
     const pStates = {};
     const fStates = {};
     const rStates = {};
+    const checkedUsers = new Set();
     for (const post of posts) {
+
+      if (checkedUsers.has(post.createdBy)) continue;
+
       try {
         const userDoc = doc(firestore, 'users', post.createdBy);
         const userSnap = await getDoc(userDoc);
@@ -46,6 +51,9 @@ useEffect(() => {
         pStates[post.createdBy] = userData.private || false;
         fStates[post.createdBy] = userData.followers.includes(authUser.uid);
         rStates[post.createdBy] = userData.requested.includes(authUser.uid) ;
+
+        checkedUsers.add(post.createdBy);
+
       } catch (error) {
         //console.error(`Error fetching follow state for user ${post.createdBy}:`, error);
       }

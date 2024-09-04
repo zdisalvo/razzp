@@ -16,6 +16,15 @@ const useGetFeedPosts = () => {
 	const { posts: top5Posts } = useGetTop5Posts();
 	const now = Date.now();
     const oneDayAgo = now - 24 * 60 * 60 * 1000;
+	const threeDaysAgo = now - 30 * 24 * 60 * 60 * 1000;
+
+	const chunkArray = (array, size) => {
+		const chunkedArr = [];
+		for (let i = 0; i < array.length; i += size) {
+		  chunkedArr.push(array.slice(i, i + size));
+		}
+		return chunkedArr;
+	  };
 	
 
 	const shuffleArray = (array) => {
@@ -36,7 +45,7 @@ const useGetFeedPosts = () => {
 			// 	return;
 			// }
 			//console.log(authUser.following.length);
-			const q = authUser.following.length > 0 ? query(collection(firestore, "posts"), where("createdBy", "in", authUser.following)) : [];
+			const q = authUser.following.length > 0 ? query(collection(firestore, "posts"), where("createdBy", "in", authUser.following), where("createdAt", ">=", threeDaysAgo)) : [];
 			const r = query(collection(firestore, "posts"), where("createdAt", ">=", oneDayAgo));
 
 			try {
@@ -49,6 +58,8 @@ const useGetFeedPosts = () => {
 				if (authUser.following.length > 0) {
 
 					querySnapshot = await getDocs(q);
+
+					//console.log(querySnapshot);
 
 				}
 				
@@ -78,6 +89,7 @@ const useGetFeedPosts = () => {
 					let uniquePosts = feedPosts;
 				  
 					if (top5Posts && top5Posts.length > 0) {
+						console.log(top5Posts.length);
 					  // Combine feedPosts and top5Posts
 					  combinedPosts = [...feedPosts, ...top5Posts];
 				
