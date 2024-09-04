@@ -87,7 +87,7 @@ import {
         const currentTime = new Date();
         const elapsedTimeInDays = (currentTime - postTime) / (1000 * 60 * 60 * 24);
         //console.log(post.score / (elapsedTimeInDays + 1));
-        return post.score / (elapsedTimeInDays + 1);
+        return Math.round(post.score / (elapsedTimeInDays + 1));
     };
 
     const[totalScore, setTotalScore] = useState(Math.round(calculateRankingScore(post)));
@@ -144,7 +144,7 @@ import {
 			<Flex>
 			  <AiFillHeart size={20} />
 			  <Text fontWeight={"bold"} ml={2}>
-				{post.score}
+				{calculateRankingScore(post)}
 			  </Text>
 			</Flex>
   

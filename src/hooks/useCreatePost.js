@@ -50,7 +50,8 @@ const useCreatePost = () => {
                     imageURL: downloadURL,
                     mediaType: mediaType
                 });
-                newPost.videoURL = downloadURL;
+                newPost.imageURL = downloadURL;
+                newPost.mediaType = mediaType;
             } else {
                 // Handle image upload
                 //await updateDoc(userDocRef, { posts: arrayUnion(postDocRef.id) });
