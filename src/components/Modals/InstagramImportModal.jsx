@@ -14,11 +14,11 @@ const ImportInstagramModal = ({ isOpen, onClose }) => {
     //     }
     // }, [loading, items]);
 
-    // useEffect(() => {
-    //     if (!loading && isOpen && items.length > 0) {
-    //         onClose(); // Close the modal
-    //     }
-    // }, [loading, isOpen, items, onClose]);
+    useEffect(() => {
+        if (!loading && isOpen && items.length > 0) {
+            onClose(); // Close the modal
+        }
+    }, [loading, isOpen, items, onClose]);
 
     return (
         <Modal isOpen={isOpen} onClose={onClose} p={0}>
@@ -69,7 +69,7 @@ const ImportInstagramModal = ({ isOpen, onClose }) => {
                             </div>
                         )}
                         {error && <Text color="red.500" mt={3}>{error.message}</Text>}
-                        {items.length > 0 && (
+                        {/* {items.length > 0 && (
                             <div>
                                 <Text mt={3} fontWeight="bold">Results for @{username}</Text>
                                 <ul>
@@ -80,7 +80,7 @@ const ImportInstagramModal = ({ isOpen, onClose }) => {
                                     ))}
                                 </ul>
                             </div>
-                        )}
+                        )} */}
                     </form>
                 </ModalBody>
             </ModalContent>

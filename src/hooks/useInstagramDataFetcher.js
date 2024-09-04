@@ -46,7 +46,7 @@ const useInstagramDataFetcher = () => {
                 `https://www.instagram.com/${username}/`
             ],
             "resultsType": "posts",
-            "resultsLimit": 200,
+            "resultsLimit": 100,
             "searchType": "hashtag",
             "searchLimit": 1,
             "addParentData": false

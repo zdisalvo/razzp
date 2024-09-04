@@ -176,7 +176,7 @@ import {
         //autoPlay 
 		playsInline
         muted 
-        //loop
+        loop
         alt={"FEED POST VIDEO"} 
         style={{ 
 			width: "100%", 
