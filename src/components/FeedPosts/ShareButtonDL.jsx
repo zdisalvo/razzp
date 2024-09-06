@@ -34,8 +34,8 @@ const ShareButtonDL = ({ imageUrl, overlayText }) => {
 
       overlayImage.onload = () => {
         const overlayWidth = 100 * MULTIPLIER;
-        const overlayHeight = 100 * MULTIPLIER;
-        const overlayX = canvas.width - overlayWidth - 160 * MULTIPLIER;
+        const overlayHeight = 130 * MULTIPLIER;
+        const overlayX = canvas.width - overlayWidth / MULTIPLIER - 150 * MULTIPLIER;
         const overlayY = Math.min(canvas.height, CROP + (canvas.height - CROP) / 2) - overlayHeight - 50 * MULTIPLIER;
 
         
@@ -44,16 +44,20 @@ const ShareButtonDL = ({ imageUrl, overlayText }) => {
             const padding = 30 * MULTIPLIER; // Padding around the text
             const radius = 30 * MULTIPLIER; // Radius for the rounded corners
             const backgroundColor = 'rgba(235, 119, 52, .92)'; // Orange with 60% opacity
+            //const backgroundColor = 'rgba(254, 239, 174, .92)';
             const fontSize = 36 * MULTIPLIER;
             
             // Calculate text width and height
             ctx.font = `italic bold ${fontSize}px Lato`;
-            const textWidth = ctx.measureText(overlayText).width;
+            const textWidth = ctx.measureText("razzp.com/" + overlayText).width;
+            //console.log(textWidth);
             const textHeight = fontSize; // Assuming font size is 36px
     
             // Positioning
             const usernameY = overlayY + overlayHeight + 24 * MULTIPLIER;
-            const backgroundX = canvas.width - textWidth - padding - 147 * MULTIPLIER; // Adjust based on text alignment
+            console.log(textWidth);
+            console.log(MULTIPLIER);
+            const backgroundX = canvas.width - textWidth - padding - (textWidth + 20 * MULTIPLIER) / MULTIPLIER; // Adjust based on text alignment
             const backgroundY = usernameY - textHeight - padding + 17 * MULTIPLIER;
     
             // Draw the rounded background
@@ -76,7 +80,7 @@ const ShareButtonDL = ({ imageUrl, overlayText }) => {
             ctx.shadowBlur = 10 * MULTIPLIER; // Shadow blur
             ctx.textAlign = 'right'; // Align text to the right
             
-            ctx.fillText(overlayText, canvas.width - 150 * MULTIPLIER, usernameY);
+            ctx.fillText("razzp.com/" + overlayText, canvas.width - (textWidth + 20 * MULTIPLIER) / MULTIPLIER, usernameY);
           }
 
           ctx.drawImage(overlayImage, overlayX, overlayY, overlayWidth, overlayHeight);

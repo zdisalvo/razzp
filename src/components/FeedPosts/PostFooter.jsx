@@ -38,7 +38,7 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
         return post.score / (elapsedTimeInDays + 1);
     };
 
-    const[totalScore, setTotalScore] = useState(Math.round(calculateRankingScore(post)));
+    const[totalScore, setTotalScore] = useState(Math.abs(Math.round(calculateRankingScore(post))));
     //const age = useState(post.createdAt);
 
     //const value = 2232333434;
@@ -175,7 +175,7 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
                 {creatorProfile && post && (
                 <Box cursor={"pointer"} fontSize={18}>
                     {/* <ShareButtonOverlay imageUrl={post.imageURL} overlayText={`@${creatorProfile.username}`} /> */}
-                    <ShareButtonDL imageUrl={post.imageURL} overlayText={`@${creatorProfile.username}`} />
+                    <ShareButtonDL imageUrl={post.imageURL} overlayText={`${creatorProfile.username}`} />
                     {/* <ShareButton imageUrl={post.imageURL} /> */}
                     
                 </Box>
