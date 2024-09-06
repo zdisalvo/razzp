@@ -71,14 +71,18 @@ const useCreatePost = () => {
                 newPost.mediaType = mediaType;
             }
 
-            // if (authUser) {
-            //     await updateDoc(userDocRef, { posts: arrayUnion(postDocRef.id) });
-            //     createPost({ ...newPost, id: postDocRef.id });
-            //     addPost({ ...newPost, id: postDocRef.id });
-            // }
+            
+                await updateDoc(userDocRef, { 
+                    posts: arrayUnion(postDocRef.id),
+                    instagramImport: true,
+                    //instagramUsername: username,
+                });
+                createPost({ ...newPost, id: postDocRef.id });
+                addPost({ ...newPost, id: postDocRef.id });
+            
 
-            if (authUser) createPost({ ...newPost, id: postDocRef.id });
-            if (authUser) addPost({ ...newPost, id: postDocRef.id });
+                // if (authUser) createPost({ ...newPost, id: postDocRef.id });
+                // if (authUser) addPost({ ...newPost, id: postDocRef.id });
 
             //showToast("Success", "Post created successfully", "success");
         } catch (error) {

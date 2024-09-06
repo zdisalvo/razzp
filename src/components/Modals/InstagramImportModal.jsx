@@ -15,7 +15,7 @@ const ImportInstagramModal = ({ isOpen, onClose }) => {
     // }, [loading, items]);
 
     useEffect(() => {
-        if (!loading && isOpen && items.length > 0) {
+        if (isOpen && items.length > 0) {
             onClose(); // Close the modal
         }
     }, [loading, isOpen, items, onClose]);
@@ -59,17 +59,18 @@ const ImportInstagramModal = ({ isOpen, onClose }) => {
                             bg={"blue.400"}
                             color={"white"} 
                             width="full"
+                            isDisabled={loading}
                         >
                             Import Posts
                         </Button>
-                        {/* {loading && (
+                        {loading && (
                             <div>
                                 <Text mt={3} mb={2}>Loading...</Text>
                                 <Progress value={progress} size="sm" colorScheme="blue" />
                             </div>
                         )}
                         {error && <Text color="red.500" mt={3}>{error.message}</Text>}
-                        {items.length > 0 && (
+                        {/* {items.length > 0 && (
                             <div>
                                 <Text mt={3} fontWeight="bold">Results for @{username}</Text>
                                 <ul>

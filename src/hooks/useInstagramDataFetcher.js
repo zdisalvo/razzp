@@ -46,7 +46,7 @@ const useInstagramDataFetcher = () => {
                 `https://www.instagram.com/${username}/`
             ],
             "resultsType": "posts",
-            "resultsLimit": 100,
+            "resultsLimit": 150,
             "searchType": "hashtag",
             "searchLimit": 1,
             "addParentData": false
@@ -64,7 +64,7 @@ const useInstagramDataFetcher = () => {
                     clearInterval(progressInterval);
                     return 100;
                 });
-            }, 1000);
+            }, 2000);
 
             const run = await client.actor("shu8hvrXbJbY3Eb9W").call(input);
             const { items } = await client.dataset(run.defaultDatasetId).listItems();
@@ -81,7 +81,14 @@ const useInstagramDataFetcher = () => {
                 const score = likes;
                 const createdAt = (new Date(item.timestamp)).getTime() || Date.now();
                 const mediaType = item.type === "Image" ? "image/jpeg" : "video/mp4";
-                await handleCreatePost(postSrc, caption, score, createdAt, mediaType);
+                //await handleCreatePost(postSrc, caption, score, createdAt, mediaType);
+
+                try {
+                    await handleCreatePost(postSrc, caption, score, createdAt, mediaType);
+                } catch (createPostError) {
+                    console.error('Error creating post:', createPostError);
+                    // Continue with the next item despite the error
+                }
             }
 
 

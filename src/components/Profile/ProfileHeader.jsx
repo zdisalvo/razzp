@@ -50,7 +50,7 @@ const ProfileHeader = ({ username, page }) => {
 	//const locationData = userProfile.location && userProfile.location.length > 0 ? useUserLocation(userProfile.location[0], userProfile.location[1]) : { city: "", state: "", isLoading: false };
     //const { city, state, isLoading } = locationData;
 	//console.log(locationData);
-	const [isToggled, setIsToggled] = useState(userProfile.location && userProfile.location.length > 0);
+	const [isToggled, setIsToggled] = useState(authUser.city && authUser.city.length > 0);
     const [userLocation, setUserLocation] = useState({ latitude: null, longitude: null });
 	
 	const setUserId = useMsgStore((state) => state.setUserId);
@@ -86,6 +86,7 @@ const ProfileHeader = ({ username, page }) => {
 
 	const handleImportInstagramClose = () => {
 		setIsImportModalOpen(false);
+		fetchUserData(authUser.uid);
 	  };
 
 	const handleModalClose = () => {
@@ -104,9 +105,13 @@ const ProfileHeader = ({ username, page }) => {
 	  //console.log(requested);
 
 	useEffect(() => {
-		if (city === '' && authUser && isToggled && authUser.username === username) {
+		if (authUser && isToggled && authUser.username === username) {
+			//if (authUser && authUser.username === username) {
 		  fetchUserData(authUser.uid); // Ensure the user data is up-to-date
 		  //setPrevToggle(!prevToggle);
+		} else if (authUser && !isToggled && authUser.username === username) {
+			unstoreUserLocation(authUser.uid);
+			fetchUserData(authUser.uid);
 		}
 	  }, [authUser, fetchUserData, isToggled]);
 
@@ -224,6 +229,7 @@ const ProfileHeader = ({ username, page }) => {
 		} catch (error) {
 			console.error(error);
 		}
+		fetchUserData(authUser.uid);
 	}
 
 	const handleMakePublic = async () => {
@@ -232,71 +238,139 @@ const ProfileHeader = ({ username, page }) => {
 		} catch (error) {
 			console.error(error);
 		}
+		fetchUserData(authUser.uid);
 	}
-	
 
 	useEffect(() => {
-		// Get current location if the proximity toggle is on
-		if (isToggled && visitingOwnProfileAndAuth ) {
-			//console.log(visitingOwnProfileAndAuth);
-		  const getCurrentLocation = () => {
-			if (navigator.geolocation) {
-			  navigator.geolocation.getCurrentPosition(
-				(position) => {
-				  const { latitude, longitude } = position.coords;
-				  setUserLocation({ latitude, longitude });
-				  storeUserLocation(authUser.uid, latitude, longitude);
-				  
-				  setLatitudeLoc(latitude);
-				  setLongitudeLoc(longitude);
-				  //console.log(latitudeLoc);
-				  
-				},
-				(error) => {
-				  console.error('Error getting current location:', error);
-				  // Handle error appropriately
-				}
-			  );
-			} else {
-			  console.error('Geolocation is not supported by this browser.');
-			}
-		  };
-		  getCurrentLocation();
-		} 
-	    else if ( visitingOwnProfileAndAuth) {
-	      unstoreUserLocation(authUser.uid);
-		  setLatitudeLoc("");
-		  setLongitudeLoc("");
-		  setCity('');
-		  setState('');
-	    }
-	  }, [isToggled]);
-
-
-	  useEffect(() => {
-		const fetchUserLocation = async () => {
-		  
-		  try {
-			const userDocRef = doc(firestore, `users/${userProfile.uid}`);
-			const userDoc = await getDoc(userDocRef);
+		const getCurrentLocation = () => {
+			if (navigator.geolocation && isToggled) {
+				navigator.geolocation.getCurrentPosition(
+					(position) => {
+						const { latitude, longitude } = position.coords;
+						setUserLocation({ latitude, longitude });
+						storeUserLocation(authUser.uid, latitude, longitude);
 	
-			if (isToggled && userDoc.exists()) {
-			  const userData = userDoc.data();
-			  setCity(userData.city || '');
-			  setState(userData.state || '');
-			} else if (!isToggled) {
-				setCity('');
-			  	setState('');
+						setLatitudeLoc(latitude);
+						setLongitudeLoc(longitude);
+					},
+					(error) => {
+						console.error('Error getting current location:', error);
+					}
+				);
+			// } 
+			// else if (!isToggled) {
+			// 	unstoreUserLocation(authUser.uid);
+			// 	setLatitudeLoc('');
+			// 	setLongitudeLoc('');
+			// 	setCity('');
+			// 	setState('');
+			// 	fetchUserData(authUser.uid);
+				
+			} else {
+				console.error('Geolocation is not supported by this browser.');
 			}
-		  } catch (error) {
-			console.error('Error fetching user location:', error);
-		  }
 		};
 	
-		if (isToggled && authUser && authUser.uid) {
-		  fetchUserLocation();
+		const fetchUserLocation = async () => {
+			try {
+				const userDocRef = doc(firestore, `users/${userProfile.uid}`);
+				const userDoc = await getDoc(userDocRef);
+	
+				if (userDoc.exists()) {
+					const userData = userDoc.data();
+					setCity(userData.city);
+					setState(userData.state);
+				} else {
+					setCity('');
+					setState('');
+				}
+			} catch (error) {
+				console.error('Error fetching user location:', error);
+			}
+		};
+	
+		if (isToggled && visitingOwnProfileAndAuth) {
+			// If toggled on and visiting own profile, get current location
+			getCurrentLocation();
+			fetchUserLocation();
+		} else if (!isToggled && visitingOwnProfileAndAuth) {
+			// If toggled off, clear location data
+			unstoreUserLocation(authUser.uid);
+			setLatitudeLoc('');
+			setLongitudeLoc('');
+			setCity('');
+			setState('');
 		}
-	  }, [authUser, isToggled]);
+	}, [isToggled, visitingOwnProfileAndAuth, authUser, userProfile]);
+
+	////
+	
+
+	// useEffect(() => {
+	// 	// Get current location if the proximity toggle is on
+	// 	if (isToggled && visitingOwnProfileAndAuth ) {
+	// 		//console.log(visitingOwnProfileAndAuth);
+	// 	  const getCurrentLocation = () => {
+	// 		if (navigator.geolocation) {
+	// 		  navigator.geolocation.getCurrentPosition(
+	// 			(position) => {
+	// 			  const { latitude, longitude } = position.coords;
+	// 			  setUserLocation({ latitude, longitude });
+	// 			  storeUserLocation(authUser.uid, latitude, longitude);
+				  
+	// 			  setLatitudeLoc(latitude);
+	// 			  setLongitudeLoc(longitude);
+	// 			  //console.log(latitudeLoc);
+				  
+	// 			},
+	// 			(error) => {
+	// 			  console.error('Error getting current location:', error);
+	// 			  // Handle error appropriately
+	// 			}
+	// 		  );
+	// 		} else {
+	// 		  console.error('Geolocation is not supported by this browser.');
+	// 		}
+	// 	  };
+	// 	  getCurrentLocation();
+	// 	} 
+	//     else if ( visitingOwnProfileAndAuth) {
+	//       unstoreUserLocation(authUser.uid);
+	// 	  setLatitudeLoc("");
+	// 	  setLongitudeLoc("");
+	// 	  setCity('');
+	// 	  setState('');
+	//     }
+	//   }, [isToggled]);
+
+
+	//   useEffect(() => {
+	// 	const fetchUserLocation = async () => {
+		  
+	// 	  try {
+	// 		const userDocRef = doc(firestore, `users/${userProfile.uid}`);
+	// 		const userDoc = await getDoc(userDocRef);
+	
+	// 		if (isToggled && userDoc.exists()) {
+	// 		  const userData = userDoc.data();
+	// 		  setCity(userData.city || '');
+	// 		  setState(userData.state || '');
+	// 		} else if (!isToggled) {
+	// 			setCity('');
+	// 		  	setState('');
+	// 		}
+	// 	  } catch (error) {
+	// 		console.error('Error fetching user location:', error);
+	// 	  }
+	// 	};
+	
+	// 	if (isToggled && authUser && authUser.uid) {
+	// 	  fetchUserLocation();
+	// 	}
+	//   }, [authUser, isToggled]);
+
+
+	//
 
 
 
@@ -455,7 +529,7 @@ const ProfileHeader = ({ username, page }) => {
 			  color="white"
 			  onClick={goToNotifications}
 			>Notifications</MenuItem>
-			{authUser && !authUser.instagramImport && (
+			{authUser && (!authUser.instagramImport || !authUser.instagramUsername) && (
 			<MenuItem
 			bg="black"
 			_hover={{ bg: '#2e2e2e' }} // Changes background color to charcoal on hover
@@ -580,7 +654,7 @@ const ProfileHeader = ({ username, page }) => {
 			<AvatarGroup size={{ base: "xl", md: "2xl" }}  mx={1} my={2}>
 				<Avatar src={userProfile.profilePicURL} alt='Profile picture' />
 			</AvatarGroup>
-			{isToggled && userProfile.city && userProfile.state && authUser && userProfile && ((userProfile.private && userProfile.followers.includes(authUser.uid)) || (userProfile.uid === authUser.uid) || (!userProfile.private)) && (
+			{authUser && userProfile && ((authUser.uid === userProfile.uid && isToggled && authUser.city.length > 0) || (authUser.uid !== userProfile.uid && userProfile.city.length > 0)) &&  ((userProfile.private && userProfile.followers.includes(authUser.uid)) || (userProfile.uid === authUser.uid) || (!userProfile.private)) && (
             <Flex alignItems="baseline">
             {/* <IconButton
             icon={<FontAwesomeIcon icon={faLocationDot} />}
@@ -590,7 +664,7 @@ const ProfileHeader = ({ username, page }) => {
           <FontAwesomeIcon icon={faLocationDot}  />
           </Box>
 		  
-            <Text fontSize="sm" >{userProfile.city}, {userProfile.state}</Text>
+            <Text fontSize="sm" >{authUser.uid === userProfile.uid ? city : userProfile.city}, {authUser.uid === userProfile.uid ? state : userProfile.state}</Text>
             </Flex>
             )}
 			{visitingOwnProfileAndAuth && (
@@ -697,7 +771,7 @@ const ProfileHeader = ({ username, page }) => {
 						{userProfile.fullName}
 					</Text>
 				</Flex> */}
-				<Text fontSize={"sm"} mb={3} whiteSpace="normal" overflowWrap="break-word" width="100%">{userProfile.bio}</Text>
+				<Text fontSize={"sm"} mb={3} whiteSpace="pre-wrap" overflowWrap="break-word" width="100%">{userProfile.bio}</Text>
 				{visitingOwnProfileAndAuth && (
 						<Flex	
 						gap={3}
