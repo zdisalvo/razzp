@@ -1,11 +1,12 @@
 import React, { forwardRef, useEffect, useState, useRef } from "react";
-import { Box, Container, Image, Button, IconButton, useDisclosure } from "@chakra-ui/react";
+import { Box, Container, Image, Button, IconButton, useDisclosure, Skeleton, Flex } from "@chakra-ui/react";
 import PostFooter from "./PostFooter";
 import PostHeader from "./PostHeader";
 import useGetUserProfileById from "../../hooks/useGetUserProfileById";
 import { FaVolumeUp, FaVolumeMute } from "react-icons/fa";
+import BlackLoadingPage from "../Loading/BlackLoadingPage";
 
-const FeedPost = forwardRef(({ post, isFollowing, requested, isPrivate, onFollowClick }, ref) => {
+const FeedPost = forwardRef(({ post, isFollowing, requested, isPrivate, onFollowClick, isLoaded }, ref) => {
   const { userProfile } = useGetUserProfileById(post.createdBy);
   const videoRef = useRef(null);
   const [isMuted, setIsMuted] = useState(true);
@@ -33,35 +34,31 @@ const FeedPost = forwardRef(({ post, isFollowing, requested, isPrivate, onFollow
 
   useEffect(() => {
     const videoElement = videoRef.current;
-
-    if (videoElement) {
+  
+    if (isLoaded && videoElement) {
       const observer = new IntersectionObserver(
         ([entry]) => {
           if (entry.isIntersecting) {
-            videoElement.src = post.imageURL;
             videoElement.play();
           } else {
             videoElement.pause();
-            videoElement.src = "";
           }
         },
-        { threshold: 0.1 } // Adjust this value to control how much of the video needs to be visible to trigger playback
+        { threshold: 0.01 } // Adjust the threshold to your preference
       );
-
+  
       observer.observe(videoElement);
-
+  
       return () => {
-        observer.disconnect();
-        if (videoElement) {
-          videoElement.src = ""; // Unload video when component unmounts
-        }
+        observer.unobserve(videoElement);
       };
     }
-  }, []);
+  }, [isLoaded]); // Add isLoaded as a dependency
+  
 
   return (
-    <div ref={ref}>
-      <Container
+    <div ref={ref} data-post-id={post.id}>
+      {isLoaded ? (<Container
         //h={{ base: "auto", md: "70%" }}
         maxW={{ base: "100vw", md: "container.md" }}
         //maxW="container.md"
@@ -97,7 +94,7 @@ const FeedPost = forwardRef(({ post, isFollowing, requested, isPrivate, onFollow
         //autoPlay 
         muted={isMuted} 
         loop
-        preload="none"
+        //preload="none"
         alt={"FEED POST VIDEO"} 
         onClick={toggleMute}
         />
@@ -107,7 +104,15 @@ const FeedPost = forwardRef(({ post, isFollowing, requested, isPrivate, onFollow
       
       </Box>
       <PostFooter post={post} creatorProfile={userProfile} />
-      </Container>
+      </Container> 
+      ):
+      (
+        // Render a placeholder while the post is not loaded
+      <Flex flexDir='column' h='100vh' alignItems='center' justifyContent='center'>
+    {/* <Spinner size='xl' /> */}
+          <BlackLoadingPage />
+      </Flex>
+      )}
     </div>
   );
 });

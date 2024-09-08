@@ -11,6 +11,8 @@ import useAuthStore from "../../store/authStore";
 import { firestore, storage } from "../../firebase/firebase";
 import { doc, getDoc } from "firebase/firestore";
 import useUnrequestFollow from "../../hooks/useUnrequestFollow";
+import useIntersectionObserver from "../../hooks/useIntersectionObserver";
+import LoadingPage from "../Loading/LoadingPage";
 
 const UserFeed = () => {
   const authUser = useAuthStore((state) => state.user)
@@ -27,21 +29,57 @@ const UserFeed = () => {
   const { isUpdating, handleFollowUser } = useFollowUserFP();
   const isBlocked = useCheckBlockedUser({ userProfile });
   const unrequestFollow = useUnrequestFollow();
-  
+  const [loadedPosts, setLoadedPosts] = useState({});
+  const [isInitialized, setIsInitialized] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   const userNotFound = !isLoading && !userProfile;
 
   //console.log(isLoading);
 
+  const addElementsToObserve = useIntersectionObserver(
+    (postElement) => {
+      const postId = postElement.getAttribute("data-post-id");
+      setLoadedPosts((prev) => ({ ...prev, [postId]: true }));
+    },
+    { threshold: .01 }
+  );
+
+
   useEffect(() => {
     if (!isLoading && postId && postRefs.current[postId] && shouldScroll) {
+      setIsInitialized(true);
       setTimeout(() => {
-        postRefs.current[postId].scrollIntoView();
-      }, 500);
-      setShouldScroll(false);
+        postRefs.current[postId].scrollIntoView({ block: 'start' });
+      }, 50);
+      
+      setTimeout(() => {
+        setShouldScroll(false);
+      }, 150);
+      setIsScrolled(true);
+      
     }
   }, [isLoading, postId, posts]);
 
+  // useEffect(() => {
+  //   if (!isLoading && postId && postRefs.current[postId] && shouldScroll) {
+  //     setIsInitialized(true);
+  //     setTimeout(() => {
+  //       postRefs.current[postId].scrollIntoView();
+  //     }, 500);
+  //     setIsScrolled(true);
+  //     setShouldScroll(false);
+      
+  //   }
+  // }, [isLoading, postId, posts]);
+
+
+  useEffect(() => {
+    if (posts.length > 0) {
+      const elementsToObserve = posts.map((post) => postRefs.current[post.id]);
+      addElementsToObserve(elementsToObserve);
+    }
+  }, [posts]); // 'addElementsToObserve' is now stable and won't cause unnecessary re-renders
 
 
   // useEffect(() => {
@@ -122,8 +160,8 @@ const UserFeed = () => {
           const userSnap = await getDoc(userDoc);
           const userData = userSnap.data();
           pStates[post.createdBy] = userData.private || false;
-          fStates[post.createdBy] = userData.followers.includes(authUser.uid);
-          rStates[post.createdBy] = userData.requested.includes(authUser.uid);
+          fStates[post.createdBy] = userData.followers.includes(authUser.uid) || false;
+          rStates[post.createdBy] = userData.requested.includes(authUser.uid) || false;
         } catch (error) {
           console.error(`Error fetching follow state for user ${post.createdBy}:`, error);
         }
@@ -183,7 +221,7 @@ const UserFeed = () => {
 
   return (
     <Container py={0}   px={0} w={['100vw', null, '60vh']} >
-      {isLoading &&
+      {/* {isLoading &&
         [0, 1, 2].map((_, idx) => (
           <VStack key={idx} gap={0} alignItems={"flex-start"} mb={{ base: "13vh", md: "60px" }}>
             <Flex gap="0">
@@ -197,9 +235,15 @@ const UserFeed = () => {
               <Box h={"400px"}>contents wrapped</Box>
             </Skeleton>
           </VStack>
-        ))}
+        ))} */}
+        {isLoading && (
+            <Flex flexDir='column' h='100vh' alignItems='center' justifyContent='center'>
+			{/* <Spinner size='xl' /> */}
+            <LoadingPage />
+		    </Flex>
+        )}
 
-      {!isLoading && posts.length > 0 &&
+      {posts.length > 0 &&
         posts.map((post) => (
           <FeedPost
             key={post.id}
@@ -209,11 +253,12 @@ const UserFeed = () => {
             requested={requestedStates[post.createdBy] || false}
             isPrivate={privateStates[post.createdBy] || false}
             onFollowClick={() => handleFollowClick(post.createdBy)}
+            isLoaded={!!loadedPosts[post.id] && isInitialized && isScrolled} // Pass loaded state to FeedPost
           />
         ))
       }
 
-      {shouldScroll && <div style={{ visibility: "hidden", height: 0 }} ref={(el) => el && el.scrollIntoView({ behavior: "smooth" })}></div>}
+      {shouldScroll && <div style={{ visibility: "hidden", height: "450px" }} ref={(el) => el && el.scrollIntoView({block: 'start'})}></div>}
     </Container>
   );
 };
