@@ -50,7 +50,7 @@ const ProfileHeader = ({ username, page }) => {
 	//const locationData = userProfile.location && userProfile.location.length > 0 ? useUserLocation(userProfile.location[0], userProfile.location[1]) : { city: "", state: "", isLoading: false };
     //const { city, state, isLoading } = locationData;
 	//console.log(locationData);
-	const [isToggled, setIsToggled] = useState(authUser.city && authUser.city.length > 0);
+	const [isToggled, setIsToggled] = useState(authUser && authUser.city && authUser.city.length > 0);
     const [userLocation, setUserLocation] = useState({ latitude: null, longitude: null });
 	
 	const setUserId = useMsgStore((state) => state.setUserId);
@@ -243,7 +243,7 @@ const ProfileHeader = ({ username, page }) => {
 
 	useEffect(() => {
 		const getCurrentLocation = () => {
-			if (navigator.geolocation && isToggled) {
+			if (navigator.geolocation) {
 				navigator.geolocation.getCurrentPosition(
 					(position) => {
 						const { latitude, longitude } = position.coords;
@@ -654,7 +654,7 @@ const ProfileHeader = ({ username, page }) => {
 			<AvatarGroup size={{ base: "xl", md: "2xl" }}  mx={1} my={2}>
 				<Avatar src={userProfile.profilePicURL} alt='Profile picture' />
 			</AvatarGroup>
-			{authUser && userProfile && ((authUser.uid === userProfile.uid && isToggled && authUser.city.length > 0) || (authUser.uid !== userProfile.uid && userProfile.city.length > 0)) &&  ((userProfile.private && userProfile.followers.includes(authUser.uid)) || (userProfile.uid === authUser.uid) || (!userProfile.private)) && (
+			{authUser && userProfile && ((authUser.uid === userProfile.uid && isToggled && authUser.city && authUser.city.length > 0) || (authUser.uid !== userProfile.uid && userProfile.city && userProfile.city.length > 0)) &&  ((userProfile.private && userProfile.followers.includes(authUser.uid)) || (userProfile.uid === authUser.uid) || (!userProfile.private)) && (
             <Flex alignItems="baseline">
             {/* <IconButton
             icon={<FontAwesomeIcon icon={faLocationDot} />}

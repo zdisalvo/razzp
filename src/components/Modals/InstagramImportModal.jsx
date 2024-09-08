@@ -15,7 +15,7 @@ const ImportInstagramModal = ({ isOpen, onClose }) => {
     // }, [loading, items]);
 
     useEffect(() => {
-        if (isOpen && items.length > 0) {
+        if (!loading && isOpen && items.length > 0) {
             onClose(); // Close the modal
         }
     }, [loading, isOpen, items, onClose]);

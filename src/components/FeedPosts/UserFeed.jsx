@@ -37,7 +37,7 @@ const UserFeed = () => {
     if (!isLoading && postId && postRefs.current[postId] && shouldScroll) {
       setTimeout(() => {
         postRefs.current[postId].scrollIntoView();
-      }, 1200);
+      }, 500);
       setShouldScroll(false);
     }
   }, [isLoading, postId, posts]);
@@ -183,7 +183,7 @@ const UserFeed = () => {
 
   return (
     <Container py={0}   px={0} w={['100vw', null, '60vh']} >
-      {/* {isLoading &&
+      {isLoading &&
         [0, 1, 2].map((_, idx) => (
           <VStack key={idx} gap={0} alignItems={"flex-start"} mb={{ base: "13vh", md: "60px" }}>
             <Flex gap="0">
@@ -197,9 +197,9 @@ const UserFeed = () => {
               <Box h={"400px"}>contents wrapped</Box>
             </Skeleton>
           </VStack>
-        ))} */}
+        ))}
 
-      {posts.length > 0 &&
+      {!isLoading && posts.length > 0 &&
         posts.map((post) => (
           <FeedPost
             key={post.id}

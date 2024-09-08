@@ -38,9 +38,11 @@ const FeedPost = forwardRef(({ post, isFollowing, requested, isPrivate, onFollow
       const observer = new IntersectionObserver(
         ([entry]) => {
           if (entry.isIntersecting) {
+            videoElement.src = post.imageURL;
             videoElement.play();
           } else {
             videoElement.pause();
+            videoElement.src = "";
           }
         },
         { threshold: 0.1 } // Adjust this value to control how much of the video needs to be visible to trigger playback
@@ -49,7 +51,10 @@ const FeedPost = forwardRef(({ post, isFollowing, requested, isPrivate, onFollow
       observer.observe(videoElement);
 
       return () => {
-        observer.unobserve(videoElement);
+        observer.disconnect();
+        if (videoElement) {
+          videoElement.src = ""; // Unload video when component unmounts
+        }
       };
     }
   }, []);
@@ -92,6 +97,7 @@ const FeedPost = forwardRef(({ post, isFollowing, requested, isPrivate, onFollow
         //autoPlay 
         muted={isMuted} 
         loop
+        preload="none"
         alt={"FEED POST VIDEO"} 
         onClick={toggleMute}
         />

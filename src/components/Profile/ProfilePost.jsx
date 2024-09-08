@@ -44,9 +44,11 @@ import {
 		  const observer = new IntersectionObserver(
 			([entry]) => {
 			  if (entry.isIntersecting) {
+				videoElement.src = post.imageURL;
 				videoElement.play();
 			  } else {
 				videoElement.pause();
+				videoElement.src = "";
 			  }
 			},
 			{ threshold: 0.8 } // Adjust this value to control how much of the video needs to be visible to trigger playback
@@ -55,7 +57,10 @@ import {
 		  observer.observe(videoElement);
 	
 		  return () => {
-			observer.unobserve(videoElement);
+			observer.disconnect();
+			if (videoElement) {
+				videoElement.src = ""; // Unload video when component unmounts
+			}
 		  };
 		}
 	  }, []);
@@ -177,6 +182,7 @@ import {
 		playsInline
         muted 
         loop
+		preload="none"
         alt={"FEED POST VIDEO"} 
         style={{ 
 			width: "100%", 

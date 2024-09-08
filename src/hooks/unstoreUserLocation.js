@@ -22,8 +22,8 @@ const unstoreUserLocation = async (userId) => {
     state: "",
   })
   .catch((error) => {
-    console.error("Error storing geohash and location:", error);
-    throw error;
+    console.error("Error unstoring geohash and location:", error);
+    //throw error;
   });
 };
 
