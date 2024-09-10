@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Box, Container, Flex, Skeleton, SkeletonCircle, Text, VStack, Link } from "@chakra-ui/react";
-import FeedPost from "./FeedPost";
+import FeedPostUser from "./FeedPostUser";
 import useGetUserFeed from "../../hooks/useGetUserFeed";
 import { useLocation, useParams } from "react-router-dom";
 import useGetUserProfileByUsername from "../../hooks/useGetUserProfileByUsername";
@@ -37,26 +37,69 @@ const UserFeed = () => {
 
   //console.log(isLoading);
 
+  useEffect(() => {
+    //console.log("Updated loadedPosts:", loadedPosts);
+    // console.log("isLoading: " + isLoading);
+    //   console.log("should scroll: " + shouldScroll);
+    //   console.log("is initialized: " + isInitialized);
+    //   console.log("is scrolled: " + isScrolled);
+  }, [loadedPosts]);
+
   const addElementsToObserve = useIntersectionObserver(
     (postElement) => {
       const postId = postElement.getAttribute("data-post-id");
-      setLoadedPosts((prev) => ({ ...prev, [postId]: true }));
+      const index = posts.findIndex((post) => post.id === postId);
+      //console.log(index);
+      if (index !== -1 ) {
+              const start = Math.max(0, index - 2);
+              const end = Math.min(posts.length, index + 2); // 5 before and 5 after, including the current post
+      
+              const surroundingPosts = posts.slice(start, end);
+              setLoadedPosts((prev) => {
+                const updatedPosts = { ...prev };
+                surroundingPosts.forEach((post) => {
+                  updatedPosts[post.id] = true;
+                });
+                return updatedPosts;
+              });
+            }
+      //setLoadedPosts((prev) => ({ ...prev, [postId]: true }));
     },
-    { threshold: .01 }
+    //{ threshold: 0.99 }
+    { threshold: !isScrolled ? 0.99 : .4 }
   );
 
 
   useEffect(() => {
     if (!isLoading && postId && postRefs.current[postId] && shouldScroll) {
+      
       setIsInitialized(true);
       setTimeout(() => {
-        postRefs.current[postId].scrollIntoView({ block: 'start' });
-      }, 50);
+        postRefs.current[postId].scrollIntoView({ block: 'center' });
+      }, 400);
+      // setTimeout(() => {
+      //   postRefs.current[postId].scrollIntoView({ block: 'start' });
+      // }, 150);
       
+      
+      setIsScrolled(true);
+      setTimeout(() => {
+        postRefs.current[postId].scrollIntoView({ block: 'center' });
+      }, 100); //200
+      //setShouldScroll(false);
+
       setTimeout(() => {
         setShouldScroll(false);
-      }, 150);
-      setIsScrolled(true);
+      }, 100);
+
+      
+
+      //postRefs.current[postId].scrollIntoView({ block: 'start' });
+
+      // setTimeout(() => {
+      //   setIsScrolled(true);
+      // }, 100);
+      
       
     }
   }, [isLoading, postId, posts]);
@@ -80,6 +123,38 @@ const UserFeed = () => {
       addElementsToObserve(elementsToObserve);
     }
   }, [posts]); // 'addElementsToObserve' is now stable and won't cause unnecessary re-renders
+
+
+
+
+  // useEffect(() => {
+  //   if (posts.length > 0) {
+  //     const index = posts.findIndex((post) => post.id === postId);
+  //     if (index !== -1) {
+  //       const start = Math.max(0, index - 5);
+  //       const end = Math.min(posts.length, index + 6); // 5 before and 5 after, including the current post
+
+  //       const surroundingPosts = posts.slice(start, end);
+  //       setLoadedPosts(surroundingPosts);
+  //     }
+  //   }
+  // }, [posts, postId]);
+
+  // useEffect(() => {
+  //   if (posts.length > 0) {
+  //     const index = posts.findIndex((post) => post.id === postId);
+  //     if (index !== -1) {
+  //       const start = Math.max(0, index - 5);
+  //       const end = Math.min(posts.length, index + 6); // 5 before and 5 after, including the current post
+
+  //       const surroundingPosts = posts.slice(start, end);
+  //       setLoadedPosts((prev) => ({
+  //         ...prev,
+  //         ...surroundingPosts.reduce((acc, post) => ({ ...acc, [post.id]: false }), {}),
+  //       }));
+  //     }
+  //   }
+  // }, [posts, postId]);
 
 
   // useEffect(() => {
@@ -245,7 +320,7 @@ const UserFeed = () => {
 
       {posts.length > 0 &&
         posts.map((post) => (
-          <FeedPost
+          <FeedPostUser
             key={post.id}
             post={post}
             ref={(el) => (postRefs.current[post.id] = el)}
@@ -254,11 +329,14 @@ const UserFeed = () => {
             isPrivate={privateStates[post.createdBy] || false}
             onFollowClick={() => handleFollowClick(post.createdBy)}
             isLoaded={!!loadedPosts[post.id] && isInitialized && isScrolled} // Pass loaded state to FeedPost
+            loading={isLoading}
+            isScrolled={isScrolled}
+            shouldScroll={shouldScroll}
           />
         ))
       }
 
-      {shouldScroll && <div style={{ visibility: "hidden", height: "450px" }} ref={(el) => el && el.scrollIntoView({block: 'start'})}></div>}
+      {isLoading && shouldScroll && <div style={{ visibility: "hidden", height: "450px" }} ref={(el) => el && el.scrollIntoView({block: 'start'})}></div>}
     </Container>
   );
 };

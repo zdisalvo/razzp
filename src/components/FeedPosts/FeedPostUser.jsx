@@ -6,7 +6,7 @@ import useGetUserProfileById from "../../hooks/useGetUserProfileById";
 import { FaVolumeUp, FaVolumeMute } from "react-icons/fa";
 import BlackLoadingPage from "../Loading/BlackLoadingPage";
 
-const FeedPost = forwardRef(({ post, isFollowing, requested, isPrivate, onFollowClick, isLoaded, loading, isScrolled }, ref) => {
+const FeedPostUser = forwardRef(({ post, isFollowing, requested, isPrivate, onFollowClick, isLoaded, loading, isScrolled, shouldScroll }, ref) => {
   const { userProfile } = useGetUserProfileById(post.createdBy);
   const videoRef = useRef(null);
   const [isMuted, setIsMuted] = useState(true);
@@ -32,17 +32,23 @@ const FeedPost = forwardRef(({ post, isFollowing, requested, isPrivate, onFollow
     onToggle(); // Toggle controls visibility
   };
 
-  // useEffect(() => {
-  //   // Programmatically load the video when the component mounts
-  //   if (videoRef.current) {
-  //     videoRef.current.load();
-  //   }
-  // }, []);
+  useEffect(() => {
+    // Programmatically load the video when the component mounts
+    if (videoRef.current && isScrolled && isLoaded) {
+
+        // setTimeout(() => {
+        //     videoRef.current.load();
+        //   }, 350); 
+      videoRef.current.load();
+    }
+  }, []);
 
   useEffect(() => {
     const videoElement = videoRef.current;
+
+    //videoRef.current.load();
   
-    if (videoElement) {
+    if (isLoaded && videoElement) {
       const observer = new IntersectionObserver(
         ([entry]) => {
           if (entry.isIntersecting) {
@@ -51,7 +57,7 @@ const FeedPost = forwardRef(({ post, isFollowing, requested, isPrivate, onFollow
             videoElement.pause();
           }
         },
-        { threshold: 0.1 } // Adjust the threshold to your preference
+        { threshold: 0.2 } // Adjust the threshold to your preference
       );
   
       observer.observe(videoElement);
@@ -64,14 +70,15 @@ const FeedPost = forwardRef(({ post, isFollowing, requested, isPrivate, onFollow
   
 
   return (
-    <div ref={ref} >
-      <Container
+    <div ref={ref} data-post-id={post.id}>
+      {isLoaded ? (<Container
         //h={{ base: "auto", md: "70%" }}
         maxW={{ base: "100vw", md: "container.md" }}
         //maxW="container.md"
         marginBottom={{ base: "7vh", md: "30px" }}
         //
-        maxH={{ base: "auto", md: "80%" }}
+        //maxH={{ base: "auto", md: "80%" }}
+        //height={{ base: "650px", md: "80%" }}
         px={0}
         mx={0}
       >
@@ -81,9 +88,11 @@ const FeedPost = forwardRef(({ post, isFollowing, requested, isPrivate, onFollow
       isPrivate={isPrivate}
       onFollowClick={onFollowClick}
       />
-      <Box my={2} borderRadius={4} overflow={"hidden"} px={0} maxHeight="450px" objectFit="cover" height="auto" width="100%" display="flex" 
-  justifyContent="center" 
-  alignItems="center">
+      <Box my={2} borderRadius={4} overflow={"hidden"} px={0} objectFit="cover" height="450px" width="100%" display="flex" 
+        justifyContent="center" 
+        alignItems="center"
+        //transition="height 2.0s ease-in-out"
+        >
       {(!post.mediaType || post.mediaType.startsWith("image/")) && (
         
         <Image src={post.imageURL} alt={"FEED POST IMG"} width="100%" objectFit="cover" maxHeight="450px" height="auto"/>
@@ -93,7 +102,6 @@ const FeedPost = forwardRef(({ post, isFollowing, requested, isPrivate, onFollow
         <Box justifyContent="center" alignItems="center" m={0} p={0}
         //onClick={handleVideoClick}
         cursor="pointer"
-        
         >
         <video src={post.imageURL} 
         ref={videoRef} 
@@ -103,10 +111,10 @@ const FeedPost = forwardRef(({ post, isFollowing, requested, isPrivate, onFollow
         muted={isMuted} 
         loop
         //preload={isLoaded ? "auto" : "none"}
-        //preload="none"
+        preload="metadata"
         alt={"FEED POST VIDEO"} 
         onClick={toggleMute}
-        //style={{ width: "100%", height: "auto" }}
+        style={{ width: "100%", height: "450px", objectFit: "cover" }}
         />
         
         </Box>
@@ -115,8 +123,16 @@ const FeedPost = forwardRef(({ post, isFollowing, requested, isPrivate, onFollow
       </Box>
       <PostFooter post={post} creatorProfile={userProfile} />
       </Container> 
+      )
+      : 
+      (
+      <Flex flexDir='column' alignItems='center' justifyContent='center'>
+          
+          <BlackLoadingPage />
+      </Flex>
+      )}
     </div>
   );
 });
 
-export default FeedPost;
+export default FeedPostUser;
