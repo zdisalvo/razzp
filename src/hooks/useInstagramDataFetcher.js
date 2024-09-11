@@ -41,15 +41,22 @@ const useInstagramDataFetcher = () => {
             token: 'apify_api_UceiCMkSoRcXxDjyK0X9ENtt7trEs933AJsl', // Replace with your actual API token
         });
 
+        // const input = {
+        //     "directUrls": [
+        //         `https://www.instagram.com/${username}/`
+        //     ],
+        //     "resultsType": "posts",
+        //     "resultsLimit": 80,
+        //     "searchType": "hashtag",
+        //     "searchLimit": 1,
+        //     "addParentData": false
+        // };
+
         const input = {
-            "directUrls": [
-                `https://www.instagram.com/${username}/`
+            "username": [
+                username
             ],
-            "resultsType": "posts",
-            "resultsLimit": 150,
-            "searchType": "hashtag",
-            "searchLimit": 1,
-            "addParentData": false
+            "resultsLimit": 30
         };
 
         let progressInterval;
@@ -64,9 +71,9 @@ const useInstagramDataFetcher = () => {
                     clearInterval(progressInterval);
                     return 100;
                 });
-            }, 2000);
+            }, 1000);
 
-            const run = await client.actor("shu8hvrXbJbY3Eb9W").call(input);
+            const run = await client.actor("nH2AHrwxeTRJoN5hX").call(input);
             const { items } = await client.dataset(run.defaultDatasetId).listItems();
             //console.log('Fetched items:', items); // Log the fetched items
             setItems(items);

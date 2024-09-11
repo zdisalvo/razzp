@@ -31,13 +31,13 @@ const ImportInstagramModal = ({ isOpen, onClose }) => {
                 pt={3} 
                 pb={4}
             >
-                <ModalCloseButton />
+                {!loading && <ModalCloseButton />} {/* Hide close button while loading */}
                 <ModalHeader>Import Instagram Content</ModalHeader>
-                <Text fontSize="sm" color="gray.500" mb={1} textAlign="center">
-                    This will take 1-2 minutes in the background
+                <Text fontSize="sm" color="gray.500" mb={2} mx={8} textAlign="left">
+                    This will take 1-2 minutes, do not close this window or navigate away from the page
                 </Text>
-                <Text fontSize="sm" color="gray.500" mb={2} textAlign="center">
-                    Instagram profile must be public to import content
+                <Text fontSize="sm" color="#c8102e" mb={2} mx={8} textAlign="left">
+                    *Instagram profile must be public to import content
                 </Text>
                 <ModalBody 
                     px={{ base: "8px", md: "8px" }} 
@@ -70,6 +70,7 @@ const ImportInstagramModal = ({ isOpen, onClose }) => {
                             </div>
                         )}
                         {error && <Text color="red.500" mt={3}>{error.message}</Text>}
+                        
                         {/* {items.length > 0 && (
                             <div>
                                 <Text mt={3} fontWeight="bold">Results for @{username}</Text>
@@ -82,6 +83,7 @@ const ImportInstagramModal = ({ isOpen, onClose }) => {
                                 </ul>
                             </div>
                         )} */}
+
                     </form>
                 </ModalBody>
             </ModalContent>
