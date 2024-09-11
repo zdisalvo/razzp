@@ -27,4 +27,4 @@ dist-ssr
 dist/assets/index-b1a0513b.js
 dist/assets/index-1d07b039.css
 imageService.js
-useInstagramDataFetcher.js
+/src/hooks/useInstagramDataFetcher.js
