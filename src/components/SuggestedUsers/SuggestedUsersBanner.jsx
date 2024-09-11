@@ -9,6 +9,8 @@ const SuggestedUsersBanner = () => {
     const authUser = useAuthStore((state => state.user));
     const { suggestedUsers, isLoading } = useGetSuggestedUsers2();
 
+    //console.log(suggestedUsers);
+
   return (
     
     <Container maxW={{base: "100vw", md: "672px"}} py={4} mx={0}>

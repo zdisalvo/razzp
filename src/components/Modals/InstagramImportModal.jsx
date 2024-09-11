@@ -50,7 +50,7 @@ const ImportInstagramModal = ({ isOpen, onClose }) => {
                             <Input 
                                 type="text" 
                                 value={username} 
-                                onChange={(e) => setUsername(e.target.value)} 
+                                onChange={(e) => setUsername(e.target.value.toLowerCase())} 
                                 placeholder="Enter Instagram username"
                             />
                         </FormControl>

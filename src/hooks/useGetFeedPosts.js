@@ -65,10 +65,12 @@ const useGetFeedPosts = () => {
 				
 
 					querySnapshot.forEach((doc) => {
-						feedPosts.push({ id: doc.id, ...doc.data() });
-						
+						//if (doc.createdAt > threeDaysAgo) 
+							feedPosts.push({ id: doc.id, ...doc.data() });
 						//console.log(feedPosts.length);
 					});
+
+					//feedPosts = feedPosts.filter(post => post.createdAt >= threeDaysAgo);
 				
 				
 

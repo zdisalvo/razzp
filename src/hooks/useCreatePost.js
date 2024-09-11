@@ -42,7 +42,9 @@ const useCreatePost = () => {
             await updateDoc(userDocRef, { posts: arrayUnion(postDocRef.id) });
 
             // Upload video if mediaType is 'video/mp4'
+
             if (mediaType === 'video/mp4') {
+
                 const response = await fetch(postSrc);
                 const blob = await response.blob();
                 await uploadBytes(mediaRef, blob);
@@ -59,17 +61,37 @@ const useCreatePost = () => {
                 //await updateDoc(userDocRef, { posts: arrayUnion(postDocRef.id) });
                 //await uploadString(mediaRef, postSrc, "data_url");
                 const proxyURL = "https://radiant-retreat-87579-dcc979ba57be.herokuapp.com?url=";
-            
-                const downloadURL = postSrc;
+
+                const imageAddress = proxyURL + encodeURIComponent(postSrc)
     
-                await updateDoc(postDocRef, { imageURL: proxyURL + encodeURIComponent(downloadURL), mediaType: mediaType });
-                //await updateDoc(postDocRef, { imageURL: proxyURL + encodeURIComponent(downloadURL), mediaType: mediaType });
-    
-    
-                newPost.imageURL = proxyURL + encodeURIComponent(downloadURL);
-                //newPost.imageURL = proxyURL + encodeURIComponent(downloadURL);
+                const response = await fetch(imageAddress);
+                const blob = await response.blob();
+                await uploadBytes(mediaRef, blob);
+                const downloadURL = await getDownloadURL(mediaRef);
+
+                await updateDoc(postDocRef, { 
+                    imageURL: downloadURL,
+                    mediaType: mediaType
+                });
+                newPost.imageURL = downloadURL;
                 newPost.mediaType = mediaType;
             }
+            // else {
+            //     // Handle image upload
+            //     //await updateDoc(userDocRef, { posts: arrayUnion(postDocRef.id) });
+            //     //await uploadString(mediaRef, postSrc, "data_url");
+            //     const proxyURL = "https://radiant-retreat-87579-dcc979ba57be.herokuapp.com?url=";
+            
+            //     const downloadURL = postSrc;
+    
+            //     await updateDoc(postDocRef, { imageURL: proxyURL + encodeURIComponent(downloadURL), mediaType: mediaType });
+            //     //await updateDoc(postDocRef, { imageURL: proxyURL + encodeURIComponent(downloadURL), mediaType: mediaType });
+    
+    
+            //     newPost.imageURL = proxyURL + encodeURIComponent(downloadURL);
+            //     //newPost.imageURL = proxyURL + encodeURIComponent(downloadURL);
+            //     newPost.mediaType = mediaType;
+            // }
 
             
                 await updateDoc(userDocRef, { 
