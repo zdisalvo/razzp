@@ -89,7 +89,7 @@ const useGetFeedPosts = () => {
 					let uniquePosts = feedPosts;
 				  
 					if (top5Posts && top5Posts.length > 0) {
-						console.log(top5Posts.length);
+						//console.log(top5Posts.length);
 					  // Combine feedPosts and top5Posts
 					  combinedPosts = [...feedPosts, ...top5Posts];
 				

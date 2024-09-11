@@ -17,7 +17,7 @@ const useCreatePost = () => {
     const addPost = useUserProfileStore((state) => state.addPost);
     const { pathname } = useLocation();
 
-    const handleCreatePost = async (postSrc, caption, score, createdAt, mediaType) => {
+    const handleCreatePost = async (postSrc, caption, score, createdAt, mediaType, username) => {
         if (isLoading || !authUser) return;
         
         setIsLoading(true);
@@ -75,7 +75,7 @@ const useCreatePost = () => {
                 await updateDoc(userDocRef, { 
                     posts: arrayUnion(postDocRef.id),
                     instagramImport: true,
-                    //instagramUsername: username,
+                    instagramUsername: username,
                 });
                 createPost({ ...newPost, id: postDocRef.id });
                 addPost({ ...newPost, id: postDocRef.id });

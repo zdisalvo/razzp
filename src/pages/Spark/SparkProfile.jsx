@@ -282,7 +282,10 @@ const SparkProfile = ({ sparkProfile, onViewed, sparkUser }) => {
     //console.log(pin);
     
     const locationData = pin && pin.length > 0 && sparkUser.pin && sparkUser.pin.length > 0 ? useGetSparkLocationAndDistance(pin[0], pin[1], sparkUser) : { city: "", state: "", distance: null, isLoading: false };
+    
     const { city, state, distance, isLoading } = locationData;
+
+    //console.log(locationData);
 
   const rawProfileData = [
     { label: 'Age', value: calculateAge(birthday) },

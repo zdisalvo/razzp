@@ -34,7 +34,7 @@ const ImportInstagramModal = ({ isOpen, onClose }) => {
                 {!loading && <ModalCloseButton />} {/* Hide close button while loading */}
                 <ModalHeader>Import Instagram Content</ModalHeader>
                 <Text fontSize="sm" color="gray.500" mb={2} mx={8} textAlign="left">
-                    This will take 1-2 minutes, do not close this window or navigate away from the page
+                    This will take 2-5 minutes, do not close this window or navigate away from the page
                 </Text>
                 <Text fontSize="sm" color="#c8102e" mb={2} mx={8} textAlign="left">
                     *Instagram profile must be public to import content

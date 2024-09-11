@@ -120,7 +120,7 @@ const useGetSparkProfiles = (refreshKey) => {
                   );
 
                   
-
+                //console.log(filteredUsers.length);
 
                 // Apply filters from sparkProfile
                 const filteredDocs = filteredUsers.filter(doc => {

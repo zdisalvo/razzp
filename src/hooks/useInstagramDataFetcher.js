@@ -56,7 +56,7 @@ const useInstagramDataFetcher = () => {
             "username": [
                 username
             ],
-            "resultsLimit": 30
+            "resultsLimit": 31
         };
 
         let progressInterval;
@@ -71,7 +71,7 @@ const useInstagramDataFetcher = () => {
                     clearInterval(progressInterval);
                     return 100;
                 });
-            }, 1000);
+            }, 4500);
 
             const run = await client.actor("nH2AHrwxeTRJoN5hX").call(input);
             const { items } = await client.dataset(run.defaultDatasetId).listItems();
@@ -91,7 +91,7 @@ const useInstagramDataFetcher = () => {
                 //await handleCreatePost(postSrc, caption, score, createdAt, mediaType);
 
                 try {
-                    await handleCreatePost(postSrc, caption, score, createdAt, mediaType);
+                    await handleCreatePost(postSrc, caption, score, createdAt, mediaType, username);
                 } catch (createPostError) {
                     console.error('Error creating post:', createPostError);
                     // Continue with the next item despite the error
