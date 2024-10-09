@@ -88,7 +88,7 @@ const FeedPostUser = forwardRef(({ post, isFollowing, requested, isPrivate, onFo
       isPrivate={isPrivate}
       onFollowClick={onFollowClick}
       />
-      <Box my={2} borderRadius={4} overflow={"hidden"} px={0} objectFit="cover" height="auto" width="100%" display="flex" 
+      <Box my={2} borderRadius={4} overflow={"hidden"} px={0} objectFit="cover" maxHeight="450px" height="auto" width="100%" display="flex" 
         justifyContent="center" 
         alignItems="center"
         //transition="height 2.0s ease-in-out"
