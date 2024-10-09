@@ -114,7 +114,7 @@ const FeedPostUser = forwardRef(({ post, isFollowing, requested, isPrivate, onFo
         preload="metadata"
         alt={"FEED POST VIDEO"} 
         onClick={toggleMute}
-        style={{ width: "100%", height: "450px", objectFit: "cover" }}
+        //style={{ width: "100%", height: "450px", objectFit: "cover" }}
         />
         
         </Box>
