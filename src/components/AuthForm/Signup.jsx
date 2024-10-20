@@ -1,5 +1,5 @@
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
-import { Alert, AlertIcon, Button, Input, InputGroup, InputRightElement } from "@chakra-ui/react";
+import { Alert, AlertIcon, Button, Input, InputGroup, InputRightElement, Text } from "@chakra-ui/react";
 import { useState } from "react";
 import useSignUpWithEmailAndPassword from "../../hooks/useSignUpWithEmailAndPassword";
 
@@ -12,6 +12,7 @@ const Signup = () => {
 	});
 	const [showPassword, setShowPassword] = useState(false);
 	const { loading, error, signup } = useSignUpWithEmailAndPassword();
+	const referral = localStorage.getItem("referral") !== "undefined" ? localStorage.getItem("referral") : null;
 
 	return (
 		<>
@@ -102,6 +103,30 @@ const Signup = () => {
 			>
 				Sign Up
 			</Button>
+			{referral && (
+			<>
+			<Text fontSize="sm" fontWeight="bold" mb={-2} textAlign="left">
+			Referral credit to:
+		</Text>
+			<InputGroup>
+				<Input
+					placeholder='Referral'
+					_placeholder={{ color: 'gray.500' }}
+					border="1px groove #888888"
+					fontSize={16}
+					type="text"
+					value={referral}
+					size={"sm"}
+					bg={"charcoal"}
+					readOnly
+					_focus={{ 
+						borderColor: 'transparent', // Make the border transparent
+						boxShadow: '0 0 0 2px rgba(244, 164, 96, 0.5)' // Simulate a thinner border with box-shadow
+					  }} 
+				/>
+				</InputGroup>
+				</>
+			)}
 		</>
 	);
 };

@@ -55,8 +55,10 @@ const useInstagramDataFetcher = () => {
         const input = {
             "username": [
                 username
-            ],
-            "resultsLimit": 100
+            ]
+            // "onlyPostsNewerThan": "2024-10-05",
+            // "resultsLimit": 30
+            
         };
 
         let progressInterval;

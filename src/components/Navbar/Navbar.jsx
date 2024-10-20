@@ -9,7 +9,7 @@ const Navbar = () => {
 				<Image src='/razzp-new-logo.png' h={{base: 9, md: 20}} display={{ base: "block", sm: "block" }} cursor={"pointer"} />
 				</Link>
 				<Flex gap={4}>
-					<Link to='/auth'>
+					<Link to='/auth?mode=login'>
 						<Button size={"sm"}
 							bg={"#eb7734"}
 							color={"white"}
@@ -20,7 +20,7 @@ const Navbar = () => {
 							Login
 						</Button>
 					</Link>
-					<Link to='/auth'>
+					<Link to='/auth?mode=signup'>
 						<Button variant={"outline"} size={"sm"}
 							bg={"#0ba32a"}
 							color={"white"}

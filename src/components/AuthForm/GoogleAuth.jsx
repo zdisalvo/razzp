@@ -4,11 +4,13 @@ import { auth, firestore } from "../../firebase/firebase";
 import useShowToast from "../../hooks/useShowToast";
 import useAuthStore from "../../store/authStore";
 import { doc, getDoc, setDoc } from "firebase/firestore";
+import useGetUserProfileByUsername from "../../hooks/useGetUserProfileByUsername";
 
 const GoogleAuth = ({ prefix }) => {
 	const [signInWithGoogle, , , error] = useSignInWithGoogle(auth);
 	const showToast = useShowToast();
 	const loginUser = useAuthStore((state) => state.login);
+	const referralId = localStorage.getItem("referralId") !== "undefined" ? localStorage.getItem("referralId") : "";
 
 	const handleGoogleAuth = async () => {
 		try {
@@ -95,6 +97,7 @@ const GoogleAuth = ({ prefix }) => {
 					spark: false,
 					dayCrowns: 0,
 					private: false,
+					referral: referralId || "",
 				};
 
 				await setDoc(doc(firestore, "spark", newUser.user.uid), spark);

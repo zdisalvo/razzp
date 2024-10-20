@@ -1,5 +1,5 @@
 import { Box, Flex, Image, Text, VStack, useDisclosure } from "@chakra-ui/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Login from "./Login";
 import Signup from "./Signup";
 import GoogleAuth from "./GoogleAuth";
@@ -8,6 +8,12 @@ import ForgotPasswordModal from "./ForgotPasswordModal";
 const AuthForm = () => {
 	const [isLogin, setIsLogin] = useState(true);
 	const { isOpen, onOpen, onClose } = useDisclosure();
+
+	useEffect(() => {
+		const params = new URLSearchParams(location.search);
+		const mode = params.get("mode");
+		setIsLogin(mode === "login");
+	}, [location]);
 
 	return (
 		<>

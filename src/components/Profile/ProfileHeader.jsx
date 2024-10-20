@@ -78,6 +78,10 @@ const ProfileHeader = ({ username, page }) => {
 
 	//console.log(isFollowing);
 
+	
+	localStorage.setItem("referral", username);
+	localStorage.setItem("referralId", userProfile.uid);
+
 	const handleImportInstagram = () => {
 		
 		setIsImportModalOpen(true); // If using a Chakra UI modal

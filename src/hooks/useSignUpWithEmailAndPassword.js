@@ -3,17 +3,25 @@ import { auth, firestore } from "../firebase/firebase";
 import { collection, doc, getDocs, query, setDoc, where } from "firebase/firestore";
 import useShowToast from "./useShowToast";
 import useAuthStore from "../store/authStore";
+import useGetUserProfileByUsername from "./useGetUserProfileByUsername";
 
 const useSignUpWithEmailAndPassword = () => {
 	const [createUserWithEmailAndPassword, , loading, error] = useCreateUserWithEmailAndPassword(auth);
 	const showToast = useShowToast();
 	const loginUser = useAuthStore((state) => state.login);
 
+	const referralId = localStorage.getItem("referralId") !== "undefined" ? localStorage.getItem("referralId") : "";
+
 	const signup = async (inputs) => {
 		if (!inputs.email || !inputs.password || !inputs.username || !inputs.fullName) {
 			showToast("Error", "Please fill all the fields", "error");
 			return;
 		}
+
+		// if (isLoading)
+		// 	return;
+
+		// console.log(referralProfile);
 
 		const usersRef = collection(firestore, "users");
 
@@ -100,6 +108,7 @@ const useSignUpWithEmailAndPassword = () => {
 					spark: false,
 					dayCrowns: 0,
 					private: false,
+					referral: referralId || "",
 				};
 				await setDoc(doc(firestore, "spark", newUser.user.uid), spark);
 				localStorage.setItem("spark-profile", JSON.stringify(spark));
