@@ -31,6 +31,7 @@ import { auth } from "../../firebase/firebase";
 import ImportInstagramModal from "../Modals/InstagramImportModal";
 import useSetContentCreator from "../../hooks/useSetContentCreator";
 import useUnsetContentCreator from "../../hooks/useUnsetContentCreator";
+import CreateContent from "./CreateContent";
 
 const ProfileHeader = ({ username, page }) => {
 	//const { userProfile } = useUserProfileStore();
@@ -74,6 +75,7 @@ const ProfileHeader = ({ username, page }) => {
 	//const hasRequested = useHasRequestedFollow(userProfile.uid);
 	const { handleLogout, isLoggingOut } = useLogout();
 	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [isCCModalOpen, setIsCCModalOpen] = useState(false);
 	const [userAuth] = useAuthState(auth);
 	const [isImportModalOpen, setIsImportModalOpen] = useState(false);
 	//const [prevToggle, setPrevToggle] = useState(isToggled);
@@ -99,6 +101,16 @@ const ProfileHeader = ({ username, page }) => {
 
 	const handleModalClose = () => {
 		setIsModalOpen(false);
+	  };
+
+	  const handleCCModalClose = () => {
+		setIsCCModalOpen(false);
+	  };
+
+	  const handleCCClick = () => {
+		// setSparkProfile(profileData);
+		// setSparkUser(match); // Assuming match contains user data
+		setIsCCModalOpen(true);
 	  };
 		
 	  const handleSupportClick = () => {
@@ -839,6 +851,25 @@ const ProfileHeader = ({ username, page }) => {
 							</Button>
 						</Flex>
 					)}
+					{visitingOwnProfileAndAuth && authUser.creator && (
+						<Flex	
+						gap={3}
+					direction={{ base: "row", sm: "row" }}
+					justifyContent={{ base: "center", sm: "flex-start" }}
+					alignItems="baseline"
+					w={"full"}	
+					>
+							<Button
+								bg={"white"}
+								color={"black"}
+								_hover={{ bg: "whiteAlpha.800" }}
+								size={{ base: "sm", md: "sm" }}
+								onClick={handleCCClick}
+							>
+								Post Content
+							</Button>
+						</Flex>
+					)}
 					{visitingAnotherProfileAndAuth && (
 					<Flex	
 						gap={3}
@@ -876,6 +907,7 @@ const ProfileHeader = ({ username, page }) => {
 			</VStack>
 			</Container>
 			{isOpen && <EditProfile isOpen={isOpen} onClose={onClose} />}
+			{isCCModalOpen && <CreateContent isOpen={isCCModalOpen} onClose={handleCCModalClose} />}
 			{isModalOpen && <SupportModal isOpen={isModalOpen} onClose={handleModalClose} />}
 			{isImportModalOpen && <ImportInstagramModal isOpen={isImportModalOpen} onClose={handleImportInstagramClose} />}
 		</Flex>
