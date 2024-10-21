@@ -29,6 +29,8 @@ import SupportModal from "../Modals/SupportModal";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../../firebase/firebase";
 import ImportInstagramModal from "../Modals/InstagramImportModal";
+import useSetContentCreator from "../../hooks/useSetContentCreator";
+import useUnsetContentCreator from "../../hooks/useUnsetContentCreator";
 
 const ProfileHeader = ({ username, page }) => {
 	//const { userProfile } = useUserProfileStore();
@@ -75,6 +77,8 @@ const ProfileHeader = ({ username, page }) => {
 	const [userAuth] = useAuthState(auth);
 	const [isImportModalOpen, setIsImportModalOpen] = useState(false);
 	//const [prevToggle, setPrevToggle] = useState(isToggled);
+	const { setCreator, isLoading: settingCreator} = useSetContentCreator();
+	const { unsetCreator, isLoading: unsettingCreator} = useUnsetContentCreator();
 
 	//console.log(isFollowing);
 
@@ -239,6 +243,24 @@ const ProfileHeader = ({ username, page }) => {
 	const handleMakePublic = async () => {
 		try {
 			await setPublic();
+		} catch (error) {
+			console.error(error);
+		}
+		fetchUserData(authUser.uid);
+	}
+
+	const handleSetCreator = async () => {
+		try {
+			await setCreator();
+		} catch (error) {
+			console.error(error);
+		}
+		fetchUserData(authUser.uid);
+	}
+
+	const handleUnsetCreator = async () => {
+		try {
+			await unsetCreator();
 		} catch (error) {
 			console.error(error);
 		}
@@ -590,6 +612,28 @@ const ProfileHeader = ({ username, page }) => {
 			  color="white"
 			  onClick={handleMakePublic}
 			>Make Public</MenuItem>
+			)}
+			{authUser && !authUser.creator && (
+			<MenuItem
+			bg="black"
+			_hover={{ bg: '#2e2e2e' }} // Changes background color to charcoal on hover
+			px={4} // Adds padding inside MenuItem
+              //width="100%"
+			  whiteSpace="nowrap"
+			  color="#228B22"
+			  onClick={handleSetCreator}
+			>Content Creator: Off</MenuItem>
+			)}
+			{authUser && authUser.creator && (
+			<MenuItem
+			bg="black"
+			_hover={{ bg: '#2e2e2e' }} // Changes background color to charcoal on hover
+			px={4} // Adds padding inside MenuItem
+              //width="100%"
+			  whiteSpace="nowrap"
+			  color="#228B22"
+			  onClick={handleUnsetCreator}
+			>Content Creator: On</MenuItem>
 			)}
           {authUser && authUser.blocked && (
             <MenuItem
