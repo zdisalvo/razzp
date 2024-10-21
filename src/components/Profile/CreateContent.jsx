@@ -21,7 +21,7 @@ import {
 import { CreatePostLogo } from "../../assets/constants";
 import { BsFillImageFill } from "react-icons/bs";
 import { useRef, useState } from "react";
-import usePreviewMedia from "../../hooks/usePreviewMedia";
+import usePreviewPaidMedia from "../../hooks/usePreviewPaidMedia";
 import useShowToast from "../../hooks/useShowToast";
 import useAuthStore from "../../store/authStore";
 import usePostStore from "../../store/postStore";
@@ -35,7 +35,7 @@ const CreateContent = ({ isOpen, onClose }) => {
 	//const { isOpen, onOpen, onClose } = useDisclosure();
 	const [caption, setCaption] = useState("");
 	const mediaRef = useRef(null);
-	const { handleMediaChange, selectedFile, setSelectedFile } = usePreviewMedia();
+	const { handleMediaChange, selectedFile, setSelectedFile } = usePreviewPaidMedia();
 	//const { handleMediaChange, selectedFile, setSelectedFile } = usePreviewMedia();
 	const showToast = useShowToast();
 	const { isLoading, handleCreatePost } = useCreatePost();

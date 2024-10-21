@@ -100,7 +100,7 @@ const FeedPostUser = forwardRef(({ post, isFollowing, requested, isPrivate, onFo
       )}
       {(!post.mediaType || post.mediaType.startsWith("image/")) && post.paid && (
         
-        <Image src={post.imageURL} style={{ filter: 'blur(5px)' }} alt={"FEED POST IMG"} width="100%" objectFit="cover" maxHeight="450px" height="auto"/>
+        <Image src={post.imageURL} style={{ filter: 'blur(11px)' }} alt={"FEED POST IMG"} width="100%" objectFit="cover" maxHeight="450px" height="auto"/>
         
       )}
       {(post.mediaType && post.mediaType.startsWith("video/")) && (
