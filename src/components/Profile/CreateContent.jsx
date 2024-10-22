@@ -111,32 +111,45 @@ const CreateContent = ({ isOpen, onClose }) => {
                         {/* Price buttons and custom input */}
                         <VStack spacing={4} mt={4}>
                         <Flex gap={4}>
-                            <Button
+                        <Button
                             onClick={() => handlePriceClick(5.0)}
-                            variant={selectedPresetPrice === 5.0 ? "solid" : "outline"}
-                            >
+                            backgroundColor={selectedPresetPrice === 5.0 ? "#D4AF37" : "#013220"} // Gold when selected, Very Dark Forest Green when not
+                            color={selectedPresetPrice === 5.0 ? "black" : "white"}
+                            borderColor={selectedPresetPrice === 5.0 ? "#D4AF37" : "#002010"} // Gold for selected, even darker green for unselected
+                            _hover={{ backgroundColor: selectedPresetPrice === 5.0 ? "#C8A21E" : "#001810" }} // Darker metallic forest green on hover
+                        >
                             $5.00
-                            </Button>
-                            <Button
+                        </Button>
+                        <Button
                             onClick={() => handlePriceClick(10.0)}
-                            variant={selectedPresetPrice === 10.0 ? "solid" : "outline"}
-                            >
+                            backgroundColor={selectedPresetPrice === 10.0 ? "#D4AF37" : "#013220"}
+                            color={selectedPresetPrice === 10.0 ? "black" : "white"}
+                            borderColor={selectedPresetPrice === 10.0 ? "#D4AF37" : "#002010"}
+                            _hover={{ backgroundColor: selectedPresetPrice === 10.0 ? "#C8A21E" : "#001810" }}
+                        >
                             $10.00
-                            </Button>
+                        </Button>
                         </Flex>
+
                         <Flex gap={4}>
-                            <Button
+                        <Button
                             onClick={() => handlePriceClick(15.0)}
-                            variant={selectedPresetPrice === 15.0 ? "solid" : "outline"}
-                            >
+                            backgroundColor={selectedPresetPrice === 15.0 ? "#D4AF37" : "#013220"}
+                            color={selectedPresetPrice === 15.0 ? "black" : "white"}
+                            borderColor={selectedPresetPrice === 15.0 ? "#D4AF37" : "#002010"}
+                            _hover={{ backgroundColor: selectedPresetPrice === 15.0 ? "#C8A21E" : "#001810" }}
+                        >
                             $15.00
-                            </Button>
-                            <Button
+                        </Button>
+                        <Button
                             onClick={() => handlePriceClick(20.0)}
-                            variant={selectedPresetPrice === 20.0 ? "solid" : "outline"}
-                            >
+                            backgroundColor={selectedPresetPrice === 20.0 ? "#D4AF37" : "#013220"}
+                            color={selectedPresetPrice === 20.0 ? "black" : "white"}
+                            borderColor={selectedPresetPrice === 20.0 ? "#D4AF37" : "#002010"}
+                            _hover={{ backgroundColor: selectedPresetPrice === 20.0 ? "#C8A21E" : "#001810" }}
+                        >
                             $20.00
-                            </Button>
+                        </Button>
                         </Flex>
 
                         {/* Custom price input */}
