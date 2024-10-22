@@ -43,7 +43,7 @@ const CreateContent = ({ isOpen, onClose }) => {
     const [selectedPresetPrice, setSelectedPresetPrice] = useState(null); // State for preset price
 
     const handleCustomAmountChange = (e) => {
-        let value = e.target.value.replace(/[^0-9.]/g, ""); 
+        let value = e.target.value.replace(/[^0-9]/g, ""); 
   
         // if (value.includes('.')) {
         //   const parts = value.split('.');
@@ -209,6 +209,7 @@ function useCreatePost() {
 			score: 0,
             paid: true,
             price: parseFloat(price),
+            purchased: [],
 			comments: [],
 			createdAt: Date.now(),
 			createdBy: authUser.uid,

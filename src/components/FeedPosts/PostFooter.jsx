@@ -12,6 +12,7 @@ import ShareButton from "./ShareButton";
 import ShareButtonDL from "./ShareButtonDL";
 import { doc, getDoc } from 'firebase/firestore';
 import { firestore } from '../../firebase/firebase';
+import usePurchasePost from "../../hooks/usePurchasePost";
 
 const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
     const { isCommenting, handlePostComment } = usePostComment();
@@ -29,6 +30,11 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
     const [crowns, setCrowns] = useState(initialCrowns);
 
     const [postComments, setPostComments] = useState(post?.comments.length || 0);
+    const { handlePurchase } = usePurchasePost();
+
+    const handlePurchaseClick = () => {
+        handlePurchase(post, post.price);  // Pass the post and price to the purchase handler
+    };
 
     const calculateRankingScore = (post) => {
         const postTime = new Date(post.createdAt);
@@ -176,6 +182,15 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
                 <Box cursor={"pointer"} fontSize={18}>
                     {/* <ShareButtonOverlay imageUrl={post.imageURL} overlayText={`@${creatorProfile.username}`} /> */}
                     <ShareButtonDL imageUrl={post.imageURL} overlayText={`${creatorProfile.username}`} />
+                    {/* <ShareButton imageUrl={post.imageURL} /> */}
+                    
+                </Box>
+                )}
+                {/* !post.purchased.includes(authUser.uid) */}
+                {post && post.paid && !post.purchased.includes(authUser.uid) &&  (
+                <Box cursor={"pointer"} fontSize={18}>
+                    {/* <ShareButtonOverlay imageUrl={post.imageURL} overlayText={`@${creatorProfile.username}`} /> */}
+                    <Button onClick={handlePurchaseClick}>Access for ${post.price}</Button>
                     {/* <ShareButton imageUrl={post.imageURL} /> */}
                     
                 </Box>
