@@ -10,7 +10,7 @@ import useCrownPost from "../../hooks/useCrownPost";
 //import ShareButtonOverlay from "./ShareButtonOverlay";
 import ShareButton from "./ShareButton";
 import ShareButtonDL from "./ShareButtonDL";
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, onSnapshot, updateDoc } from 'firebase/firestore';
 import { firestore } from '../../firebase/firebase';
 import usePurchasePost from "../../hooks/usePurchasePost";
 
@@ -31,6 +31,21 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
 
     const [postComments, setPostComments] = useState(post?.comments.length || 0);
     const { handlePurchase } = usePurchasePost();
+    const [isPurchased, setIsPurchased] = useState(post.purchased && post.purchased.includes(authUser.uid));
+    const [purchasedUsers, setPurchasedUsers] = useState(post.purchased || null); // Store purchased users
+
+    useEffect(() => {
+        const postRef = doc(firestore, 'posts', post.id);
+        const unsubscribe = onSnapshot(postRef, (snapshot) => {
+            if (snapshot.exists()) {
+                const updatedPost = snapshot.data();
+                setPurchasedUsers(updatedPost.purchased);
+                setIsPurchased(updatedPost.purchased.includes(authUser.uid));
+            }
+        });
+
+        return () => unsubscribe(); // Clean up the listener
+    }, [post.id, authUser.uid]);
 
     const handlePurchaseClick = () => {
         handlePurchase(post, post.price);  // Pass the post and price to the purchase handler
@@ -187,7 +202,7 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
                 </Box>
                 )}
                 {/* !post.purchased.includes(authUser.uid) */}
-                {post && post.paid && !post.purchased.includes(authUser.uid) &&  (
+                {post && post.paid && !isPurchased &&  (
                 <Box cursor={"pointer"} fontSize={18}>
                     {/* <ShareButtonOverlay imageUrl={post.imageURL} overlayText={`@${creatorProfile.username}`} /> */}
                     <Button onClick={handlePurchaseClick}>Access for ${post.price}</Button>

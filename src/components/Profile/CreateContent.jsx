@@ -70,6 +70,7 @@ const CreateContent = ({ isOpen, onClose }) => {
 		try {
             await handleCreatePost(selectedFile, caption, price); // Pass price to the createPost function
             onClose();
+            //console.log("try");
             setCaption("");
             setSelectedFile(null);
             setPrice(""); // Reset the price after post creation
@@ -77,6 +78,7 @@ const CreateContent = ({ isOpen, onClose }) => {
           } catch (error) {
             showToast("Error", error.message, "error");
           }
+          //console.log("try, done");
 	};
 
 	return (

@@ -18,6 +18,8 @@ const usePreviewPaidMedia = () => {
         return;
       }
 
+      //console.log("start media");
+
       const reader = new FileReader();
 
       reader.onloadend = async () => {

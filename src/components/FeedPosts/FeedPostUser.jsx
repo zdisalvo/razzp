@@ -5,14 +5,33 @@ import PostHeader from "./PostHeader";
 import useGetUserProfileById from "../../hooks/useGetUserProfileById";
 import { FaVolumeUp, FaVolumeMute } from "react-icons/fa";
 import BlackLoadingPage from "../Loading/BlackLoadingPage";
+import { doc, getDoc, onSnapshot, updateDoc } from 'firebase/firestore';
+import { firestore } from '../../firebase/firebase';
+import useAuthStore from "../../store/authStore";
 
 const FeedPostUser = forwardRef(({ post, isFollowing, requested, isPrivate, onFollowClick, isLoaded, loading, isScrolled, shouldScroll }, ref) => {
+  const authUser = useAuthStore((state) => state.user);
   const { userProfile } = useGetUserProfileById(post.createdBy);
   const videoRef = useRef(null);
   const [isMuted, setIsMuted] = useState(true);
   const { isOpen, onToggle } = useDisclosure(); // To handle video click
   //const proxyURL = "https://radiant-retreat-87579-dcc979ba57be.herokuapp.com?url=";
   //const imageSrc = !post.imageURL.startsWith("https://firebase") ? `${proxyURL}${encodeURIComponent(post.imageURL)}` : post.imageURL;
+  const [isPurchased, setIsPurchased] = useState(post.purchased && post.purchased.includes(authUser.uid));
+  const [purchasedUsers, setPurchasedUsers] = useState(post.purchased || null); // Store purchased users
+
+  useEffect(() => {
+    const postRef = doc(firestore, 'posts', post.id);
+    const unsubscribe = onSnapshot(postRef, (snapshot) => {
+        if (snapshot.exists()) {
+            const updatedPost = snapshot.data();
+            setPurchasedUsers(updatedPost.purchased);
+            setIsPurchased(updatedPost.purchased.includes(authUser.uid));
+        }
+    });
+
+      return () => unsubscribe(); // Clean up the listener
+  }, [post.id, authUser.uid]);
 
   const toggleMute = () => {
     if (videoRef.current) {
@@ -93,12 +112,12 @@ const FeedPostUser = forwardRef(({ post, isFollowing, requested, isPrivate, onFo
         alignItems="center"
         //transition="height 2.0s ease-in-out"
         >
-      {(!post.mediaType || post.mediaType.startsWith("image/")) && !post.paid && (
+      {(!post.mediaType || post.mediaType.startsWith("image/")) && (!post.paid || post.paid && isPurchased) && (
         
         <Image src={post.imageURL} alt={"FEED POST IMG"} width="100%" objectFit="cover" maxHeight="450px" height="auto"/>
         
       )}
-      {(!post.mediaType || post.mediaType.startsWith("image/")) && post.paid && (
+      {(!post.mediaType || post.mediaType.startsWith("image/")) && post.paid && !isPurchased && (
         
         <Image src={post.imageURL} style={{ filter: 'blur(11px)' }} alt={"FEED POST IMG"} width="100%" objectFit="cover" maxHeight="450px" height="auto"/>
         
