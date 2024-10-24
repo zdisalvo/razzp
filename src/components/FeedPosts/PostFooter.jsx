@@ -13,6 +13,8 @@ import ShareButtonDL from "./ShareButtonDL";
 import { doc, getDoc, onSnapshot, updateDoc } from 'firebase/firestore';
 import { firestore } from '../../firebase/firebase';
 import usePurchasePost from "../../hooks/usePurchasePost";
+import CheckoutButton from "../Stripe/CheckoutButton";
+import AgePaymentModal from "../Stripe/AgePaymentModal";
 
 const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
     const { isCommenting, handlePostComment } = usePostComment();
@@ -33,6 +35,17 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
     const { handlePurchase } = usePurchasePost();
     const [isPurchased, setIsPurchased] = useState(post.purchased && post.purchased.includes(authUser.uid));
     const [purchasedUsers, setPurchasedUsers] = useState(post.purchased || null); // Store purchased users
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const handlePurchaseClick = () => {
+		// setSparkProfile(profileData);
+		// setSparkUser(match); // Assuming match contains user data
+		setIsModalOpen(true);
+	  };
+
+    const handleModalClose = () => {
+		setIsModalOpen(false);
+	  };
 
     useEffect(() => {
         const postRef = doc(firestore, 'posts', post.id);
@@ -47,9 +60,9 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
         return () => unsubscribe(); // Clean up the listener
     }, [post.id, authUser.uid]);
 
-    const handlePurchaseClick = () => {
-        handlePurchase(post, post.price);  // Pass the post and price to the purchase handler
-    };
+    // const handlePurchaseClick = () => {
+    //     handlePurchase(post, post.price);  // Pass the post and price to the purchase handler
+    // };
 
     const calculateRankingScore = (post) => {
         const postTime = new Date(post.createdAt);
@@ -204,9 +217,10 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
                 {/* !post.purchased.includes(authUser.uid) */}
                 {post && post.paid && !isPurchased &&  (
                 <Box cursor={"pointer"} fontSize={18}>
-                    {/* <ShareButtonOverlay imageUrl={post.imageURL} overlayText={`@${creatorProfile.username}`} /> */}
+                    {/* <CheckoutButton post={post} /> */}
                     <Button onClick={handlePurchaseClick}>Access for ${post.price}</Button>
-                    {/* <ShareButton imageUrl={post.imageURL} /> */}
+
+                    
                     
                 </Box>
                 )}
@@ -296,6 +310,7 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
                             </Button>
                         </InputRightElement>
                     </InputGroup>
+                    {isModalOpen && <AgePaymentModal isOpen={isModalOpen} onClose={handleModalClose} post={post} />}
                 </Flex>
             )}
         </Box>
