@@ -32,6 +32,7 @@ import ImportInstagramModal from "../Modals/InstagramImportModal";
 import useSetContentCreator from "../../hooks/useSetContentCreator";
 import useUnsetContentCreator from "../../hooks/useUnsetContentCreator";
 import CreateContent from "./CreateContent";
+import CreatorModal from "../Modals/CreatorModal";
 
 const ProfileHeader = ({ username, page }) => {
 	//const { userProfile } = useUserProfileStore();
@@ -81,6 +82,7 @@ const ProfileHeader = ({ username, page }) => {
 	//const [prevToggle, setPrevToggle] = useState(isToggled);
 	const { setCreator, isLoading: settingCreator} = useSetContentCreator();
 	const { unsetCreator, isLoading: unsettingCreator} = useUnsetContentCreator();
+	const [isCreatorModalOpen, setIsCreatorModalOpen] = useState(false);
 
 	//console.log(isFollowing);
 
@@ -119,7 +121,15 @@ const ProfileHeader = ({ username, page }) => {
 		setIsModalOpen(true);
 	  };
 
+	  const handleCreatorModalClose = () => {
+		setIsCreatorModalOpen(false);
+	  };
 
+	  const handleCreatorModalClick = () => {
+		// setSparkProfile(profileData);
+		// setSparkUser(match); // Assuming match contains user data
+		setIsCreatorModalOpen(true);
+	  };
 	
 
 	  //console.log(requested);
@@ -811,6 +821,42 @@ const ProfileHeader = ({ username, page }) => {
 						</Text>
 					)}
 				</Flex>
+
+				{visitingOwnProfileAndAuth && (<>
+				<Flex 
+				justifyContent={{ base: "center", sm: "flex-start" }}
+				alignItems={"center"} gap={{ base: 5, sm: 4 }} w={"full"}>
+					{(authUser && userProfile) && userProfile.creatorGross && (
+					<Text color="white" fontSize={{ base: "md", md: "sm" }}
+					as='span' 
+    				onClick={handleCreatorModalClick}
+					style={{ cursor: 'pointer', color: 'inherit' }}
+					>
+                        Creator Balance: 
+						<Text as='span' fontWeight={"bold"} ml={2}>
+                            ${userProfile.creatorPayments ? userProfile.creatorNet - userProfile.creatorPayments.toFixed(2) : userProfile.creatorNet.toFixed(2) }
+                        </Text>
+                    
+					</Text>
+					)}
+					</Flex>
+					<Flex 
+				justifyContent={{ base: "center", sm: "flex-start" }}
+				alignItems={"center"} gap={{ base: 5, sm: 4 }} w={"full"}>
+					{(authUser && userProfile) && userProfile.referralTotal && 
+					(
+						<Text color="white" fontSize={{ base: "md", md: "sm" }}>
+						<Link to={`/${username}/following`} style={{ textDecoration: 'none', color: 'inherit' }}>
+							Referral Balance: 
+							<Text as='span' fontWeight={"bold"} ml={2}>
+							${userProfile.referralPayments ? userProfile.referralTotal - userProfile.referralPayments.toFixed(2) : userProfile.referralTotal.toFixed(2) }
+							</Text>
+						</Link>
+						</Text>
+					)}
+				</Flex>
+				</>
+				)}
 				{userProfile && userProfile.instagramUsername && (
 				<Flex 
 				justifyContent={{ base: "center", sm: "flex-start" }}
@@ -832,14 +878,15 @@ const ProfileHeader = ({ username, page }) => {
 					</Text>
 				</Flex> */}
 				<Text fontSize={"sm"} mb={3} whiteSpace="pre-wrap" overflowWrap="break-word" width="100%">{userProfile.bio}</Text>
-				{visitingOwnProfileAndAuth && (
-						<Flex	
+				<Flex	
 						gap={3}
-					direction={{ base: "row", sm: "row" }}
+					direction={{ base: "column", sm: "row" }}
 					justifyContent={{ base: "center", sm: "flex-start" }}
 					alignItems="baseline"
 					w={"full"}	
 					>
+				{visitingOwnProfileAndAuth && (
+						
 							<Button
 								bg={"white"}
 								color={"black"}
@@ -849,16 +896,10 @@ const ProfileHeader = ({ username, page }) => {
 							>
 								Edit Profile
 							</Button>
-						</Flex>
+						
 					)}
 					{visitingOwnProfileAndAuth && authUser.creator && (
-						<Flex	
-						gap={3}
-					direction={{ base: "row", sm: "row" }}
-					justifyContent={{ base: "center", sm: "flex-start" }}
-					alignItems="baseline"
-					w={"full"}	
-					>
+						
 							<Button
 								bg={"white"}
 								color={"black"}
@@ -868,8 +909,9 @@ const ProfileHeader = ({ username, page }) => {
 							>
 								Post Content
 							</Button>
-						</Flex>
+						
 					)}
+					</Flex>
 					{visitingAnotherProfileAndAuth && (
 					<Flex	
 						gap={3}
@@ -910,6 +952,7 @@ const ProfileHeader = ({ username, page }) => {
 			{isCCModalOpen && <CreateContent isOpen={isCCModalOpen} onClose={handleCCModalClose} />}
 			{isModalOpen && <SupportModal isOpen={isModalOpen} onClose={handleModalClose} />}
 			{isImportModalOpen && <ImportInstagramModal isOpen={isImportModalOpen} onClose={handleImportInstagramClose} />}
+			{isCreatorModalOpen && <CreatorModal isOpen={isCreatorModalOpen} onClose={handleCreatorModalClose} />}
 		</Flex>
 		
 	);
