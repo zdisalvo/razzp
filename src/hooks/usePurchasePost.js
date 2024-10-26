@@ -24,7 +24,7 @@ const usePurchasePost = () => {
             const creatorBonus = (0.80 * price).toFixed(2);
 
             // Set or update the creator bonus, using the purchaser's UID as the document ID
-            const creatorDocRef = doc(bonusRef, post.createdBy, "creator", authUser.uid);
+            const creatorDocRef = doc(bonusRef, post.createdBy, "creator");
             const creatorDocSnap = await getDoc(creatorDocRef);
             
             if (creatorDocSnap.exists()) {
@@ -32,6 +32,7 @@ const usePurchasePost = () => {
                 await updateDoc(creatorDocRef, {
                     purchases: arrayUnion({
                         purchasedBy: authUser.uid,
+                        purchasedByUsername: authUser.username,
                         date: Date.now(),  // Store the date in milliseconds (UNIX timestamp)
                         gross: price,
                         net: parseFloat(creatorBonus)
@@ -42,6 +43,7 @@ const usePurchasePost = () => {
                 await setDoc(creatorDocRef, {
                     purchases: [{
                         purchasedBy: authUser.uid,
+                        purchasedByUsername: authUser.username,
                         date: Date.now(),
                         gross: price,
                         net: parseFloat(creatorBonus)
