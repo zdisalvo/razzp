@@ -47,8 +47,15 @@ const UserFeed = () => {
 
   const addElementsToObserve = useIntersectionObserver(
     (postElement) => {
+      if (!isScrolled)
+        return;
       const postId = postElement.getAttribute("data-post-id");
       const index = posts.findIndex((post) => post.id === postId);
+
+      // setTimeout(() => {
+      //   postRefs.current[postId].scrollIntoView({ block: 'center' });
+      // }, 300); //400
+
       //console.log(index);
       if (index !== -1 ) {
               const start = Math.max(0, index - 2);
@@ -62,43 +69,54 @@ const UserFeed = () => {
                 });
                 return updatedPosts;
               });
+              //setIsScrolled(false);
+              // setTimeout(() => {
+              //   postRefs.current[postId].scrollIntoView({ block: 'center' });
+              // }, 300); //200 //800
+              
+        
+              // setTimeout(() => {
+              //   setShouldScroll(false);
+              // }, 300); //200
+
+              // setTimeout(() => {
+              //   postRefs.current[postId].scrollIntoView({ block: 'center' });
+              // }, 300); //200 //800
             }
       //setLoadedPosts((prev) => ({ ...prev, [postId]: true }));
     },
     //{ threshold: 0.99 }
-    { threshold: !isScrolled ? 0.99 : .4 }
+    { threshold: !isScrolled  ? 0.99 : .4 } //: .4
   );
 
 
   useEffect(() => {
+    // if (isScrolled)
+    //   return;
     if (!isLoading && postId && postRefs.current[postId] && shouldScroll) {
       
       setIsInitialized(true);
       setTimeout(() => {
         postRefs.current[postId].scrollIntoView({ block: 'center' });
-      }, 400);
+      }, 400); //600
       // setTimeout(() => {
       //   postRefs.current[postId].scrollIntoView({ block: 'start' });
       // }, 150);
       
       
+      
       setIsScrolled(true);
       setTimeout(() => {
         postRefs.current[postId].scrollIntoView({ block: 'center' });
-      }, 100); //200
-      //setShouldScroll(false);
+      }, 100); //200 //800
+      
+    
 
       setTimeout(() => {
         setShouldScroll(false);
-      }, 100);
+      }, 500); //200
 
       
-
-      //postRefs.current[postId].scrollIntoView({ block: 'start' });
-
-      // setTimeout(() => {
-      //   setIsScrolled(true);
-      // }, 100);
       
       
     }

@@ -880,7 +880,7 @@ const ProfileHeader = ({ username, page }) => {
 				<Text fontSize={"sm"} mb={3} whiteSpace="pre-wrap" overflowWrap="break-word" width="100%">{userProfile.bio}</Text>
 				<Flex	
 						gap={3}
-					direction={{ base: "column", sm: "row" }}
+					direction={{ base: "column", sm: "column" }}
 					justifyContent={{ base: "center", sm: "flex-start" }}
 					alignItems="baseline"
 					w={"full"}	

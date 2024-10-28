@@ -21,7 +21,7 @@ import {
   import { useState, useEffect, useRef } from "react";
   import { deleteObject, ref } from "firebase/storage";
   import { firestore, storage } from "../../firebase/firebase";
-  import { arrayRemove, deleteDoc, doc, updateDoc } from "firebase/firestore";
+  import { arrayRemove, deleteDoc, doc, updateDoc, onSnapshot } from "firebase/firestore";
   import usePostStore from "../../store/postStore";
   import Caption from "../Comment/Caption";
   
@@ -36,6 +36,21 @@ import {
     //const imageSrc = post.imageURL && post.imageURL.startsWith("https://firebase") ? post.imageURL : `${proxyURL}${encodeURIComponent(post.imageURL)}` ;
 	const videoRef = useRef(null);
 	const [playCount, setPlayCount] = useState(0);
+	const [isPurchased, setIsPurchased] = useState(post.purchased && authUser && post.purchased.includes(authUser?.uid));
+	const [purchasedUsers, setPurchasedUsers] = useState(post.purchased || null); // Store purchased users
+
+	useEffect(() => {
+		const postRef = doc(firestore, 'posts', post.id);
+		const unsubscribe = onSnapshot(postRef, (snapshot) => {
+			if (snapshot.exists()) {
+				const updatedPost = snapshot.data();
+				setPurchasedUsers(updatedPost.purchased);
+				setIsPurchased(authUser && updatedPost.purchased.includes(authUser?.uid));
+			}
+		});
+
+		return () => unsubscribe(); // Clean up the listener
+	}, [post.id, authUser?.uid]);
 
 	useEffect(() => {
 		const videoElement = videoRef.current;
@@ -162,10 +177,14 @@ import {
 		  </Flex>
 		</Flex>
 		
-		{(!post.mediaType || post.mediaType.startsWith("image/")) && (
+		{(!post.mediaType || post.mediaType.startsWith("image/")) && (!post.paid || post.paid && isPurchased) && (
 		<Image src={post.imageURL} alt="profile post" w={"100%"} h={"100%"} objectFit={"cover"} />
 		)}
-		{(post.mediaType && post.mediaType.startsWith("video/")) && (
+		{(!post.mediaType || post.mediaType.startsWith("image/"))  && post.paid && !isPurchased && (
+		<Image src={post.imageURL} style={{ filter: 'blur(11px)' }} alt="profile post" w={"100%"} h={"100%"} objectFit={"cover"} />
+		)}
+
+		{(post.mediaType && post.mediaType.startsWith("video/")) && (!post.paid || post.paid && isPurchased) && (
         <Box 
 		display="flex" 
 		justifyContent="center" 
@@ -189,9 +208,41 @@ import {
 			height: "100%", 
 			objectFit: "cover" 
 		  }} 
+		  
         />
         </Box>
       )}
+
+	{(post.mediaType && post.mediaType.startsWith("video/")) && post.paid && !isPurchased && (
+        <Box 
+		display="flex" 
+		justifyContent="center" 
+		alignItems="center" 
+		height="100%" 
+		width="100%"
+		overflow="hidden"
+	  >
+        <video src={post.imageURL} 
+		ref={videoRef}
+        w={"100%"} h={"100%"} 
+        //controls 
+        //autoPlay 
+		playsInline
+        muted 
+        loop
+		preload="none"
+        alt={"FEED POST VIDEO"} 
+        style={{ 
+			width: "100%", 
+			height: "100%", 
+			objectFit: "cover",
+			filter: 'blur(15px)'
+		  }} 
+		  
+        />
+        </Box>
+      )}
+
 	  </GridItem>
 	);
   };

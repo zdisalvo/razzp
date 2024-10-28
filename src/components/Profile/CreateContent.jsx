@@ -173,7 +173,7 @@ const CreateContent = ({ isOpen, onClose }) => {
                                 {selectedFile.type.startsWith("image/") ? (
                                     <Image src={selectedFile.src} alt='Selected img' />
                                 ) : (
-                                    <video src={selectedFile.src} controls style={{ width: "100%" }} />
+                                    <video src={selectedFile.src} playsInline autoPlay style={{ width: "100%" }} />
                                 )}
                                 <CloseButton
                                     position={"absolute"}
