@@ -3,13 +3,32 @@ import { Box, Container, Image, Text } from "@chakra-ui/react";
 import PostFooter from "./PostFooter";
 import PostHeader from "./PostHeader";
 import useGetUserProfileById from "../../hooks/useGetUserProfileById";
+import useAuthStore from "../../store/authStore";
+import { doc, getDoc, onSnapshot, updateDoc } from 'firebase/firestore';
+import { firestore } from '../../firebase/firebase';
 
 const FeedPost = forwardRef(({ post, rank, isFollowing, requested, isPrivate, onFollowClick }, ref) => {
+  const authUser = useAuthStore((state) => state.user);
   const { userProfile } = useGetUserProfileById(post.createdBy);
   const videoRef = useRef(null);
   const [isMuted, setIsMuted] = useState(true);
   //const proxyURL = "https://radiant-retreat-87579-dcc979ba57be.herokuapp.com?url=";
   //const imageSrc = !post.imageURL.startsWith("https://firebase") ? `${proxyURL}${encodeURIComponent(post.imageURL)}` : post.imageURL;
+  const [isPurchased, setIsPurchased] = useState(post.purchased && authUser && post.purchased.includes(authUser?.uid));
+  const [purchasedUsers, setPurchasedUsers] = useState(post.purchased || null); // Store purchased users
+
+  useEffect(() => {
+    const postRef = doc(firestore, 'posts', post.id);
+    const unsubscribe = onSnapshot(postRef, (snapshot) => {
+        if (snapshot.exists()) {
+            const updatedPost = snapshot.data();
+            setPurchasedUsers(updatedPost.purchased);
+            setIsPurchased(authUser && updatedPost.purchased.includes(authUser?.uid));
+        }
+    });
+
+      return () => unsubscribe(); // Clean up the listener
+  }, [post.id, authUser?.uid]);
 
   const toggleMute = () => {
     if (videoRef.current) {
@@ -98,23 +117,57 @@ const FeedPost = forwardRef(({ post, rank, isFollowing, requested, isPrivate, on
       <Box my={2} borderRadius={4} overflow={"hidden"} px={0} maxHeight="450px" objectFit="cover" height="auto" width="100%" display="flex" 
       justifyContent="center" 
       alignItems="center">
-      {(!post.mediaType || post.mediaType.startsWith("image/")) && (
+      {((!post.mediaType) || (post.mediaType.startsWith("image/")) && (!post.paid || post.paid && isPurchased)) && (
+        
         <Image src={post.imageURL} alt={"FEED POST IMG"} width="100%" objectFit="cover" maxHeight="450px" height="auto"/>
+        
       )}
-      {(post.mediaType && post.mediaType.startsWith("video/")) && (
+      {(!post.mediaType || post.mediaType.startsWith("image/")) && post.paid && !isPurchased && (
+        
+        <Image src={post.imageURL} style={{ filter: 'blur(11px)' }} alt={"FEED POST IMG"} width="100%" objectFit="cover" maxHeight="450px" height="auto"/>
+        
+      )}
+      {(post.mediaType && post.mediaType.startsWith("video/")) && (!post.paid || post.paid && isPurchased) && (
         <Box justifyContent="center" alignItems="center" m={0} p={0}
+        //onClick={handleVideoClick}
         cursor="pointer"
         >
         <video src={post.imageURL} 
         ref={videoRef} 
         //controls 
-        //autoPlay 
         playsInline
-        muted 
+        //autoPlay 
+        muted={isMuted} 
         loop
+        //preload={isLoaded ? "auto" : "none"}
+        preload="metadata"
         alt={"FEED POST VIDEO"} 
         onClick={toggleMute}
+        //style={{ width: "100%", height: "450px", objectFit: "cover" }}
         />
+        
+        </Box>
+      )}
+      {(post.mediaType && post.mediaType.startsWith("video/")) && post.paid && !isPurchased && (
+        <Box justifyContent="center" alignItems="center" m={0} p={0}
+        //onClick={handleVideoClick}
+        cursor="pointer"
+        >
+        <video src={post.imageURL} 
+        style={{ filter: 'blur(15px)' }}
+        ref={videoRef} 
+        //controls 
+        playsInline
+        //autoPlay 
+        muted={isMuted} 
+        loop
+        //preload={isLoaded ? "auto" : "none"}
+        preload="metadata"
+        alt={"FEED POST VIDEO"} 
+        onClick={toggleMute}
+        //style={{ width: "100%", height: "450px", objectFit: "cover" }}
+        />
+        
         </Box>
       )}
       </Box>

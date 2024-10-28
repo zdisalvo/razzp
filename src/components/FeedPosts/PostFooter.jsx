@@ -33,7 +33,7 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
 
     const [postComments, setPostComments] = useState(post?.comments.length || 0);
     const { handlePurchase } = usePurchasePost();
-    const [isPurchased, setIsPurchased] = useState(post.purchased && post.purchased.includes(authUser.uid));
+    const [isPurchased, setIsPurchased] = useState(post.purchased && authUser && post.purchased.includes(authUser?.uid));
     const [purchasedUsers, setPurchasedUsers] = useState(post.purchased || null); // Store purchased users
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -53,12 +53,12 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
             if (snapshot.exists()) {
                 const updatedPost = snapshot.data();
                 setPurchasedUsers(updatedPost.purchased);
-                setIsPurchased(updatedPost.purchased.includes(authUser.uid));
+                setIsPurchased(authUser && updatedPost.purchased.includes(authUser?.uid));
             }
         });
 
         return () => unsubscribe(); // Clean up the listener
-    }, [post.id, authUser.uid]);
+    }, [post.id, authUser?.uid]);
 
     // const handlePurchaseClick = () => {
     //     handlePurchase(post, post.price);  // Pass the post and price to the purchase handler
@@ -215,7 +215,7 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
                 </Box>
                 )}
                 {/* !post.purchased.includes(authUser.uid) */}
-                {post && post.paid && !isPurchased &&  (
+                {post && post.paid && (authUser && !isPurchased) &&  (
                 <Box cursor={"pointer"} fontSize={18}>
                     {/* <CheckoutButton post={post} /> */}
                     <Button onClick={handlePurchaseClick}>Access for ${post.price}</Button>

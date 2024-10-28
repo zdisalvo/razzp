@@ -17,7 +17,7 @@ const FeedPostUser = forwardRef(({ post, isFollowing, requested, isPrivate, onFo
   const { isOpen, onToggle } = useDisclosure(); // To handle video click
   //const proxyURL = "https://radiant-retreat-87579-dcc979ba57be.herokuapp.com?url=";
   //const imageSrc = !post.imageURL.startsWith("https://firebase") ? `${proxyURL}${encodeURIComponent(post.imageURL)}` : post.imageURL;
-  const [isPurchased, setIsPurchased] = useState(post.purchased && post.purchased.includes(authUser.uid));
+  const [isPurchased, setIsPurchased] = useState(post.purchased && authUser && post.purchased.includes(authUser?.uid));
   const [purchasedUsers, setPurchasedUsers] = useState(post.purchased || null); // Store purchased users
 
   useEffect(() => {
@@ -26,12 +26,12 @@ const FeedPostUser = forwardRef(({ post, isFollowing, requested, isPrivate, onFo
         if (snapshot.exists()) {
             const updatedPost = snapshot.data();
             setPurchasedUsers(updatedPost.purchased);
-            setIsPurchased(updatedPost.purchased.includes(authUser.uid));
+            setIsPurchased(authUser && updatedPost.purchased.includes(authUser?.uid));
         }
     });
 
       return () => unsubscribe(); // Clean up the listener
-  }, [post.id, authUser.uid]);
+  }, [post.id, authUser?.uid]);
 
   const toggleMute = () => {
     if (videoRef.current) {
@@ -112,7 +112,7 @@ const FeedPostUser = forwardRef(({ post, isFollowing, requested, isPrivate, onFo
         alignItems="center"
         //transition="height 2.0s ease-in-out"
         >
-      {(!post.mediaType || post.mediaType.startsWith("image/")) && (!post.paid || post.paid && isPurchased) && (
+      {((!post.mediaType) || (post.mediaType.startsWith("image/")) && (!post.paid || post.paid && isPurchased)) && (
         
         <Image src={post.imageURL} alt={"FEED POST IMG"} width="100%" objectFit="cover" maxHeight="450px" height="auto"/>
         
@@ -122,12 +122,34 @@ const FeedPostUser = forwardRef(({ post, isFollowing, requested, isPrivate, onFo
         <Image src={post.imageURL} style={{ filter: 'blur(11px)' }} alt={"FEED POST IMG"} width="100%" objectFit="cover" maxHeight="450px" height="auto"/>
         
       )}
-      {(post.mediaType && post.mediaType.startsWith("video/")) && (
+      {(post.mediaType && post.mediaType.startsWith("video/")) && (!post.paid || post.paid && isPurchased) && (
         <Box justifyContent="center" alignItems="center" m={0} p={0}
         //onClick={handleVideoClick}
         cursor="pointer"
         >
         <video src={post.imageURL} 
+        ref={videoRef} 
+        //controls 
+        playsInline
+        //autoPlay 
+        muted={isMuted} 
+        loop
+        //preload={isLoaded ? "auto" : "none"}
+        preload="metadata"
+        alt={"FEED POST VIDEO"} 
+        onClick={toggleMute}
+        //style={{ width: "100%", height: "450px", objectFit: "cover" }}
+        />
+        
+        </Box>
+      )}
+      {(post.mediaType && post.mediaType.startsWith("video/")) && post.paid && !isPurchased && (
+        <Box justifyContent="center" alignItems="center" m={0} p={0}
+        //onClick={handleVideoClick}
+        cursor="pointer"
+        >
+        <video src={post.imageURL} 
+        style={{ filter: 'blur(15px)' }}
         ref={videoRef} 
         //controls 
         playsInline
