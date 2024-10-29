@@ -32,6 +32,7 @@ const UserFeed = () => {
   const [loadedPosts, setLoadedPosts] = useState({});
   const [isInitialized, setIsInitialized] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
 
   const userNotFound = !isLoading && !userProfile;
 
@@ -47,8 +48,8 @@ const UserFeed = () => {
 
   const addElementsToObserve = useIntersectionObserver(
     (postElement) => {
-      if (!isScrolled)
-        return;
+      // if (!isScrolled)
+      //   return;
       const postId = postElement.getAttribute("data-post-id");
       const index = posts.findIndex((post) => post.id === postId);
 
@@ -86,19 +87,19 @@ const UserFeed = () => {
       //setLoadedPosts((prev) => ({ ...prev, [postId]: true }));
     },
     //{ threshold: 0.99 }
-    { threshold: !isScrolled  ? 0.99 : .4 } //: .4
+    { threshold: !isScrolled ? 0.99 : .2 } //: .4
   );
 
 
   useEffect(() => {
-    // if (isScrolled)
-    //   return;
+    // if (!shouldScroll)
+    //   setIsVisible(true);
     if (!isLoading && postId && postRefs.current[postId] && shouldScroll) {
       
       setIsInitialized(true);
       setTimeout(() => {
         postRefs.current[postId].scrollIntoView({ block: 'center' });
-      }, 400); //600
+      }, 50); //100 //600
       // setTimeout(() => {
       //   postRefs.current[postId].scrollIntoView({ block: 'start' });
       // }, 150);
@@ -107,14 +108,24 @@ const UserFeed = () => {
       
       setIsScrolled(true);
       setTimeout(() => {
-        postRefs.current[postId].scrollIntoView({ block: 'center' });
-      }, 100); //200 //800
+        postRefs.current[postId].scrollIntoView({ block: 'start' });
+      }, 50); //100
       
     
 
       setTimeout(() => {
         setShouldScroll(false);
-      }, 500); //200
+        
+      }, 250); //300 //500
+
+      setTimeout(() => {
+        postRefs.current[postId].scrollIntoView({ block: 'start' });
+        setTimeout(() => {
+          setIsVisible(true);
+        }, 100); //150
+      }, 950); //800
+       //500
+      
 
       
       
@@ -313,6 +324,11 @@ const UserFeed = () => {
   if (userNotFound || isBlocked) return <UserNotFound />;
 
   return (
+    <div style={{
+      visibility: isVisible ? 'visible' : 'hidden',
+      opacity: isVisible ? 1 : 0,
+      transition: 'opacity 0.5s ease', // Smooth transition effect
+    }}>
     <Container py={0}   px={0} w={['100vw', null, '60vh']} >
       {/* {isLoading &&
         [0, 1, 2].map((_, idx) => (
@@ -356,6 +372,7 @@ const UserFeed = () => {
 
       {isLoading && shouldScroll && <div style={{ visibility: "hidden", height: "450px" }} ref={(el) => el && el.scrollIntoView({block: 'start'})}></div>}
     </Container>
+    </div>
   );
 };
 
