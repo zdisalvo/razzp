@@ -18,38 +18,55 @@ const usePurchasePost = () => {
                 purchased: arrayUnion(authUser.uid)
             });
 
+            // const bonusRef = collection(firestore, "bonus");
+
+            // // Calculate 80% of the price for the creator
+            // const creatorBonus = (0.80 * price).toFixed(2);
+
+            // // Set or update the creator bonus, using the purchaser's UID as the document ID
+            // const creatorDocRef = doc(bonusRef, post.createdBy, "creator", "purchases");
+            // const creatorDocSnap = await getDoc(creatorDocRef);
+            
+            // if (creatorDocSnap.exists()) {
+            //     // Document exists, update it by adding a new purchase
+            //     await updateDoc(creatorDocRef, {
+            //         purchases: arrayUnion({
+            //             purchasedBy: authUser.uid,
+            //             purchasedByUsername: authUser.username,
+            //             date: Date.now(),  // Store the date in milliseconds (UNIX timestamp)
+            //             gross: price,
+            //             net: parseFloat(creatorBonus)
+            //         })
+            //     });
+            // } else {
+            //     // Document doesn't exist, create it with the first purchase
+            //     await setDoc(creatorDocRef, {
+            //         purchases: [{
+            //             purchasedBy: authUser.uid,
+            //             purchasedByUsername: authUser.username,
+            //             date: Date.now(),
+            //             gross: price,
+            //             net: parseFloat(creatorBonus)
+            //         }]
+            //     });
+            // }
+
             const bonusRef = collection(firestore, "bonus");
 
             // Calculate 80% of the price for the creator
             const creatorBonus = (0.80 * price).toFixed(2);
-
-            // Set or update the creator bonus, using the purchaser's UID as the document ID
-            const creatorDocRef = doc(bonusRef, post.createdBy, "creator");
-            const creatorDocSnap = await getDoc(creatorDocRef);
+    
+            // Set the path to a new purchase document within the purchases sub-collection
+            const purchaseRef = doc(collection(bonusRef, post.createdBy, "purchases"));
             
-            if (creatorDocSnap.exists()) {
-                // Document exists, update it by adding a new purchase
-                await updateDoc(creatorDocRef, {
-                    purchases: arrayUnion({
-                        purchasedBy: authUser.uid,
-                        purchasedByUsername: authUser.username,
-                        date: Date.now(),  // Store the date in milliseconds (UNIX timestamp)
-                        gross: price,
-                        net: parseFloat(creatorBonus)
-                    })
-                });
-            } else {
-                // Document doesn't exist, create it with the first purchase
-                await setDoc(creatorDocRef, {
-                    purchases: [{
-                        purchasedBy: authUser.uid,
-                        purchasedByUsername: authUser.username,
-                        date: Date.now(),
-                        gross: price,
-                        net: parseFloat(creatorBonus)
-                    }]
-                });
-            }
+            // Add a new purchase document
+            await setDoc(purchaseRef, {
+                purchasedBy: authUser.uid,
+                purchasedByUsername: authUser.username,
+                date: Date.now(),  // Store the date in milliseconds (UNIX timestamp)
+                gross: price,
+                net: parseFloat(creatorBonus)
+            });
 
             // Increment the creator's total earnings (creatorTotal)
             const creatorTotalRef = doc(firestore, "users", post.createdBy);

@@ -62,7 +62,7 @@ const UserFeed = () => {
               const start = Math.max(0, index - 2);
               const end = Math.min(posts.length, index + 2); // 5 before and 5 after, including the current post
       
-              const surroundingPosts = posts.slice(start, end);
+              const surroundingPosts = posts.slice(0, end);
               setLoadedPosts((prev) => {
                 const updatedPosts = { ...prev };
                 surroundingPosts.forEach((post) => {
@@ -123,7 +123,7 @@ const UserFeed = () => {
         setTimeout(() => {
           setIsVisible(true);
         }, 100); //150
-      }, 950); //800
+      }, 1100); //950
        //500
       
 
