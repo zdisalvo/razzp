@@ -32,6 +32,7 @@ import {
     ResponsiveContainer
 } from 'recharts';
 import useAuthStore from "../../store/authStore";
+import { ja } from "date-fns/locale";
 
 const categoryColors = {
     post: "#FF5733",       // Red
@@ -42,7 +43,9 @@ const categoryColors = {
 const CreatorModal = ({ isOpen, onClose }) => {
     const authUser = useAuthStore((state) => state.user);
     const [startDate, setStartDate] = useState("");
+    const [useStartDate, setUseStartDate] = useState(""); 
     const [endDate, setEndDate] = useState(""); // Initialize endDate
+    const [useEndDate, setUseEndDate] = useState(""); 
     const [grossEarnings, setGrossEarnings] = useState(0);
     const [netEarnings, setNetEarnings] = useState(0);
     const [payments, setPayments] = useState(0);
@@ -52,21 +55,32 @@ const CreatorModal = ({ isOpen, onClose }) => {
     const [categoryTotals, setCategoryTotals] = useState({ gross: 0, net: 0 });
     const [purchaserTotals, setPurchaserTotals] = useState({ gross: 0, net: 0 });
     const [spendData, setSpendData] = useState([]);
+    //const [isInitialized, setIsInitialized] = useState(false);
 
     useEffect(() => {
-        if (isOpen) {
+        //console.log(isInitialized);
+        if (isOpen && authUser) {
+            //console.log(authUser);
             const today = new Date();
             const todayStr = today.toISOString().split("T")[0]; // Format to YYYY-MM-DD
+            setUseEndDate(todayStr);
             const twoDaysLater = new Date(today);
             twoDaysLater.setDate(today.getDate() + 2); // Set to two days later
             const twoDaysLaterStr = twoDaysLater.toISOString().split("T")[0]; // Format to YYYY-MM-DD
-            setStartDate(todayStr); // Set default start date to today
+            setStartDate(new Date(authUser?.createdAt).toISOString().split("T")[0]); // Set default start date to today
             setEndDate(twoDaysLaterStr); // Set default end date to two days later
-            fetchCreatorData();
-        }
+            // console.log(new Date(authUser?.createdAt).toISOString().split("T")[0]);
+            // console.log(twoDaysLaterStr);
+            fetchCreatorData(new Date(authUser?.createdAt).toISOString().split("T")[0], 
+            twoDaysLaterStr);
+            //setIsInitialized(true);
+        } 
+        // else if (isOpen && isInitialized ) {
+        //     fetchCreatorData();
+        // }
     }, [isOpen]);
 
-    const fetchCreatorData = async () => {
+    const fetchCreatorData = async (startDate, endDate) => {
         if (!authUser) return;
 
         try {
@@ -86,9 +100,9 @@ const CreatorModal = ({ isOpen, onClose }) => {
                 setPayments(userData.creatorPayments || 0);
                 
                 // Set default start date to userData.createdAt
-                if (userData.createdAt) {
-                    setStartDate(new Date(userData.createdAt).toISOString().split("T")[0]);
-                }
+                // if (userData.createdAt) {
+                //     setStartDate(new Date(userData.createdAt).toISOString().split("T")[0]);
+                // }
             }
 
             const filteredPurchases = purchases.filter((purchase) => {
@@ -140,7 +154,9 @@ const CreatorModal = ({ isOpen, onClose }) => {
             setCategoryTotals({ gross: categoryGrossTotal, net: categoryNetTotal });
 
             const allCategories = Object.keys(breakdown);
+            //console.log(startDate);
             const allDates = getAllDates(startDate, new Date()); // Only get dates until today
+            
             const graphData = allDates.map(date => {
                 const dateStr = date.toLocaleDateString();
                 const dataPoint = { date: dateStr };
@@ -195,10 +211,12 @@ const CreatorModal = ({ isOpen, onClose }) => {
         }
     };
 
-    const getAllDates = (startDateStr, endDate) => {
-        const startDateObj = new Date(startDateStr);
+    const getAllDates = (startDate, endDate) => {
+        const startDateObj = new Date(startDate);
         const endDateObj = new Date(endDate);
         const dates = [];
+
+        //console.log(startDate);
 
         for (let dt = startDateObj; dt <= endDateObj; dt.setDate(dt.getDate() + 1)) {
             dates.push(new Date(dt));
@@ -226,16 +244,27 @@ const CreatorModal = ({ isOpen, onClose }) => {
                         <Input
                             type="date"
                             value={startDate}
-                            onChange={(e) => setStartDate(e.target.value)}
+                            //onChange={(e) => setStartDate(e.target.value)}
+                            onChange={(e) => {
+                                setUseStartDate(e.target.value);
+                                const selectedDate = new Date(e.target.value);
+                                selectedDate.setDate(selectedDate.getDate()); // Add 2 days
+                                setStartDate(selectedDate.toISOString().split("T")[0]); // Update endDate state
+                            }}
                             placeholder="Start Date"
                         />
                         <Input
                             type="date"
-                            value={endDate}
-                            onChange={(e) => setEndDate(e.target.value)}
+                            value={useEndDate}
+                            onChange={(e) => {
+                                setUseEndDate(e.target.value);
+                                const selectedDate = new Date(e.target.value);
+                                selectedDate.setDate(selectedDate.getDate() + 2); // Add 2 days
+                                setEndDate(selectedDate.toISOString().split("T")[0]); // Update endDate state
+                            }}
                             placeholder="End Date"
                         />
-                        <Button onClick={fetchCreatorData} colorScheme="teal">
+                        <Button hidden onClick={fetchCreatorData(startDate, endDate)} colorScheme="teal">
                             Search
                         </Button>
                     </HStack>
