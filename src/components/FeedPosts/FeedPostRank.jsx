@@ -81,7 +81,7 @@ const FeedPost = forwardRef(({ post, rank, isFollowing, requested, isPrivate, on
           {/* Ranking Badge */}
           {rank && (
              <Box position="absolute" display="inline-block" bottom={1} // Adjust this value to move the text up or down
-             right={1}>
+             right={1} zIndex={2}>
              <Image
                  src="/trophy-gold.png" // Your icon
                  alt="Trophy Icon"
@@ -124,7 +124,7 @@ const FeedPost = forwardRef(({ post, rank, isFollowing, requested, isPrivate, on
       )}
       {(!post.mediaType || post.mediaType.startsWith("image/")) && post.paid && !isPurchased && (
         
-        <Image src={post.imageURL} style={{ filter: 'blur(11px)' }} alt={"FEED POST IMG"} width="100%" objectFit="cover" maxHeight="450px" height="auto"/>
+        <Image src={post.imageURL} style={{ filter: 'blur(22px)' }} alt={"FEED POST IMG"} width="100%" objectFit="cover" maxHeight="450px" height="auto"/>
         
       )}
       {(post.mediaType && post.mediaType.startsWith("video/")) && (!post.paid || post.paid && isPurchased) && (
@@ -154,7 +154,7 @@ const FeedPost = forwardRef(({ post, rank, isFollowing, requested, isPrivate, on
         cursor="pointer"
         >
         <video src={post.imageURL} 
-        style={{ filter: 'blur(15px)' }}
+        style={{ filter: 'blur(30px)' }}
         ref={videoRef} 
         //controls 
         playsInline

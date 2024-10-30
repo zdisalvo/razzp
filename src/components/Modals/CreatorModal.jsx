@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { doc, getDoc, collection } from "firebase/firestore";
+import { doc, getDoc, collection, getDocs } from "firebase/firestore";
 import { firestore } from "../../firebase/firebase";
 import {
     Modal,
@@ -11,94 +11,111 @@ import {
     ModalFooter,
     Box,
     Text,
-    VStack,
-    Avatar,
-    Spinner,
+    HStack,
     Input,
     Button,
-    HStack,
+    Table,
+    Thead,
+    Tbody,
+    Tr,
+    Th,
+    Td,
 } from "@chakra-ui/react";
 import useAuthStore from "../../store/authStore";
 
 const CreatorModal = ({ isOpen, onClose }) => {
-    const authUser = useAuthStore((state) => state.user); // Fetching the authenticated user's info
-    const [topSpenders, setTopSpenders] = useState([]);
+    const authUser = useAuthStore((state) => state.user);
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
     const [grossEarnings, setGrossEarnings] = useState(0);
     const [netEarnings, setNetEarnings] = useState(0);
-    const [payments, setPayments] = useState(0);
     const [balance, setBalance] = useState(0);
-    const [isLoading, setIsLoading] = useState(false);
+    const [payments, setPayments] = useState(0);
+    const [filteredPurchases, setFilteredPurchases] = useState([]);
+    const [categoryBreakdown, setCategoryBreakdown] = useState([]);
+    const [topPurchasers, setTopPurchasers] = useState([]);
 
     useEffect(() => {
         if (isOpen) {
-            fetchTopSpenders();
+            fetchCreatorData();
         }
     }, [isOpen, startDate, endDate]);
 
-    const fetchTopSpenders = async () => {
-        if (!authUser) return; // Ensure authUser is available
+    const fetchCreatorData = async () => {
+        if (!authUser) return;
 
-        setIsLoading(true);
         try {
-            const bonusRef = collection(firestore, "bonus");
-            const creatorDocRef = doc(bonusRef, authUser.uid);
+            const bonusRef = collection(firestore, "bonus", authUser.uid, "creator");
+            const querySnapshot = await getDocs(bonusRef);
+            const purchases = querySnapshot.docs.map((doc) => ({
+                ...doc.data(),
+                id: doc.id,
+            }));
 
-            const creatorDocSnap = await getDoc(creatorDocRef);
-
-            if (creatorDocSnap.exists()) {
-                const creatorData = creatorDocSnap.data();
-
-                // Set earnings and balance values
-                setGrossEarnings(creatorData.gross || 0);
-                setNetEarnings(creatorData.net || 0);
-                setPayments(creatorData.payments || 0);
-                setBalance(creatorData.balance || 0);
-
-                // Get the purchases array from the creator document
-                const purchases = creatorData.purchases || [];
-
-                // Filter purchases based on the selected date range
-                const filteredPurchases = purchases.filter((purchase) => {
-                    const purchaseDate = new Date(purchase.date);
-                    const isAfterStart = startDate ? purchaseDate >= new Date(startDate) : true;
-                    const isBeforeEnd = endDate ? purchaseDate <= new Date(endDate) : true;
-                    return isAfterStart && isBeforeEnd;
-                });
-
-                // Calculate total spending for each purchaser within the date range
-                const spenderTotals = {};
-                filteredPurchases.forEach((purchase) => {
-                    if (spenderTotals[purchase.purchasedByUsername]) {
-                        spenderTotals[purchase.purchasedByUsername].gross += purchase.gross;
-                        spenderTotals[purchase.purchasedByUsername].net += purchase.net;
-                    } else {
-                        spenderTotals[purchase.purchasedByUsername] = {
-                            gross: purchase.gross,
-                            net: purchase.net,
-                        };
-                    }
-                });
-
-                // Convert the spender totals object to an array and sort by total gross spending
-                const sortedSpenders = Object.entries(spenderTotals)
-                    .map(([username, totals]) => ({
-                        username,
-                        gross: totals.gross,
-                        net: totals.net,
-                    }))
-                    .sort((a, b) => b.gross - a.gross)
-                    .slice(0, 5); // Limit to top 5 spenders
-
-                setTopSpenders(sortedSpenders);
-            } else {
-                console.error("No creator document found for the user:", authUser.uid);
+            const userRef = doc(collection(firestore, "users"), authUser.uid);
+            const userDocSnap = await getDoc(userRef);
+            if (userDocSnap.exists()) {
+                const userData = userDocSnap.data();
+                setGrossEarnings(userData.creatorGross || 0);
+                setNetEarnings(userData.creatorNet || 0);
+                setPayments(userData.creatorPayments || 0);
             }
+
+            const filteredPurchases = purchases.filter((purchase) => {
+                const purchaseDate = new Date(purchase.date);
+                const isAfterStart = startDate ? purchaseDate >= new Date(startDate) : true;
+                const isBeforeEnd = endDate ? purchaseDate <= new Date(endDate) : true;
+                return isAfterStart && isBeforeEnd;
+            });
+
+            setFilteredPurchases(filteredPurchases);
+
+            // Compute category breakdown
+            const breakdown = {};
+            filteredPurchases.forEach((purchase) => {
+                const type = purchase.purchaseType;
+                if (breakdown[type]) {
+                    breakdown[type].gross += purchase.gross;
+                    breakdown[type].net += purchase.net;
+                } else {
+                    breakdown[type] = {
+                        gross: purchase.gross,
+                        net: purchase.net,
+                    };
+                }
+            });
+            setCategoryBreakdown(Object.entries(breakdown).map(([type, totals]) => ({
+                type,
+                gross: totals.gross,
+                net: totals.net,
+            })));
+
+            // Compute top purchasers in descending order by gross amount
+            const purchaserTotals = {};
+            filteredPurchases.forEach((purchase) => {
+                const purchaser = purchase.purchaser || "Unknown";
+                if (purchaserTotals[purchaser]) {
+                    purchaserTotals[purchaser].gross += purchase.gross;
+                    purchaserTotals[purchaser].net += purchase.net;
+                } else {
+                    purchaserTotals[purchaser] = {
+                        gross: purchase.gross,
+                        net: purchase.net,
+                    };
+                }
+            });
+
+            const sortedPurchasers = Object.entries(purchaserTotals)
+                .map(([purchaser, totals]) => ({
+                    purchaser,
+                    gross: totals.gross,
+                    net: totals.net,
+                }))
+                .sort((a, b) => b.gross - a.gross);
+
+            setTopPurchasers(sortedPurchasers);
         } catch (error) {
-            console.error("Failed to fetch top spenders:", error);
-        } finally {
-            setIsLoading(false);
+            console.error("Failed to fetch creator data:", error);
         }
     };
 
@@ -106,19 +123,17 @@ const CreatorModal = ({ isOpen, onClose }) => {
         <Modal isOpen={isOpen} onClose={onClose} size="lg">
             <ModalOverlay />
             <ModalContent>
-                <ModalHeader>Top Spenders</ModalHeader>
+                <ModalHeader>Creator Earnings Summary</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
-                    {/* Earnings Summary */}
                     <Box mb={4}>
                         <Text fontWeight="bold">Earnings Summary</Text>
                         <Text>Gross Earnings: ${grossEarnings.toFixed(2)}</Text>
                         <Text>Net Earnings: ${netEarnings.toFixed(2)}</Text>
                         <Text>Payments: ${payments.toFixed(2)}</Text>
-                        <Text>Balance: ${balance.toFixed(2)}</Text>
+                        <Text>Balance: ${(netEarnings - payments).toFixed(2)}</Text>
                     </Box>
 
-                    {/* Date Range Filter */}
                     <HStack spacing={3} mb={4}>
                         <Input
                             type="date"
@@ -132,35 +147,72 @@ const CreatorModal = ({ isOpen, onClose }) => {
                             onChange={(e) => setEndDate(e.target.value)}
                             placeholder="End Date"
                         />
-                        <Button onClick={fetchTopSpenders} colorScheme="teal">
+                        <Button onClick={fetchCreatorData} colorScheme="teal">
                             Search
                         </Button>
                     </HStack>
 
-                    {isLoading ? (
-                        <Spinner size="md" />
-                    ) : (
-                        <VStack spacing={3} align="start">
-                            {topSpenders.length > 0 ? (
-                                topSpenders.map((spender, index) => (
-                                    <Box key={index} display="flex" alignItems="center">
-                                        <Avatar name={spender.username} />
-                                        <Box ml={3}>
-                                            <Text fontWeight="bold">{spender.username}</Text>
-                                            <Text color="gray.500">
-                                                Gross Spending: ${spender.gross.toFixed(2)}
-                                            </Text>
-                                            <Text color="gray.500">
-                                                Net Spending: ${spender.net.toFixed(2)}
-                                            </Text>
-                                        </Box>
-                                    </Box>
-                                ))
-                            ) : (
-                                <Text mt={4} color="gray.600">No spenders found for the selected range.</Text>
-                            )}
-                        </VStack>
-                    )}
+                    {/* Purchase Breakdown Table */}
+                    <Box mb={4}>
+                        <Text fontWeight="bold">Purchase Breakdown by Category</Text>
+                        <Table variant="simple">
+                            <Thead>
+                                <Tr>
+                                    <Th>Category</Th>
+                                    <Th>Gross</Th>
+                                    <Th>Net</Th>
+                                </Tr>
+                            </Thead>
+                            <Tbody>
+                                {categoryBreakdown.length > 0 ? (
+                                    categoryBreakdown.map((category, index) => (
+                                        <Tr key={index}>
+                                            <Td>{category.type}</Td>
+                                            <Td>${category.gross.toFixed(2)}</Td>
+                                            <Td>${category.net.toFixed(2)}</Td>
+                                        </Tr>
+                                    ))
+                                ) : (
+                                    <Tr>
+                                        <Td colSpan="3" textAlign="center" color="gray.500">
+                                            No purchases found for the selected range.
+                                        </Td>
+                                    </Tr>
+                                )}
+                            </Tbody>
+                        </Table>
+                    </Box>
+
+                    {/* Top Purchasers Table */}
+                    <Box mb={4}>
+                        <Text fontWeight="bold">Top Purchasers</Text>
+                        <Table variant="simple">
+                            <Thead>
+                                <Tr>
+                                    <Th>Purchaser</Th>
+                                    <Th>Gross</Th>
+                                    <Th>Net</Th>
+                                </Tr>
+                            </Thead>
+                            <Tbody>
+                                {topPurchasers.length > 0 ? (
+                                    topPurchasers.map((purchaser, index) => (
+                                        <Tr key={index}>
+                                            <Td>{purchaser.purchaser}</Td>
+                                            <Td>${purchaser.gross.toFixed(2)}</Td>
+                                            <Td>${purchaser.net.toFixed(2)}</Td>
+                                        </Tr>
+                                    ))
+                                ) : (
+                                    <Tr>
+                                        <Td colSpan="3" textAlign="center" color="gray.500">
+                                            No purchasers found for the selected range.
+                                        </Td>
+                                    </Tr>
+                                )}
+                            </Tbody>
+                        </Table>
+                    </Box>
                 </ModalBody>
                 <ModalFooter>
                     <Button colorScheme="blue" mr={3} onClick={onClose}>

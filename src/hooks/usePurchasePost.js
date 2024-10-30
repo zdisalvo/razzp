@@ -57,10 +57,11 @@ const usePurchasePost = () => {
             const creatorBonus = (0.80 * price).toFixed(2);
     
             // Set the path to a new purchase document within the purchases sub-collection
-            const purchaseRef = doc(collection(bonusRef, post.createdBy, "purchases"));
+            const purchaseRef = doc(collection(bonusRef, post.createdBy, "creator"));
             
             // Add a new purchase document
             await setDoc(purchaseRef, {
+                purchaseType: "post",
                 purchasedBy: authUser.uid,
                 purchasedByUsername: authUser.username,
                 date: Date.now(),  // Store the date in milliseconds (UNIX timestamp)

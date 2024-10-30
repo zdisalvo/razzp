@@ -33,8 +33,9 @@ const UserFeed = () => {
   const [isInitialized, setIsInitialized] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-
+  //const [timeOut, setTimeOut] = useState(0);
   const userNotFound = !isLoading && !userProfile;
+  let timeOut;
 
   //console.log(isLoading);
 
@@ -59,9 +60,13 @@ const UserFeed = () => {
 
       //console.log(index);
       if (index !== -1 ) {
-              const start = Math.max(0, index - 2);
+              const start = Math.max(0, index - 2); //-2
               const end = Math.min(posts.length, index + 2); // 5 before and 5 after, including the current post
-      
+              
+                // timeOut = 400.0 * end / 10.0;
+                // console.log(timeOut);
+              
+
               const surroundingPosts = posts.slice(0, end);
               setLoadedPosts((prev) => {
                 const updatedPosts = { ...prev };
@@ -90,48 +95,72 @@ const UserFeed = () => {
     { threshold: !isScrolled ? 0.99 : .2 } //: .4
   );
 
-
   useEffect(() => {
-    // if (!shouldScroll)
-    //   setIsVisible(true);
-    if (!isLoading && postId && postRefs.current[postId] && shouldScroll) {
-      
+    if (!isLoading && postId && postRefs.current[postId] && shouldScroll && timeOut !== 0) {
       setIsInitialized(true);
-      setTimeout(() => {
-        postRefs.current[postId].scrollIntoView({ block: 'center' });
-      }, 50); //100 //600
-      // setTimeout(() => {
-      //   postRefs.current[postId].scrollIntoView({ block: 'start' });
-      // }, 150);
-      
-      
-      
+  
+      // Initial scroll to the post center
+      postRefs.current[postId].scrollIntoView({ block: 'center' });
+
       setIsScrolled(true);
-      setTimeout(() => {
+  
+      // Wait and then fine-tune scroll, resetting scroll flags only once
+      const scrollTimeout = setTimeout(() => {
         postRefs.current[postId].scrollIntoView({ block: 'start' });
-      }, 50); //100
+        //setShouldScroll(false);
+        setTimeout(() => {
+          setShouldScroll(false);
+          
+        }, 50); //300 //500
+        setIsVisible(true);
+      }, 700 ); // Adjust timing based on need
+  
+      return () => clearTimeout(scrollTimeout); // Clear timeout if dependencies change
+    }
+  }, [isLoading, postId, shouldScroll, postRefs]);
+
+
+  // useEffect(() => {
+  //   // if (!shouldScroll)
+  //   //   setIsVisible(true);
+  //   if (!isLoading && postId && postRefs.current[postId] && shouldScroll) {
+      
+  //     setIsInitialized(true);
+  //     setTimeout(() => {
+  //       postRefs.current[postId].scrollIntoView({ block: 'center' });
+  //     }, 50); //100 //600
+  //     // setTimeout(() => {
+  //     //   postRefs.current[postId].scrollIntoView({ block: 'start' });
+  //     // }, 150);
+      
+      
+      
+  //     setIsScrolled(true);
+  //     setTimeout(() => {
+  //       postRefs.current[postId].scrollIntoView({ block: 'start' });
+  //     }, 50); //100
       
     
 
-      setTimeout(() => {
-        setShouldScroll(false);
+  //     setTimeout(() => {
+  //       setShouldScroll(false);
         
-      }, 250); //300 //500
+  //     }, 250); //300 //500
 
-      setTimeout(() => {
-        postRefs.current[postId].scrollIntoView({ block: 'start' });
-        setTimeout(() => {
-          setIsVisible(true);
-        }, 100); //150
-      }, 1100); //950
-       //500
+  //     setTimeout(() => {
+  //       postRefs.current[postId].scrollIntoView({ block: 'start' });
+  //       setTimeout(() => {
+  //         setIsVisible(true);
+  //       }, 100); //150
+  //     }, 1100); //950
+  //      //500
       
 
       
       
       
-    }
-  }, [isLoading, postId, posts]);
+  //   }
+  // }, [isLoading, postId, posts]);
 
   // useEffect(() => {
   //   if (!isLoading && postId && postRefs.current[postId] && shouldScroll) {
