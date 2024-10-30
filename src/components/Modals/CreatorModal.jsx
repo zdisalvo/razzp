@@ -10,6 +10,8 @@ import {
     ModalBody,
     ModalFooter,
     Box,
+    Flex,
+    Avatar,
     Text,
     HStack,
     Input,
@@ -56,22 +58,26 @@ const CreatorModal = ({ isOpen, onClose }) => {
     const [purchaserTotals, setPurchaserTotals] = useState({ gross: 0, net: 0 });
     const [spendData, setSpendData] = useState([]);
     //const [isInitialized, setIsInitialized] = useState(false);
+    const [createdAt, setCreatedAt] = useState(authUser?.createdAt);
+    const [todayDate, setTodayDate] = useState("");
 
     useEffect(() => {
         //console.log(isInitialized);
-        if (isOpen && authUser) {
+        if (isOpen) {
             //console.log(authUser);
             const today = new Date();
             const todayStr = today.toISOString().split("T")[0]; // Format to YYYY-MM-DD
             setUseEndDate(todayStr);
+            setTodayDate(todayStr);
             const twoDaysLater = new Date(today);
             twoDaysLater.setDate(today.getDate() + 2); // Set to two days later
             const twoDaysLaterStr = twoDaysLater.toISOString().split("T")[0]; // Format to YYYY-MM-DD
-            setStartDate(new Date(authUser?.createdAt).toISOString().split("T")[0]); // Set default start date to today
+            setStartDate(new Date(createdAt).toISOString().split("T")[0]); // Set default start date to today
+            setUseStartDate(new Date(createdAt).toISOString().split("T")[0]);
             setEndDate(twoDaysLaterStr); // Set default end date to two days later
             // console.log(new Date(authUser?.createdAt).toISOString().split("T")[0]);
             // console.log(twoDaysLaterStr);
-            fetchCreatorData(new Date(authUser?.createdAt).toISOString().split("T")[0], 
+            fetchCreatorData(new Date(createdAt).toISOString().split("T")[0], 
             twoDaysLaterStr);
             //setIsInitialized(true);
         } 
@@ -155,7 +161,13 @@ const CreatorModal = ({ isOpen, onClose }) => {
 
             const allCategories = Object.keys(breakdown);
             //console.log(startDate);
-            const allDates = getAllDates(startDate, new Date()); // Only get dates until today
+            let endDateData;
+            if (new Date(endDate) < new Date(todayDate)) {
+                endDateData = new Date(endDate);
+            } else {
+                endDateData = new Date(todayDate);
+            }
+            const allDates = getAllDates(startDate, endDateData); // Only get dates until today
             
             const graphData = allDates.map(date => {
                 const dateStr = date.toLocaleDateString();
@@ -243,28 +255,36 @@ const CreatorModal = ({ isOpen, onClose }) => {
                     <HStack spacing={3} mb={4}>
                         <Input
                             type="date"
-                            value={startDate}
+                            value={useStartDate}
+                            //min="2024-01-01"
                             //onChange={(e) => setStartDate(e.target.value)}
                             onChange={(e) => {
+                                
                                 setUseStartDate(e.target.value);
-                                const selectedDate = new Date(e.target.value);
-                                selectedDate.setDate(selectedDate.getDate()); // Add 2 days
-                                setStartDate(selectedDate.toISOString().split("T")[0]); // Update endDate state
+                                console.log(e.target.value);
+                                if (e.target.value > "2024-08-01") {
+                                    const selectedDate = new Date(e.target.value);
+                                    selectedDate.setDate(selectedDate.getDate()); // Add 2 days
+                                    setStartDate(selectedDate.toISOString().split("T")[0]); // Update endDate state
+                                }
                             }}
                             placeholder="Start Date"
                         />
                         <Input
                             type="date"
                             value={useEndDate}
+                            //max="2025-12-31"
                             onChange={(e) => {
                                 setUseEndDate(e.target.value);
-                                const selectedDate = new Date(e.target.value);
-                                selectedDate.setDate(selectedDate.getDate() + 2); // Add 2 days
-                                setEndDate(selectedDate.toISOString().split("T")[0]); // Update endDate state
+                                if (e.target.value <= todayDate) {
+                                    const selectedDate = new Date(e.target.value);
+                                    selectedDate.setDate(selectedDate.getDate() + 2); // Add 2 days
+                                    setEndDate(selectedDate.toISOString().split("T")[0]); // Update endDate state
+                                }
                             }}
                             placeholder="End Date"
                         />
-                        <Button hidden onClick={fetchCreatorData(startDate, endDate)} colorScheme="teal">
+                        <Button onClick={() => fetchCreatorData(startDate, endDate)} colorScheme="teal">
                             Search
                         </Button>
                     </HStack>
@@ -331,12 +351,22 @@ const CreatorModal = ({ isOpen, onClose }) => {
                             <Tbody>
                                 {topPurchasers.map((purchaser) => (
                                     <Tr key={purchaser.purchaser}>
-                                        <Td>{purchaser.purchaser}</Td>
+                                        <Td>
+                                        <Flex align="baseline" gap={3}>
+                                        <Avatar
+                                            size="sm"
+                                            src={purchaser.purchaserProfilePicURL || undefined}
+                                            name={purchaser.purchaser}
+                                        />
+                                        {purchaser.purchaser}
+                                        </Flex>
+                                        </Td>
                                         <Td isNumeric>${purchaser.gross.toFixed(2)}</Td>
                                         <Td isNumeric>${purchaser.net.toFixed(2)}</Td>
                                     </Tr>
                                 ))}
                                 <Tr fontWeight="bold">
+                                    
                                     <Td>Total</Td>
                                     <Td isNumeric>${purchaserTotals.gross.toFixed(2)}</Td>
                                     <Td isNumeric>${purchaserTotals.net.toFixed(2)}</Td>
