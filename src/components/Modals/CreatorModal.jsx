@@ -212,18 +212,27 @@ const CreatorModal = ({ isOpen, onClose }) => {
             const purchaserTotals = {};
             let purchaserGrossTotal = 0;
             let purchaserNetTotal = 0;
-            filteredPurchases.forEach((purchase) => {
+            const descendingFilteredPurchases = filteredPurchases.sort((b, a) => new Date(a.date) - new Date(b.date));
+            descendingFilteredPurchases.forEach((purchase) => {
                 const purchaser = purchase.purchasedByUsername || "Unknown";
-                const profilePicURL = purchase.purchaserProfilePicURL || "undefined";
+                const profilePicURL = purchase.purchaserProfilePicURL || null;
+                //console.log("  " + profilePicURL)
                 if (purchaserTotals[purchaser]) {
                     purchaserTotals[purchaser].gross += purchase.gross;
                     purchaserTotals[purchaser].net += purchase.net;
+                    if (!purchaserTotals[purchaser].profilePicURL ) {
+                        purchaserTotals[purchaser].profilePicURL = profilePicURL;
+                        //console.log(purchaser + " " + purchaserTotals[purchaser].profilePicURL);
+                    }
                 } else {
                     purchaserTotals[purchaser] = {
                         gross: purchase.gross,
                         net: purchase.net,
-                        profilePicURL,
                     };
+                    if (!purchaserTotals[purchaser].profilePicURL ) {
+                        purchaserTotals[purchaser].profilePicURL = profilePicURL;
+                        //console.log(purchaser + " " + purchaserTotals[purchaser].profilePicURL);
+                    }
                 }
                 purchaserGrossTotal += purchase.gross;
                 purchaserNetTotal += purchase.net;
@@ -391,13 +400,17 @@ const CreatorModal = ({ isOpen, onClose }) => {
                                 {topPurchasers.map((purchaser) => (
                                     <Tr key={purchaser.purchaser}>
                                         <Td>
-                                        <Flex align="baseline" gap={3}>
-                                        <Avatar
+                                        <Flex alignItems={"center"} gap={3}>
+                                        <Box  display="flex" alignItems="center" justifyContent="center">
+                                        <Avatar 
                                             size="sm"
-                                            src={purchaser.purchaserProfilePicURL || undefined}
+                                            src={purchaser.profilePicURL || undefined}
                                             name={purchaser.purchaser}
                                         />
+                                        </Box>
+                                        <Box display="flex" alignItems="center" justifyContent="center">
                                         {purchaser.purchaser}
+                                        </Box>
                                         </Flex>
                                         </Td>
                                         <Td isNumeric>${purchaser.gross.toFixed(2)}</Td>
