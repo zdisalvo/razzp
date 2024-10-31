@@ -57,29 +57,32 @@ const CreatorModal = ({ isOpen, onClose }) => {
     const [categoryTotals, setCategoryTotals] = useState({ gross: 0, net: 0 });
     const [purchaserTotals, setPurchaserTotals] = useState({ gross: 0, net: 0 });
     const [spendData, setSpendData] = useState([]);
-    //const [isInitialized, setIsInitialized] = useState(false);
+    const [isInitialized, setIsInitialized] = useState(false);
     const [createdAt, setCreatedAt] = useState(authUser?.createdAt);
-    const [todayDate, setTodayDate] = useState("");
+    const [todayDate, setTodayDate] = useState(new Date(Date.now() + new Date().getTimezoneOffset() * 60000));
 
     useEffect(() => {
         //console.log(isInitialized);
-        if (isOpen) {
+        console.log(todayDate);
+        if (isOpen && authUser && !isInitialized) {
             //console.log(authUser);
             const today = new Date();
-            const todayStr = today.toISOString().split("T")[0]; // Format to YYYY-MM-DD
+            const todayStr = today.toLocaleDateString('en-CA').split("T")[0]; // Format to YYYY-MM-DD
             setUseEndDate(todayStr);
-            setTodayDate(todayStr);
-            const twoDaysLater = new Date(today);
-            twoDaysLater.setDate(today.getDate() + 2); // Set to two days later
-            const twoDaysLaterStr = twoDaysLater.toISOString().split("T")[0]; // Format to YYYY-MM-DD
+            //setTodayDate(new Date(todayDate.getTime() + todayDate.getTimezoneOffset() * 60000));
+            
+            // const twoDaysLater = new Date(today);
+            // twoDaysLater.setDate(today.getDate() + 2); // Set to two days later
+            // const twoDaysLaterStr = twoDaysLater.toISOString().split("T")[0]; // Format to YYYY-MM-DD
+            //setTodayDate(twoDaysLaterStr);
             setStartDate(new Date(createdAt).toISOString().split("T")[0]); // Set default start date to today
-            setUseStartDate(new Date(createdAt).toISOString().split("T")[0]);
-            setEndDate(twoDaysLaterStr); // Set default end date to two days later
+            setUseStartDate(new Date(createdAt).toLocaleDateString('en-CA').split("T")[0]);
+            setEndDate(todayDate.toISOString().split("T")[0]); // Set default end date to two days later
             // console.log(new Date(authUser?.createdAt).toISOString().split("T")[0]);
             // console.log(twoDaysLaterStr);
-            fetchCreatorData(new Date(createdAt).toISOString().split("T")[0], 
-            twoDaysLaterStr);
-            //setIsInitialized(true);
+            //fetchCreatorData(startDate, endDate);
+            fetchCreatorData(new Date(createdAt).toISOString().split("T")[0], todayDate.toISOString().split("T")[0]);
+            
         } 
         // else if (isOpen && isInitialized ) {
         //     fetchCreatorData();
@@ -88,6 +91,8 @@ const CreatorModal = ({ isOpen, onClose }) => {
 
     const fetchCreatorData = async (startDate, endDate) => {
         if (!authUser) return;
+
+        console.log(startDate );
 
         try {
             const bonusRef = collection(firestore, "bonus", authUser.uid, "creator");
@@ -113,31 +118,46 @@ const CreatorModal = ({ isOpen, onClose }) => {
 
             const filteredPurchases = purchases.filter((purchase) => {
                 const purchaseDate = new Date(purchase.date);
-                const isAfterStart = startDate ? purchaseDate >= new Date(startDate) : true;
-                const isBeforeEnd = endDate ? purchaseDate <= new Date(endDate) : true;
+                const isAfterStart = startDate ? purchaseDate >= new Date(`${startDate}T00:00:00Z`) : true; // Adjusted for UTC start time
+                const isBeforeEnd = endDate ? purchaseDate <= new Date(`${endDate}T23:59:59Z`) : true; // Adjusted for UTC end time
                 return isAfterStart && isBeforeEnd;
             });
-
+            
             setFilteredPurchases(filteredPurchases);
-
+            
             const breakdown = {};
             let categoryGrossTotal = 0;
             let categoryNetTotal = 0;
             const spendByDate = {};
-
+            
+            // Sort filtered purchases in ascending order based on UTC date
+            filteredPurchases.sort((a, b) => new Date(a.date) - new Date(b.date));
+            
+            // Step 2: Initialize spend by date after sorting
             filteredPurchases.forEach((purchase) => {
                 const type = purchase.purchaseType;
-                const date = new Date(purchase.date).toLocaleDateString();
-
+                const date = new Date(purchase.date).toISOString().split('T')[0]; // Get date in YYYY-MM-DD format
+            
                 // Initialize spend by date if not already done
                 if (!spendByDate[date]) {
                     spendByDate[date] = {};
                 }
+            
+                // Initialize category total from the previous day if available, otherwise from zero
                 if (!spendByDate[date][type]) {
-                    spendByDate[date][type] = 0;
+                    const previousDate = new Date(purchase.date);
+                    previousDate.setUTCDate(previousDate.getUTCDate() - 1); // Use UTC to get the previous date
+                    const previousDateString = previousDate.toISOString().split('T')[0]; // Get previous date in YYYY-MM-DD format
+            
+                    spendByDate[date][type] = spendByDate[previousDateString]?.[type] || 0;
                 }
-                spendByDate[date][type] += purchase.gross;
-
+            
+                // Add the current purchase amount to the cumulative total for the date
+                spendByDate[date][type] = (spendByDate[date][type] || 0) + purchase.gross; // Initialize to 0 if undefined
+            
+                // Log the cumulative spend for the date and type
+                console.log(`Date: ${date}, Type: ${type}, Cumulative Spend: ${spendByDate[date][type]}`);
+            
                 // Prepare breakdown
                 if (breakdown[type]) {
                     breakdown[type].gross += purchase.gross;
@@ -148,53 +168,53 @@ const CreatorModal = ({ isOpen, onClose }) => {
                         net: purchase.net,
                     };
                 }
+            
+                // Update category totals
                 categoryGrossTotal += purchase.gross;
                 categoryNetTotal += purchase.net;
             });
-
+            
             setCategoryBreakdown(Object.entries(breakdown).map(([type, totals]) => ({
                 type,
                 gross: totals.gross,
                 net: totals.net,
             })));
             setCategoryTotals({ gross: categoryGrossTotal, net: categoryNetTotal });
-
+            
             const allCategories = Object.keys(breakdown);
-            //console.log(startDate);
+            console.log("startDate:" + startDate);
+            console.log("endDate:" + endDate);
+            
             let endDateData;
-            if (new Date(endDate) < new Date(todayDate)) {
+            if (new Date(endDate) <= todayDate) {
                 endDateData = new Date(endDate);
             } else {
                 endDateData = new Date(todayDate);
             }
-            const allDates = getAllDates(startDate, endDateData); // Only get dates until today
+            console.log(endDate);
+            
+            // Use the adjusted getAllDates function to get all dates in the specified range
+            const allDates = getAllDates(startDate, endDate); // Only get dates until today
             
             const graphData = allDates.map(date => {
-                const dateStr = date.toLocaleDateString();
+                const dateStr = date.toISOString().split('T')[0]; // Get date in YYYY-MM-DD format
                 const dataPoint = { date: dateStr };
-
-                // Include all categories and ensure "post" is represented
+            
                 allCategories.forEach(category => {
                     dataPoint[category] = spendByDate[dateStr] && spendByDate[dateStr][category] ? spendByDate[dateStr][category] : 0;
                 });
-
-                // Explicitly ensure all categories have a data point
-                allCategories.forEach(category => {
-                    if (!dataPoint[category]) {
-                        dataPoint[category] = 0; // Set 0 if category is undefined for that date
-                    }
-                });
-
+            
                 return dataPoint;
             });
-
+            
             setSpendData(graphData);
-
+            
             const purchaserTotals = {};
             let purchaserGrossTotal = 0;
             let purchaserNetTotal = 0;
             filteredPurchases.forEach((purchase) => {
                 const purchaser = purchase.purchasedByUsername || "Unknown";
+                const profilePicURL = purchase.purchaserProfilePicURL || "undefined";
                 if (purchaserTotals[purchaser]) {
                     purchaserTotals[purchaser].gross += purchase.gross;
                     purchaserTotals[purchaser].net += purchase.net;
@@ -202,6 +222,7 @@ const CreatorModal = ({ isOpen, onClose }) => {
                     purchaserTotals[purchaser] = {
                         gross: purchase.gross,
                         net: purchase.net,
+                        profilePicURL,
                     };
                 }
                 purchaserGrossTotal += purchase.gross;
@@ -213,6 +234,7 @@ const CreatorModal = ({ isOpen, onClose }) => {
                     purchaser,
                     gross: totals.gross,
                     net: totals.net,
+                    profilePicURL: totals.profilePicURL,
                 }))
                 .sort((a, b) => b.gross - a.gross);
 
@@ -221,11 +243,12 @@ const CreatorModal = ({ isOpen, onClose }) => {
         } catch (error) {
             console.error("Failed to fetch creator data:", error);
         }
+        setIsInitialized(true);
     };
 
     const getAllDates = (startDate, endDate) => {
-        const startDateObj = new Date(startDate);
-        const endDateObj = new Date(endDate);
+        const startDateObj = new Date(`${startDate}T00:00:00Z`);
+        const endDateObj = new Date(`${endDate}T23:59:59Z`);
         const dates = [];
 
         //console.log(startDate);
@@ -261,11 +284,19 @@ const CreatorModal = ({ isOpen, onClose }) => {
                             onChange={(e) => {
                                 
                                 setUseStartDate(e.target.value);
+                                //const timezoneOffset = new Date(useStartDate + "T00:00:00").toLocaleString().getTimezoneOffset();
+
+                                const currentDate = new Date(); 
+                                const timezoneOffset = currentDate.getTimezoneOffset(); // e.g., -420 for PDT (UTC-7)
+                                const userDate = new Date(`${useStartDate}T00:00:00`);
+
+                                const userDateUTC = new Date(userDate.getTime() - timezoneOffset * 60000);
                                 console.log(e.target.value);
-                                if (e.target.value > "2024-08-01") {
+                                if (userDate > new Date(createdAt).toLocaleDateString()) {
                                     const selectedDate = new Date(e.target.value);
-                                    selectedDate.setDate(selectedDate.getDate()); // Add 2 days
-                                    setStartDate(selectedDate.toISOString().split("T")[0]); // Update endDate state
+                                    selectedDate.setDate(selectedDate.getTime() + timezoneOffset * 60000); // Add 2 days
+                                    setStartDate(userDateUTC.toISOString().split("T")[0]); // Update endDate state
+                                    console.log(startDate);
                                 }
                             }}
                             placeholder="Start Date"
@@ -276,11 +307,19 @@ const CreatorModal = ({ isOpen, onClose }) => {
                             //max="2025-12-31"
                             onChange={(e) => {
                                 setUseEndDate(e.target.value);
-                                if (e.target.value <= todayDate) {
+                                const currentDate = new Date(); 
+                                const timezoneOffset = currentDate.getTimezoneOffset(); // e.g., -420 for PDT (UTC-7)
+                                const userDate = new Date(`${useEndDate}T00:00:00`);
+
+                                const userDateUTC = new Date(userDate.getTime() - timezoneOffset * 60000);
+                                if (userDate <= new Date().toLocaleDateString) {
+                                    console.log("test");
                                     const selectedDate = new Date(e.target.value);
-                                    selectedDate.setDate(selectedDate.getDate() + 2); // Add 2 days
-                                    setEndDate(selectedDate.toISOString().split("T")[0]); // Update endDate state
-                                }
+                                    selectedDate.setDate(selectedDate.getTime() + timezoneOffset * 60000);
+                                    //setEndDate(selectedDate.toISOString().split("T")[0]); // Update endDate state
+                                    setEndDate(userDateUTC.toISOString().split("T")[0]);
+                                    console.log(endDate);
+                                } 
                             }}
                             placeholder="End Date"
                         />

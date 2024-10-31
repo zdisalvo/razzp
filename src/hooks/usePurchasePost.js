@@ -61,9 +61,10 @@ const usePurchasePost = () => {
             
             // Add a new purchase document
             await setDoc(purchaseRef, {
-                purchaseType: "post",
+                purchaseType: "Posts",
                 purchasedBy: authUser.uid,
                 purchasedByUsername: authUser.username,
+                purchaserProfilePicURL: authUser.profilePicURL,
                 date: Date.now(),  // Store the date in milliseconds (UNIX timestamp)
                 gross: price,
                 net: parseFloat(creatorBonus)
