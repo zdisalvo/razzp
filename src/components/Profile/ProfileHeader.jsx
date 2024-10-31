@@ -7,7 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import useUserLocation from '../../hooks/useUserLocation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faLocationDot, faEllipsis} from '@fortawesome/free-solid-svg-icons'; 
+import { faLocationDot, faEllipsis, faGear} from '@fortawesome/free-solid-svg-icons'; 
 import { storeUserLocation } from "../../hooks/storeUserLocation";
 import { unstoreUserLocation } from "../../hooks/unstoreUserLocation";
 import useMsgStore from "../../store/msgStore";
@@ -33,6 +33,7 @@ import useSetContentCreator from "../../hooks/useSetContentCreator";
 import useUnsetContentCreator from "../../hooks/useUnsetContentCreator";
 import CreateContent from "./CreateContent";
 import CreatorModal from "../Modals/CreatorModal";
+import CreatorSettings from "./CreatorSettings";
 
 const ProfileHeader = ({ username, page }) => {
 	//const { userProfile } = useUserProfileStore();
@@ -77,6 +78,7 @@ const ProfileHeader = ({ username, page }) => {
 	const { handleLogout, isLoggingOut } = useLogout();
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [isCCModalOpen, setIsCCModalOpen] = useState(false);
+	const [isCreatorSettingsOpen, setIsCreatorSettingsOpen] = useState(false);
 	const [userAuth] = useAuthState(auth);
 	const [isImportModalOpen, setIsImportModalOpen] = useState(false);
 	//const [prevToggle, setPrevToggle] = useState(isToggled);
@@ -114,6 +116,16 @@ const ProfileHeader = ({ username, page }) => {
 		// setSparkUser(match); // Assuming match contains user data
 		setIsCCModalOpen(true);
 	  };
+
+	  const handleCreatorSettingsClose = () => {
+		setIsCreatorSettingsOpen(false);
+	  }
+
+	  const handleCreatorSettingsClick = () => {
+		setIsCreatorSettingsOpen(true);
+	  }
+
+
 		
 	  const handleSupportClick = () => {
 		// setSparkProfile(profileData);
@@ -911,6 +923,18 @@ const ProfileHeader = ({ username, page }) => {
 							</Button>
 						
 					)}
+					{visitingOwnProfileAndAuth && authUser.creator && (
+						
+						<Button
+							//bg={"white"}
+							//color={"black"}
+							icon={<FontAwesomeIcon icon={faGear} />}
+							//_hover={{ bg: "whiteAlpha.800" }}
+							size={{ base: "sm", md: "sm" }}
+							onClick={handleCreatorSettingsClick}
+						/>
+					
+				)}
 					</Flex>
 					{visitingAnotherProfileAndAuth && (
 					<Flex	
@@ -953,6 +977,7 @@ const ProfileHeader = ({ username, page }) => {
 			{isModalOpen && <SupportModal isOpen={isModalOpen} onClose={handleModalClose} />}
 			{isImportModalOpen && <ImportInstagramModal isOpen={isImportModalOpen} onClose={handleImportInstagramClose} />}
 			{isCreatorModalOpen && <CreatorModal isOpen={isCreatorModalOpen} onClose={handleCreatorModalClose} />}
+			{isCreatorSettingsOpen && <CreatorSettings isOpen={isCreatorSettingsOpen} onClose={handleCreatorSettingsClose} />}
 		</Flex>
 		
 	);

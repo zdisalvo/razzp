@@ -132,7 +132,10 @@ const Message = () => {
     if ((receivingProfile && messages && messages.length === 1 && messages[0].sendingUser === userId)) {
       showToast("Warning", `${receivingProfile.username} must reply first.`, "warning");
       return;
-    }
+    } 
+    // else if ((receivingProfile.creator)) {
+
+    // }
 
     const newMessageObject = {
       sendingUser: userId,
