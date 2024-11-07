@@ -10,6 +10,8 @@ import { firestore } from "../../firebase/firebase";
 import useUpdateOutgoingReadStatus from "../../hooks/useUpdateOutgoingReadStatus";
 import useUpdateIncomingReadStatus from "../../hooks/useUpdateIncomingReadStatus";
 import useShowToast from "../../hooks/useShowToast";
+import usePurchaseMessage from "../../hooks/usePurchaseMessage";
+import MessagePurchaseModal from "../Stripe/MessagePurchaseModal";
 
 const Message = () => {
   const [messages, setMessages] = useState([]);
@@ -28,11 +30,22 @@ const Message = () => {
   const { previousReadData, updateReadStatus } = useUpdateOutgoingReadStatus(userId, receivingUserId);
   const { previousViewedData, updateViewedStatus } = useUpdateIncomingReadStatus(userId, receivingUserId);
   const showToast = useShowToast();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [ purchaseSuccess, setPurchaseSuccess ] = useState(false);
 
 
   const { sendMessage } = useSendRazzpMsg();
 
+  const handleModalClose = () => {
+		setIsModalOpen(false);
+  };
 
+
+  const handlePurchaseClick = () => {
+		// setSparkProfile(profileData);
+		// setSparkUser(match); // Assuming match contains user data
+		setIsModalOpen(true);
+	  };
 
   const handleGoBack = () => {
     navigate(-1); // Navigate to the previous page
@@ -126,16 +139,27 @@ const Message = () => {
     }
   }, [messages, userScrolled]);
 
+  const handlePurchaseStatus = (status) => {
+    setPurchaseSuccess(status);
+  }
+
+
   const handleSendMessage = async () => {
     if (!newMessage.trim()) return;
 
-    if ((receivingProfile && messages && messages.length === 1 && messages[0].sendingUser === userId)) {
+    if ((!receivingProfile.creator && receivingProfile && messages && messages.length === 1 && messages[0].sendingUser === userId)) {
       showToast("Warning", `${receivingProfile.username} must reply first.`, "warning");
       return;
     } 
-    // else if ((receivingProfile.creator)) {
+    else if ((receivingProfile.creator)) {
+      setIsModalOpen(true);
+      //console.log(purchaseSuccess);
+      if (purchaseSuccess)
+        handleModalClose();
+    }
 
-    // }
+    if (!purchaseSuccess)
+      return;
 
     const newMessageObject = {
       sendingUser: userId,
@@ -155,6 +179,7 @@ const Message = () => {
     } catch (error) {
       console.error("Error sending message:", error);
     }
+    setPurchaseSuccess(false);
   };
 
   const handleScroll = () => {
@@ -318,6 +343,7 @@ const Message = () => {
           Send
         </Button>
       </Flex>
+      {isModalOpen && <MessagePurchaseModal isOpen={isModalOpen} onClose={handleModalClose} creatorProfile={receivingProfile} onPurchaseStatus={handlePurchaseStatus}/>}
     </Container>
   );
 };

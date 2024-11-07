@@ -25,7 +25,11 @@ const useSetContentCreator = () => {
       const userDoc = await getDoc(userDocRef);
 
       if (userDoc.exists()) {
-        await updateDoc(userDocRef, { creator: true });
+        await updateDoc(userDocRef, { 
+            creator: true,
+            creatorSubscriptionPrice: 9,
+            creatorMessagePrice: 5,
+        });
         showToast("Success", "Paid content creation now active", "success");
       } else {
         throw new Error("User profile does not exist");

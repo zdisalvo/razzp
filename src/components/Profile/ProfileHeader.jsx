@@ -846,7 +846,7 @@ const ProfileHeader = ({ username, page }) => {
 					>
                         Creator Balance: 
 						<Text as='span' fontWeight={"bold"} ml={2}>
-                            ${userProfile.creatorPayments ? userProfile.creatorNet - userProfile.creatorPayments.toFixed(2) : userProfile.creatorNet.toFixed(2) }
+                            ${userProfile.creatorPayments ? (userProfile.creatorNet - userProfile.creatorPayments).toFixed(2) : userProfile.creatorNet.toFixed(2) }
                         </Text>
                     
 					</Text>
@@ -894,7 +894,7 @@ const ProfileHeader = ({ username, page }) => {
 						gap={3}
 					direction={{ base: "row", sm: "row" }}
 					justifyContent={{ base: "center", sm: "flex-start" }} //flex-start
-					alignItems="baseline"
+					alignItems="center"
 					w={"full"}	
 					>
 				{visitingOwnProfileAndAuth && (
@@ -925,13 +925,22 @@ const ProfileHeader = ({ username, page }) => {
 					)}
 					{visitingOwnProfileAndAuth && authUser.creator && (
 						
-						<Button
-							//bg={"white"}
-							//color={"black"}
+						// <Button
+						// 	//bg={"white"}
+						// 	//color={"black"}
+						// 	icon={<FontAwesomeIcon icon={faGear} />}
+						// 	//_hover={{ bg: "whiteAlpha.800" }}
+						// 	size={{ base: "sm", md: "sm" }}
+						// 	onClick={handleCreatorSettingsClick}
+						// />
+						<IconButton
 							icon={<FontAwesomeIcon icon={faGear} />}
-							//_hover={{ bg: "whiteAlpha.800" }}
 							size={{ base: "sm", md: "sm" }}
 							onClick={handleCreatorSettingsClick}
+							backgroundColor="white"
+							color="black"
+							_hover={{ bg: "whiteAlpha.800" }}
+							aria-label="Settings"
 						/>
 					
 				)}

@@ -20,6 +20,7 @@ const HomePage = () => {
   const navigate = useNavigate();
   const incomingReadCount = useIncomingReadCount(userAuth?.uid);
   const newNotificationsCount = useNewNotificationsCount();
+  
   const { isLoading: profileLoading, sparkProfile } = useGetSparkProfileById(userAuth?.uid);
 
 
