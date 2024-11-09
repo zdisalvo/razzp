@@ -35,6 +35,7 @@ import {
 } from 'recharts';
 import useAuthStore from "../../store/authStore";
 import { ja } from "date-fns/locale";
+import ACHPaymentForm from "./ACHPaymentForm";
 
 const categoryColors = {
     post: "#FF5733",       // Red
@@ -402,6 +403,7 @@ const CreatorModal = ({ isOpen, onClose }) => {
                             </Tbody>
                         </Table>
                     </Box>
+                    <ACHPaymentForm />
                 </ModalBody>
                 <ModalFooter>
                     <Button onClick={onClose} colorScheme="blue">Close</Button>

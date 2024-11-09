@@ -20,6 +20,10 @@ import BlockPage from './pages/BlockPage/BlockPage';
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "./firebase/firebase";
 import useAuthStore from "./store/authStore";
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
+
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 function App() {
 	const [userAuth] = useAuthState(auth);
@@ -63,6 +67,7 @@ function App() {
 	  //console.log(userAuth);
 
 	return (
+		<Elements stripe={stripePromise}>
 		<PageLayout>
 			<Routes>
 				{/* <Route path='/' element={authUser ? (authUser && showHome ? <HomePage /> : <Navigate to='/top5' /> ): <Navigate to='/auth' />} /> */}
@@ -88,6 +93,7 @@ function App() {
 
 			</Routes>
 		</PageLayout>
+		</Elements>
 	);
 }
 
