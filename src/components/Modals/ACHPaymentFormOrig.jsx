@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Center, Stack } from '@chakra-ui/react';
 import { useStripe, useElements } from '@stripe/react-stripe-js';
-import usePayoutCreator from '../../hooks/usePayoutCreator'; // Adjust the path as needed
 
-const ACHPaymentForm = ({ balance, onPayoutSuccess }) => {
+const ACHPaymentForm = () => {
   const stripe = useStripe();
   const elements = useElements();
 
@@ -16,8 +14,6 @@ const ACHPaymentForm = ({ balance, onPayoutSuccess }) => {
   const [clientSecret, setClientSecret] = useState('');
   const [paymentIntentId, setPaymentIntentId] = useState('');
 
-  const { createPayout, loading: payoutLoading, error: payoutError } = usePayoutCreator();
-
   useEffect(() => {
     const createPaymentIntent = async () => {
       try {
@@ -28,7 +24,7 @@ const ACHPaymentForm = ({ balance, onPayoutSuccess }) => {
           },
           body: JSON.stringify({ amount: parseFloat(amount) * 100 }), // Send amount in cents
         });
-
+        
         const data = await response.json();
         setClientSecret(data.clientSecret);
         setPaymentIntentId(data.paymentIntentId); // Store the PaymentIntent ID
@@ -37,29 +33,18 @@ const ACHPaymentForm = ({ balance, onPayoutSuccess }) => {
       }
     };
 
-    if (amount && parseFloat(amount) >= 10 && parseFloat(amount) <= balance) {
+    if (amount) {
       createPaymentIntent();
     }
-  }, [amount, balance]);
-
-  const handleAmountChange = (e) => {
-    const value = e.target.value;
-    setAmount(value);
-
-    if (parseFloat(value) < 10 || parseFloat(value) > balance) {
-      setError(`Please enter an amount between $10 and $${balance}`);
-    } else {
-      setError(null);
-    }
-  };
+  }, [amount]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
 
-    if (!amount || isNaN(amount) || parseFloat(amount) < 10 || parseFloat(amount) > balance) {
-      setError(`Please enter a valid amount between $10 and ${balance}`);
+    if (!amount || isNaN(amount) || parseFloat(amount) <= 0) {
+      setError('Please enter a valid amount greater than 0');
       setLoading(false);
       return;
     }
@@ -112,14 +97,7 @@ const ACHPaymentForm = ({ balance, onPayoutSuccess }) => {
       if (confirmData.error) {
         setError(confirmData.error);
       } else {
-        // Payment was successful, so trigger the payout creation
-        createPayout(parseFloat(amount))
-          .then(() => {
-            alert('Payment and Payout successful!')
-            onPayoutSuccess(parseFloat(amount));
-          })
-          .catch((err) => setError('Failed to record payout: ' + err.message));
-        
+        alert('Payment successful: ' + confirmData.status);
         setPaymentMethod(paymentMethodResponse.paymentMethod);
       }
     } catch (err) {
@@ -131,17 +109,15 @@ const ACHPaymentForm = ({ balance, onPayoutSuccess }) => {
 
   return (
     <div>
-      {/* <h2>ACH Payment Form</h2> */}
+      <h2>ACH Payment Form</h2>
       <form onSubmit={handleSubmit}>
-      <Stack spacing={1} ml={10}>
         <div>
-          <label htmlFor="amount" style={{ marginRight: '3px' }}>Amount Requested&nbsp;&nbsp;&nbsp;$</label>
+          <label htmlFor="amount">Enter Amount to Pay</label>
           <input
             type="number"
-            style={{width: '80px'}}
             id="amount"
             value={amount}
-            onChange={handleAmountChange}
+            onChange={(e) => setAmount(e.target.value)}
             min="0.01"
             step="any"
             required
@@ -149,7 +125,7 @@ const ACHPaymentForm = ({ balance, onPayoutSuccess }) => {
         </div>
 
         <div>
-          <label htmlFor="accountNumber" style={{ marginRight: '7px' }}>Account&nbsp;&nbsp;#</label>
+          <label htmlFor="accountNumber">Account Number</label>
           <input
             type="text"
             id="accountNumber"
@@ -160,7 +136,7 @@ const ACHPaymentForm = ({ balance, onPayoutSuccess }) => {
         </div>
 
         <div>
-          <label htmlFor="routingNumber" style={{ marginRight: '7px' }}>Routing&nbsp;&nbsp;#</label>
+          <label htmlFor="routingNumber">Routing Number</label>
           <input
             type="text"
             id="routingNumber"
@@ -170,24 +146,13 @@ const ACHPaymentForm = ({ balance, onPayoutSuccess }) => {
           />
         </div>
 
-        <Center>
-        <Button
-        type="submit"
-        alignContent="center"
-        size="sm"
-        isLoading={loading || payoutLoading} // Chakra UI's `isLoading` prop to show a spinner when loading
-        loadingText="Processing..." // Text shown when the button is in a loading state
-        disabled={loading || payoutLoading} // This will disable the button when loading or processing
-        >
-        Complete Payment Request
-        </Button>
-        </Center>
-        </Stack>
+        <button type="submit" disabled={loading}>
+          {loading ? 'Processing...' : 'Submit ACH Payment'}
+        </button>
       </form>
 
       {error && <p style={{ color: 'red' }}>{error}</p>}
-      {payoutError && <p style={{ color: 'red' }}>{payoutError}</p>}
-      {/* {paymentMethod && <pre>{JSON.stringify(paymentMethod, null, 2)}</pre>} */}
+      {paymentMethod && <pre>{JSON.stringify(paymentMethod, null, 2)}</pre>}
     </div>
   );
 };

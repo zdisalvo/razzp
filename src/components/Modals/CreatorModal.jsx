@@ -22,6 +22,7 @@ import {
     Tr,
     Th,
     Td,
+    IconButton,
 } from "@chakra-ui/react";
 import {
     LineChart,
@@ -36,12 +37,38 @@ import {
 import useAuthStore from "../../store/authStore";
 import { ja } from "date-fns/locale";
 import ACHPaymentForm from "./ACHPaymentForm";
+import { format } from 'date-fns';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faChartLine} from '@fortawesome/free-solid-svg-icons'; 
+
 
 const categoryColors = {
-    post: "#FF5733",       // Red
-    message: "#33FF57",    // Green
-    subscription: "#3357FF" // Blue
+    Posts: "#32CD32",       // Lime
+    Messages: "#D5006D",    // Pink
+    Subscriptions: "#3357FF" // Blue
 };
+
+const CustomTooltip = ({ payload, label, active }) => {
+    console.log(payload);
+    if (active && payload && payload.length) {
+        // Format the label (date) to show only MM/dd
+        const formattedDate = format(new Date(label), 'MM/dd');
+
+        return (
+            <div className="custom-tooltip" style={{ backgroundColor: 'white', padding: '10px', border: '1px solid #ccc' }}>
+                <p className="label">{`Date: ${formattedDate}`}</p>
+                {payload.map((data, index) => (
+                    <p key={index} style={{ color: data.stroke }}>
+                        {data.name}: {data.value}
+                    </p>
+                ))}
+            </div>
+        );
+    }
+
+    return null;
+};
+
 
 const CreatorModal = ({ isOpen, onClose }) => {
     const authUser = useAuthStore((state) => state.user);
@@ -61,6 +88,19 @@ const CreatorModal = ({ isOpen, onClose }) => {
     const [isInitialized, setIsInitialized] = useState(false);
     const [createdAt, setCreatedAt] = useState(authUser?.createdAt);
     const [todayDate, setTodayDate] = useState(new Date(Date.now() + new Date().getTimezoneOffset() * 60000));
+    const [showPaymentForm, setShowPaymentForm] = useState(false);
+
+    const handlePayoutSuccess = (payoutAmount) => {
+        setPayments(prevPayments => prevPayments + payoutAmount);
+    };
+
+    const handlePayoutRequest = () => {
+        setShowPaymentForm(prevState => !prevState);
+    };
+
+    // useEffect(() => {
+    //     console.log('Tooltip Payload:', payload);
+    // }, [payload]);
 
     useEffect(() => {
         //console.log(isInitialized);
@@ -252,13 +292,40 @@ const CreatorModal = ({ isOpen, onClose }) => {
                 <ModalHeader>Creator Earnings Summary</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
-                    <Box mb={4}>
-                        <Text fontWeight="bold">Earnings Summary</Text>
-                        <Text>Gross Earnings: ${grossEarnings.toFixed(2)}</Text>
-                        <Text>Net Earnings: ${netEarnings.toFixed(2)}</Text>
-                        <Text>Payments: ${payments.toFixed(2)}</Text>
-                        <Text>Balance: ${(netEarnings - payments).toFixed(2)}</Text>
+                <Box mb={4} mx={8}>
+                    {/* <Text fontWeight="bold" mb={2} ml={-3}>Earnings Summary</Text> */}
+                    
+                    <Flex justifyContent="space-between">
+                        <Text>Gross Earnings:</Text>
+                        <Text>${grossEarnings.toFixed(2)}</Text>
+                    </Flex>
+                    
+                    <Flex justifyContent="space-between">
+                        <Text>Net Earnings:</Text>
+                        <Text>${netEarnings.toFixed(2)}</Text>
+                    </Flex>
+                    
+                    <Flex justifyContent="space-between">
+                        <Text>Payouts:</Text>
+                        <Text>${payments.toFixed(2)}</Text>
+                    </Flex>
+                    
+                    <Flex justifyContent="space-between" alignItems="center" mb={1}>
+                        <Text>Balance:</Text>
+                        <Button size="sm" onClick={handlePayoutRequest} mx={2}>
+                            Request Payout
+                        </Button>
+                        <Text>${(netEarnings - payments).toFixed(2)}</Text>
+                    </Flex>
+                    {showPaymentForm && (netEarnings - payments >= 10) && (
+                    <Box mt={4}>
+                        <ACHPaymentForm 
+                        balance={(netEarnings - payments).toFixed(2)} 
+                        onPayoutSuccess={handlePayoutSuccess}
+                        />
                     </Box>
+                    )}
+                </Box>
 
                     <HStack spacing={3} mb={4}>
                     <Input
@@ -309,9 +376,18 @@ const CreatorModal = ({ isOpen, onClose }) => {
                         placeholder="End Date"
                     />
 
-                        <Button onClick={() => fetchCreatorData(startDate, endDate)} colorScheme="teal">
+                        {/* <Button onClick={() => fetchCreatorData(startDate, endDate)} colorScheme="teal">
                             Search
-                        </Button>
+                        </Button> */}
+                        <IconButton
+							icon={<FontAwesomeIcon icon={faChartLine} />}
+							size={{ base: "sm", md: "sm" }}
+							onClick={() => fetchCreatorData(startDate, endDate)}
+							backgroundColor="white"
+							color="black"
+							_hover={{ bg: "whiteAlpha.800" }}
+							aria-label="Settings"
+						/>
                     </HStack>
 
                     {/* Line Chart for Total Spend by Category by Date */}
@@ -320,17 +396,19 @@ const CreatorModal = ({ isOpen, onClose }) => {
                         <ResponsiveContainer>
                             <LineChart data={spendData}>
                                 <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis dataKey="date" />
+                                <XAxis dataKey="date" tickFormatter={(tick) => format(new Date(tick), 'MM/dd')}/>
                                 <YAxis />
+                                {/* <Tooltip content={<CustomTooltip />} /> */}
                                 <Tooltip />
-                                <Legend />
+                                {/* <Legend /> */}
                                 {categoryBreakdown.map((category) => (
                                     <Line
                                         key={category.type}
                                         type="monotone"
                                         dataKey={category.type}
                                         stroke={categoryColors[category.type] || "#000"}
-                                        activeDot={{ r: 8 }}
+                                        dot={false}
+                                        //activeDot={{ r: 8 }}
                                     />
                                 ))}
                             </LineChart>
@@ -342,16 +420,18 @@ const CreatorModal = ({ isOpen, onClose }) => {
                         <Thead>
                             <Tr>
                                 <Th>Category</Th>
-                                <Th isNumeric>Gross Earnings</Th>
-                                <Th isNumeric>Net Earnings</Th>
+                                <Th isNumeric>Gross</Th>
+                                <Th isNumeric>Net</Th>
                             </Tr>
                         </Thead>
                         <Tbody>
                             {categoryBreakdown.map((category) => (
                                 <Tr key={category.type}>
-                                    <Td>{category.type}</Td>
-                                    <Td isNumeric>${category.gross.toFixed(2)}</Td>
-                                    <Td isNumeric>${category.net.toFixed(2)}</Td>
+                                    <Td style={{ color: categoryColors[category.type] || 'black' }}>
+                                    {category.type}
+                                </Td>
+                                    <Td isNumeric style={{ color: categoryColors[category.type] || 'black' }}>${category.gross.toFixed(2)}</Td>
+                                    <Td isNumeric style={{ color: categoryColors[category.type] || 'black' }}>${category.net.toFixed(2)}</Td>
                                 </Tr>
                             ))}
                             <Tr fontWeight="bold">
@@ -364,11 +444,11 @@ const CreatorModal = ({ isOpen, onClose }) => {
 
                     {/* Top Purchasers Table */}
                     <Box mt={4}>
-                        <Text fontWeight="bold">Top Purchasers</Text>
+                        <Text fontWeight="bold">Top Spenders</Text>
                         <Table variant="simple">
                             <Thead>
                                 <Tr>
-                                    <Th>Purchaser</Th>
+                                    <Th>User</Th>
                                     <Th isNumeric>Gross</Th>
                                     <Th isNumeric>Net</Th>
                                 </Tr>
@@ -403,7 +483,7 @@ const CreatorModal = ({ isOpen, onClose }) => {
                             </Tbody>
                         </Table>
                     </Box>
-                    <ACHPaymentForm />
+                    {/* <ACHPaymentForm /> */}
                 </ModalBody>
                 <ModalFooter>
                     <Button onClick={onClose} colorScheme="blue">Close</Button>
