@@ -844,7 +844,7 @@ const ProfileHeader = ({ username, page }) => {
     				onClick={handleCreatorModalClick}
 					style={{ cursor: 'pointer', color: 'inherit' }}
 					>
-                        Creator Balance: 
+                        Earnings Balance: 
 						<Text as='span' fontWeight={"bold"} ml={2}>
                             ${userProfile.creatorPayments ? (userProfile.creatorNet - userProfile.creatorPayments).toFixed(2) : userProfile.creatorNet.toFixed(2) }
                         </Text>
@@ -852,7 +852,7 @@ const ProfileHeader = ({ username, page }) => {
 					</Text>
 					)}
 					</Flex>
-					<Flex 
+					{/* <Flex 
 				justifyContent={{ base: "center", sm: "flex-start" }}
 				alignItems={"center"} gap={{ base: 5, sm: 4 }} w={"full"}>
 					{(authUser && userProfile) && userProfile.referralTotal && 
@@ -866,7 +866,7 @@ const ProfileHeader = ({ username, page }) => {
 						</Link>
 						</Text>
 					)}
-				</Flex>
+				</Flex> */}
 				</>
 				)}
 				{userProfile && userProfile.instagramUsername && (

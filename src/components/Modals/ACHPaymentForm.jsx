@@ -46,8 +46,10 @@ const ACHPaymentForm = ({ balance, onPayoutSuccess }) => {
     const value = e.target.value;
     setAmount(value);
 
-    if (parseFloat(value) < 10 || parseFloat(value) > balance) {
-      setError(`Please enter an amount between $10 and $${balance}`);
+    if (balance < 10) {
+        setError(`You need a balance of at least $10 to cash out`)
+    } else if (parseFloat(value) < 10 || parseFloat(value) > balance) {
+        setError(`Please enter an amount between $10 and $${balance}`);
     } else {
       setError(null);
     }

@@ -45,7 +45,8 @@ import { faChartLine} from '@fortawesome/free-solid-svg-icons';
 const categoryColors = {
     Posts: "#32CD32",       // Lime
     Messages: "#D5006D",    // Pink
-    Subscriptions: "#3357FF" // Blue
+    Subscriptions: "#3357FF", // Blue
+    Referrals: "#3357FF",
 };
 
 const CustomTooltip = ({ payload, label, active }) => {
@@ -317,7 +318,7 @@ const CreatorModal = ({ isOpen, onClose }) => {
                         </Button>
                         <Text>${(netEarnings - payments).toFixed(2)}</Text>
                     </Flex>
-                    {showPaymentForm && (netEarnings - payments >= 10) && (
+                    {showPaymentForm && (
                     <Box mt={4}>
                         <ACHPaymentForm 
                         balance={(netEarnings - payments).toFixed(2)} 
@@ -444,7 +445,7 @@ const CreatorModal = ({ isOpen, onClose }) => {
 
                     {/* Top Purchasers Table */}
                     <Box mt={4}>
-                        <Text fontWeight="bold">Top Spenders</Text>
+                        <Text fontWeight="bold">Top Earners</Text>
                         <Table variant="simple">
                             <Thead>
                                 <Tr>

@@ -5,7 +5,7 @@ import usePurchasePost from "../../hooks/usePurchasePost";
 
 const stripePromise = loadStripe('pk_test_51QDDRNF8INFI9spHDcvYT97lRNENvUzlVE7IycQPD53LOr9vmGLXpjfx1aLnW48niZ4EJg0dcZTtYFqm2Ssnwxhi00wHKGaHTv'); // Your Stripe public key
 
-const AgePaymentModal = ({ isOpen, onClose, post }) => {
+const AgePaymentModal = ({ isOpen, onClose, post, creatorProfile }) => {
     const [paymentRequest, setPaymentRequest] = useState(null);
     const [isAgeConfirmed, setIsAgeConfirmed] = useState(false);
     const { handlePurchase } = usePurchasePost();
@@ -68,7 +68,7 @@ const AgePaymentModal = ({ isOpen, onClose, post }) => {
 
                             if (response.ok) {
                                 event.complete('success');
-                                handlePurchase(post, post.price);
+                                handlePurchase(post, post.price, creatorProfile);
                                 onClose();
                                 console.log('Payment succeeded!');
                             } else {

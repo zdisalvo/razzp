@@ -53,7 +53,7 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
             if (snapshot.exists()) {
                 const updatedPost = snapshot.data();
                 setPurchasedUsers(updatedPost.purchased);
-                setIsPurchased(authUser && updatedPost.purchased.includes(authUser?.uid));
+                setIsPurchased(authUser && updatedPost.purchased && updatedPost.purchased.includes(authUser?.uid));
             }
         });
 
@@ -310,7 +310,7 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
                             </Button>
                         </InputRightElement>
                     </InputGroup>
-                    {isModalOpen && <AgePaymentModal isOpen={isModalOpen} onClose={handleModalClose} post={post} />}
+                    {isModalOpen && <AgePaymentModal isOpen={isModalOpen} onClose={handleModalClose} post={post} creatorProfile={creatorProfile} />}
                 </Flex>
             )}
         </Box>

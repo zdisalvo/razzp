@@ -23,7 +23,7 @@ const FeedPost = forwardRef(({ post, rank, isFollowing, requested, isPrivate, on
         if (snapshot.exists()) {
             const updatedPost = snapshot.data();
             setPurchasedUsers(updatedPost.purchased);
-            setIsPurchased(authUser && updatedPost.purchased.includes(authUser?.uid));
+            setIsPurchased(authUser && updatedPost.purchased && updatedPost.purchased.includes(authUser?.uid));
         }
     });
 

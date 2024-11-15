@@ -52,36 +52,56 @@ const usePurchaseMessage = () => {
 
             // Check if the authUser has a referral and calculate 5% of the price for referral
             if (authUser.referral) {
-                const referralBonus = (0.05 * price).toFixed(2);
+                const referralBonus = (0.1 * price).toFixed(2);
 
-                const referralDocRef = doc(bonusRef, authUser.referral, "referral", authUser.uid);
-                const referralDocSnap = await getDoc(referralDocRef);
+                const referralRef = doc(collection(bonusRef, authUser.referral, "creator"));
 
-                if (referralDocSnap.exists()) {
-                    // Document exists, update it by adding a new purchase
-                    await updateDoc(referralDocRef, {
-                        purchases: arrayUnion({
-                            purchasedBy: authUser.uid,
-                            date: Date.now(),
-                            net: parseFloat(referralBonus)
-                        })
-                    });
-                } else {
-                    // Document doesn't exist, create it with the first purchase
-                    await setDoc(referralDocRef, {
-                        purchases: [{
-                            purchasedBy: authUser.uid,
-                            date: Date.now(),
-                            net: parseFloat(referralBonus)
-                        }]
-                    });
-                }
+                // const referralDocRef = doc(bonusRef, authUser.referral, "referral", authUser.uid);
+                // const referralDocSnap = await getDoc(referralDocRef);
 
-                // Increment the referrer's total earnings (referralTotal)
-                const referralTotalRef = doc(firestore, "users", authUser.referral);
-                await updateDoc(referralTotalRef, {
-                    referralTotal: increment(parseFloat(referralBonus))  // Increment referralTotal by the referralBonus
+                await setDoc(referralRef, {
+                    purchaseType: "Referrals",
+                    purchasedBy: creatorProfile.uid,
+                    purchasedByUsername: creatorProfile.username,
+                    purchaserProfilePicURL: creatorProfile.profilePicURL,
+                    date: Date.now(),  // Store the date in milliseconds (UNIX timestamp)
+                    gross: price,
+                    net: parseFloat(referralBonus)
                 });
+    
+                // Increment the creator's total earnings (creatorTotal)
+                const creatorTotalRef = doc(firestore, "users", authUser.referral);
+                await updateDoc(creatorTotalRef, {
+                    creatorGross: increment(price), // Increment creatorTotal by the creatorBonus
+                    creatorNet: increment(parseFloat(referralBonus)) 
+                });
+
+
+                // if (referralDocSnap.exists()) {
+                //     // Document exists, update it by adding a new purchase
+                //     await updateDoc(referralDocRef, {
+                //         purchases: arrayUnion({
+                //             purchasedBy: authUser.uid,
+                //             date: Date.now(),
+                //             net: parseFloat(referralBonus)
+                //         })
+                //     });
+                // } else {
+                //     // Document doesn't exist, create it with the first purchase
+                //     await setDoc(referralDocRef, {
+                //         purchases: [{
+                //             purchasedBy: authUser.uid,
+                //             date: Date.now(),
+                //             net: parseFloat(referralBonus)
+                //         }]
+                //     });
+                // }
+
+                // // Increment the referrer's total earnings (referralTotal)
+                // const referralTotalRef = doc(firestore, "users", authUser.referral);
+                // await updateDoc(referralTotalRef, {
+                //     referralTotal: increment(parseFloat(referralBonus))  // Increment referralTotal by the referralBonus
+                // });
             }
 
             showToast("Success", "Message purchased! You can now send your message", "success");

@@ -32,6 +32,7 @@ function App() {
 	const [showSpark, setShowSpark] = useState(false);
 	const [showHome, setShowHome ] = useState(false);
 
+
 	useEffect(() => {
 		const checkAuthUserProf = async () => {
 		  if (authUserProf && authUserProf.spark === true) {
@@ -44,17 +45,17 @@ function App() {
 		checkAuthUserProf();
 	  }, [authUserProf]);
 
-	  useEffect(() => {
-		const checkAuthUserProf = async () => {
-		  if (authUserProf && authUserProf.following.length > 0 === true) {
-			setShowHome(true);
-		  } else {
-			setShowHome(false);
-		  }
-		};
+	//   useEffect(() => {
+	// 	const checkAuthUserProf = async () => {
+	// 	  if (authUserProf && authUserProf.following.length > 0 === true) {
+	// 		setShowHome(true);
+	// 	  } else {
+	// 		setShowHome(false);
+	// 	  }
+	// 	};
 	
-		checkAuthUserProf();
-	  }, [authUserProf]);
+	// 	checkAuthUserProf();
+	//   }, [authUserProf]);
 
 	// let spark;
 
@@ -71,7 +72,8 @@ function App() {
 		<PageLayout>
 			<Routes>
 				{/* <Route path='/' element={authUser ? (authUser && showHome ? <HomePage /> : <Navigate to='/top5' /> ): <Navigate to='/auth' />} /> */}
-				<Route path='/' element={userAuth ? <HomePage /> : <Navigate to='/auth' />} />
+				<Route path='/' element={userAuth  && authUser && authUser.following && authUser.following.length > 0 
+					&& (authUser.following.length === 1 && !authUser.following.includes(authUser.uid)) ? <HomePage /> : <Navigate to='/top5' />} />
 				<Route path='/top5' element={<TopFivePosts />} />
 				<Route path='/auth' element={!userAuth ? <AuthPage /> : <Navigate to='/' />} />
 				<Route path='/spark' element={authUser ? (!showSpark  ? <Navigate to='/spark/edit' /> : <Spark />) : <Navigate to='/' /> } />
