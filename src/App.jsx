@@ -63,9 +63,9 @@ function App() {
 	// 	spark = false;
 	// else 
 	// 	spark = authUserProf.spark;
+	
 
 
-	  //console.log(userAuth);
 
 	return (
 		<Elements stripe={stripePromise}>
@@ -73,7 +73,7 @@ function App() {
 			<Routes>
 				{/* <Route path='/' element={authUser ? (authUser && showHome ? <HomePage /> : <Navigate to='/top5' /> ): <Navigate to='/auth' />} /> */}
 				<Route path='/' element={userAuth  && authUser && authUser.following && authUser.following.length > 0 
-					&& (authUser.following.length === 1 && !authUser.following.includes(authUser.uid)) ? <HomePage /> : <Navigate to='/top5' />} />
+					&& !(authUser.following.length === 1 && authUser.following.includes(authUser.uid)) ? <HomePage /> : <Navigate to='/top5' />} />
 				<Route path='/top5' element={<TopFivePosts />} />
 				<Route path='/auth' element={!userAuth ? <AuthPage /> : <Navigate to='/' />} />
 				<Route path='/spark' element={authUser ? (!showSpark  ? <Navigate to='/spark/edit' /> : <Spark />) : <Navigate to='/' /> } />

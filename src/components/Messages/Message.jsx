@@ -147,7 +147,7 @@ const Message = () => {
   const handleSendMessage = async () => {
     if (!newMessage.trim()) return;
 
-    if ((!receivingProfile.creator && receivingProfile && messages && messages.length === 1 && messages[0].sendingUser === userId)) {
+    if ((receivingProfile && !receivingProfile.creator && messages && messages.length === 1 && messages[0].sendingUser === userId)) {
       showToast("Warning", `${receivingProfile.username} must reply first.`, "warning");
       return;
     } 
@@ -158,7 +158,7 @@ const Message = () => {
         handleModalClose();
     }
 
-    if (!purchaseSuccess)
+    if (receivingProfile.creator && !purchaseSuccess)
       return;
 
     const newMessageObject = {
@@ -256,7 +256,7 @@ const Message = () => {
             onClick={handleGoBack}
             color="#eb7734"
             ml={5}
-            mr={4}
+            mr={1}
           />
           <Avatar
             ml={2}

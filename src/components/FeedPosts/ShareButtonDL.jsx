@@ -4,11 +4,18 @@ import { addDoc, arrayUnion, collection, doc, updateDoc } from "firebase/firesto
 import { firestore, storage } from "../../firebase/firebase"; // Adjust path as necessary
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
 import useAuthStore from '../../store/authStore';
+import useShowToast from '../../hooks/useShowToast';
 
 const ShareButtonDL = ({ imageUrl, overlayText }) => {
   const canvasRef = useRef(null);
   const authUser = useAuthStore((state) => state.user);
+  const showToast = useShowToast();
   // OVERLAY_RATIO = 0.133
+
+  const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text);
+    showToast('Share link copied to clipboard: ' + text);
+  };
 
   const prepareImage = () => {
     const canvas = canvasRef.current;
@@ -131,9 +138,16 @@ const ShareButtonDL = ({ imageUrl, overlayText }) => {
       text: `Follow me at Razzp.com/${authUser.username}`,
     };
 
+    //copyToClipboard("Razzp.com/" + overlayText)
+
     try {
+      // await navigator.clipboard.writeText("Razzp.com/" + authUser.username);
+      // alert(`Link copied to clipboard: Razzp.com/${authUser.username}`);
+
       if (navigator.canShare && navigator.canShare(data)) {
+        
         await navigator.share(data);
+        
       } else {
         alert('Sharing not supported on this device.');
       }
@@ -143,7 +157,10 @@ const ShareButtonDL = ({ imageUrl, overlayText }) => {
   };
 
   return (
-    <Box cursor={"pointer"} onClick={prepareImage}>
+    <Box cursor={"pointer"} onClick={() => {
+      copyToClipboard(`https://razzp.com/${authUser.username}`);
+      prepareImage();
+    }}>
       <canvas ref={canvasRef} style={{ display: 'none' }} />
       <ChakraImage width="30px" src="/razzp-logo-matte.png" alt="logo" />
     </Box>

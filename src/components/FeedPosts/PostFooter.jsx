@@ -206,7 +206,7 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
                     <CommentLogo />
                 </Box >
                 )}
-                {creatorProfile && post && (
+                {creatorProfile && post && !post.paid && (
                 <Box cursor={"pointer"} fontSize={18}>
                     {/* <ShareButtonOverlay imageUrl={post.imageURL} overlayText={`@${creatorProfile.username}`} /> */}
                     <ShareButtonDL imageUrl={post.imageURL} overlayText={`${creatorProfile.username}`} />
