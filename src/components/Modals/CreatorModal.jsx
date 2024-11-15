@@ -88,7 +88,8 @@ const CreatorModal = ({ isOpen, onClose }) => {
     const [spendData, setSpendData] = useState([]);
     const [isInitialized, setIsInitialized] = useState(false);
     const [createdAt, setCreatedAt] = useState(authUser?.createdAt);
-    const [todayDate, setTodayDate] = useState(new Date(Date.now() + new Date().getTimezoneOffset() * 60000));
+    //const [todayDate, setTodayDate] = useState(new Date(Date.now() - new Date().getTimezoneOffset() * 60000));
+    const [todayDate, setTodayDate] = useState(new Date(Date.now()));
     const [showPaymentForm, setShowPaymentForm] = useState(false);
 
     const handlePayoutSuccess = (payoutAmount) => {
@@ -133,6 +134,8 @@ const CreatorModal = ({ isOpen, onClose }) => {
 
     const fetchCreatorData = async (startDate, endDate) => {
         if (!authUser) return;
+
+        console.log(startDate);
     
         try {
             const bonusRef = collection(firestore, "bonus", authUser.uid, "creator");
@@ -200,10 +203,11 @@ const CreatorModal = ({ isOpen, onClose }) => {
     
             const allCategories = Object.keys(breakdown);
     
-            const todayDate = new Date().toISOString().split("T")[0];
-            const endDateData = new Date(endDate) <= new Date(todayDate) ? new Date(endDate) : new Date(todayDate);
+            //const todayDate = new Date().toISOString().split("T")[0];
+            const todayDate = new Date().toLocaleDateString('en-CA');
+            //const endDateData = new Date(endDate) <= new Date(todayDate) ? new Date(endDate) : new Date(todayDate);
     
-            const allDates = getAllDates(startDate, endDateData.toISOString().split("T")[0]);
+            const allDates = getAllDates(startDate, endDate);
     
             const cumulativeTotals = {}; // Track cumulative totals for each category
     
@@ -279,8 +283,14 @@ const CreatorModal = ({ isOpen, onClose }) => {
 
         //console.log(startDate);
 
-        for (let dt = startDateObj; dt <= endDateObj; dt.setDate(dt.getDate() + 1)) {
-            dates.push(new Date(dt));
+        // for (let dt = startDateObj; dt <= endDateObj; dt.setDate(dt.getDate() + 1)) {
+        //     dates.push(new Date(dt));
+        //     console.log(new Date(dt));
+        // }
+
+        for (let dt = startDateObj; dt <= endDateObj; dt.setUTCDate(dt.getUTCDate() + 1)) {
+            dates.push(new Date(Date.UTC(dt.getUTCFullYear(), dt.getUTCMonth(), dt.getUTCDate())));
+            //console.log(new Date(Date.UTC(dt.getUTCFullYear(), dt.getUTCMonth(), dt.getUTCDate())));
         }
 
         return dates;
@@ -289,11 +299,17 @@ const CreatorModal = ({ isOpen, onClose }) => {
     return (
         <Modal isOpen={isOpen} onClose={onClose} size="lg">
             <ModalOverlay />
-            <ModalContent>
+            <ModalContent
+                border={"1px solid gray"} 
+                maxW={{ base: "100vw", md: "400px" }}  
+                //px={{ base: "4px", md: "4px" }} 
+                pt={3} 
+                pb={4}
+            >
                 <ModalHeader>Creator Earnings Summary</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
-                <Box mb={4} mx={8}>
+                <Box mb={4} mx={4}>
                     {/* <Text fontWeight="bold" mb={2} ml={-3}>Earnings Summary</Text> */}
                     
                     <Flex justifyContent="space-between">
@@ -345,8 +361,11 @@ const CreatorModal = ({ isOpen, onClose }) => {
                             // Compare dates
                             if (userDate >= createdAtDate) {
                                 // Set startDate directly in local time (YYYY-MM-DD format)
-                                setStartDate(userDate.toISOString().split("T")[0]);
+                                //setStartDate(userDate.toISOString().split("T")[0]);
+                                setStartDate(userDate.toLocaleDateString('en-CA'));
                                 console.log("startDate:", userDate.toISOString().split("T")[0]);
+                            } else {
+                                setStartDate(createdAtDate.toISOString().split("T")[0]);
                             }
                         }}
                         placeholder="Start Date"
@@ -368,10 +387,17 @@ const CreatorModal = ({ isOpen, onClose }) => {
                             // Compare dates
                             if (userDate <= currentDate) {
                                 // Set endDate directly in local time (YYYY-MM-DD format)
-                                setEndDate(userDate.toISOString().split("T")[0]);
+                                //setEndDate(userDate.toISOString().split("T")[0]);
+                                const nextDay = new Date(userDate);
+                                nextDay.setDate(nextDay.getDate() + 1);
+                                setEndDate(nextDay.toISOString().split("T")[0]);
                                 console.log("Selected end date:", userDate.toISOString().split("T")[0]);
                             } else {
-                                console.log("Selected date is in the future.");
+                                //setEndDate(currentDate.toISOString().split("T")[0]);
+                                const nextDay = new Date(currentDate);
+                                nextDay.setDate(nextDay.getDate() + 1);
+                                setEndDate(nextDay.toISOString().split("T")[0]);
+                                console.log("End Date: today's date:", nextDay.toISOString().split("T")[0]);
                             }
                         }}
                         placeholder="End Date"
@@ -392,12 +418,19 @@ const CreatorModal = ({ isOpen, onClose }) => {
                     </HStack>
 
                     {/* Line Chart for Total Spend by Category by Date */}
-                    <Box mb={4} height="300px">
+                    <Box mb={4} mt={2} ml={-4} mr={4} height="300px" >
                         <Text fontWeight="bold">Total Spend by Category</Text>
                         <ResponsiveContainer>
-                            <LineChart data={spendData}>
-                                <CartesianGrid strokeDasharray="3 3" />
+                            <LineChart data={spendData} >
+                                {/* <CartesianGrid strokeDasharray="3 3" /> */}
                                 <XAxis dataKey="date" tickFormatter={(tick) => format(new Date(tick), 'MM/dd')}/>
+                                {/* <XAxis
+                                dataKey="date"
+                                tickFormatter={(tick) => new Date(tick).toLocaleDateString('en-US', {
+                                    month: '2-digit',
+                                    day: '2-digit',
+                                })}
+                                /> */}
                                 <YAxis />
                                 {/* <Tooltip content={<CustomTooltip />} /> */}
                                 <Tooltip />
@@ -417,7 +450,8 @@ const CreatorModal = ({ isOpen, onClose }) => {
                     </Box>
 
                     {/* Category Breakdown Table */}
-                    <Table variant="simple">
+                    <Box mt={4} maxW="100%" overflowX="auto">
+                    <Table variant="simple" size="sm">
                         <Thead>
                             <Tr>
                                 <Th>Category</Th>
@@ -442,23 +476,28 @@ const CreatorModal = ({ isOpen, onClose }) => {
                             </Tr>
                         </Tbody>
                     </Table>
+                    </Box>
 
                     {/* Top Purchasers Table */}
-                    <Box mt={4}>
+                    <Box mt={4} maxW="100%" overflowX="auto">
                         <Text fontWeight="bold">Top Earners</Text>
-                        <Table variant="simple">
+                        <Table variant="simple" size="sm">
                             <Thead>
                                 <Tr>
-                                    <Th>User</Th>
+                                    <Th textAlign="center">User</Th>
                                     <Th isNumeric>Gross</Th>
                                     <Th isNumeric>Net</Th>
                                 </Tr>
                             </Thead>
                             <Tbody>
-                                {topPurchasers.map((purchaser) => (
+                                {topPurchasers.map((purchaser, index) => (
                                     <Tr key={purchaser.purchaser}>
+                                        
                                         <Td>
                                         <Flex alignItems={"center"} gap={3}>
+                                        <Box  display="flex" alignItems="center" justifyContent="center">
+                                            {index + 1}
+                                        </Box>
                                         <Box  display="flex" alignItems="center" justifyContent="center">
                                         <Avatar 
                                             size="sm"
