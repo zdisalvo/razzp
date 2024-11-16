@@ -36,6 +36,15 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
     const [isPurchased, setIsPurchased] = useState(post.purchased && authUser && post.purchased.includes(authUser?.uid));
     const [purchasedUsers, setPurchasedUsers] = useState(post.purchased || null); // Store purchased users
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const previewLimit = 125; 
+    const [isExpanded, setIsExpanded] = useState(false);
+
+    // Decide whether to show full or truncated caption
+    const captionToShow = isExpanded
+        ? post.caption
+        : post.caption.length > previewLimit
+        ? `${post.caption.substring(0, previewLimit)}...`
+        : post.caption;
 
     const handlePurchaseClick = () => {
 		// setSparkProfile(profileData);
@@ -206,7 +215,7 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
                     <CommentLogo />
                 </Box >
                 )}
-                {creatorProfile && post && !post.paid && (
+                {creatorProfile && post && !post.paid && post.mediaType.startsWith("image/") && (
                 <Box cursor={"pointer"} fontSize={18}>
                     {/* <ShareButtonOverlay imageUrl={post.imageURL} overlayText={`@${creatorProfile.username}`} /> */}
                     <ShareButtonDL imageUrl={post.imageURL} overlayText={`${creatorProfile.username}`} />
@@ -264,11 +273,35 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
 
             {!isProfilePage && (
                 <>
-                    <Text fontSize="sm" fontWeight={700}  mb={1} >
-                        {creatorProfile?.username}{" "}
-                        <Text as="span" fontWeight={400} ml={2}>
-                        {post.caption}
+                    <Text fontSize="sm" fontWeight={700} mb={1}>
+                    {creatorProfile?.username}{" "}
+                    <Text as="span" fontWeight={400} ml={2}>
+                        {captionToShow}
+                        {/* Show "Read more" only if the caption is truncated */}
+                        {!isExpanded && post.caption.length > previewLimit && (
+                        <Text
+                            as="span"
+                            color="gray.500"
+                            cursor="pointer"
+                            onClick={() => setIsExpanded(true)}
+                        >
+                            {" "}
+                            more
                         </Text>
+                        )}
+                        {/* Allow user to collapse when expanded */}
+                        {isExpanded && (
+                        <Text
+                            as="span"
+                            color="gray.500"
+                            cursor="pointer"
+                            onClick={() => setIsExpanded(false)}
+                        >
+                            {" "}
+                            collapse
+                        </Text>
+                        )}
+                    </Text>
                     </Text>
                     {postComments > 0 && (
                         <Text fontSize="sm"  color={"gray"} cursor={"pointer"} onClick={onOpen}>

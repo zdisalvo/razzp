@@ -22,6 +22,7 @@ import { auth } from "./firebase/firebase";
 import useAuthStore from "./store/authStore";
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
+import Creators from './pages/Creators/Creators';
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
@@ -92,6 +93,7 @@ function App() {
 				<Route path="/:username/following" element={authUser ? <FollowingPage /> : <Navigate to='/auth' />} />
 				<Route path="/search" element={<SearchPage />} />
 				<Route path="/blocked" element={authUser ? <BlockPage /> : <Navigate to='/auth' />} />
+				<Route path="/creators" element={<Creators />} />
 
 			</Routes>
 		</PageLayout>

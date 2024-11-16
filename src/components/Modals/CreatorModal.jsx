@@ -40,6 +40,7 @@ import ACHPaymentForm from "./ACHPaymentForm";
 import { format } from 'date-fns';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChartLine} from '@fortawesome/free-solid-svg-icons'; 
+import { useNavigate, useParams, Link } from 'react-router-dom';
 
 
 const categoryColors = {
@@ -91,6 +92,7 @@ const CreatorModal = ({ isOpen, onClose }) => {
     //const [todayDate, setTodayDate] = useState(new Date(Date.now() - new Date().getTimezoneOffset() * 60000));
     const [todayDate, setTodayDate] = useState(new Date(Date.now()));
     const [showPaymentForm, setShowPaymentForm] = useState(false);
+    const navigate = useNavigate();
 
     const handlePayoutSuccess = (payoutAmount) => {
         setPayments(prevPayments => prevPayments + payoutAmount);
@@ -98,6 +100,11 @@ const CreatorModal = ({ isOpen, onClose }) => {
 
     const handlePayoutRequest = () => {
         setShowPaymentForm(prevState => !prevState);
+    };
+
+    const handleAvatarClick = (purchaser) => {
+        onClose();
+        navigate(`/${purchaser.purchaser}`);
     };
 
     // useEffect(() => {
@@ -503,9 +510,14 @@ const CreatorModal = ({ isOpen, onClose }) => {
                                             size="sm"
                                             src={purchaser.profilePicURL || undefined}
                                             name={purchaser.purchaser}
+                                            onClick={() => handleAvatarClick(purchaser)}
+                                            cursor="pointer"
                                         />
                                         </Box>
-                                        <Box display="flex" alignItems="center" justifyContent="center">
+                                        <Box display="flex" alignItems="center" justifyContent="center"
+                                            onClick={() => handleAvatarClick(purchaser)}
+                                            cursor="pointer"
+                                        >
                                         {purchaser.purchaser}
                                         </Box>
                                         </Flex>

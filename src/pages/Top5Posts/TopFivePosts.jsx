@@ -8,7 +8,7 @@ import { doc, getDoc } from "firebase/firestore";
 import useAuthStore from "../../store/authStore";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBolt, faCommentDots } from "@fortawesome/free-solid-svg-icons";
+import { faBolt, faCommentDots, faMagnifyingGlassDollar } from "@fortawesome/free-solid-svg-icons";
 import useIncomingReadCount from "../../hooks/useIncomingReadCount";
 import useNewNotificationsCount from "../../hooks/useNewNotificationsCount";
 import useGetUserProfileById from "../../hooks/useGetUserProfileById";
@@ -50,6 +50,10 @@ const TopFivePosts = () => {
   const handleNotificationsClick = useCallback(() => {
     navigate("/notifications");
   }, [navigate]);
+
+  const handleCreatorsClick = () => {
+    navigate("/creators");
+  };
 
 
   // useEffect(() => {
@@ -199,6 +203,13 @@ const TopFivePosts = () => {
       <Box position="sticky" top="0" bg="black" zIndex="1" py={4}>
       <Box position="fixed" top="0" right={{base: "0", md: "15vw"}} p={4} zIndex="docked" width="100%">
                 <Flex justifyContent="flex-end" alignItems="center">
+                <IconButton
+                  icon={<FontAwesomeIcon icon={faMagnifyingGlassDollar} />}
+                  aria-label="Creators"
+                  onClick={handleCreatorsClick}
+                  variant="outline"
+                  mx={2} // Adds horizontal margin between the icons
+                />
                 {authUser && newNotificationsCount > 0 && (
                 <Box position="relative">
                 <IconButton

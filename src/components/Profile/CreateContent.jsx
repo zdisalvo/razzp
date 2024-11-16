@@ -40,7 +40,7 @@ const CreateContent = ({ isOpen, onClose }) => {
 	const showToast = useShowToast();
 	const { isLoading, handleCreatePost } = useCreatePost();
     const [price, setPrice] = useState(""); // State for handling price
-    const [selectedPresetPrice, setSelectedPresetPrice] = useState(null); // State for preset price
+    const [selectedPresetPrice, setSelectedPresetPrice] = useState(10.0); // State for preset price
 
     const handleCustomAmountChange = (e) => {
         let value = e.target.value.replace(/[^0-9]/g, ""); 
@@ -113,42 +113,48 @@ const CreateContent = ({ isOpen, onClose }) => {
                         <Flex gap={4}>
                         <Button
                             onClick={() => handlePriceClick(5.0)}
+                            borderRadius={100}
+                            size="sm"
                             backgroundColor={selectedPresetPrice === 5.0 ? "#D4AF37" : "#013220"} // Gold when selected, Very Dark Forest Green when not
                             color={selectedPresetPrice === 5.0 ? "black" : "white"}
                             borderColor={selectedPresetPrice === 5.0 ? "#D4AF37" : "#002010"} // Gold for selected, even darker green for unselected
                             _hover={{ backgroundColor: selectedPresetPrice === 5.0 ? "#C8A21E" : "#001810" }} // Darker metallic forest green on hover
                         >
-                            $5.00
+                            $5
                         </Button>
                         <Button
                             onClick={() => handlePriceClick(10.0)}
+                            borderRadius={100}
+                            size="sm"
                             backgroundColor={selectedPresetPrice === 10.0 ? "#D4AF37" : "#013220"}
                             color={selectedPresetPrice === 10.0 ? "black" : "white"}
                             borderColor={selectedPresetPrice === 10.0 ? "#D4AF37" : "#002010"}
                             _hover={{ backgroundColor: selectedPresetPrice === 10.0 ? "#C8A21E" : "#001810" }}
                         >
-                            $10.00
+                            $10
                         </Button>
-                        </Flex>
-
-                        <Flex gap={4}>
+                        
                         <Button
                             onClick={() => handlePriceClick(15.0)}
+                            borderRadius={100}
+                            size="sm"
                             backgroundColor={selectedPresetPrice === 15.0 ? "#D4AF37" : "#013220"}
                             color={selectedPresetPrice === 15.0 ? "black" : "white"}
                             borderColor={selectedPresetPrice === 15.0 ? "#D4AF37" : "#002010"}
                             _hover={{ backgroundColor: selectedPresetPrice === 15.0 ? "#C8A21E" : "#001810" }}
                         >
-                            $15.00
+                            $15
                         </Button>
                         <Button
                             onClick={() => handlePriceClick(20.0)}
+                            borderRadius={100}
+                            size="sm"
                             backgroundColor={selectedPresetPrice === 20.0 ? "#D4AF37" : "#013220"}
                             color={selectedPresetPrice === 20.0 ? "black" : "white"}
                             borderColor={selectedPresetPrice === 20.0 ? "#D4AF37" : "#002010"}
                             _hover={{ backgroundColor: selectedPresetPrice === 20.0 ? "#C8A21E" : "#001810" }}
                         >
-                            $20.00
+                            $20
                         </Button>
                         </Flex>
 

@@ -158,7 +158,7 @@ const ShareButtonDL = ({ imageUrl, overlayText }) => {
 
   return (
     <Box cursor={"pointer"} onClick={() => {
-      copyToClipboard(`https://razzp.com/${authUser.username}`);
+      copyToClipboard(`https://razzp.com/${overlayText}`);
       prepareImage();
     }}>
       <canvas ref={canvasRef} style={{ display: 'none' }} />
