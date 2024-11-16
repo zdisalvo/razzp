@@ -654,9 +654,9 @@ const ProfileHeader = ({ username, page }) => {
 			px={4} // Adds padding inside MenuItem
               //width="100%"
 			  whiteSpace="nowrap"
-			  color="#228B22"
+			  color="#A8A4C1"
 			  onClick={handleSetCreator}
-			>Content Creator: Off</MenuItem>
+			>Content Creator ❌</MenuItem>
 			)}
 			{authUser && authUser.creator && (
 			<MenuItem
@@ -665,9 +665,9 @@ const ProfileHeader = ({ username, page }) => {
 			px={4} // Adds padding inside MenuItem
               //width="100%"
 			  whiteSpace="nowrap"
-			  color="#228B22"
+			  color="#D8B7DD"
 			  onClick={handleUnsetCreator}
-			>Content Creator: On</MenuItem>
+			>Content Creator ✔️</MenuItem>
 			)}
           {authUser && authUser.blocked && (
             <MenuItem
@@ -913,9 +913,9 @@ const ProfileHeader = ({ username, page }) => {
 					{visitingOwnProfileAndAuth && authUser.creator && (
 						
 							<Button
-								bg={"white"}
+								bg={"#D8B7DD"}
 								color={"black"}
-								_hover={{ bg: "whiteAlpha.800" }}
+								_hover={{ bg: "#A8A4C1" }}
 								size={{ base: "sm", md: "sm" }}
 								onClick={handleCCClick}
 							>
@@ -937,9 +937,9 @@ const ProfileHeader = ({ username, page }) => {
 							icon={<FontAwesomeIcon icon={faGear} />}
 							size={{ base: "sm", md: "sm" }}
 							onClick={handleCreatorSettingsClick}
-							backgroundColor="white"
+							backgroundColor="#D8B7DD"
 							color="black"
-							_hover={{ bg: "whiteAlpha.800" }}
+							_hover={{ bg: "#A8A4C1" }}
 							aria-label="Settings"
 						/>
 					
