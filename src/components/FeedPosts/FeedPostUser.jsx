@@ -113,35 +113,21 @@ const FeedPostUser = forwardRef(({ post, isFollowing, requested, isPrivate, onFo
         //transition="height 2.0s ease-in-out"
         >
       {((!post.mediaType) || (post.mediaType.startsWith("image/")) && (!post.paid || post.paid && isPurchased)) && (
-        <>
-        <Image src={post.imageURL} alt={"FEED POST IMG"} width="100%" objectFit="cover" maxHeight="450px" height="auto"/>
-        <Box 
-          position="absolute" 
-          top="0" 
-          left="0" 
-          width="100%" 
-          height="100%" 
-          backgroundColor="rgba(255, 255, 255, 0)" 
-          onTouchStart={(e) => e.preventDefault()}
-          onContextMenu={(e) => e.preventDefault()} 
+        
+        <Image src={post.imageURL} alt={"FEED POST IMG"} width="100%" objectFit="cover" maxHeight="450px" height="auto"
+        onTouchStart={(e) => e.preventDefault()} 
+        onContextMenu={(e) => e.preventDefault()} 
         />
-        </>
+        
         
       )}
       {(!post.mediaType || post.mediaType.startsWith("image/")) && post.paid && !isPurchased && (
-        <>
-        <Image src={post.imageURL} style={{ filter: 'blur(11px)' }} alt={"FEED POST IMG"} width="100%" objectFit="cover" maxHeight="450px" height="auto"/>
-        <Box 
-          position="absolute" 
-          top="0" 
-          left="0" 
-          width="100%" 
-          height="100%" 
-          backgroundColor="rgba(255, 255, 255, 0)" 
-          onTouchStart={(e) => e.preventDefault()}
-          onContextMenu={(e) => e.preventDefault()} 
+        
+        <Image src={post.imageURL} style={{ filter: 'blur(11px)' }} alt={"FEED POST IMG"} width="100%" objectFit="cover" maxHeight="450px" height="auto"
+        onTouchStart={(e) => e.preventDefault()} 
+        onContextMenu={(e) => e.preventDefault()} 
         />
-        </>
+        
       )}
       {(post.mediaType && post.mediaType.startsWith("video/")) && (!post.paid || post.paid && isPurchased) && (
         <Box justifyContent="center" alignItems="center" m={0} p={0}
@@ -159,18 +145,11 @@ const FeedPostUser = forwardRef(({ post, isFollowing, requested, isPrivate, onFo
         preload="metadata"
         alt={"FEED POST VIDEO"} 
         onClick={toggleMute}
+        onTouchStart={(e) => e.preventDefault()} 
+        onContextMenu={(e) => e.preventDefault()} 
         //style={{ width: "100%", height: "450px", objectFit: "cover" }}
         />
-        <Box 
-          position="absolute" 
-          top="0" 
-          left="0" 
-          width="100%" 
-          height="100%" 
-          backgroundColor="rgba(255, 255, 255, 0)" 
-          onTouchStart={(e) => e.preventDefault()}
-          onContextMenu={(e) => e.preventDefault()} 
-        />
+        
         </Box>
       )}
       {(post.mediaType && post.mediaType.startsWith("video/")) && post.paid && !isPurchased && (
@@ -190,18 +169,11 @@ const FeedPostUser = forwardRef(({ post, isFollowing, requested, isPrivate, onFo
         preload="metadata"
         alt={"FEED POST VIDEO"} 
         onClick={toggleMute}
+        onTouchStart={(e) => e.preventDefault()} 
+        onContextMenu={(e) => e.preventDefault()} 
         //style={{ width: "100%", height: "450px", objectFit: "cover" }}
         />
-        <Box 
-          position="absolute" 
-          top="0" 
-          left="0" 
-          width="100%" 
-          height="100%" 
-          backgroundColor="rgba(255, 255, 255, 0)" 
-          onTouchStart={(e) => e.preventDefault()}
-          onContextMenu={(e) => e.preventDefault()} 
-        />
+        
         </Box>
       )}
       
