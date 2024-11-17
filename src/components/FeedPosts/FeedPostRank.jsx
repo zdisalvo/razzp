@@ -120,16 +120,19 @@ const FeedPost = forwardRef(({ post, rank, isFollowing, requested, isPrivate, on
       {((!post.mediaType) || (post.mediaType.startsWith("image/")) && (!post.paid || post.paid && isPurchased)) && (
         
         <Image src={post.imageURL} alt={"FEED POST IMG"} width="100%" objectFit="cover" maxHeight="450px" height="auto"
-        onTouchStart={(e) => e.preventDefault()} 
-        onContextMenu={(e) => e.preventDefault()} 
+        style={{ pointerEvents: 'none', userSelect: 'none' }}
+          onTouchStart={(e) => e.preventDefault()} 
+          onContextMenu={(e) => e.preventDefault()} 
+          onTouchMove={(e) => e.preventDefault()} 
         />
         
       )}
       {(!post.mediaType || post.mediaType.startsWith("image/")) && post.paid && !isPurchased && (
         
-        <Image src={post.imageURL} style={{ filter: 'blur(22px)' }} alt={"FEED POST IMG"} width="100%" objectFit="cover" maxHeight="450px" height="auto"
-        onTouchStart={(e) => e.preventDefault()} 
-        onContextMenu={(e) => e.preventDefault()} 
+        <Image src={post.imageURL} style={{ filter: 'blur(22px)', pointerEvents: 'none', userSelect: 'none' }} alt={"FEED POST IMG"} width="100%" objectFit="cover" maxHeight="450px" height="auto"
+          onTouchStart={(e) => e.preventDefault()} 
+          onContextMenu={(e) => e.preventDefault()} 
+          onTouchMove={(e) => e.preventDefault()} 
         />
         
       )}

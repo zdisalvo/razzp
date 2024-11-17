@@ -114,51 +114,26 @@ const FeedPostUser = forwardRef(({ post, isFollowing, requested, isPrivate, onFo
         >
       {((!post.mediaType) || (post.mediaType.startsWith("image/")) && (!post.paid || post.paid && isPurchased)) && (
         
-        <div style={{ position: 'relative', width: '100%', maxHeight: '450px', overflow: 'hidden', userSelect: 'none' }}>
- 
+        
         <Image src={post.imageURL} alt={"FEED POST IMG"} width="100%" objectFit="cover" maxHeight="450px" height="auto"
         style={{ pointerEvents: 'none', userSelect: 'none' }}
+          onTouchStart={(e) => e.preventDefault()} 
+          onContextMenu={(e) => e.preventDefault()} 
+          onTouchMove={(e) => e.preventDefault()} 
         />
-        <div 
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '100%',
-              height: '100%',
-              backgroundColor: 'transparent',
-              userSelect: 'none',
-            }}
-            onTouchStart={(e) => e.preventDefault()} 
-            onContextMenu={(e) => e.preventDefault()} 
-            onTouchMove={(e) => e.preventDefault()} 
-          ></div>
-        </div>
+        
         
         
       )}
       {(!post.mediaType || post.mediaType.startsWith("image/")) && post.paid && !isPurchased && (
         
-        <div style={{ position: 'relative', width: '100%', maxHeight: '450px', overflow: 'hidden', userSelect: 'none' }}>
- 
-        <Image src={post.imageURL} style={{ filter: 'blur(11px)', pointerEvents: 'none', userSelect: 'none' }} alt={"FEED POST IMG"} width="100%" objectFit="cover" maxHeight="450px" height="auto"
         
-        />
-        <div 
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            backgroundColor: 'transparent',
-            userSelect: 'none',
-          }}
+        <Image src={post.imageURL} style={{ filter: 'blur(11px)', pointerEvents: 'none', userSelect: 'none' }} alt={"FEED POST IMG"} width="100%" objectFit="cover" maxHeight="450px" height="auto"
           onTouchStart={(e) => e.preventDefault()} 
           onContextMenu={(e) => e.preventDefault()} 
           onTouchMove={(e) => e.preventDefault()} 
-        ></div>
-      </div>
+        />
+        
         
       )}
       {(post.mediaType && post.mediaType.startsWith("video/")) && (!post.paid || post.paid && isPurchased) && (
