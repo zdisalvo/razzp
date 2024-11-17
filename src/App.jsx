@@ -33,6 +33,35 @@ function App() {
 	const [showSpark, setShowSpark] = useState(false);
 	const [showHome, setShowHome ] = useState(false);
 
+	useEffect(() => {
+		const preventDefault = (e) => e.preventDefault();
+	  
+		document.addEventListener("contextmenu", preventDefault);
+		document.addEventListener("touchstart", preventDefault);
+	  
+		return () => {
+		  document.removeEventListener("contextmenu", preventDefault);
+		  document.removeEventListener("touchstart", preventDefault);
+		};
+	  }, []);
+
+	  useEffect(() => {
+		const preventCopy = (e) => {
+		  e.preventDefault(); // Prevent copy
+		};
+	  
+		// Prevent text selection
+		document.addEventListener("selectstart", preventCopy);
+	  
+		// Prevent copy action
+		document.addEventListener("copy", preventCopy);
+	  
+		return () => {
+		  document.removeEventListener("selectstart", preventCopy);
+		  document.removeEventListener("copy", preventCopy);
+		};
+	  }, []);
+	  
 
 	useEffect(() => {
 		const checkAuthUserProf = async () => {

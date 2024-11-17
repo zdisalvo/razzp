@@ -7,12 +7,20 @@ import { extendTheme } from "@chakra-ui/react";
 import { mode } from "@chakra-ui/theme-tools";
 import { BrowserRouter } from "react-router-dom";
 
+
+
 const styles = {
 	global: (props) => ({
 		body: {
 			bg: mode("gray.100", "#000")(props),
 			color: mode("gray.800", "whiteAlpha.900")(props),
 		},
+		img: {
+			"-webkit-touch-callout": "none", // Prevent long-press on iOS
+			"-webkit-user-select": "none",  // Prevent image selection on Safari
+			"user-select": "none",          // Prevent image selection on other browsers
+			"pointer-events": "none",       // Disable pointer events on images
+		  },
 	}),
 };
 
@@ -28,7 +36,7 @@ const theme = extendTheme({
 	fonts: {
 	  heading: "Lato, sans-serif",
 	  body: "Lato, sans-serif",
-	},
+	}
   });
 
 ReactDOM.createRoot(document.getElementById("root")).render(
