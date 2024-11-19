@@ -39,7 +39,7 @@ const CreateContent = ({ isOpen, onClose }) => {
 	//const { handleMediaChange, selectedFile, setSelectedFile } = usePreviewMedia();
 	const showToast = useShowToast();
 	const { isLoading, handleCreatePost } = useCreatePost();
-    const [price, setPrice] = useState(""); // State for handling price
+    const [price, setPrice] = useState(10); // State for handling price
     const [selectedPresetPrice, setSelectedPresetPrice] = useState(10.0); // State for preset price
 
     const handleCustomAmountChange = (e) => {
