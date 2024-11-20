@@ -25,6 +25,7 @@ import useShowToast from "../../hooks/useShowToast";
 import useAuthStore from "../../store/authStore";
 import { addDoc, arrayUnion, collection, doc, updateDoc } from "firebase/firestore";
 import { firestore } from "../../firebase/firebase";
+import CreateSubscription from "../Stripe/CreateSubscription";
 
 const CreatorSettings = ({ isOpen, onClose }) => {
 	//const { isOpen, onOpen, onClose } = useDisclosure();
@@ -299,6 +300,7 @@ const CreatorSettings = ({ isOpen, onClose }) => {
                             color="black"
                         />
                         </Flex>
+                        <CreateSubscription creator={authUser}/>
                         </VStack>
                         
                             
