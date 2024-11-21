@@ -34,6 +34,7 @@ import useUnsetContentCreator from "../../hooks/useUnsetContentCreator";
 import CreateContent from "./CreateContent";
 import CreatorModal from "../Modals/CreatorModal";
 import CreatorSettings from "./CreatorSettings";
+import AddPaymentAndSubscribe from "../Stripe/AddPaymentAndSubscribe";
 
 const ProfileHeader = ({ username, page }) => {
 	//const { userProfile } = useUserProfileStore();
@@ -85,6 +86,7 @@ const ProfileHeader = ({ username, page }) => {
 	const { setCreator, isLoading: settingCreator} = useSetContentCreator();
 	const { unsetCreator, isLoading: unsettingCreator} = useUnsetContentCreator();
 	const [isCreatorModalOpen, setIsCreatorModalOpen] = useState(false);
+	const [subscribe, setSubscribe] = useState(false);
 
 	//console.log(isFollowing);
 
@@ -102,6 +104,10 @@ const ProfileHeader = ({ username, page }) => {
 		setIsImportModalOpen(false);
 		fetchUserData(authUser.uid);
 	  };
+
+	const handleSubscribeClick = () => {
+		setSubscribe(true);
+	}
 
 	const handleModalClose = () => {
 		setIsModalOpen(false);
@@ -975,10 +981,25 @@ const ProfileHeader = ({ username, page }) => {
 								onClick={handleMessageClick} 
 								mx={2} 
 								>Message</Button>
+							{userProfile.creator && (
+							<Button
+							bg={"#eb7734"}
+							color={"white"}
+							_hover={{ bg: "#c75e1f" }}
+							size={{ base: "sm", md: "sm" }}
+							aria-label="Messages"
+							textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)"
+							onClick={handleSubscribeClick} 
+							mx={2} 
+							>Subscribe</Button>
+							)}
 							
 						</Flex>
 						
 					)}
+					{subscribe && userProfile && authUser && (
+							<AddPaymentAndSubscribe userProfile={userProfile} authUser={authUser} />
+						)}
 			</VStack>
 			</Container>
 			{isOpen && <EditProfile isOpen={isOpen} onClose={onClose} />}

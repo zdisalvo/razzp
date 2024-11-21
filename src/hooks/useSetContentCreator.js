@@ -3,6 +3,9 @@ import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { firestore } from "../firebase/firebase"; // Adjust the import path as necessary
 import useAuthStore from "../store/authStore";
 import useShowToast from "./useShowToast"; // Assuming you have a custom hook for showing toast notifications
+import { loadStripe } from "@stripe/stripe-js";
+
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 const useSetContentCreator = () => {
   const { authUser } = useAuthStore((state) => ({
@@ -30,6 +33,28 @@ const useSetContentCreator = () => {
             creatorSubscriptionPrice: 9,
             creatorMessagePrice: 5,
         });
+
+        const stripe = await stripePromise;
+
+      const response = await fetch("https://razzp-subscribe-56142959b61f.herokuapp.com/create-creator-subscription", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          creatorId: authUser.uid,
+          creatorName: authUser.username,
+          subscriptionPrice: Number(9),
+          userId: authUser.uid, // Pass the user's UID
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to create subscription");
+      }
+
         showToast("Success", "Paid content creation now active", "success");
       } else {
         throw new Error("User profile does not exist");

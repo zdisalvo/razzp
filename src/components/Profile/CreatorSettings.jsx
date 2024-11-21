@@ -23,9 +23,12 @@ import {
 import { useRef, useState, useEffect } from "react";
 import useShowToast from "../../hooks/useShowToast";
 import useAuthStore from "../../store/authStore";
-import { addDoc, arrayUnion, collection, doc, updateDoc } from "firebase/firestore";
+import { addDoc, arrayUnion, collection, doc, updateDoc, getDoc} from "firebase/firestore";
 import { firestore } from "../../firebase/firebase";
 import CreateSubscription from "../Stripe/CreateSubscription";
+import { loadStripe } from "@stripe/stripe-js";
+
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 const CreatorSettings = ({ isOpen, onClose }) => {
 	//const { isOpen, onOpen, onClose } = useDisclosure();
@@ -36,7 +39,7 @@ const CreatorSettings = ({ isOpen, onClose }) => {
     const [selectedPresetPrice, setSelectedPresetPrice] = useState((price === 5 || price === 10 || price === 15 || price === 20) ? price : null); // State for preset price
     const [selectedPresetSubscription, setSelectedPresetSubscription] = useState((subscriptionPrice === 9 || subscriptionPrice === 15 || subscriptionPrice === 23 || subscriptionPrice === 32) ? subscriptionPrice : null);
     const [isSettingPrices, setIsSettingPrices] = useState(false);
-    const userDocRef = doc(firestore, "users", authUser.uid);
+    const userDocRef = doc(firestore, "users", authUser?.uid);
     const [isInitialized, setIsInitialized] = useState(false);
     const [userInfo, setUserInfo] = useState(null);
 
@@ -80,26 +83,79 @@ const CreatorSettings = ({ isOpen, onClose }) => {
     // }, [isInitialized, authUser]);
 
     const handleSetCreatorPrices = async () => {
-        if (!authUser || isSettingPrices) return;
+        if (!authUser || isSettingPrices ) return;
 
         setIsSettingPrices(true);
         try {
 
+
             // console.log(price);
-            // console.log(subscriptionPrice);
+            console.log(subscriptionPrice);
             
             const parsedSubscriptionPrice = parseFloat(subscriptionPrice) || 0;
             const parsedMessagePrice = parseFloat(price) || 0;
 
             // Only update Firestore if prices have changed
-            await updateDoc(userDocRef, {
-                ...(parsedMessagePrice !== authUser.creatorMessagePrice && { creatorMessagePrice: parsedMessagePrice }),
-                ...(parsedSubscriptionPrice !== authUser.creatorSubscriptionPrice && { creatorSubscriptionPrice: parsedSubscriptionPrice }),
-            });
+            // await updateDoc(userDocRef, {
+            //     ...(parsedMessagePrice !== authUser.creatorMessagePrice && { creatorMessagePrice: parsedMessagePrice }),
+            //     ...(parsedSubscriptionPrice !== authUser.creatorSubscriptionPrice && { creatorSubscriptionPrice: parsedSubscriptionPrice }),
+            // });
+
+            // if (parsedMessagePrice !== authUser.creatorMessagePrice) {
+            //     await updateDoc(userDocRef, { creatorMessagePrice: parsedMessagePrice });
+            // }
+            // if (parsedSubscriptionPrice !== authUser.creatorSubscriptionPrice) {
+            //     await updateDoc(userDocRef, { creatorSubscriptionPrice: parsedSubscriptionPrice });
+            // }
+
+            const userDoc = await getDoc(userDocRef);
+
+            // Return early if the document has not loaded or doesn't exist
+            if (!userDoc.exists()) {
+                throw new Error("User document not found");
+            }
+
+            const userData = userDoc.data();
+
+            // Check for changes in prices and prepare the update object
+            const updates = {};
+            if (parsedMessagePrice !== userData.creatorMessagePrice) {
+                updates.creatorMessagePrice = parsedMessagePrice;
+            }
+            if (parsedSubscriptionPrice !== userData.creatorSubscriptionPrice) {
+                updates.creatorSubscriptionPrice = parsedSubscriptionPrice;
+            }
+            
+
+            
             // await updateDoc(userDocRef, {
             //     creatorMessagePrice: parsedMessagePrice,
             //     creatorSubscriptionPrice: parsedSubscriptionPrice,
             // });
+            //console.log("test");
+
+            if (parsedSubscriptionPrice !== authUser.creatorSubscriptionPrice) {
+                const stripe = await stripePromise;
+
+                const response = await fetch("https://razzp-subscribe-56142959b61f.herokuapp.com/create-creator-subscription", {
+                    method: "POST",
+                    headers: {
+                    "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                    creatorId: authUser.uid,
+                    creatorName: authUser.username,
+                    subscriptionPrice: Number(parsedSubscriptionPrice),
+                    userId: authUser.uid, // Pass the user's UID
+                    }),
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || "Failed to create subscription");
+                }
+            }
 
             showToast("Success", "Prices updated successfully", "success");
         } catch (error) {
