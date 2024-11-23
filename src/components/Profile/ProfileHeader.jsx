@@ -35,6 +35,7 @@ import CreateContent from "./CreateContent";
 import CreatorModal from "../Modals/CreatorModal";
 import CreatorSettings from "./CreatorSettings";
 import AddPaymentAndSubscribe from "../Stripe/AddPaymentAndSubscribe";
+import SubscribeModal from "../Stripe/SubscribeModal";
 
 const ProfileHeader = ({ username, page }) => {
 	//const { userProfile } = useUserProfileStore();
@@ -86,13 +87,51 @@ const ProfileHeader = ({ username, page }) => {
 	const { setCreator, isLoading: settingCreator} = useSetContentCreator();
 	const { unsetCreator, isLoading: unsettingCreator} = useUnsetContentCreator();
 	const [isCreatorModalOpen, setIsCreatorModalOpen] = useState(false);
-	const [subscribe, setSubscribe] = useState(false);
-
-	//console.log(isFollowing);
-
+	const [isSubscribeModalOpen, setIsSubscibeModalOpen] = useState(false);
+	const [isSubscribedToCreator, setIsSubscribedToCreator] = useState(false);
+	const [isInitialized, setIsInitialized] = useState(false);
 	
-	localStorage.setItem("referral", username);
-	localStorage.setItem("referralId", userProfile.uid);
+	useEffect (() => {
+		if (!authUser || !userProfile || isInitialized)
+			return;
+
+		fetchUserData(authUser.uid);
+		setIsSubscribedToCreator(authUser.subscriptions && authUser.subscriptions.some(
+			(subscription) => subscription.creatorId === userProfile.uid
+		  ));
+		setIsInitialized(true);
+	})
+
+	useEffect(() => {
+		// If authUser or userProfile changes, recompute subscription state
+		if (authUser && userProfile) {
+		  setIsSubscribedToCreator(
+			authUser.subscriptions &&
+			authUser.subscriptions.some(
+			  (subscription) => subscription.creatorId === userProfile.uid
+			)
+		  );
+		}
+	  }, [authUser, userProfile]);
+	
+
+	if (!(localStorage.getItem("referral"))) {
+		localStorage.setItem("referral", username);
+		localStorage.setItem("referralId", userProfile.uid);
+	}
+
+	const handleOpenSubscribeModal = () => {
+		setIsSubscibeModalOpen(true);
+	}
+
+	const handleSubscribeModalClose = () => {
+		fetchUserData(authUser.uid);
+		// setIsSubscribedToCreator(authUser.subscriptions && authUser.subscriptions.some(
+		// 	(subscription) => subscription.creatorId === userProfile.uid
+		// 	));
+		// console.log(isSubscribedToCreator);
+		setIsSubscibeModalOpen(false);
+	}
 
 	const handleImportInstagram = () => {
 		
@@ -104,10 +143,6 @@ const ProfileHeader = ({ username, page }) => {
 		setIsImportModalOpen(false);
 		fetchUserData(authUser.uid);
 	  };
-
-	const handleSubscribeClick = () => {
-		setSubscribe(true);
-	}
 
 	const handleModalClose = () => {
 		setIsModalOpen(false);
@@ -989,17 +1024,17 @@ const ProfileHeader = ({ username, page }) => {
 							size={{ base: "sm", md: "sm" }}
 							aria-label="Messages"
 							textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)"
-							onClick={handleSubscribeClick} 
+							onClick={handleOpenSubscribeModal} 
 							mx={2} 
-							>Subscribe</Button>
+							>{!isSubscribedToCreator ? "Subscribe" : "Subscribed"}</Button>
 							)}
 							
 						</Flex>
 						
 					)}
-					{subscribe && userProfile && authUser && (
+					{/* {subscribe && userProfile && authUser && !isSubscribedToCreator && (
 							<AddPaymentAndSubscribe userProfile={userProfile} authUser={authUser} />
-						)}
+						)} */}
 			</VStack>
 			</Container>
 			{isOpen && <EditProfile isOpen={isOpen} onClose={onClose} />}
@@ -1008,6 +1043,7 @@ const ProfileHeader = ({ username, page }) => {
 			{isImportModalOpen && <ImportInstagramModal isOpen={isImportModalOpen} onClose={handleImportInstagramClose} />}
 			{isCreatorModalOpen && <CreatorModal isOpen={isCreatorModalOpen} onClose={handleCreatorModalClose} />}
 			{isCreatorSettingsOpen && <CreatorSettings isOpen={isCreatorSettingsOpen} onClose={handleCreatorSettingsClose} />}
+			{isSubscribeModalOpen && <SubscribeModal isOpen={isSubscribeModalOpen} onClose={handleSubscribeModalClose} userProfile={userProfile} authUser={authUser} isSubscribed={isSubscribedToCreator} />}
 		</Flex>
 		
 	);
