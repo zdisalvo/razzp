@@ -12,8 +12,11 @@ import useUpdateIncomingReadStatus from "../../hooks/useUpdateIncomingReadStatus
 import useShowToast from "../../hooks/useShowToast";
 import usePurchaseMessage from "../../hooks/usePurchaseMessage";
 import MessagePurchaseModal from "../Stripe/MessagePurchaseModal";
+import useAuthStore from "../../store/authStore";
+import useGetUserProfileById from "../../hooks/useGetUserProfileById";
 
 const Message = () => {
+  const authUser = useAuthStore((state) => state.user);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [receivingProfile, setReceivingProfile] = useState(null);
@@ -32,6 +35,32 @@ const Message = () => {
   const showToast = useShowToast();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [ purchaseSuccess, setPurchaseSuccess ] = useState(false);
+  const [isSubscribedToCreator, setIsSubscribedToCreator] = useState(false);
+	const [isInitialized, setIsInitialized] = useState(false);
+
+  useEffect (() => {
+		if (!authUser || !receivingProfile || isInitialized)
+			return;
+
+		// setIsSubscribedToCreator(authUser.subscriptions && authUser.subscriptions.some(
+		// 	(subscription) => subscription.creatorId === userProfile.uid
+		//   ));
+
+		  const isSubscribed = authUser.subscriptions && authUser.subscriptions.some((subscription) => {
+			const isValidSubscription = subscription.creatorId === receivingProfile.uid;
+			if (!isValidSubscription)
+				return false;
+			else
+				 return subscription.expirationDate.toDate() > new Date(); // Check if expirationDate is in the future
+			//console.log(isExpirationValid);
+			
+			//return isValidSubscription && isExpirationValid
+		  });
+		  
+		  setIsSubscribedToCreator(isSubscribed);
+
+		setIsInitialized(true);
+	})
 
 
   const { sendMessage } = useSendRazzpMsg();
@@ -147,19 +176,25 @@ const Message = () => {
   const handleSendMessage = async () => {
     if (!newMessage.trim()) return;
 
+    //console.log(isSubscribedToCreator);
+
     if ((receivingProfile && !receivingProfile.creator && messages && messages.length === 1 && messages[0].sendingUser === userId)) {
       showToast("Warning", `${receivingProfile.username} must reply first.`, "warning");
       return;
     } 
-    else if ((receivingProfile.creator)) {
+    else if (receivingProfile.creator && !isSubscribedToCreator) {
       setIsModalOpen(true);
       //console.log(purchaseSuccess);
       if (purchaseSuccess)
         handleModalClose();
     }
 
-    if (receivingProfile.creator && !purchaseSuccess)
+    //console.log(!isSubscribedToCreator && receivingProfile.creator);
+
+    if (receivingProfile.creator && !purchaseSuccess && !isSubscribedToCreator)
       return;
+
+    //console.log("test");
 
     const newMessageObject = {
       sendingUser: userId,

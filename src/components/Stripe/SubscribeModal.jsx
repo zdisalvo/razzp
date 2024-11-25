@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Checkbox, Text, Box, Flex, Modal, ModalOverlay, ModalBody, ModalContent, ModalCloseButton, ModalHeader } from '@chakra-ui/react'; // Assuming you are using Chakra UI
 import AddPaymentAndSubscribe from './AddPaymentAndSubscribe';
+import dayjs from "dayjs";
 
 const SubscribeModal = ({ isOpen, onClose, userProfile, authUser }) => {
     const [isAgeConfirmed, setIsAgeConfirmed] = useState(false);
     const [isSubscribed, setIsSubscribed] = useState(false);
-    
+    const todayDate = new Date();
+    const monthPrior = dayjs(todayDate).subtract(1, "month");
+    const monthAfter = dayjs(todayDate).add(1, "month");
+    const fmtMonthPrior = monthPrior.format("MM/DD");
+    const fmtMonthAfter = monthAfter.format("MMMM DD, YYYY");
 
 
     const handleCheckboxChange = (event) => {
@@ -24,14 +29,21 @@ const SubscribeModal = ({ isOpen, onClose, userProfile, authUser }) => {
                 pb={4}
             >
                 <ModalCloseButton />
-                <ModalHeader>Subscribe to {userProfile?.username}</ModalHeader>
+                <ModalHeader>Subscribe to {userProfile?.username} for ${userProfile?.creatorSubscriptionPrice}/mo</ModalHeader>
                 <ModalBody 
                     px={{ base: "8px", md: "8px" }} 
                     pt={{ base: 5, md: 5 }} 
                     pb={{ base: 4, md: 5 }}
                 >
+                    <Box mx={5} mb={6}>
+                    <h2>Includes...</h2>
+                    <Text fontSize="sm" mt={2}>{`📨 Unlimited messaging with ${userProfile.username} `}</Text>
+                    <Text fontSize="sm">{`📸 Exclusive access to ${userProfile.username}'s premium content`}</Text>
+                    <Text fontSize="sm">{`🎁 One month free. Instantly unlocks prior 30 days`}</Text>
+                    <Text fontSize="sm">{`💫 Renews on ${fmtMonthAfter}`}</Text>
+                    </Box>
                     <></>
-                    <Text textAlign="center">This is age-restricted content</Text>
+                    <Text textAlign="center" color="red">This is age-restricted content</Text>
                     
 
                     {/* Checkbox for age confirmation */}

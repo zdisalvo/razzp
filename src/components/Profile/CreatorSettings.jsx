@@ -118,12 +118,62 @@ const CreatorSettings = ({ isOpen, onClose }) => {
             const userData = userDoc.data();
 
             // Check for changes in prices and prepare the update object
-            const updates = {};
-            if (parsedMessagePrice !== userData.creatorMessagePrice) {
-                updates.creatorMessagePrice = parsedMessagePrice;
-            }
-            if (parsedSubscriptionPrice !== userData.creatorSubscriptionPrice) {
-                updates.creatorSubscriptionPrice = parsedSubscriptionPrice;
+            // const updates = {};
+            // if (parsedMessagePrice !== userData.creatorMessagePrice &&
+            //     parsedSubscriptionPrice !== userData.creatorSubscriptionPrice) {
+            //     updates.creatorMessagePrice = parsedMessagePrice;
+            //     updates.creatorSubscriptionPrice = parsedSubscriptionPrice;
+            //     await updateDoc(userDocRef, {
+            //     creatorMessagePrice: parsedMessagePrice,
+            //     creatorSubscriptionPrice: parsedSubscriptionPrice,
+            // });
+            
+            // }
+            
+            // else if (parsedMessagePrice !== userData.creatorMessagePrice) {
+            //     updates.creatorMessagePrice = parsedMessagePrice;
+            //     await updateDoc(userDocRef, {
+            //         creatorMessagePrice: parsedMessagePrice,
+            //     });
+            // }
+            // else if (parsedSubscriptionPrice !== userData.creatorSubscriptionPrice) {
+            //     updates.creatorSubscriptionPrice = parsedSubscriptionPrice;
+            //     await updateDoc(userDocRef, {
+            //         creatorSubscriptionPrice: parsedSubscriptionPrice,
+            //     });
+            // }
+
+
+            
+
+            // const updates = {}; // Create an empty object to hold the updates
+
+            // // Check if creatorMessagePrice or creatorSubscriptionPrice need to be updated
+            // if (parsedMessagePrice !== userData.creatorMessagePrice) {
+            //     updates.creatorMessagePrice = parsedMessagePrice;
+            // }
+
+            // if (parsedSubscriptionPrice !== userData.creatorSubscriptionPrice) {
+            //     updates.creatorSubscriptionPrice = parsedSubscriptionPrice;
+            // }
+
+            // // If there are any updates, apply them to Firestore
+            // if (Object.keys(updates).length > 0) {
+            //     await updateDoc(userDocRef, updates); // Update all fields at once
+            // }
+
+            const updatedUser = {
+                ...authUser, // Spread the existing authUser data
+                creatorMessagePrice: parsedMessagePrice !== authUser.creatorMessagePrice ? parsedMessagePrice : authUser.creatorMessagePrice,
+                creatorSubscriptionPrice: parsedSubscriptionPrice !== authUser.creatorSubscriptionPrice ? parsedSubscriptionPrice : authUser.creatorSubscriptionPrice
+            };
+            
+            // If any fields have been updated, apply the updates to Firestore
+            if (
+                updatedUser.creatorMessagePrice !== authUser.creatorMessagePrice || 
+                updatedUser.creatorSubscriptionPrice !== authUser.creatorSubscriptionPrice
+            ) {
+                await updateDoc(userDocRef, updatedUser); // Update all fields in Firestore
             }
             
 
@@ -356,7 +406,7 @@ const CreatorSettings = ({ isOpen, onClose }) => {
                             color="black"
                         />
                         </Flex>
-                        <CreateSubscription creator={authUser}/>
+                        {/* <CreateSubscription creator={authUser}/> */}
                         </VStack>
                         
                             

@@ -21,6 +21,7 @@ const AddPaymentAndSubscribe = ({ userProfile, authUser, onClose}) => {
   const [errorMessage, setErrorMessage] = useState(null);
   const [clientSecret, setClientSecret] = useState(null);
   const [subscriptionPrice, setSubscriptionPrice] = useState("");
+  
 
   const userId = authUser.uid;
   const creatorId = userProfile.uid;
@@ -153,11 +154,12 @@ const AddPaymentAndSubscribe = ({ userProfile, authUser, onClose}) => {
         }
       }
 
-      // Subscribe user
+      // Subscribe user https://razzp-subscribe-56142959b61f.herokuapp.com/subscribe-user
       const response = await axios.post(
         "https://razzp-subscribe-56142959b61f.herokuapp.com/subscribe-user",
         {
           userId,
+          creatorId,
           priceId: subscriptionPrice,
           paymentMethodId,
         }
@@ -165,7 +167,7 @@ const AddPaymentAndSubscribe = ({ userProfile, authUser, onClose}) => {
 
       if (response.data.transactionStatus) {
         if (response.data.transactionStatus === "succeeded") {
-            addSubscriptionToFirestore();
+            //addSubscriptionToFirestore();
             
             onClose();
         } else {
@@ -194,6 +196,7 @@ const AddPaymentAndSubscribe = ({ userProfile, authUser, onClose}) => {
             <p>
               {paymentMethods[0].card.brand} ending in {paymentMethods[0].card.last4}
             </p> */}
+            
             <Button
               size="sm"
               mt={3}
@@ -202,11 +205,11 @@ const AddPaymentAndSubscribe = ({ userProfile, authUser, onClose}) => {
               disabled={loading}
             >
               {loading
-            ? "Processing..."
+            ? "Processing payment..."
             : `Subscribe with ${paymentMethods[0].card.brand} ending in ${paymentMethods[0].card.last4}`}
             </Button>
             <Button size="sm" mt={3} type="button" onClick={() => setShowAddPaymentForm(true)}>
-              Add New Payment
+              Add New Payment Method
             </Button>
           </div>
         ) : null}

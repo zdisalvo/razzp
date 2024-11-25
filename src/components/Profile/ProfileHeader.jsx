@@ -36,6 +36,7 @@ import CreatorModal from "../Modals/CreatorModal";
 import CreatorSettings from "./CreatorSettings";
 import AddPaymentAndSubscribe from "../Stripe/AddPaymentAndSubscribe";
 import SubscribeModal from "../Stripe/SubscribeModal";
+import CancelSubscription from "../Stripe/CancelSubscription";
 
 const ProfileHeader = ({ username, page }) => {
 	//const { userProfile } = useUserProfileStore();
@@ -88,6 +89,7 @@ const ProfileHeader = ({ username, page }) => {
 	const { unsetCreator, isLoading: unsettingCreator} = useUnsetContentCreator();
 	const [isCreatorModalOpen, setIsCreatorModalOpen] = useState(false);
 	const [isSubscribeModalOpen, setIsSubscibeModalOpen] = useState(false);
+	const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
 	const [isSubscribedToCreator, setIsSubscribedToCreator] = useState(false);
 	const [isInitialized, setIsInitialized] = useState(false);
 	
@@ -96,21 +98,42 @@ const ProfileHeader = ({ username, page }) => {
 			return;
 
 		fetchUserData(authUser.uid);
-		setIsSubscribedToCreator(authUser.subscriptions && authUser.subscriptions.some(
-			(subscription) => subscription.creatorId === userProfile.uid
-		  ));
+		// setIsSubscribedToCreator(authUser.subscriptions && authUser.subscriptions.some(
+		// 	(subscription) => subscription.creatorId === userProfile.uid
+		//   ));
+
+		  const isSubscribed = authUser.subscriptions && authUser.subscriptions.some((subscription) => {
+			const isValidSubscription = subscription.creatorId === userProfile.uid;
+			if (!isValidSubscription)
+				return false;
+			else
+				 return subscription.expirationDate.toDate() > new Date(); // Check if expirationDate is in the future
+			//console.log(isExpirationValid);
+			
+			//return isValidSubscription && isExpirationValid
+		  });
+		  
+		  setIsSubscribedToCreator(isSubscribed);
+
 		setIsInitialized(true);
 	})
 
 	useEffect(() => {
 		// If authUser or userProfile changes, recompute subscription state
 		if (authUser && userProfile) {
-		  setIsSubscribedToCreator(
-			authUser.subscriptions &&
-			authUser.subscriptions.some(
-			  (subscription) => subscription.creatorId === userProfile.uid
-			)
-		  );
+			fetchUserData(authUser.uid);
+			const isSubscribed = authUser.subscriptions && authUser.subscriptions.some((subscription) => {
+				const isValidSubscription = subscription.creatorId === userProfile.uid;
+				if (!isValidSubscription)
+					return false;
+				else
+				 	return subscription.expirationDate.toDate() > new Date(); // Check if expirationDate is in the future
+				//console.log(isExpirationValid);
+				
+				//return isValidSubscription && isExpirationValid;
+			  });
+			  
+			  setIsSubscribedToCreator(isSubscribed);
 		}
 	  }, [authUser, userProfile]);
 	
@@ -121,7 +144,10 @@ const ProfileHeader = ({ username, page }) => {
 	}
 
 	const handleOpenSubscribeModal = () => {
-		setIsSubscibeModalOpen(true);
+		if (!isSubscribedToCreator)
+			setIsSubscibeModalOpen(true);
+		else
+			setIsCancelModalOpen(true);
 	}
 
 	const handleSubscribeModalClose = () => {
@@ -131,6 +157,16 @@ const ProfileHeader = ({ username, page }) => {
 		// 	));
 		// console.log(isSubscribedToCreator);
 		setIsSubscibeModalOpen(false);
+	}
+
+
+	const handleCancelModalClose = () => {
+		fetchUserData(authUser.uid);
+		// setIsSubscribedToCreator(authUser.subscriptions && authUser.subscriptions.some(
+		// 	(subscription) => subscription.creatorId === userProfile.uid
+		// 	));
+		// console.log(isSubscribedToCreator);
+		setIsCancelModalOpen(false);
 	}
 
 	const handleImportInstagram = () => {
@@ -1044,6 +1080,7 @@ const ProfileHeader = ({ username, page }) => {
 			{isCreatorModalOpen && <CreatorModal isOpen={isCreatorModalOpen} onClose={handleCreatorModalClose} />}
 			{isCreatorSettingsOpen && <CreatorSettings isOpen={isCreatorSettingsOpen} onClose={handleCreatorSettingsClose} />}
 			{isSubscribeModalOpen && <SubscribeModal isOpen={isSubscribeModalOpen} onClose={handleSubscribeModalClose} userProfile={userProfile} authUser={authUser} isSubscribed={isSubscribedToCreator} />}
+			{isCancelModalOpen && <CancelSubscription isOpen={isCancelModalOpen} onClose={handleCancelModalClose} userProfile={userProfile} authUser={authUser} isSubscribed={isSubscribedToCreator} />}
 		</Flex>
 		
 	);
