@@ -42,16 +42,12 @@ const Message = () => {
 		if (!authUser || !receivingProfile || isInitialized)
 			return;
 
-		// setIsSubscribedToCreator(authUser.subscriptions && authUser.subscriptions.some(
-		// 	(subscription) => subscription.creatorId === userProfile.uid
-		//   ));
-
 		  const isSubscribed = authUser.subscriptions && authUser.subscriptions.some((subscription) => {
 			const isValidSubscription = subscription.creatorId === receivingProfile.uid;
 			if (!isValidSubscription)
 				return false;
 			else
-				 return subscription.expirationDate.toDate() > new Date(); // Check if expirationDate is in the future
+				 return subscription.expirationDate.seconds * 1000 > Date.now(); // Check if expirationDate is in the future
 			//console.log(isExpirationValid);
 			
 			//return isValidSubscription && isExpirationValid
@@ -301,7 +297,10 @@ const Message = () => {
             onClick={() => handleAvatarClick(receivingUserId)}
             cursor="pointer"
           />
-          <Box ml={4}>
+          <Box ml={4}
+            onClick={() => handleAvatarClick(receivingUserId)}
+            cursor="pointer"
+          >
             <Text fontSize="xl" fontWeight="bold">
               {receivingProfile.username}
             </Text>

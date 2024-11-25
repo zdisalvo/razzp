@@ -38,6 +38,28 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const previewLimit = 125; 
     const [isExpanded, setIsExpanded] = useState(false);
+    const [isSubscribedToCreator, setIsSubscribedToCreator] = useState(false);
+	const [isInitialized, setIsInitialized] = useState(false);
+	
+	useEffect (() => {
+		if (!authUser || !creatorProfile || isInitialized)
+			return;
+
+		  const isSubscribed = authUser.subscriptions && authUser.subscriptions.some((subscription) => {
+			const isValidSubscription = subscription.creatorId === creatorProfile.uid;
+			if (!isValidSubscription)
+				return false;
+			else
+				 return subscription.activeSince.seconds * 1000 < post.createdAt; // Check if expirationDate is in the future
+			//console.log(isExpirationValid);
+			
+			//return isValidSubscription && isExpirationValid
+		  });
+		  
+		  setIsSubscribedToCreator(isSubscribed);
+
+		setIsInitialized(true);
+	})
 
     // Decide whether to show full or truncated caption
     const captionToShow = isExpanded
@@ -224,7 +246,7 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
                 </Box>
                 )}
                 {/* !post.purchased.includes(authUser.uid) */}
-                {post && post.paid && (authUser && !isPurchased) &&  (
+                {post && post.paid && (authUser && !isPurchased && !isSubscribedToCreator) &&  (
                 <Box cursor={"pointer"} fontSize={18}>
                     {/* <CheckoutButton post={post} /> */}
                     <Button onClick={handlePurchaseClick}>Access for ${post.price}</Button>

@@ -24,9 +24,11 @@ import {
   import { arrayRemove, deleteDoc, doc, updateDoc, onSnapshot } from "firebase/firestore";
   import usePostStore from "../../store/postStore";
   import Caption from "../Comment/Caption";
+  import useGetUserProfileById from "../../hooks/useGetUserProfileById";
   
   const ProfilePost = ({ post, onClick }) => {
-	const userProfile = useUserProfileStore((state) => state.userProfile);
+	//const userProfile = useUserProfileStore((state) => state.userProfile);
+	const { userProfile } = useGetUserProfileById(post.createdBy);
 	const authUser = useAuthStore((state) => state.user);
 	const showToast = useShowToast();
 	const [isDeleting, setIsDeleting] = useState(false);
@@ -38,6 +40,28 @@ import {
 	const [playCount, setPlayCount] = useState(0);
 	const [isPurchased, setIsPurchased] = useState(post.purchased && authUser && post.purchased.includes(authUser?.uid));
 	const [purchasedUsers, setPurchasedUsers] = useState(post.purchased || null); // Store purchased users
+	const [isSubscribedToCreator, setIsSubscribedToCreator] = useState(false);
+	const [isInitialized, setIsInitialized] = useState(false);
+	
+	useEffect (() => {
+		if (!authUser || !userProfile || isInitialized)
+			return;
+
+		  const isSubscribed = authUser.subscriptions && authUser.subscriptions.some((subscription) => {
+			const isValidSubscription = subscription.creatorId === userProfile.uid;
+			if (!isValidSubscription)
+				return false;
+			else
+				 return subscription.activeSince.seconds * 1000 < post.createdAt; // Check if expirationDate is in the future
+			//console.log(isExpirationValid);
+			
+			//return isValidSubscription && isExpirationValid
+		  });
+		  
+		  setIsSubscribedToCreator(isSubscribed);
+
+		setIsInitialized(true);
+	})
 
 	useEffect(() => {
 		const postRef = doc(firestore, 'posts', post.id);
@@ -177,14 +201,14 @@ import {
 		  </Flex>
 		</Flex>
 		
-		{(!post.mediaType || post.mediaType.startsWith("image/")) && (!post.paid || post.paid && isPurchased) && (
+		{(!post.mediaType || post.mediaType.startsWith("image/")) && (!post.paid || post.paid && isPurchased || post.paid && isSubscribedToCreator) && (
 		<Image src={post.imageURL} alt="profile post" w={"100%"} h={"100%"} objectFit={"cover"} />
 		)}
-		{(!post.mediaType || post.mediaType.startsWith("image/"))  && post.paid && !isPurchased && (
+		{(!post.mediaType || post.mediaType.startsWith("image/"))  && post.paid && !isPurchased && !isSubscribedToCreator && (
 		<Image src={post.imageURL} style={{ filter: 'blur(11px)' }} alt="profile post" w={"100%"} h={"100%"} objectFit={"cover"} />
 		)}
 
-		{(post.mediaType && post.mediaType.startsWith("video/")) && (!post.paid || post.paid && isPurchased) && (
+		{(post.mediaType && post.mediaType.startsWith("video/")) && (!post.paid || post.paid && isPurchased || post.paid && isSubscribedToCreator) && (
         <Box 
 		display="flex" 
 		justifyContent="center" 
@@ -213,7 +237,7 @@ import {
         </Box>
       )}
 
-	{(post.mediaType && post.mediaType.startsWith("video/")) && post.paid && !isPurchased && (
+	{(post.mediaType && post.mediaType.startsWith("video/")) && post.paid && !isPurchased && !isSubscribedToCreator && (
         <Box 
 		display="flex" 
 		justifyContent="center" 

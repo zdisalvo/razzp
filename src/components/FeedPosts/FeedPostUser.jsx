@@ -19,6 +19,28 @@ const FeedPostUser = forwardRef(({ post, isFollowing, requested, isPrivate, onFo
   //const imageSrc = !post.imageURL.startsWith("https://firebase") ? `${proxyURL}${encodeURIComponent(post.imageURL)}` : post.imageURL;
   const [isPurchased, setIsPurchased] = useState(post.purchased && authUser && post.purchased.includes(authUser?.uid));
   const [purchasedUsers, setPurchasedUsers] = useState(post.purchased || null); // Store purchased users
+  const [isSubscribedToCreator, setIsSubscribedToCreator] = useState(false);
+	const [isInitialized, setIsInitialized] = useState(false);
+	
+	useEffect (() => {
+		if (!authUser || !userProfile || isInitialized)
+			return;
+
+		  const isSubscribed = authUser.subscriptions && authUser.subscriptions.some((subscription) => {
+			const isValidSubscription = subscription.creatorId === userProfile.uid;
+			if (!isValidSubscription)
+				return false;
+			else
+				 return subscription.activeSince.seconds * 1000 < post.createdAt; // Check if expirationDate is in the future
+			//console.log(isExpirationValid);
+			
+			//return isValidSubscription && isExpirationValid
+		  });
+		  
+		  setIsSubscribedToCreator(isSubscribed);
+
+		setIsInitialized(true);
+	})
 
   useEffect(() => {
     const postRef = doc(firestore, 'posts', post.id);
@@ -112,7 +134,7 @@ const FeedPostUser = forwardRef(({ post, isFollowing, requested, isPrivate, onFo
         alignItems="center"
         //transition="height 2.0s ease-in-out"
         >
-      {((!post.mediaType) || (post.mediaType.startsWith("image/")) && (!post.paid || post.paid && isPurchased)) && (
+      {((!post.mediaType) || (post.mediaType.startsWith("image/")) && (!post.paid || post.paid && isPurchased || post.paid && isSubscribedToCreator)) && (
         
         
         <Image src={post.imageURL} alt={"FEED POST IMG"} width="100%" objectFit="cover" maxHeight="450px" height="auto"
@@ -125,7 +147,7 @@ const FeedPostUser = forwardRef(({ post, isFollowing, requested, isPrivate, onFo
         
         
       )}
-      {(!post.mediaType || post.mediaType.startsWith("image/")) && post.paid && !isPurchased && (
+      {(!post.mediaType || post.mediaType.startsWith("image/")) && (post.paid && !isPurchased && !isSubscribedToCreator) && (
         
         
         <Image src={post.imageURL} style={{ filter: 'blur(11px)', pointerEvents: 'none', userSelect: 'none' }} alt={"FEED POST IMG"} width="100%" objectFit="cover" maxHeight="450px" height="auto"
@@ -136,7 +158,7 @@ const FeedPostUser = forwardRef(({ post, isFollowing, requested, isPrivate, onFo
         
         
       )}
-      {(post.mediaType && post.mediaType.startsWith("video/")) && (!post.paid || post.paid && isPurchased) && (
+      {(post.mediaType && post.mediaType.startsWith("video/")) && (!post.paid || post.paid && isPurchased || post.paid && isSubscribedToCreator) && (
         <Box justifyContent="center" alignItems="center" m={0} p={0}
         //onClick={handleVideoClick}
         cursor="pointer"
@@ -159,7 +181,7 @@ const FeedPostUser = forwardRef(({ post, isFollowing, requested, isPrivate, onFo
         
         </Box>
       )}
-      {(post.mediaType && post.mediaType.startsWith("video/")) && post.paid && !isPurchased && (
+      {(post.mediaType && post.mediaType.startsWith("video/")) && (post.paid && !isPurchased && !isSubscribedToCreator) && (
         <Box justifyContent="center" alignItems="center" m={0} p={0}
         //onClick={handleVideoClick}
         cursor="pointer"

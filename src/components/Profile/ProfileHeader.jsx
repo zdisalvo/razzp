@@ -107,7 +107,7 @@ const ProfileHeader = ({ username, page }) => {
 			if (!isValidSubscription)
 				return false;
 			else
-				 return subscription.expirationDate.toDate() > new Date(); // Check if expirationDate is in the future
+				 return subscription.expirationDate.seconds * 1000 > Date.now(); // Check if expirationDate is in the future
 			//console.log(isExpirationValid);
 			
 			//return isValidSubscription && isExpirationValid
@@ -127,7 +127,7 @@ const ProfileHeader = ({ username, page }) => {
 				if (!isValidSubscription)
 					return false;
 				else
-				 	return subscription.expirationDate.toDate() > new Date(); // Check if expirationDate is in the future
+					return subscription.expirationDate.seconds * 1000 > Date.now(); // Check if expirationDate is in the future
 				//console.log(isExpirationValid);
 				
 				//return isValidSubscription && isExpirationValid;
