@@ -367,7 +367,7 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
                             </Button>
                         </InputRightElement>
                     </InputGroup>
-                    {isModalOpen && <AgePaymentModal isOpen={isModalOpen} onClose={handleModalClose} post={post} creatorProfile={creatorProfile} />}
+                    {isModalOpen && <AgePaymentModal isOpen={isModalOpen} onClose={handleModalClose} post={post} creatorProfile={creatorProfile} authUser={authUser} />}
                 </Flex>
             )}
         </Box>

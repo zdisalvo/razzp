@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Checkbox, Text, Box, Flex, Modal, ModalOverlay, ModalBody, ModalContent, ModalCloseButton, ModalHeader } from '@chakra-ui/react'; // Assuming you are using Chakra UI
-import AddPaymentAndSubscribe from './AddPaymentAndSubscribe';
+//import AddPaymentAndSubscribe from './AddPaymentAndSubscribe';
 import dayjs from "dayjs";
 import axios from "axios";
 

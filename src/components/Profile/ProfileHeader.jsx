@@ -127,13 +127,13 @@ const ProfileHeader = ({ username, page }) => {
 		setIsInitialized(true);
 		
 		
-	}, [authUser && authUser.subscriptions.length]);
+	}, [authUser && authUser.subscriptions && authUser.subscriptions.length]);
 
 
 	  const handleFetchUserData = async (userId) => {
 		try {
 		  // Add a delay using setTimeout wrapped in a Promise
-		  await new Promise((resolve) => setTimeout(resolve, 1000));
+		  await new Promise((resolve) => setTimeout(resolve, 2000));
 	  
 		  // Now call fetchUserData
 		  await fetchUserData(userId);

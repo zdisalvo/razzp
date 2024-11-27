@@ -71,7 +71,7 @@ import {
 		  setOwnProfile(authUser.uid === userProfile.uid);
 
 		//setIsInitialized(true);
-	},[authUser.subscriptions.length])
+	},[authUser && authUser.subscriptions && authUser.subscriptions.length])
 
 	useEffect (() => {
 		if (!authUser || !userProfile || isInitialized)

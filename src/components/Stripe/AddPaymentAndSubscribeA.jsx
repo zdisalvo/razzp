@@ -133,6 +133,67 @@ const AddPaymentAndSubscribe = ({ userProfile, authUser, onClose}) => {
 
       let paymentMethodId = selectedPaymentMethod;
 
+      // Create a new payment method if not using the current one
+    //   if (!useCurrentPayment && !paymentMethodId ) {
+    //     const { paymentMethod, error } = await stripe.createPaymentMethod({
+    //       type: "card",
+    //       card: elements.getElement(PaymentElement),
+    //     });
+
+    //     if (error) {
+    //       setErrorMessage(error.message);
+    //       setLoading(false);
+    //       return;
+    //     }
+
+    //     paymentMethodId = paymentMethod.id;
+    //   }
+
+    //   // Confirm card setup if using a new payment method
+    //   if (!useCurrentPayment && clientSecret) {
+    //     const { error: confirmError } = await stripe.confirmCardSetup(clientSecret, {
+    //       payment_method: paymentMethodId,
+    //     });
+
+    //     if (confirmError) {
+    //       setErrorMessage(confirmError.message);
+    //       setLoading(false);
+    //       return;
+    //     }
+    //   }
+
+      if (!useCurrentPayment && clientSecret) {
+        const { setupIntent, error } = await stripe.confirmSetup({
+          elements, // Implicitly includes the PaymentElement
+          confirmParams: {
+            return_url: window.location.origin, // Optional, redirects after setup
+          },
+          redirect: "if_required", // Avoid redirection when unnecessary
+        });
+      
+        if (error) {
+          setErrorMessage(error.message);
+          setLoading(false);
+          return;
+        }
+      
+        paymentMethodId = setupIntent.payment_method;
+      }
+
+    //   const { error } = await stripe.confirmPayment({
+    //     elements, // Pass the mounted PaymentElement
+    //     // confirmParams: {
+    //     //   return_url: "https://your-return-url.com", // Optional redirect URL
+    //     // },
+    //   });
+  
+    //   if (error) {
+    //     console.error("Payment confirmation error:", error.message);
+    //   } else {
+    //     console.log("Payment confirmed!");
+    //   }
+
+
 
       // Subscribe user https://razzp-subscribe-56142959b61f.herokuapp.com/subscribe-user
       const response = await axios.post(
@@ -195,82 +256,22 @@ const AddPaymentAndSubscribe = ({ userProfile, authUser, onClose}) => {
         ) : null }
 
         {showAddPaymentForm || paymentMethods.length === 0 ? (
-          
-            <PaymentForm
-                userId={userId}
-                creatorId={creatorId}
-                subscriptionPrice={subscriptionPrice}
-                setLoading={setLoading}
-                onClose={onClose}
-            />
+          <form onSubmit={handleSubmit}>
+            <h3>{paymentMethods.length === 0 ? "Add a Payment Method" : "Enter Payment Method"}</h3>
+            <div>
+              <PaymentElement />
+            </div>
             
+            <Button type="submit" disabled={loading || !stripe || !elements}>
+              {loading ? "Processing..." : "Subscribe"}
+            </Button>
+            
+            {errorMessage && <div>{errorMessage}</div>}
+          </form>
         ) : null}
       </div>
     </Elements>
   );
 };
-
-const PaymentForm = ({ userId, creatorId, subscriptionPrice, loading, setLoading, onClose }) => {
-    const stripe = useStripe();
-    const elements = useElements();
-    const [errorMessage, setErrorMessage] = useState("");
-  
-  
-    const handleSubmit = async (e) => {
-      e.preventDefault();
-      setLoading(true);
-    
-      try {
-        // Confirm the setup of the payment method
-        const { setupIntent, error } = await stripe.confirmSetup({
-          elements,
-          confirmParams: {
-            return_url: window.location.origin, // Optional, redirects after setup
-          },
-          redirect: "if_required", // Avoid redirection when unnecessary
-        });
-    
-        if (error) {
-          setErrorMessage(error.message);
-        } else {
-          // Save the payment method and subscribe the user
-          const response = await axios.post(
-            "https://razzp-subscribe-56142959b61f.herokuapp.com/subscribe-user",
-            {
-              userId,
-              creatorId,
-              priceId: subscriptionPrice,
-              paymentMethodId: setupIntent.payment_method,
-            }
-          );
-          if (response.data.transactionStatus) {
-            if (response.data.transactionStatus === "succeeded") {
-                //addSubscriptionToFirestore();
-                
-                onClose();
-            } else {
-            alert("Payment " + response.data.transactionStatus);
-            }
-          } else {
-            alert("Subscription failed.");
-          }
-        }
-      } catch (err) {
-        setErrorMessage(err.message || "An error occurred while processing your payment.");
-      } finally {
-        setLoading(false);
-      }
-    };
-  
-    return (
-      <form onSubmit={handleSubmit}>
-        <PaymentElement />
-        <Button type="submit" disabled={!stripe || loading}>
-          {loading ? "Processing..." : "Subscribe"}
-        </Button>
-        {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
-      </form>
-    );
-  };
 
 export default AddPaymentAndSubscribe;

@@ -377,7 +377,7 @@ const Message = () => {
           Send
         </Button>
       </Flex>
-      {isModalOpen && <MessagePurchaseModal isOpen={isModalOpen} onClose={handleModalClose} creatorProfile={receivingProfile} onPurchaseStatus={handlePurchaseStatus}/>}
+      {isModalOpen && <MessagePurchaseModal isOpen={isModalOpen} onClose={handleModalClose} authUser={authUser} creatorProfile={receivingProfile} onPurchaseStatus={handlePurchaseStatus}/>}
     </Container>
   );
 };
