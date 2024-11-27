@@ -40,6 +40,7 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
     const [isExpanded, setIsExpanded] = useState(false);
     const [isSubscribedToCreator, setIsSubscribedToCreator] = useState(false);
 	const [isInitialized, setIsInitialized] = useState(false);
+    const [ownProfile, setOwnProfile] = useState(false);
 	
 	useEffect (() => {
 		if (!authUser || !creatorProfile || isInitialized)
@@ -57,6 +58,7 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
 		  });
 		  
 		  setIsSubscribedToCreator(isSubscribed);
+          setOwnProfile(authUser.uid === creatorProfile.uid);
 
 		setIsInitialized(true);
 	})
@@ -246,7 +248,7 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
                 </Box>
                 )}
                 {/* !post.purchased.includes(authUser.uid) */}
-                {post && post.paid && (authUser && !isPurchased && !isSubscribedToCreator) &&  (
+                {post && post.paid && (authUser && !isPurchased && !isSubscribedToCreator && !ownProfile) &&  (
                 <Box cursor={"pointer"} fontSize={18}>
                     {/* <CheckoutButton post={post} /> */}
                     <Button onClick={handlePurchaseClick}>Access for ${post.price}</Button>

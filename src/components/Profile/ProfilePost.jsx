@@ -29,7 +29,11 @@ import {
   const ProfilePost = ({ post, onClick }) => {
 	//const userProfile = useUserProfileStore((state) => state.userProfile);
 	const { userProfile } = useGetUserProfileById(post.createdBy);
-	const authUser = useAuthStore((state) => state.user);
+	//const authUser = useAuthStore((state) => state.user);
+	const { authUser, fetchUserData } = useAuthStore((state) => ({
+		authUser: state.user,
+		fetchUserData: state.fetchUserData,
+	  }));
 	const showToast = useShowToast();
 	const [isDeleting, setIsDeleting] = useState(false);
 	const deletePost = usePostStore((state) => state.deletePost);
@@ -42,10 +46,15 @@ import {
 	const [purchasedUsers, setPurchasedUsers] = useState(post.purchased || null); // Store purchased users
 	const [isSubscribedToCreator, setIsSubscribedToCreator] = useState(false);
 	const [isInitialized, setIsInitialized] = useState(false);
+	const [ownProfile, setOwnProfile] = useState(false);
 	
 	useEffect (() => {
-		if (!authUser || !userProfile || isInitialized)
+		if (!authUser || !userProfile)
 			return;
+
+		  handleFetchUserData(authUser.uid);
+
+		  //console.log(authUser);
 
 		  const isSubscribed = authUser.subscriptions && authUser.subscriptions.some((subscription) => {
 			const isValidSubscription = subscription.creatorId === userProfile.uid;
@@ -59,9 +68,51 @@ import {
 		  });
 		  
 		  setIsSubscribedToCreator(isSubscribed);
+		  setOwnProfile(authUser.uid === userProfile.uid);
+
+		//setIsInitialized(true);
+	},[authUser.subscriptions.length])
+
+	useEffect (() => {
+		if (!authUser || !userProfile || isInitialized)
+			return;
+
+		  handleFetchUserData(authUser.uid);
+
+		  //console.log(authUser);
+
+		  const isSubscribed = authUser.subscriptions && authUser.subscriptions.some((subscription) => {
+			const isValidSubscription = subscription.creatorId === userProfile.uid;
+			if (!isValidSubscription)
+				return false;
+			else
+				 return subscription.activeSince.seconds * 1000 < post.createdAt; // Check if expirationDate is in the future
+			//console.log(isExpirationValid);
+			
+			//return isValidSubscription && isExpirationValid
+		  });
+		  
+		  setIsSubscribedToCreator(isSubscribed);
+		  setOwnProfile(authUser.uid === userProfile.uid);
 
 		setIsInitialized(true);
-	})
+	},)
+
+	const handleFetchUserData = async () => {
+		await fetchUserData(authUser.uid); // This will update the authUser state
+	  };
+
+	// const handleFetchUserData = async (userId) => {
+	// 	try {
+	// 	  // Add a delay using setTimeout wrapped in a Promise
+	// 	  await new Promise((resolve) => setTimeout(resolve, 3000));
+	  
+	// 	  // Now call fetchUserData
+	// 	  await fetchUserData(userId);
+	// 	} catch (error) {
+	// 	  console.error("Error fetching user data:", error);
+	// 	}
+	//   };
 
 	useEffect(() => {
 		const postRef = doc(firestore, 'posts', post.id);
@@ -201,14 +252,14 @@ import {
 		  </Flex>
 		</Flex>
 		
-		{(!post.mediaType || post.mediaType.startsWith("image/")) && (!post.paid || post.paid && isPurchased || post.paid && isSubscribedToCreator) && (
+		{(!post.mediaType || post.mediaType.startsWith("image/")) && (!post.paid || post.paid && isPurchased || post.paid && isSubscribedToCreator || post.paid && ownProfile) && (
 		<Image src={post.imageURL} alt="profile post" w={"100%"} h={"100%"} objectFit={"cover"} />
 		)}
-		{(!post.mediaType || post.mediaType.startsWith("image/"))  && post.paid && !isPurchased && !isSubscribedToCreator && (
+		{(!post.mediaType || post.mediaType.startsWith("image/"))  && post.paid && !isPurchased && !isSubscribedToCreator && !ownProfile && (
 		<Image src={post.imageURL} style={{ filter: 'blur(11px)' }} alt="profile post" w={"100%"} h={"100%"} objectFit={"cover"} />
 		)}
 
-		{(post.mediaType && post.mediaType.startsWith("video/")) && (!post.paid || post.paid && isPurchased || post.paid && isSubscribedToCreator) && (
+		{(post.mediaType && post.mediaType.startsWith("video/")) && (!post.paid || post.paid && isPurchased || post.paid && isSubscribedToCreator || post.paid && ownProfile) && (
         <Box 
 		display="flex" 
 		justifyContent="center" 
@@ -237,7 +288,7 @@ import {
         </Box>
       )}
 
-	{(post.mediaType && post.mediaType.startsWith("video/")) && post.paid && !isPurchased && !isSubscribedToCreator && (
+	{(post.mediaType && post.mediaType.startsWith("video/")) && post.paid && !isPurchased && !isSubscribedToCreator && !ownProfile && (
         <Box 
 		display="flex" 
 		justifyContent="center" 

@@ -22,47 +22,25 @@ const FeedPost = forwardRef(({ post, isFollowing, requested, isPrivate, onFollow
   const [purchasedUsers, setPurchasedUsers] = useState(post.purchased || null); // Store purchased users
   const [isSubscribedToCreator, setIsSubscribedToCreator] = useState(false);
 	const [isInitialized, setIsInitialized] = useState(false);
+  const [ownProfile, setOwnProfile] = useState(false);
 	
 	useEffect (() => {
 		if (!authUser || !userProfile || isInitialized)
 			return;
 
-		//fetchUserData(authUser.uid);
-		// setIsSubscribedToCreator(authUser.subscriptions && authUser.subscriptions.some(
-		// 	(subscription) => subscription.creatorId === userProfile.uid
-		//   ));
-
-    const isSubscribed =
-    authUser.subscriptions &&
-    authUser.subscriptions.some((subscription) => {
-      const isValidSubscription = subscription.creatorId === receivingProfile.uid;
-      //console.log(subscription.expirationDate);
-  
-      if (!isValidSubscription) return false;
-  
-      // Ensure expirationDate is a valid Date or Timestamp object
-      if (subscription.expirationDate) {
-        let expirationDate;
-        if (subscription.expirationDate.toDate) {
-          // Convert Firestore Timestamp to Date
-          expirationDate = subscription.expirationDate.toDate();
-        } else if (subscription.expirationDate instanceof Date) {
-          // Already a Date object
-          expirationDate = subscription.expirationDate;
-        } else {
-          // Invalid expirationDate format
-          console.error("Invalid expirationDate format:", subscription.expirationDate);
-          return false;
-        }
-  
-        // Check if expirationDate is in the future
-        return expirationDate > new Date();
-      }
-  
-      return false; // No expiration date means not valid
-    });
-  
-  setIsSubscribedToCreator(isSubscribed);
+		  const isSubscribed = authUser.subscriptions && authUser.subscriptions.some((subscription) => {
+			const isValidSubscription = subscription.creatorId === userProfile.uid;
+			if (!isValidSubscription)
+				return false;
+			else
+				 return subscription.activeSince.seconds * 1000 < post.createdAt; // Check if expirationDate is in the future
+			//console.log(isExpirationValid);
+			
+			//return isValidSubscription && isExpirationValid
+		  });
+		  
+		  setIsSubscribedToCreator(isSubscribed);
+      setOwnProfile(authUser.uid === userProfile.uid);
 
 		setIsInitialized(true);
 	})
@@ -150,7 +128,7 @@ const FeedPost = forwardRef(({ post, isFollowing, requested, isPrivate, onFollow
       <Box my={2} borderRadius={4} overflow={"hidden"} px={0} maxHeight="450px" objectFit="cover" height="auto" width="100%" display="flex" 
   justifyContent="center" 
   alignItems="center">
-      {((!post.mediaType) || (post.mediaType.startsWith("image/")) && (!post.paid || post.paid && isPurchased || post.paid && isSubscribedToCreator)) && (
+      {((!post.mediaType) || (post.mediaType.startsWith("image/")) && (!post.paid || post.paid && isPurchased || post.paid && isSubscribedToCreator || post.paid && ownProfile)) && (
         
         <Image src={post.imageURL} alt={"FEED POST IMG"} width="100%" objectFit="cover" maxHeight="450px" height="auto"
         style={{ pointerEvents: 'none', userSelect: 'none' }}
@@ -160,7 +138,7 @@ const FeedPost = forwardRef(({ post, isFollowing, requested, isPrivate, onFollow
         />
         
       )}
-      {(!post.mediaType || post.mediaType.startsWith("image/")) && (post.paid && !isPurchased && !isSubscribedToCreator) && (
+      {(!post.mediaType || post.mediaType.startsWith("image/")) && (post.paid && !isPurchased && !isSubscribedToCreator && !ownProfile) && (
         
         <Image src={post.imageURL} style={{ filter: 'blur(11px)', pointerEvents: 'none', userSelect: 'none' }} alt={"FEED POST IMG"} width="100%" objectFit="cover" maxHeight="450px" height="auto"
           onTouchStart={(e) => e.preventDefault()} 
@@ -169,7 +147,7 @@ const FeedPost = forwardRef(({ post, isFollowing, requested, isPrivate, onFollow
         />
         
       )}
-      {(post.mediaType && post.mediaType.startsWith("video/")) && (!post.paid || post.paid && isPurchased) && (
+      {(post.mediaType && post.mediaType.startsWith("video/")) && (!post.paid || post.paid && isPurchased || post.paid && isSubscribedToCreator || post.paid && ownProfile) && (
         <Box justifyContent="center" alignItems="center" m={0} p={0}
         //onClick={handleVideoClick}
         cursor="pointer"
@@ -192,7 +170,7 @@ const FeedPost = forwardRef(({ post, isFollowing, requested, isPrivate, onFollow
         
         </Box>
       )}
-      {(post.mediaType && post.mediaType.startsWith("video/")) && post.paid && !isPurchased && (
+      {(post.mediaType && post.mediaType.startsWith("video/")) && post.paid && !isPurchased && !isSubscribedToCreator && !ownProfile && (
         <Box justifyContent="center" alignItems="center" m={0} p={0}
         //onClick={handleVideoClick}
         cursor="pointer"

@@ -4,7 +4,7 @@ import useAuthStore from "../../store/authStore";
 import EditProfile from "./EditProfile";
 import useFollowUserFP from "../../hooks/useFollowUserFP";
 import { Link, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect} from "react";
 import useUserLocation from '../../hooks/useUserLocation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLocationDot, faEllipsis, faGear} from '@fortawesome/free-solid-svg-icons'; 
@@ -37,6 +37,8 @@ import CreatorSettings from "./CreatorSettings";
 import AddPaymentAndSubscribe from "../Stripe/AddPaymentAndSubscribe";
 import SubscribeModal from "../Stripe/SubscribeModal";
 import CancelSubscription from "../Stripe/CancelSubscription";
+import useShowToast from "../../hooks/useShowToast";
+import dayjs from 'dayjs';
 
 const ProfileHeader = ({ username, page }) => {
 	//const { userProfile } = useUserProfileStore();
@@ -45,6 +47,8 @@ const ProfileHeader = ({ username, page }) => {
 		authUser: state.user,
 		fetchUserData: state.fetchUserData,
 	  }));
+	const subscriptions = useAuthStore((state) => state.subscriptions);
+	const showToast = useShowToast();
 	//const {authUserDoc} = useGetUserProfileById(authUser.uid)
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	//const { isFollowing: initialIsFollowing } = useFollowUser(userProfile?.uid);
@@ -92,22 +96,27 @@ const ProfileHeader = ({ username, page }) => {
 	const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
 	const [isSubscribedToCreator, setIsSubscribedToCreator] = useState(false);
 	const [isInitialized, setIsInitialized] = useState(false);
+	const [subscriptionStatus, setSubscriptionStatus] = useState("");
+	const [expDate, setExpDate] = useState("");
 	
 	useEffect (() => {
-		if (!authUser || !userProfile || isInitialized)
+
+		if (!authUser || !userProfile )
 			return;
 
 		fetchUserData(authUser.uid);
-		// setIsSubscribedToCreator(authUser.subscriptions && authUser.subscriptions.some(
-		// 	(subscription) => subscription.creatorId === userProfile.uid
-		//   ));
+
 
 		  const isSubscribed = authUser.subscriptions && authUser.subscriptions.some((subscription) => {
 			const isValidSubscription = subscription.creatorId === userProfile.uid;
 			if (!isValidSubscription)
 				return false;
-			else
-				 return subscription.expirationDate.seconds * 1000 > Date.now(); // Check if expirationDate is in the future
+			else {
+				const expirationDateInMillis = subscription.expirationDate.seconds * 1000;
+				setExpDate(dayjs(expirationDateInMillis).format("MMMM DD, YYYY"));
+				setSubscriptionStatus(subscription.status);
+				return subscription.expirationDate.seconds * 1000 > Date.now(); // Check if expirationDate is in the future
+			}
 			//console.log(isExpirationValid);
 			
 			//return isValidSubscription && isExpirationValid
@@ -116,27 +125,23 @@ const ProfileHeader = ({ username, page }) => {
 		  setIsSubscribedToCreator(isSubscribed);
 
 		setIsInitialized(true);
-	})
+		
+		
+	}, [authUser && authUser.subscriptions.length]);
 
-	useEffect(() => {
-		// If authUser or userProfile changes, recompute subscription state
-		if (authUser && userProfile) {
-			fetchUserData(authUser.uid);
-			const isSubscribed = authUser.subscriptions && authUser.subscriptions.some((subscription) => {
-				const isValidSubscription = subscription.creatorId === userProfile.uid;
-				if (!isValidSubscription)
-					return false;
-				else
-					return subscription.expirationDate.seconds * 1000 > Date.now(); // Check if expirationDate is in the future
-				//console.log(isExpirationValid);
-				
-				//return isValidSubscription && isExpirationValid;
-			  });
-			  
-			  setIsSubscribedToCreator(isSubscribed);
+
+	  const handleFetchUserData = async (userId) => {
+		try {
+		  // Add a delay using setTimeout wrapped in a Promise
+		  await new Promise((resolve) => setTimeout(resolve, 1000));
+	  
+		  // Now call fetchUserData
+		  await fetchUserData(userId);
+		} catch (error) {
+		  console.error("Error fetching user data:", error);
 		}
-	  }, [authUser, userProfile]);
-	
+	  };
+		
 
 	if (!(localStorage.getItem("referral"))) {
 		localStorage.setItem("referral", username);
@@ -146,26 +151,25 @@ const ProfileHeader = ({ username, page }) => {
 	const handleOpenSubscribeModal = () => {
 		if (!isSubscribedToCreator)
 			setIsSubscibeModalOpen(true);
-		else
+		else if (isSubscribedToCreator && subscriptionStatus === "canceled") {
+			//console.log(expDate);
+			showToast("Your subscription is canceled but active until " + expDate);
+		} else if (isSubscribedToCreator)
 			setIsCancelModalOpen(true);
 	}
 
-	const handleSubscribeModalClose = () => {
-		fetchUserData(authUser.uid);
-		// setIsSubscribedToCreator(authUser.subscriptions && authUser.subscriptions.some(
-		// 	(subscription) => subscription.creatorId === userProfile.uid
-		// 	));
-		// console.log(isSubscribedToCreator);
+	const handleSubscribeModalClose = async () => {
+
+		handleFetchUserData(authUser.uid);
+		
 		setIsSubscibeModalOpen(false);
 	}
 
 
 	const handleCancelModalClose = () => {
-		fetchUserData(authUser.uid);
-		// setIsSubscribedToCreator(authUser.subscriptions && authUser.subscriptions.some(
-		// 	(subscription) => subscription.creatorId === userProfile.uid
-		// 	));
-		// console.log(isSubscribedToCreator);
+
+		handleFetchUserData(authUser.uid);
+
 		setIsCancelModalOpen(false);
 	}
 
