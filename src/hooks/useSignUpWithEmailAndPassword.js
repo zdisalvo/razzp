@@ -109,6 +109,7 @@ const useSignUpWithEmailAndPassword = () => {
 					dayCrowns: 0,
 					private: false,
 					referral: referralId || "",
+					subscriptions: [],
 				};
 				await setDoc(doc(firestore, "spark", newUser.user.uid), spark);
 				localStorage.setItem("spark-profile", JSON.stringify(spark));

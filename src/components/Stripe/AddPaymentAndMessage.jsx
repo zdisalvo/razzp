@@ -149,8 +149,8 @@ const AddPaymentAndMessage = ({ creatorProfile, authUser, onPurchaseStatus, onCl
             handlePurchase(creatorProfile, creatorProfile.creatorMessagePrice);
             
             onPurchaseStatus(true);
-            console.log("test");
-            console.log(onPurchaseStatus);
+            //console.log("test");
+            //console.log(onPurchaseStatus);
             onClose();
         } else {
         alert("Payment " + response.data.transactionStatus);

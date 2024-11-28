@@ -4,7 +4,7 @@ import useGetUserPosts from "../../hooks/useGetUserPosts";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 
-const ProfilePosts = ({ username }) => {
+const ProfilePosts = ({ username, isSubscribedToCreator, ownProfile }) => {
   const { isLoading, posts: fetchedPosts } = useGetUserPosts(username);
   const [posts, setPosts] = useState([]);
   const navigate = useNavigate();
@@ -48,6 +48,8 @@ const ProfilePosts = ({ username }) => {
             post={post}
             key={post.id}
             onClick={() => handlePostClick(post.id)}
+            isSubscribedToCreator={isSubscribedToCreator}
+            ownProfile={ownProfile}
           />
         ))}
     </Grid>

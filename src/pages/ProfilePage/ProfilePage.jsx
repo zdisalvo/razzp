@@ -32,6 +32,21 @@ const ProfilePage = () => {
   const userNotFound = !isLoading && !userProfile;
   const setUserId = useMsgStore((state) => state.setUserId);
   const setReceivingUserId = useMsgStore((state) => state.setReceivingUserId);
+  const [isSubscribedCallback, setIsSubscribedCallback] = useState(true);
+  const [ownProfile, setOwnProfile] = useState(false);
+
+  const handleIsSubscribed = (status) => {
+    //console.log(status);
+    setIsSubscribedCallback(status);
+  }
+
+  useEffect(() => {
+    if (!authUser || !userProfile)
+      return;
+
+    setOwnProfile(authUser.uid === userProfile.uid);
+
+  });
 
   // useEffect(() => {
 	// 	if (authUser) {
@@ -111,7 +126,7 @@ const ProfilePage = () => {
 			alignItems="center"
       >
         <Flex py={1} px={0} w="full" flexDirection="column" alignItems="center">
-          {userProfile && <ProfileHeader username={username} page="profile" />}
+          {userProfile && <ProfileHeader username={username} isSubscribedCallback={handleIsSubscribed} page="profile" />}
           {isLoading && <ProfileHeaderSkeleton />}
         </Flex>
         <Flex
@@ -126,10 +141,10 @@ const ProfilePage = () => {
         >
           {/* <ProfileTabs /> */}
           {authUser && userProfile && ((!userProfile.private) || (authUser.uid === userProfile.uid)|| (userProfile.private && userProfile.followers.includes(authUser.uid))) ? (
-          <ProfilePosts username={username} />
+          <ProfilePosts username={username} isSubscribedToCreator={isSubscribedCallback} ownProfile={ownProfile}/>
           ) : 
           ((userProfile && !userProfile.private) &&
-          <ProfilePosts username={username} />)
+          <ProfilePosts username={username} isSubscribedToCreator={isSubscribedCallback} ownProfile={ownProfile}/>)
           }
         </Flex>
       </Box>

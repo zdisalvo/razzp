@@ -40,7 +40,7 @@ import CancelSubscription from "../Stripe/CancelSubscription";
 import useShowToast from "../../hooks/useShowToast";
 import dayjs from 'dayjs';
 
-const ProfileHeader = ({ username, page }) => {
+const ProfileHeader = ({ username, page, isSubscribedCallback }) => {
 	//const { userProfile } = useUserProfileStore();
 	const { userProfile } = useGetUserProfileByUsername(username);
 	const { authUser, fetchUserData } = useAuthStore((state) => ({
@@ -106,12 +106,13 @@ const ProfileHeader = ({ username, page }) => {
 
 		fetchUserData(authUser.uid);
 
-
+		  
 		  const isSubscribed = authUser.subscriptions && authUser.subscriptions.some((subscription) => {
-			const isValidSubscription = subscription.creatorId === userProfile.uid;
-			if (!isValidSubscription)
+			const isValidSubscription = subscription.creatorId === userProfile.uid || false;
+			if (!isValidSubscription) {
+				console.log(isValidSubscription);
 				return false;
-			else {
+			} else {
 				const expirationDateInMillis = subscription.expirationDate.seconds * 1000;
 				setExpDate(dayjs(expirationDateInMillis).format("MMMM DD, YYYY"));
 				setSubscriptionStatus(subscription.status);
@@ -122,13 +123,18 @@ const ProfileHeader = ({ username, page }) => {
 			//return isValidSubscription && isExpirationValid
 		  });
 		  
+		  isSubscribedCallback(isSubscribed);
 		  setIsSubscribedToCreator(isSubscribed);
+		  //console.log(isSubscribed);
+		  //console.log(isSubscribedToCreator); 
 
 		setIsInitialized(true);
 		
 		
 	}, [authUser && authUser.subscriptions && authUser.subscriptions.length]);
+	//[authUser && authUser.subscriptions && authUser.subscriptions.length]
 
+	//console.log(isSubscribedToCreator);
 
 	  const handleFetchUserData = async (userId) => {
 		try {

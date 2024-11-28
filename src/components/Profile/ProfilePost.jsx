@@ -26,7 +26,7 @@ import {
   import Caption from "../Comment/Caption";
   import useGetUserProfileById from "../../hooks/useGetUserProfileById";
   
-  const ProfilePost = ({ post, onClick }) => {
+  const ProfilePost = ({ post, onClick, isSubscribedToCreator, ownProfile }) => {
 	//const userProfile = useUserProfileStore((state) => state.userProfile);
 	const { userProfile } = useGetUserProfileById(post.createdBy);
 	//const authUser = useAuthStore((state) => state.user);
@@ -44,59 +44,59 @@ import {
 	const [playCount, setPlayCount] = useState(0);
 	const [isPurchased, setIsPurchased] = useState(post.purchased && authUser && post.purchased.includes(authUser?.uid));
 	const [purchasedUsers, setPurchasedUsers] = useState(post.purchased || null); // Store purchased users
-	const [isSubscribedToCreator, setIsSubscribedToCreator] = useState(false);
+	//const [isSubscribedToCreator, setIsSubscribedToCreator] = useState(false);
 	const [isInitialized, setIsInitialized] = useState(false);
-	const [ownProfile, setOwnProfile] = useState(false);
+	//const [ownProfile, setOwnProfile] = useState(false);
 	
-	useEffect (() => {
-		if (!authUser || !userProfile)
-			return;
+	// useEffect (() => {
+	// 	if (!authUser || !userProfile)
+	// 		return;
 
-		  handleFetchUserData(authUser.uid);
+	// 	  handleFetchUserData(authUser.uid);
 
-		  //console.log(authUser);
+	// 	  //console.log(authUser);
 
-		  const isSubscribed = authUser.subscriptions && authUser.subscriptions.some((subscription) => {
-			const isValidSubscription = subscription.creatorId === userProfile.uid;
-			if (!isValidSubscription)
-				return false;
-			else
-				 return subscription.activeSince.seconds * 1000 < post.createdAt; // Check if expirationDate is in the future
-			//console.log(isExpirationValid);
+	// 	  const isSubscribed = authUser.subscriptions && authUser.subscriptions.some((subscription) => {
+	// 		const isValidSubscription = subscription.creatorId === userProfile.uid;
+	// 		if (!isValidSubscription)
+	// 			return false;
+	// 		else
+	// 			 return subscription.activeSince.seconds * 1000 < post.createdAt; // Check if expirationDate is in the future
+	// 		//console.log(isExpirationValid);
 			
-			//return isValidSubscription && isExpirationValid
-		  });
+	// 		//return isValidSubscription && isExpirationValid
+	// 	  });
 		  
-		  setIsSubscribedToCreator(isSubscribed);
-		  setOwnProfile(authUser.uid === userProfile.uid);
+	// 	  setIsSubscribedToCreator(isSubscribed);
+	// 	  setOwnProfile(authUser.uid === userProfile.uid);
 
-		//setIsInitialized(true);
-	},[authUser && authUser.subscriptions && authUser.subscriptions.length])
+	// 	//setIsInitialized(true);
+	// },[authUser && authUser.subscriptions && authUser.subscriptions.length])
 
-	useEffect (() => {
-		if (!authUser || !userProfile || isInitialized)
-			return;
+	// useEffect (() => {
+	// 	if (!authUser || !userProfile || isInitialized)
+	// 		return;
 
-		  handleFetchUserData(authUser.uid);
+	// 	//   handleFetchUserData(authUser.uid);
 
-		  //console.log(authUser);
+	// 	//   //console.log(authUser);
 
-		  const isSubscribed = authUser.subscriptions && authUser.subscriptions.some((subscription) => {
-			const isValidSubscription = subscription.creatorId === userProfile.uid;
-			if (!isValidSubscription)
-				return false;
-			else
-				 return subscription.activeSince.seconds * 1000 < post.createdAt; // Check if expirationDate is in the future
-			//console.log(isExpirationValid);
+	// 	//   const isSubscribed = authUser.subscriptions && authUser.subscriptions.some((subscription) => {
+	// 	// 	const isValidSubscription = subscription.creatorId === userProfile.uid;
+	// 	// 	if (!isValidSubscription)
+	// 	// 		return false;
+	// 	// 	else
+	// 	// 		 return subscription.activeSince.seconds * 1000 < post.createdAt; // Check if expirationDate is in the future
+	// 	// 	//console.log(isExpirationValid);
 			
-			//return isValidSubscription && isExpirationValid
-		  });
+	// 	// 	//return isValidSubscription && isExpirationValid
+	// 	//   });
 		  
-		  setIsSubscribedToCreator(isSubscribed);
-		  setOwnProfile(authUser.uid === userProfile.uid);
+	// 	//   setIsSubscribedToCreator(isSubscribed);
+	// 	  setOwnProfile(authUser.uid === userProfile.uid);
 
-		setIsInitialized(true);
-	},)
+	// 	setIsInitialized(true);
+	// },)
 
 	const handleFetchUserData = async () => {
 		await fetchUserData(authUser.uid); // This will update the authUser state
