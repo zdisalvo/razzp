@@ -26,14 +26,14 @@ import {
   import Caption from "../Comment/Caption";
   import useGetUserProfileById from "../../hooks/useGetUserProfileById";
   
-  const ProfilePost = ({ post, onClick, isSubscribedToCreator, ownProfile }) => {
+  const ProfilePost = ({ authUser, post, onClick, isSubscribedToCreator, ownProfile, activeSince }) => {
 	//const userProfile = useUserProfileStore((state) => state.userProfile);
 	const { userProfile } = useGetUserProfileById(post.createdBy);
 	//const authUser = useAuthStore((state) => state.user);
-	const { authUser, fetchUserData } = useAuthStore((state) => ({
-		authUser: state.user,
-		fetchUserData: state.fetchUserData,
-	  }));
+	// const { authUser, fetchUserData } = useAuthStore((state) => ({
+	// 	authUser: state.user,
+	// 	fetchUserData: state.fetchUserData,
+	//   }));
 	const showToast = useShowToast();
 	const [isDeleting, setIsDeleting] = useState(false);
 	const deletePost = usePostStore((state) => state.deletePost);
@@ -97,6 +97,13 @@ import {
 
 	// 	setIsInitialized(true);
 	// },)
+
+	//console.log(post);
+	// console.log(ownProfile);
+	// console.log(isSubscribedToCreator);
+	// console.log(authUser);
+	// console.log(activeSince);
+	//console.log(post.paid && !isPurchased && !isSubscribedToCreator && !ownProfile || (isSubscribedToCreator && activeSince > post.createdAt))
 
 	const handleFetchUserData = async () => {
 		await fetchUserData(authUser.uid); // This will update the authUser state
@@ -252,14 +259,14 @@ import {
 		  </Flex>
 		</Flex>
 		
-		{(!post.mediaType || post.mediaType.startsWith("image/")) && (!post.paid || post.paid && isPurchased || post.paid && isSubscribedToCreator || post.paid && ownProfile) && (
+		{(!post.mediaType || post.mediaType.startsWith("image/")) && (!post.paid || post.paid && isPurchased || post.paid && isSubscribedToCreator && activeSince <= post.createdAt || post.paid && ownProfile) && (
 		<Image src={post.imageURL} alt="profile post" w={"100%"} h={"100%"} objectFit={"cover"} />
 		)}
-		{(!post.mediaType || post.mediaType.startsWith("image/"))  && post.paid && !isPurchased && !isSubscribedToCreator && !ownProfile && (
+		{(!post.mediaType || post.mediaType.startsWith("image/"))  && post.paid && !isPurchased && (!isSubscribedToCreator || (isSubscribedToCreator && activeSince > post.createdAt)) && !ownProfile  && (
 		<Image src={post.imageURL} style={{ filter: 'blur(11px)' }} alt="profile post" w={"100%"} h={"100%"} objectFit={"cover"} />
 		)}
 
-		{(post.mediaType && post.mediaType.startsWith("video/")) && (!post.paid || post.paid && isPurchased || post.paid && isSubscribedToCreator || post.paid && ownProfile) && (
+		{(post.mediaType && post.mediaType.startsWith("video/")) && (!post.paid || post.paid && isPurchased || post.paid && isSubscribedToCreator && activeSince <= post.createdAt || post.paid && ownProfile) && (
         <Box 
 		display="flex" 
 		justifyContent="center" 
@@ -288,7 +295,7 @@ import {
         </Box>
       )}
 
-	{(post.mediaType && post.mediaType.startsWith("video/")) && post.paid && !isPurchased && !isSubscribedToCreator && !ownProfile && (
+	{(post.mediaType && post.mediaType.startsWith("video/")) && post.paid && !isPurchased && (!isSubscribedToCreator || (isSubscribedToCreator && activeSince > post.createdAt)) && !ownProfile && (
         <Box 
 		display="flex" 
 		justifyContent="center" 

@@ -32,17 +32,28 @@ const ProfilePage = () => {
   const userNotFound = !isLoading && !userProfile;
   const setUserId = useMsgStore((state) => state.setUserId);
   const setReceivingUserId = useMsgStore((state) => state.setReceivingUserId);
-  const [isSubscribedCallback, setIsSubscribedCallback] = useState(true);
+  const [isSubscribedCallback, setIsSubscribedCallback] = useState(false);
   const [ownProfile, setOwnProfile] = useState(false);
+  const [activeSince, setActiveSince] = useState("");
 
   const handleIsSubscribed = (status) => {
     //console.log(status);
     setIsSubscribedCallback(status);
   }
 
+  const handleActiveSince = (date) => {
+    console.log(date);
+    setActiveSince(date);
+    console.log(activeSince);
+  }
+
+  //console.log(authUser);
+
   useEffect(() => {
     if (!authUser || !userProfile)
       return;
+
+    //console.log("test");
 
     setOwnProfile(authUser.uid === userProfile.uid);
 
@@ -126,8 +137,8 @@ const ProfilePage = () => {
 			alignItems="center"
       >
         <Flex py={1} px={0} w="full" flexDirection="column" alignItems="center">
-          {userProfile && <ProfileHeader username={username} isSubscribedCallback={handleIsSubscribed} page="profile" />}
-          {isLoading && <ProfileHeaderSkeleton />}
+          {userProfile && <ProfileHeader username={username} isSubscribedCallback={handleIsSubscribed} activeSinceCallback={handleActiveSince} page="profile" />}
+          {/* {isLoading && <ProfileHeaderSkeleton />} */}
         </Flex>
         <Flex
           px={{ base: 0, sm: 0 }}
@@ -141,11 +152,13 @@ const ProfilePage = () => {
         >
           {/* <ProfileTabs /> */}
           {authUser && userProfile && ((!userProfile.private) || (authUser.uid === userProfile.uid)|| (userProfile.private && userProfile.followers.includes(authUser.uid))) ? (
-          <ProfilePosts username={username} isSubscribedToCreator={isSubscribedCallback} ownProfile={ownProfile}/>
+          <ProfilePosts authUser={authUser} username={username} isSubscribedToCreator={isSubscribedCallback} ownProfile={ownProfile} activeSince={activeSince}/>
           ) : 
-          ((userProfile && !userProfile.private) &&
-          <ProfilePosts username={username} isSubscribedToCreator={isSubscribedCallback} ownProfile={ownProfile}/>)
-          }
+          ((authUser && userProfile && !userProfile.private) &&
+          <ProfilePosts authUser={authUser} username={username} isSubscribedToCreator={isSubscribedCallback} ownProfile={ownProfile} activeSince={activeSince}/>
+        )}
+          {/* : (authUser && <ProfilePosts authUser={authUser} username={username} isSubscribedToCreator={isSubscribedCallback} ownProfile={ownProfile} activeSince={activeSince}/>
+          ))} */}
         </Flex>
       </Box>
       {/* <Box pb={{ base: "20vh", md: "60px" }}></Box> */}

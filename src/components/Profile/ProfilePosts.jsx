@@ -4,15 +4,18 @@ import useGetUserPosts from "../../hooks/useGetUserPosts";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 
-const ProfilePosts = ({ username, isSubscribedToCreator, ownProfile }) => {
+const ProfilePosts = ({ authUser, username, isSubscribedToCreator, ownProfile, activeSince }) => {
   const { isLoading, posts: fetchedPosts } = useGetUserPosts(username);
   const [posts, setPosts] = useState([]);
   const navigate = useNavigate();
   //const { userPosts, setUserPosts } = useState({});
 
+  //console.log(authUser);
+
   useEffect(() => {
     if (!isLoading && fetchedPosts.length > 0) {
       setPosts(fetchedPosts); // Store fetched posts in local state
+      //console.log("test");
     }
   }, [isLoading, fetchedPosts]);
 
@@ -50,6 +53,8 @@ const ProfilePosts = ({ username, isSubscribedToCreator, ownProfile }) => {
             onClick={() => handlePostClick(post.id)}
             isSubscribedToCreator={isSubscribedToCreator}
             ownProfile={ownProfile}
+            activeSince={activeSince}
+            authUser={authUser}
           />
         ))}
     </Grid>

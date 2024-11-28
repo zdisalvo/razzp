@@ -40,7 +40,7 @@ import CancelSubscription from "../Stripe/CancelSubscription";
 import useShowToast from "../../hooks/useShowToast";
 import dayjs from 'dayjs';
 
-const ProfileHeader = ({ username, page, isSubscribedCallback }) => {
+const ProfileHeader = ({ username, page, isSubscribedCallback, activeSinceCallback }) => {
 	//const { userProfile } = useUserProfileStore();
 	const { userProfile } = useGetUserProfileByUsername(username);
 	const { authUser, fetchUserData } = useAuthStore((state) => ({
@@ -104,18 +104,22 @@ const ProfileHeader = ({ username, page, isSubscribedCallback }) => {
 		if (!authUser || !userProfile )
 			return;
 
+		
+
 		fetchUserData(authUser.uid);
 
 		  
 		  const isSubscribed = authUser.subscriptions && authUser.subscriptions.some((subscription) => {
 			const isValidSubscription = subscription.creatorId === userProfile.uid || false;
+			//console.log(isValidSubscription);
 			if (!isValidSubscription) {
-				console.log(isValidSubscription);
+				//console.log(isValidSubscription);
 				return false;
 			} else {
 				const expirationDateInMillis = subscription.expirationDate.seconds * 1000;
 				setExpDate(dayjs(expirationDateInMillis).format("MMMM DD, YYYY"));
 				setSubscriptionStatus(subscription.status);
+				activeSinceCallback(subscription.activeSince.seconds * 1000);
 				return subscription.expirationDate.seconds * 1000 > Date.now(); // Check if expirationDate is in the future
 			}
 			//console.log(isExpirationValid);
@@ -128,13 +132,46 @@ const ProfileHeader = ({ username, page, isSubscribedCallback }) => {
 		  //console.log(isSubscribed);
 		  //console.log(isSubscribedToCreator); 
 
-		setIsInitialized(true);
+		//setIsInitialized(true);
 		
 		
 	}, [authUser && authUser.subscriptions && authUser.subscriptions.length]);
 	//[authUser && authUser.subscriptions && authUser.subscriptions.length]
 
-	//console.log(isSubscribedToCreator);
+	// useEffect (() => {
+
+	// 	if (!authUser || !userProfile || isInitialized)
+	// 		return;
+
+	// 	fetchUserData(authUser.uid);
+
+		  
+	// 	  const isSubscribed = authUser.subscriptions && authUser.subscriptions.some((subscription) => {
+	// 		const isValidSubscription = subscription.creatorId === userProfile.uid || false;
+	// 		if (!isValidSubscription) {
+	// 			//console.log(isValidSubscription);
+	// 			return false;
+	// 		} else {
+	// 			const expirationDateInMillis = subscription.expirationDate.seconds * 1000;
+	// 			setExpDate(dayjs(expirationDateInMillis).format("MMMM DD, YYYY"));
+	// 			activeSinceCallback(subscription.activeSince.seconds * 1000);
+	// 			setSubscriptionStatus(subscription.status);
+	// 			return subscription.expirationDate.seconds * 1000 > Date.now(); // Check if expirationDate is in the future
+	// 		}
+	// 		//console.log(isExpirationValid);
+			
+	// 		//return isValidSubscription && isExpirationValid
+	// 	  });
+		  
+	// 	  isSubscribedCallback(isSubscribed);
+	// 	  setIsSubscribedToCreator(isSubscribed);
+	// 	  //console.log(isSubscribed);
+	// 	  //console.log(isSubscribedToCreator); 
+
+	// 	setIsInitialized(true);
+		
+		
+	// }, );
 
 	  const handleFetchUserData = async (userId) => {
 		try {
@@ -565,7 +602,7 @@ const ProfileHeader = ({ username, page, isSubscribedCallback }) => {
 	//console.log(authUser);
 
 	return (
-		<Flex gap={{ base: 4, sm: 10 }} py={1} direction={{ base: "column", sm: "row" }} mb={4}>
+		<Flex gap={{ base: 4, sm: 10 }} py={1} direction={{ base: "column", sm: "row" }} mb={4} >
 			
 			<Container width={{base: "50%", md: "35%"}} p={0}>
 			{visitingAnotherProfileAndAuth && userAuth && (
@@ -741,7 +778,7 @@ const ProfileHeader = ({ username, page, isSubscribedCallback }) => {
 			px={4} // Adds padding inside MenuItem
               //width="100%"
 			  whiteSpace="nowrap"
-			  color="#A8A4C1"
+			  color="#B290B7"
 			  onClick={handleSetCreator}
 			>Content Creator ❌</MenuItem>
 			)}
@@ -978,7 +1015,7 @@ const ProfileHeader = ({ username, page, isSubscribedCallback }) => {
 				</Flex> */}
 				<Text fontSize={"sm"} mb={3} whiteSpace="pre-wrap" overflowWrap="break-word" width="100%">{userProfile.bio}</Text>
 				<Flex	
-						gap={3}
+						gap={2}
 					direction={{ base: "row", sm: "row" }}
 					justifyContent={{ base: "center", sm: "flex-start" }} //flex-start
 					alignItems="center"
@@ -987,11 +1024,13 @@ const ProfileHeader = ({ username, page, isSubscribedCallback }) => {
 				{visitingOwnProfileAndAuth && (
 						
 							<Button
+							flex={{ base: "0 0 auto", sm: "0 0 auto" }}
 								bg={"white"}
 								color={"black"}
 								_hover={{ bg: "whiteAlpha.800" }}
 								size={{ base: "sm", md: "sm" }}
 								onClick={onOpen}
+								textShadow="0 1px 1px rgba(0, 0, 0, 0.2)"
 							>
 								Edit Profile
 							</Button>
@@ -1000,9 +1039,10 @@ const ProfileHeader = ({ username, page, isSubscribedCallback }) => {
 					{visitingOwnProfileAndAuth && authUser.creator && (
 						
 							<Button
+							flex={{ base: "0 0 auto", sm: "0 0 auto" }}
 								bg={"#D8B7DD"}
-								color={"black"}
-								_hover={{ bg: "#A8A4C1" }}
+								color={"#722ABF"}
+								_hover={{ bg: "#B290B7" }}
 								size={{ base: "sm", md: "sm" }}
 								onClick={handleCCClick}
 							>
@@ -1021,12 +1061,13 @@ const ProfileHeader = ({ username, page, isSubscribedCallback }) => {
 						// 	onClick={handleCreatorSettingsClick}
 						// />
 						<IconButton
+						flex={{ base: "0 0 auto", sm: "0 0 auto" }}
 							icon={<FontAwesomeIcon icon={faGear} />}
 							size={{ base: "sm", md: "sm" }}
 							onClick={handleCreatorSettingsClick}
 							backgroundColor="#D8B7DD"
-							color="black"
-							_hover={{ bg: "#A8A4C1" }}
+							color="#722ABF"
+							_hover={{ bg: "#B290B7" }}
 							aria-label="Settings"
 						/>
 					
@@ -1034,13 +1075,14 @@ const ProfileHeader = ({ username, page, isSubscribedCallback }) => {
 					</Flex>
 					{visitingAnotherProfileAndAuth && (
 					<Flex	
-						gap={3}
+						gap={2}
 					direction={{ base: "row", sm: "row" }}
 					justifyContent={{ base: "center", sm: "flex-start" }}
 					alignItems="baseline"
 					w={"full"}	
 					>
 							<Button
+							flex={{ base: "0 0 auto", sm: "0 0 auto" }}
 								bg={"#eb7734"}
 								color={"white"}
 								_hover={{ bg: "#c75e1f" }}
@@ -1053,6 +1095,7 @@ const ProfileHeader = ({ username, page, isSubscribedCallback }) => {
 								{isFollowing ? "Unfollow" : (requested ? "Requested" : "Follow")}
 							</Button>
 							<Button
+							flex={{ base: "0 0 auto", sm: "0 0 auto" }}
 								bg={"#eb7734"}
 								color={"white"}
 								_hover={{ bg: "#c75e1f" }}
@@ -1064,6 +1107,7 @@ const ProfileHeader = ({ username, page, isSubscribedCallback }) => {
 								>Message</Button>
 							{userProfile.creator && (
 							<Button
+							flex={{ base: "0 0 auto", sm: "0 0 auto" }}
 							bg={"#eb7734"}
 							color={"white"}
 							_hover={{ bg: "#c75e1f" }}
@@ -1071,7 +1115,7 @@ const ProfileHeader = ({ username, page, isSubscribedCallback }) => {
 							aria-label="Messages"
 							textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)"
 							onClick={handleOpenSubscribeModal} 
-							mx={2} 
+							mr={2} 
 							>{!isSubscribedToCreator ? "Subscribe" : "Subscribed"}</Button>
 							)}
 							

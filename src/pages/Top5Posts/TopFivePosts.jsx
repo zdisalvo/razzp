@@ -203,7 +203,7 @@ const TopFivePosts = () => {
       <Box position="sticky" top="0" bg="black" zIndex="1" py={4}>
       <Box position="fixed" top="0" right={{base: "0", md: "15vw"}} p={4} zIndex="docked" width="100%">
                 <Flex justifyContent="flex-end" alignItems="center">
-                {authUser && (
+                {/* {authUser && (
                 <IconButton
                   icon={<FontAwesomeIcon icon={faMagnifyingGlassDollar} />}
                   aria-label="Creators"
@@ -211,7 +211,7 @@ const TopFivePosts = () => {
                   variant="outline"
                   mx={2} // Adds horizontal margin between the icons
                 />
-                )}
+                )} */}
                 {authUser && newNotificationsCount > 0 && (
                 <Box position="relative">
                 <IconButton
