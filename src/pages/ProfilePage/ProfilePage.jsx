@@ -42,9 +42,9 @@ const ProfilePage = () => {
   }
 
   const handleActiveSince = (date) => {
-    console.log(date);
+    //console.log(date);
     setActiveSince(date);
-    console.log(activeSince);
+    //console.log(activeSince);
   }
 
   //console.log(authUser);
@@ -137,7 +137,7 @@ const ProfilePage = () => {
 			alignItems="center"
       >
         <Flex py={1} px={0} w="full" flexDirection="column" alignItems="center">
-          {userProfile && <ProfileHeader username={username} isSubscribedCallback={handleIsSubscribed} activeSinceCallback={handleActiveSince} page="profile" />}
+          {userProfile && <ProfileHeader username={username} isSubscribedCallback={handleIsSubscribed} activeSinceCallback={handleActiveSince} page="profile" loading={loading} />}
           {/* {isLoading && <ProfileHeaderSkeleton />} */}
         </Flex>
         <Flex

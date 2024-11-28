@@ -107,10 +107,14 @@ const CreatePost = () => {
                                 <CloseButton
                                     position={"absolute"}
                                     top={2}
+									size={{base: "lg", md: "md"}}
                                     right={2}
                                     onClick={() => {
                                         setSelectedFile(null);
                                     }}
+									_focus={{
+										boxShadow: "0 0 0 2px rgba(255, 0, 0, 0.5)", // Subtle red focus ring
+									}}
                                 />
                             </Flex>
                         )}

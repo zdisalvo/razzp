@@ -32,7 +32,10 @@ const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 const CreatorSettings = ({ isOpen, onClose }) => {
 	//const { isOpen, onOpen, onClose } = useDisclosure();
-    const authUser = useAuthStore((state) => state.user);
+    const { authUser, fetchUserData } = useAuthStore((state) => ({
+		authUser: state.user,
+		fetchUserData: state.fetchUserData,
+	  }));
 	const showToast = useShowToast();
     const [price, setPrice] = useState(authUser?.creatorMessagePrice || ""); // State for handling price
     const [subscriptionPrice, setSubscriptionPrice] = useState(authUser?.creatorSubscriptionPrice || "");
@@ -90,7 +93,7 @@ const CreatorSettings = ({ isOpen, onClose }) => {
 
 
             // console.log(price);
-            console.log(subscriptionPrice);
+            //console.log(subscriptionPrice);
             
             const parsedSubscriptionPrice = parseFloat(subscriptionPrice) || 0;
             const parsedMessagePrice = parseFloat(price) || 0;
@@ -144,7 +147,7 @@ const CreatorSettings = ({ isOpen, onClose }) => {
             // }
 
 
-            
+
 
             // const updates = {}; // Create an empty object to hold the updates
 
@@ -212,6 +215,7 @@ const CreatorSettings = ({ isOpen, onClose }) => {
             showToast("Error", error.message, "error");
         } finally {
             setIsSettingPrices(false);
+            fetchUserData(authUser.uid);
             onClose();
         }
     };

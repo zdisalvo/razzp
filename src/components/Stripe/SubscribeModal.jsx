@@ -38,8 +38,8 @@ const SubscribeModal = ({ isOpen, onClose, userProfile, authUser }) => {
                     <Box mx={5} mb={6}>
                     <h2>Includes...</h2>
                     <Text fontSize="sm" mt={2}>{`📨 Unlimited messaging with ${userProfile.username} `}</Text>
-                    <Text fontSize="sm">{`📸 Exclusive access to ${userProfile.username}'s premium content`}</Text>
-                    <Text fontSize="sm">{`🎁 One month free. Instantly unlocks prior 30 days`}</Text>
+                    <Text fontSize="sm">{`📸 Exclusive access to premium content`}</Text>
+                    <Text fontSize="sm">{`🎁 Instantly unlocks prior 30 days`}</Text>
                     <Text fontSize="sm">{`💫 Renews on ${fmtMonthAfter}`}</Text>
                     </Box>
                     <></>

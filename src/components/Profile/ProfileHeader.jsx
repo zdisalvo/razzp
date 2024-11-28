@@ -40,7 +40,7 @@ import CancelSubscription from "../Stripe/CancelSubscription";
 import useShowToast from "../../hooks/useShowToast";
 import dayjs from 'dayjs';
 
-const ProfileHeader = ({ username, page, isSubscribedCallback, activeSinceCallback }) => {
+const ProfileHeader = ({ username, page, isSubscribedCallback, activeSinceCallback, loading }) => {
 	//const { userProfile } = useUserProfileStore();
 	const { userProfile } = useGetUserProfileByUsername(username);
 	const { authUser, fetchUserData } = useAuthStore((state) => ({
@@ -173,6 +173,42 @@ const ProfileHeader = ({ username, page, isSubscribedCallback, activeSinceCallba
 		
 	// }, );
 
+	useEffect (() => {
+
+		if (!authUser || !userProfile)
+			return;
+
+		if (loading) {
+			
+
+		handleFetchUserData(authUser.uid);
+
+		  
+		  const isSubscribed = authUser.subscriptions && authUser.subscriptions.some((subscription) => {
+			const isValidSubscription = subscription.creatorId === userProfile.uid || false;
+			if (!isValidSubscription) {
+				//console.log(isValidSubscription);
+				return false;
+			} else {
+				const expirationDateInMillis = subscription.expirationDate.seconds * 1000;
+				setExpDate(dayjs(expirationDateInMillis).format("MMMM DD, YYYY"));
+				activeSinceCallback(subscription.activeSince.seconds * 1000);
+				setSubscriptionStatus(subscription.status);
+				return subscription.expirationDate.seconds * 1000 > Date.now(); // Check if expirationDate is in the future
+			}
+			//console.log(isExpirationValid);
+			
+			//return isValidSubscription && isExpirationValid
+		  });
+		  
+		  isSubscribedCallback(isSubscribed);
+		  setIsSubscribedToCreator(isSubscribed);
+		  //console.log(isSubscribed);
+		  //console.log(isSubscribedToCreator); 
+
+		}
+	}, );
+
 	  const handleFetchUserData = async (userId) => {
 		try {
 		  // Add a delay using setTimeout wrapped in a Promise
@@ -258,6 +294,7 @@ const ProfileHeader = ({ username, page, isSubscribedCallback, activeSinceCallba
 	  };
 
 	  const handleCreatorModalClose = () => {
+		fetchUserData(authUser.uid);
 		setIsCreatorModalOpen(false);
 	  };
 
@@ -409,6 +446,7 @@ const ProfileHeader = ({ username, page, isSubscribedCallback, activeSinceCallba
 
 	const handleSetCreator = async () => {
 		try {
+			await setCreator();
 			await setCreator();
 		} catch (error) {
 			console.error(error);
@@ -749,7 +787,7 @@ const ProfileHeader = ({ username, page, isSubscribedCallback, activeSinceCallba
 			  color="white"
 			  onClick={handleShare}
 			>Invite my Contacts</MenuItem>
-			{authUser && !authUser.private && (
+			{authUser && !authUser.private && !authUser.creator && (
 			<MenuItem
 			bg="black"
 			_hover={{ bg: '#2e2e2e' }} // Changes background color to charcoal on hover
@@ -760,7 +798,7 @@ const ProfileHeader = ({ username, page, isSubscribedCallback, activeSinceCallba
 			  onClick={handleMakePrivate}
 			>Make Private</MenuItem>
 			)}
-			{authUser && authUser.private && (
+			{authUser && authUser.private && !authUser.creator && (
 			<MenuItem
 			bg="black"
 			_hover={{ bg: '#2e2e2e' }} // Changes background color to charcoal on hover
@@ -891,7 +929,7 @@ const ProfileHeader = ({ username, page, isSubscribedCallback, activeSinceCallba
 			</Container>
 			<Container width="85%">
 			<VStack alignItems={"start"} gap={2} mx={0} flex={1} mt={{base: "0px", md: "20px"}}>
-				<Flex
+				{/* <Flex
 					gap={3}
 					direction={{ base: "row", sm: "row" }}
 					justifyContent={{ base: "center", sm: "flex-start" }}
@@ -903,7 +941,39 @@ const ProfileHeader = ({ username, page, isSubscribedCallback, activeSinceCallba
 					<Text fontSize={"sm"} >
 						{userProfile.fullName}
 					</Text>
-				</Flex>
+				</Flex> */}
+
+					<Flex
+						gap={3}
+						direction={{ base: "column", sm: "row" }} // Change direction to column on smaller screens
+						justifyContent={{ base: "center", sm: "center" }}
+						align="center"
+						justify="center"
+						alignItems="baseline"
+						w={"full"}
+						>
+						<Box flex={"0 0 auto"} display="flex" alignItems="baseline" justifyContent="center">
+						<Text fontSize="lg" display="inline-block" mr={3}
+							//visibility={{ base: "hidden", sm: "visible" }}
+							>•</Text>
+							<Text fontWeight="bold" fontSize={{ base: "xl", md: "lg" }} display="inline-block">
+							{userProfile.username}
+							</Text>
+							<Text fontSize="lg" display="inline-block" ml={3}
+							//visibility={{ base: "hidden", sm: "visible" }}
+							>•</Text>
+						</Box>
+						<Flex
+							align="center"
+							justify="center"
+							alignItems="baseline"
+							w={"full"}
+						>
+						<Box flex={"1 0 auto"} justifyContent="center" alignItems="center" >
+							<Text textAlign="center" fontSize={"sm"} >{userProfile.fullName}</Text>
+						</Box>
+						</Flex>
+						</Flex>
 
 				<Flex 
 				justifyContent={{ base: "center", sm: "flex-start" }}

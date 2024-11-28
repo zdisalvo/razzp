@@ -44,6 +44,7 @@ function App() {
 	// 	  document.removeEventListener("touchstart", preventDefault);
 	// 	};
 	//   }, []);
+	  
 
 	  useEffect(() => {
 		const preventCopy = (e) => {
