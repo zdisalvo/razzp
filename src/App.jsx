@@ -33,17 +33,17 @@ function App() {
 	const [showSpark, setShowSpark] = useState(false);
 	const [showHome, setShowHome ] = useState(false);
 
-	// useEffect(() => {
-	// 	const preventDefault = (e) => e.preventDefault();
+	useEffect(() => {
+		const preventDefault = (e) => e.preventDefault();
 	  
-	// 	document.addEventListener("contextmenu", preventDefault);
-	// 	document.addEventListener("touchstart", preventDefault);
+		document.addEventListener("contextmenu", preventDefault);
+		document.addEventListener("touchstart", preventDefault);
 	  
-	// 	return () => {
-	// 	  document.removeEventListener("contextmenu", preventDefault);
-	// 	  document.removeEventListener("touchstart", preventDefault);
-	// 	};
-	//   }, []);
+		return () => {
+		  document.removeEventListener("contextmenu", preventDefault);
+		  document.removeEventListener("touchstart", preventDefault);
+		};
+	  }, []);
 	  
 
 	  useEffect(() => {

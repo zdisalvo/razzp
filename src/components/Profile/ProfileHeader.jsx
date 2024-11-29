@@ -952,6 +952,12 @@ const ProfileHeader = ({ username, page, isSubscribedCallback, activeSinceCallba
 						alignItems="baseline"
 						w={"full"}
 						>
+							<Flex
+							align="center"
+							justify="center"
+							alignItems="baseline"
+							w={"full"}
+						>
 						<Box flex={"0 0 auto"} display="flex" alignItems="baseline" justifyContent="center">
 						<Text fontSize="lg" display="inline-block" mr={3}
 							//visibility={{ base: "hidden", sm: "visible" }}
@@ -963,6 +969,7 @@ const ProfileHeader = ({ username, page, isSubscribedCallback, activeSinceCallba
 							//visibility={{ base: "hidden", sm: "visible" }}
 							>•</Text>
 						</Box>
+						</Flex>
 						<Flex
 							align="center"
 							justify="center"

@@ -12,6 +12,7 @@ const usePurchasePost = () => {
     const handlePurchase = async (post, price, creatorProfile) => {
         if (!authUser || !post || !price) return;
 
+
         //const { isLoading: userProfileLoading, userProfile: creatorProfile } = useGetUserProfileById(post.createdBy);
 
         try {

@@ -222,6 +222,8 @@ function useCreatePost() {
 		if (!selectedFile) throw new Error("Please select an image or video");
 	
 		setIsLoading(true);
+
+        
 	
 		const newPost = {
 			caption: caption,
@@ -241,11 +243,17 @@ function useCreatePost() {
 			const userDocRef = doc(firestore, "users", authUser.uid);
 			const mediaRef = ref(storage, `posts/${postDocRef.id}`);
 
+            console.log("test");
+
 			if (authUser) setUserProfile(authUser);
+
+            console.log("test");
 	
 			await updateDoc(userDocRef, { posts: arrayUnion(postDocRef.id) });
 			await uploadString(mediaRef, selectedFile.src, "data_url");
 			const downloadURL = await getDownloadURL(mediaRef);
+
+            
 	
 			await updateDoc(postDocRef, { imageURL: downloadURL, mediaType: selectedFile.type });
 	
@@ -267,6 +275,78 @@ function useCreatePost() {
 	};
 
 	return { isLoading, handleCreatePost };
+
+    // function useCreatePost() {
+    //     const showToast = useShowToast();
+    //     const [isLoading, setIsLoading] = useState(false);
+    //     const authUser = useAuthStore((state) => state.user);
+    //     const createPost = usePostStore((state) => state.createPost);
+    //     const { setUserProfile, addPost } = useUserProfileStore((state) => ({
+    //       setUserProfile: state.setUserProfile,
+    //       addPost: state.addPost,
+    //     }));
+    //     const { pathname } = useLocation();
+      
+    //     const handleCreatePost = async (selectedFile, caption, price) => {
+    //       if (isLoading || !authUser) return; // Prevent duplicate submissions
+    //       if (!selectedFile) {
+    //         showToast("Error", "Please select an image or video", "error");
+    //         return;
+    //       }
+      
+    //       setIsLoading(true);
+      
+    //       const newPost = {
+    //         caption,
+    //         likes: [],
+    //         crowns: [],
+    //         score: 0,
+    //         paid: true,
+    //         price: parseFloat(price),
+    //         purchased: [],
+    //         comments: [],
+    //         createdAt: Date.now(),
+    //         createdBy: authUser.uid,
+    //       };
+      
+    //       try {
+    //         // Add post to Firestore
+    //         const postDocRef = await addDoc(collection(firestore, "posts"), newPost);
+      
+    //         // Prepare media upload
+    //         const mediaRef = ref(storage, `posts/${postDocRef.id}`);
+    //         await uploadString(mediaRef, selectedFile.src, "data_url");
+    //         const downloadURL = await getDownloadURL(mediaRef);
+      
+    //         // Update post with media details
+    //         const updatedPostData = {
+    //           imageURL: downloadURL,
+    //           mediaType: selectedFile.type,
+    //         };
+    //         await updateDoc(postDocRef, updatedPostData);
+      
+    //         // Update user profile with the new post ID
+    //         await updateDoc(doc(firestore, "users", authUser.uid), {
+    //           posts: arrayUnion(postDocRef.id),
+    //         });
+      
+    //         // Update local state
+    //         const finalPost = { ...newPost, ...updatedPostData, id: postDocRef.id };
+    //         setUserProfile(authUser);
+    //         createPost(finalPost);
+    //         addPost(finalPost);
+      
+    //         // Show success toast
+    //         showToast("Success", "Post created successfully", "success");
+    //       } catch (error) {
+    //         showToast("Error", `Failed to create post: ${error.message}`, "error");
+    //       } finally {
+    //         setIsLoading(false);
+    //       }
+    //     };
+      
+    //     return { isLoading, handleCreatePost };
+    //   }
 }
 
 // 1- COPY AND PASTE AS THE STARTER CODE FOR THE CRAETEPOST COMPONENT
