@@ -16,9 +16,9 @@ const usePurchasePost = () => {
         //const { isLoading: userProfileLoading, userProfile: creatorProfile } = useGetUserProfileById(post.createdBy);
 
         try {
+            
             const postRef = doc(firestore, "posts", post.id);  // Reference to the post document
-
-            const referralUserRef = doc(firestore, "users", authUser.referral);
+            
 
             // Add the user's UID to the post.purchased array
             await updateDoc(postRef, {
@@ -57,11 +57,14 @@ const usePurchasePost = () => {
             //         }]
             //     });
             // }
+            
 
             const bonusRef = collection(firestore, "bonus");
 
             // Calculate 80% of the price for the creator
             const creatorBonus = (0.80 * price).toFixed(2);
+
+            
     
             // Set the path to a new purchase document within the purchases sub-collection
             const purchaseRef = doc(collection(bonusRef, post.createdBy, "creator"));
@@ -79,6 +82,8 @@ const usePurchasePost = () => {
                 net: parseFloat(creatorBonus)
             });
 
+            
+
             // Increment the creator's total earnings (creatorTotal)
             const creatorTotalRef = doc(firestore, "users", post.createdBy);
             await updateDoc(creatorTotalRef, {
@@ -86,8 +91,14 @@ const usePurchasePost = () => {
                 creatorNet: increment(parseFloat(creatorBonus)) 
             });
 
+            
+
+            
+
             // Check if the authUser has a referral and calculate 5% of the price for referral
             if (authUser.referral) {
+
+                //console.log(authUser.referral);
 
                 const referralRef = doc(collection(bonusRef, authUser.referral, "creator"));
 
@@ -112,6 +123,8 @@ const usePurchasePost = () => {
                     creatorGross: increment(price), // Increment creatorTotal by the creatorBonus
                     creatorNet: increment(parseFloat(referralBonus)) 
                 });
+
+                
 
                 // if (referralDocSnap.exists()) {
                 //     // Document exists, update it by adding a new purchase

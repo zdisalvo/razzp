@@ -66,10 +66,10 @@ function App() {
 	  
 
 	useEffect(() => {
-		if (!userAuth || !authUserProf || showSpark === false || showSpark) {
+		if (!userAuth || !authUserProf) {
 			//setShowSpark(false);
 			return;
-		}
+		} else if (showSpark === null) {
 
 		//console.log(showSpark);
 			
@@ -82,6 +82,7 @@ function App() {
 		};
 	
 		checkAuthUserProf();
+		}
 	  }, );
 	  //[authUserProf.spark]
 

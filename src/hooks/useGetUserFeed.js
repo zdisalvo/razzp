@@ -8,13 +8,15 @@ import { firestore } from "../firebase/firebase";
 import useGetUserProfileByUsername from "./useGetUserProfileByUsername";
 
 const useGetUserFeed = (username) => {
+	
 	const [isLoading, setIsLoading] = useState(true);
 	const { posts, setPosts } = usePostStore();
 	const authUser = useAuthStore((state) => state.user);
 	const showToast = useShowToast();
 	const { setUserProfile } = useUserProfileStore();
     const { isLoading: userProfileLoading, userProfile } = useGetUserProfileByUsername(username);
-
+	// if (!userProfile)
+	// 	return;
 	useEffect(() => {
 		const getFeedPosts = async () => {
             //if (!userProfile) return;

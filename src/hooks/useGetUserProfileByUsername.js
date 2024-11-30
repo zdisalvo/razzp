@@ -11,8 +11,8 @@ const useGetUserProfileByUsername = (username) => {
 	const [isInitialized, setIsInitialized] = useState(false);
 
 	useEffect(() => {
-		if (isInitialized)
-			return;
+		// if (isInitialized)
+		// 	return;
 		const getUserProfile = async () => {
 			setIsLoading(true);
 			try {
@@ -39,7 +39,7 @@ const useGetUserProfileByUsername = (username) => {
 
 		//console.log("test");
 
-		setIsInitialized(true);
+		// setIsInitialized(true);
 	}, [setUserProfile, username, showToast]);
 
 	return { isLoading, userProfile };

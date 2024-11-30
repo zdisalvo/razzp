@@ -113,7 +113,7 @@ const CreatorModal = ({ isOpen, onClose }) => {
 
     useEffect(() => {
         //console.log(isInitialized);
-        console.log(todayDate);
+        //console.log(todayDate);
         if (isOpen && authUser && !isInitialized) {
             //console.log(authUser);
             const today = new Date();
@@ -142,7 +142,7 @@ const CreatorModal = ({ isOpen, onClose }) => {
     const fetchCreatorData = async (startDate, endDate) => {
         if (!authUser) return;
 
-        console.log(startDate);
+        //console.log(startDate);
     
         try {
             const bonusRef = collection(firestore, "bonus", authUser.uid, "creator");
