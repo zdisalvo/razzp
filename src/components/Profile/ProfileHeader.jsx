@@ -47,7 +47,7 @@ const ProfileHeader = ({ username, page, isSubscribedCallback, activeSinceCallba
 		authUser: state.user,
 		fetchUserData: state.fetchUserData,
 	  }));
-	const subscriptions = useAuthStore((state) => state.subscriptions);
+	//const subscriptions = useAuthStore((state) => state.subscriptions);
 	const showToast = useShowToast();
 	//const {authUserDoc} = useGetUserProfileById(authUser.uid)
 	const { isOpen, onOpen, onClose } = useDisclosure();
@@ -99,12 +99,14 @@ const ProfileHeader = ({ username, page, isSubscribedCallback, activeSinceCallba
 	const [subscriptionStatus, setSubscriptionStatus] = useState("");
 	const [expDate, setExpDate] = useState("");
 	
+	//console.log(userProfile);
+	// if (!userProfile)
+	// 	return
+
 	useEffect (() => {
 
 		if (!authUser || !userProfile )
 			return;
-
-		
 
 		fetchUserData(authUser.uid);
 
@@ -135,7 +137,7 @@ const ProfileHeader = ({ username, page, isSubscribedCallback, activeSinceCallba
 		//setIsInitialized(true);
 		
 		
-	}, [authUser && authUser.subscriptions && authUser.subscriptions.length]);
+	}, [authUser.subscriptions.length]);
 	//[authUser && authUser.subscriptions && authUser.subscriptions.length]
 
 	// useEffect (() => {
@@ -173,41 +175,41 @@ const ProfileHeader = ({ username, page, isSubscribedCallback, activeSinceCallba
 		
 	// }, );
 
-	useEffect (() => {
+	// useEffect (() => {
 
-		if (!authUser || !userProfile)
-			return;
+	// 	if (!authUser || !userProfile)
+	// 		return;
 
-		if (loading) {
+	// 	if (loading) {
 			
 
-		handleFetchUserData(authUser.uid);
+	// 	handleFetchUserData(authUser.uid);
 
 		  
-		  const isSubscribed = authUser.subscriptions && authUser.subscriptions.some((subscription) => {
-			const isValidSubscription = subscription.creatorId === userProfile.uid || false;
-			if (!isValidSubscription) {
-				//console.log(isValidSubscription);
-				return false;
-			} else {
-				const expirationDateInMillis = subscription.expirationDate.seconds * 1000;
-				setExpDate(dayjs(expirationDateInMillis).format("MMMM DD, YYYY"));
-				activeSinceCallback(subscription.activeSince.seconds * 1000);
-				setSubscriptionStatus(subscription.status);
-				return subscription.expirationDate.seconds * 1000 > Date.now(); // Check if expirationDate is in the future
-			}
-			//console.log(isExpirationValid);
+	// 	  const isSubscribed = authUser.subscriptions && authUser.subscriptions.some((subscription) => {
+	// 		const isValidSubscription = subscription.creatorId === userProfile.uid || false;
+	// 		if (!isValidSubscription) {
+	// 			//console.log(isValidSubscription);
+	// 			return false;
+	// 		} else {
+	// 			const expirationDateInMillis = subscription.expirationDate.seconds * 1000;
+	// 			setExpDate(dayjs(expirationDateInMillis).format("MMMM DD, YYYY"));
+	// 			activeSinceCallback(subscription.activeSince.seconds * 1000);
+	// 			setSubscriptionStatus(subscription.status);
+	// 			return subscription.expirationDate.seconds * 1000 > Date.now(); // Check if expirationDate is in the future
+	// 		}
+	// 		//console.log(isExpirationValid);
 			
-			//return isValidSubscription && isExpirationValid
-		  });
+	// 		//return isValidSubscription && isExpirationValid
+	// 	  });
 		  
-		  isSubscribedCallback(isSubscribed);
-		  setIsSubscribedToCreator(isSubscribed);
-		  //console.log(isSubscribed);
-		  //console.log(isSubscribedToCreator); 
+	// 	  isSubscribedCallback(isSubscribed);
+	// 	  setIsSubscribedToCreator(isSubscribed);
+	// 	  //console.log(isSubscribed);
+	// 	  //console.log(isSubscribedToCreator); 
 
-		}
-	}, );
+	// 	}
+	// }, );
 
 	  const handleFetchUserData = async (userId) => {
 		try {
@@ -316,7 +318,9 @@ const ProfileHeader = ({ username, page, isSubscribedCallback, activeSinceCallba
 			unstoreUserLocation(authUser.uid);
 			fetchUserData(authUser.uid);
 		}
-	  }, [authUser, fetchUserData, isToggled]);
+	  }, [authUser.location, isToggled]);
+	  //[authUser, fetchUserData, isToggled]
+
 
 	  const navigateToBlocked = () => {
 		navigate('/blocked');
@@ -327,15 +331,16 @@ const ProfileHeader = ({ username, page, isSubscribedCallback, activeSinceCallba
 		if (userProfile && authUser && userProfile.requested) {
 		  setRequested(userProfile.requested.includes(authUser.uid)); // Ensure the user data is up-to-date
 		}
-	  }, [authUser, fetchUserData]);
+	  }, [authUser.requested && authUser.requested.length]);
+	  //[authUser, fetchUserData]
 
 	  useEffect(() => {
 		if (userProfile && authUser) {
 		  setIsFollowing(authUser.following.includes(userProfile.uid)); // Ensure the user data is up-to-date
 		}
 		//console.log(isFollowing);
-	  }, [authUser, fetchUserData]);
-
+	  }, [authUser.following.length]);
+	  //[authUser, fetchUserData]
 	
 	// useEffect(() => {
 	// 	const fetchUserData = async () => {
@@ -464,6 +469,9 @@ const ProfileHeader = ({ username, page, isSubscribedCallback, activeSinceCallba
 	}
 
 	useEffect(() => {
+		if (authUser.location.length > 0 && authUser.city.length > 0 && isToggled || authUser.location.length === 0 && !isToggled)
+			return;
+		//console.log(authUser.city);
 		const getCurrentLocation = () => {
 			if (navigator.geolocation) {
 				navigator.geolocation.getCurrentPosition(
@@ -523,7 +531,8 @@ const ProfileHeader = ({ username, page, isSubscribedCallback, activeSinceCallba
 			setCity('');
 			setState('');
 		}
-	}, [isToggled, visitingOwnProfileAndAuth, authUser, userProfile]);
+	}, [isToggled, authUser.location]);
+	//[isToggled, visitingOwnProfileAndAuth, authUser, userProfile]
 
 	////
 	
@@ -1205,7 +1214,7 @@ const ProfileHeader = ({ username, page, isSubscribedCallback, activeSinceCallba
 			</VStack>
 			</Container>
 			{isOpen && <EditProfile isOpen={isOpen} onClose={onClose} />}
-			{isCCModalOpen && <CreateContent isOpen={isCCModalOpen} onClose={handleCCModalClose} />}
+			{isCCModalOpen && <CreateContent isOpen={isCCModalOpen} onClose={handleCCModalClose} authUser={authUser}/>}
 			{isModalOpen && <SupportModal isOpen={isModalOpen} onClose={handleModalClose} />}
 			{isImportModalOpen && <ImportInstagramModal isOpen={isImportModalOpen} onClose={handleImportInstagramClose} />}
 			{isCreatorModalOpen && <CreatorModal isOpen={isCreatorModalOpen} onClose={handleCreatorModalClose} />}

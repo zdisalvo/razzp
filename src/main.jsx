@@ -16,11 +16,11 @@ const styles = {
 			color: mode("gray.800", "whiteAlpha.900")(props),
 		},
 		img: {
-			"-webkit-touch-callout": "none", // Prevent long-press on iOS
-			"-webkit-user-select": "none",  // Prevent image selection on Safari
-			"user-select": "none",          // Prevent image selection on other browsers
-			"pointer-events": "none",       // Disable pointer events on images
-		  },
+			WebkitTouchCallout: "none", // Prevent long-press on iOS
+			WebkitUserSelect: "none",  // Prevent image selection on Safari
+			userSelect: "none",        // Prevent image selection on other browsers
+			pointerEvents: "none",     // Disable pointer events on images
+		},
 	}),
 };
 

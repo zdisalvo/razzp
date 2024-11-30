@@ -14,10 +14,13 @@ import useNewNotificationsCount from "../../hooks/useNewNotificationsCount";
 import useGetUserProfileById from "../../hooks/useGetUserProfileById";
 import useUnrequestFollow from "../../hooks/useUnrequestFollow";
 import Meta from "../../components/SEO/Meta";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../../firebase/firebase";
 
 
 
 const TopFivePosts = () => {
+  const [userAuth] = useAuthState(auth);
   const authUser = useAuthStore((state) => state.user);
   const { isLoading, posts: fetchedPosts } = useGetTop5Posts();
   const { isUpdating, handleFollowUser } = useFollowUserFP();
@@ -41,6 +44,8 @@ const TopFivePosts = () => {
       setInitialized(true);
     }
   }, [isLoading, fetchedPosts]);
+
+  console.log(isLoading);
 
 
   const handleMessagesClick = () => {
@@ -212,7 +217,7 @@ const TopFivePosts = () => {
                   mx={2} // Adds horizontal margin between the icons
                 />
                 )} */}
-                {authUser && newNotificationsCount > 0 && (
+                {userAuth && authUser && newNotificationsCount > 0 && (
                 <Box position="relative">
                 <IconButton
                 icon={<FontAwesomeIcon icon={faBolt} />}
@@ -244,7 +249,7 @@ const TopFivePosts = () => {
                 </Box>
                 )}
 
-              {authUser && incomingReadCount > 0 && (
+              {userAuth && authUser && incomingReadCount > 0 && (
                 <Box position="relative">
                   <IconButton
                     icon={<FontAwesomeIcon icon={faCommentDots} />}

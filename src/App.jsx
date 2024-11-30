@@ -28,22 +28,30 @@ const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 function App() {
 	const [userAuth] = useAuthState(auth);
-	const authUser = useAuthStore((state) => state.user);
+	const [authUser, setAuthUser] = useState(null);
 	const authUserProf = useAuthStore(state => state.user);
 	const [showSpark, setShowSpark] = useState(false);
 	const [showHome, setShowHome ] = useState(false);
 
 	useEffect(() => {
-		const preventDefault = (e) => e.preventDefault();
+		if (userAuth) {
+			let authUserState = useAuthStore((state) => state.user);
+			setAuthUser(authUserState);
+			// Populate your auth store here after Firebase resolves
+		}
+	}, [userAuth]);
+
+	// useEffect(() => {
+	// 	const preventDefault = (e) => e.preventDefault();
 	  
-		document.addEventListener("contextmenu", preventDefault);
-		document.addEventListener("touchstart", preventDefault);
+	// 	document.addEventListener("contextmenu", preventDefault);
+	// 	document.addEventListener("touchstart", preventDefault);
 	  
-		return () => {
-		  document.removeEventListener("contextmenu", preventDefault);
-		  document.removeEventListener("touchstart", preventDefault);
-		};
-	  }, []);
+	// 	return () => {
+	// 	  document.removeEventListener("contextmenu", preventDefault);
+	// 	  document.removeEventListener("touchstart", preventDefault);
+	// 	};
+	//   }, []);
 	  
 
 	  useEffect(() => {
@@ -64,17 +72,24 @@ function App() {
 	  }, []);
 	  
 
-	useEffect(() => {
-		const checkAuthUserProf = async () => {
-		  if (authUserProf && authUserProf.spark === true) {
-			setShowSpark(true);
-		  } else {
-			setShowSpark(false);
-		  }
-		};
+	// useEffect(() => {
+	// 	if (!authUserProf || !userAuth) {
+	// 		setShowSpark(false);
+	// 		return;
+	// 	}
+			
+	// 	const checkAuthUserProf = async () => {
+	// 	  if (authUserProf && authUserProf.spark === true) {
+	// 		setShowSpark(true);
+	// 	  } else {
+	// 		setShowSpark(false);
+	// 	  }
+	// 	};
 	
-		checkAuthUserProf();
-	  }, [authUserProf]);
+	// 	checkAuthUserProf();
+	//   }, [authUserProf.spark]);
+
+
 
 	//   useEffect(() => {
 	// 	const checkAuthUserProf = async () => {
@@ -103,8 +118,9 @@ function App() {
 		<PageLayout>
 			<Routes>
 				{/* <Route path='/' element={authUser ? (authUser && showHome ? <HomePage /> : <Navigate to='/top5' /> ): <Navigate to='/auth' />} /> */}
-				<Route path='/' element={userAuth  && authUser && authUser.following && authUser.following.length > 0 
-					&& !(authUser.following.length === 1 && authUser.following.includes(authUser.uid)) ? <HomePage /> : <Navigate to='/top5' />} />
+				<Route path='/' element={userAuth ? <HomePage /> : <Navigate to='/auth' />} />
+				{/* <Route path='/' element={userAuth  && authUser && authUser.following && authUser.following.length > 0 
+					&& !(authUser && authUser.following.length === 1 && authUser.following.includes(authUser.uid)) ? <HomePage /> : <Navigate to='/top5' />} /> */}
 				<Route path='/top5' element={<TopFivePosts />} />
 				<Route path='/auth' element={!userAuth ? <AuthPage /> : <Navigate to='/' />} />
 				<Route path='/spark' element={authUser ? (!showSpark  ? <Navigate to='/spark/edit' /> : <Spark />) : <Navigate to='/' /> } />

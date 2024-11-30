@@ -8,8 +8,11 @@ const useGetUserProfileByUsername = (username) => {
 	const [isLoading, setIsLoading] = useState(true);
 	const showToast = useShowToast();
 	const { userProfile, setUserProfile } = useUserProfileStore();
+	const [isInitialized, setIsInitialized] = useState(false);
 
 	useEffect(() => {
+		if (isInitialized)
+			return;
 		const getUserProfile = async () => {
 			setIsLoading(true);
 			try {
@@ -33,6 +36,10 @@ const useGetUserProfileByUsername = (username) => {
 		};
 
 		getUserProfile();
+
+		//console.log("test");
+
+		setIsInitialized(true);
 	}, [setUserProfile, username, showToast]);
 
 	return { isLoading, userProfile };

@@ -197,6 +197,8 @@ function useCreatePost() {
 	return { isLoading, handleCreatePost };
 }
 
+
+
 // 1- COPY AND PASTE AS THE STARTER CODE FOR THE CRAETEPOST COMPONENT
 // import { Box, Flex, Tooltip } from "@chakra-ui/react";
 // import { CreatePostLogo } from "../../assets/constants";
