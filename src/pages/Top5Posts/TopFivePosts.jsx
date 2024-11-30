@@ -45,7 +45,7 @@ const TopFivePosts = () => {
     }
   }, [isLoading, fetchedPosts]);
 
-  console.log(isLoading);
+  //console.log(isLoading);
 
 
   const handleMessagesClick = () => {

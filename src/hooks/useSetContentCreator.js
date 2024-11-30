@@ -30,6 +30,7 @@ const useSetContentCreator = () => {
       if (userDoc.exists()) {
         await updateDoc(userDocRef, { 
             creator: true,
+            private: false,
             creatorSubscriptionPrice: 9,
             creatorMessagePrice: 5,
         });

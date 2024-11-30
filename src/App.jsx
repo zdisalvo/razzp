@@ -28,18 +28,11 @@ const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 function App() {
 	const [userAuth] = useAuthState(auth);
-	const [authUser, setAuthUser] = useState(null);
+	const authUser = useAuthStore((state) => state.user);
 	const authUserProf = useAuthStore(state => state.user);
-	const [showSpark, setShowSpark] = useState(false);
+	const [showSpark, setShowSpark] = useState(null);
 	const [showHome, setShowHome ] = useState(false);
-
-	useEffect(() => {
-		if (userAuth) {
-			let authUserState = useAuthStore((state) => state.user);
-			setAuthUser(authUserState);
-			// Populate your auth store here after Firebase resolves
-		}
-	}, [userAuth]);
+	
 
 	// useEffect(() => {
 	// 	const preventDefault = (e) => e.preventDefault();
@@ -72,24 +65,27 @@ function App() {
 	  }, []);
 	  
 
-	// useEffect(() => {
-	// 	if (!authUserProf || !userAuth) {
-	// 		setShowSpark(false);
-	// 		return;
-	// 	}
+	useEffect(() => {
+		if (!userAuth || !authUserProf || showSpark === false || showSpark) {
+			//setShowSpark(false);
+			return;
+		}
+
+		//console.log(showSpark);
 			
-	// 	const checkAuthUserProf = async () => {
-	// 	  if (authUserProf && authUserProf.spark === true) {
-	// 		setShowSpark(true);
-	// 	  } else {
-	// 		setShowSpark(false);
-	// 	  }
-	// 	};
+		const checkAuthUserProf = async () => {
+		  if (authUserProf && authUserProf.spark === true) {
+			setShowSpark(true);
+		  } else {
+			setShowSpark(false);
+		  }
+		};
 	
-	// 	checkAuthUserProf();
-	//   }, [authUserProf.spark]);
+		checkAuthUserProf();
+	  }, );
+	  //[authUserProf.spark]
 
-
+	  
 
 	//   useEffect(() => {
 	// 	const checkAuthUserProf = async () => {
@@ -118,9 +114,9 @@ function App() {
 		<PageLayout>
 			<Routes>
 				{/* <Route path='/' element={authUser ? (authUser && showHome ? <HomePage /> : <Navigate to='/top5' /> ): <Navigate to='/auth' />} /> */}
-				<Route path='/' element={userAuth ? <HomePage /> : <Navigate to='/auth' />} />
-				{/* <Route path='/' element={userAuth  && authUser && authUser.following && authUser.following.length > 0 
-					&& !(authUser && authUser.following.length === 1 && authUser.following.includes(authUser.uid)) ? <HomePage /> : <Navigate to='/top5' />} /> */}
+				{/* <Route path='/' element={userAuth ? <HomePage /> : <Navigate to='/auth' />} /> */}
+				<Route path='/' element={userAuth  && authUser && authUser.following && authUser.following.length > 0 
+					&& !(userAuth && authUser && authUser.following.length === 1 && authUser.following.includes(authUser.uid)) ? <HomePage /> : <Navigate to='/top5' />} />
 				<Route path='/top5' element={<TopFivePosts />} />
 				<Route path='/auth' element={!userAuth ? <AuthPage /> : <Navigate to='/' />} />
 				<Route path='/spark' element={authUser ? (!showSpark  ? <Navigate to='/spark/edit' /> : <Spark />) : <Navigate to='/' /> } />

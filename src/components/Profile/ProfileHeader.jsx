@@ -98,6 +98,7 @@ const ProfileHeader = ({ username, page, isSubscribedCallback, activeSinceCallba
 	const [isInitialized, setIsInitialized] = useState(false);
 	const [subscriptionStatus, setSubscriptionStatus] = useState("");
 	const [expDate, setExpDate] = useState("");
+	const [locationStatusRecorded, setLocationStatusRecorded] = useState(false);
 	
 	//console.log(userProfile);
 	// if (!userProfile)
@@ -175,41 +176,44 @@ const ProfileHeader = ({ username, page, isSubscribedCallback, activeSinceCallba
 		
 	// }, );
 
-	// useEffect (() => {
+	useEffect (() => {
 
-	// 	if (!authUser || !userProfile)
-	// 		return;
+		if (!authUser || !userProfile)
+			return;
 
-	// 	if (loading) {
-			
+		
 
-	// 	handleFetchUserData(authUser.uid);
+		if (loading) {
+
+			//console.log(isSubscribedToCreator);
+
+		handleFetchUserData(authUser.uid);
 
 		  
-	// 	  const isSubscribed = authUser.subscriptions && authUser.subscriptions.some((subscription) => {
-	// 		const isValidSubscription = subscription.creatorId === userProfile.uid || false;
-	// 		if (!isValidSubscription) {
-	// 			//console.log(isValidSubscription);
-	// 			return false;
-	// 		} else {
-	// 			const expirationDateInMillis = subscription.expirationDate.seconds * 1000;
-	// 			setExpDate(dayjs(expirationDateInMillis).format("MMMM DD, YYYY"));
-	// 			activeSinceCallback(subscription.activeSince.seconds * 1000);
-	// 			setSubscriptionStatus(subscription.status);
-	// 			return subscription.expirationDate.seconds * 1000 > Date.now(); // Check if expirationDate is in the future
-	// 		}
-	// 		//console.log(isExpirationValid);
+		  const isSubscribed = authUser.subscriptions && authUser.subscriptions.some((subscription) => {
+			const isValidSubscription = subscription.creatorId === userProfile.uid || false;
+			if (!isValidSubscription) {
+				//console.log(isValidSubscription);
+				return false;
+			} else {
+				const expirationDateInMillis = subscription.expirationDate.seconds * 1000;
+				setExpDate(dayjs(expirationDateInMillis).format("MMMM DD, YYYY"));
+				activeSinceCallback(subscription.activeSince.seconds * 1000);
+				setSubscriptionStatus(subscription.status);
+				return subscription.expirationDate.seconds * 1000 > Date.now(); // Check if expirationDate is in the future
+			}
+			//console.log(isExpirationValid);
 			
-	// 		//return isValidSubscription && isExpirationValid
-	// 	  });
+			//return isValidSubscription && isExpirationValid
+		  });
 		  
-	// 	  isSubscribedCallback(isSubscribed);
-	// 	  setIsSubscribedToCreator(isSubscribed);
-	// 	  //console.log(isSubscribed);
-	// 	  //console.log(isSubscribedToCreator); 
+		  isSubscribedCallback(isSubscribed);
+		  setIsSubscribedToCreator(isSubscribed);
+		  //console.log(isSubscribed);
+		  //console.log(isSubscribedToCreator); 
 
-	// 	}
-	// }, );
+		}
+	}, );
 
 	  const handleFetchUserData = async (userId) => {
 		try {
@@ -309,16 +313,10 @@ const ProfileHeader = ({ username, page, isSubscribedCallback, activeSinceCallba
 
 	  //console.log(requested);
 
-	useEffect(() => {
-		if (authUser && isToggled && authUser.username === username) {
-			//if (authUser && authUser.username === username) {
-		  fetchUserData(authUser.uid); // Ensure the user data is up-to-date
-		  //setPrevToggle(!prevToggle);
-		} else if (authUser && !isToggled && authUser.username === username) {
-			unstoreUserLocation(authUser.uid);
-			fetchUserData(authUser.uid);
-		}
-	  }, [authUser.location, isToggled]);
+	
+
+
+
 	  //[authUser, fetchUserData, isToggled]
 
 
@@ -452,7 +450,6 @@ const ProfileHeader = ({ username, page, isSubscribedCallback, activeSinceCallba
 	const handleSetCreator = async () => {
 		try {
 			await setCreator();
-			await setCreator();
 		} catch (error) {
 			console.error(error);
 		}
@@ -468,10 +465,52 @@ const ProfileHeader = ({ username, page, isSubscribedCallback, activeSinceCallba
 		fetchUserData(authUser.uid);
 	}
 
-	useEffect(() => {
-		if (authUser.location.length > 0 && authUser.city.length > 0 && isToggled || authUser.location.length === 0 && !isToggled)
+
+	  //11/29/2024
+
+	  useEffect(() => {
+		if (authUser.uid !== userProfile.uid)
 			return;
+
+		if (locationStatusRecorded)
+			return;
+		if (authUser && isToggled && authUser.username === username) {
+			//if (authUser && authUser.username === username) {
+		  //fetchUserData(authUser.uid); 
+		  handleFetchUserData(authUser.uid);
+		} else if (authUser && !isToggled && authUser.username === username) {
+			unstoreUserLocation(authUser.uid);
+			//fetchUserData(authUser.uid);
+		  handleFetchUserData(authUser.uid);
+		}
+		if (authUser && authUser.location && authUser.location.length > 0 && authUser.city.length > 0 && isToggled && city.length > 0 && state.length > 0 ||
+			authUser && authUser.location && authUser.location.length === 0 && !isToggled && city.length === 0 && state.length === 0 ) {
+			//console.log(city);
+			setLocationStatusRecorded(true);
+		} else {
+			setLocationStatusRecorded(false);
+		}
+	  }, [authUser.location, isToggled]);
+
+
+
+	useEffect(() => {
+		//console.log(isToggled);
+		if (authUser.uid !== userProfile.uid)
+			return;
+
+		if (((authUser && authUser.location && authUser.location.length > 0 && authUser.city.length > 0 && isToggled && city.length > 0 && state.length > 0) ||
+			(authUser && authUser.location && authUser.location.length === 0 && !isToggled && city.length === 0 && state.length === 0 ))) {
+			setLocationStatusRecorded(true);
+			return;
+		} else {
+			setLocationStatusRecorded(false);
+		}
+
+		//console.log(locationStatusRecorded);
+			
 		//console.log(authUser.city);
+		//console.log(authUser);
 		const getCurrentLocation = () => {
 			if (navigator.geolocation) {
 				navigator.geolocation.getCurrentPosition(
@@ -505,6 +544,8 @@ const ProfileHeader = ({ username, page, isSubscribedCallback, activeSinceCallba
 			try {
 				const userDocRef = doc(firestore, `users/${userProfile.uid}`);
 				const userDoc = await getDoc(userDocRef);
+
+				//fetchUserData(userProfile.uid);
 	
 				if (userDoc.exists()) {
 					const userData = userDoc.data();
@@ -519,6 +560,7 @@ const ProfileHeader = ({ username, page, isSubscribedCallback, activeSinceCallba
 			}
 		};
 	
+		setTimeout(() => {
 		if (isToggled && visitingOwnProfileAndAuth) {
 			// If toggled on and visiting own profile, get current location
 			getCurrentLocation();
@@ -531,6 +573,7 @@ const ProfileHeader = ({ username, page, isSubscribedCallback, activeSinceCallba
 			setCity('');
 			setState('');
 		}
+	}, 250);
 	}, [isToggled, authUser.location]);
 	//[isToggled, visitingOwnProfileAndAuth, authUser, userProfile]
 
