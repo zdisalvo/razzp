@@ -123,6 +123,7 @@ const NotificationsPage = () => {
         });
 
     const handlePostClick = async (postId) => {
+        //console.log(postId);
         if (!postId) return;
 
         const post = await fetchPostData(postId);
@@ -319,11 +320,15 @@ const NotificationsPage = () => {
                                 {notification.postImageURL && (
                                     <>
                                     {(!notification.postMediaType || notification.postMediaType.startsWith("image/")) && (
+                                        <Box
+                                        onClick={() => handlePostClick(notification.postId)}
+                                        cursor="pointer"
+                                        >
                                     <Image
                                         src={notification.postImageURL}
                                         alt="Post Image"
-                                        onClick={() => handlePostClick(notification.postId)}
-                                        cursor="pointer"
+                                        //onClick={() => handlePostClick(notification.postId)}
+                                        //cursor="pointer"
                                         objectFit="cover" // Maintain aspect ratio
                                         width="100%"
                                         height="100%"
@@ -331,6 +336,7 @@ const NotificationsPage = () => {
                                         borderRadius="5px" // Optional: match Avatar's round shape
                                         mr={3}
                                     />
+                                    </Box>
                                     )}
                                     {(notification.postMediaType && notification.postMediaType.startsWith("video/")) && (
                                         <Box 

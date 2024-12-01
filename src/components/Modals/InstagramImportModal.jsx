@@ -31,7 +31,15 @@ const ImportInstagramModal = ({ isOpen, onClose }) => {
                 pt={3} 
                 pb={4}
             >
-                {!loading && <ModalCloseButton />} {/* Hide close button while loading */}
+                {!loading && <ModalCloseButton 
+					sx={{
+						fontSize: '16px', // Adjust the font size to make the X larger
+						// color: '#FF5733', // Set the color to your desired one (e.g., a shade of red)
+						// _hover: {
+						// color: '#FF0000', // Hover color (e.g., red when hovered)
+						// },
+					}}
+					/>} {/* Hide close button while loading */}
                 <ModalHeader>Import Instagram Content</ModalHeader>
                 <Text fontSize="sm" color="gray.500" mb={2} mx={8} textAlign="left">
                     This will take 2-5 minutes, do not close this window or navigate away from the page

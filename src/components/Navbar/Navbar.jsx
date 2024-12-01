@@ -1,5 +1,7 @@
 import { Button, Container, Flex, Image, Box } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
+import GoldButton from "../GoldButton/GoldButton";
+import RedButton from "../GoldButton/RedButton";
 
 const Navbar = () => {
 	return (
@@ -10,25 +12,25 @@ const Navbar = () => {
 				</Link>
 				<Flex gap={4}>
 					<Link to='/auth?mode=login'>
-						<Button size={"sm"}
-							bg={"#eb7734"}
-							color={"white"}
-							_hover={{ bg: "#c75e1f" }}
-							textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)"
+						<GoldButton size={"sm"}
+							//bg={"#eb7734"}
+							//color={"white"}
+							//_hover={{ bg: "#c75e1f" }}
+							//textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)"
 							//size={{ base: "sm", md: "sm" }}
 							>
 							Login
-						</Button>
+						</GoldButton>
 					</Link>
 					<Link to='/auth?mode=signup'>
-						<Button variant={"outline"} size={"sm"}
-							bg={"#0ba32a"}
-							color={"white"}
-							_hover={{ bg: "#c75e1f" }}
-							textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)"
+						<RedButton size={"sm"}
+							// bg={"#0ba32a"}
+							// color={"white"}
+							// _hover={{ bg: "#c75e1f" }}
+							// textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)"
 						>
 							Signup
-						</Button>
+						</RedButton>
 					</Link>
 				</Flex>
 			</Flex>

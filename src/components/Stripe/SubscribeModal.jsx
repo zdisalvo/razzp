@@ -43,7 +43,7 @@ const SubscribeModal = ({ isOpen, onClose, userProfile, authUser }) => {
                     <Text fontSize="sm">{`💫 Renews on ${fmtMonthAfter}`}</Text>
                     </Box>
                     <></>
-                    <Text textAlign="center" color="red">This is age-restricted content</Text>
+                    <Text textAlign="center" color="red">This may be age-restricted content</Text>
                     
 
                     {/* Checkbox for age confirmation */}

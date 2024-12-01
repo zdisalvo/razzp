@@ -11,6 +11,7 @@ import useGetUserProfileByUsername from '../../hooks/useGetUserProfileByUsername
 import FollowButton from '../Following/FollowButton';
 import useRemoveFollower from '../../hooks/useRemoveFollower';
 import LoadingPage from '../../components/Loading/LoadingPage';
+import RedButton from '../../components/GoldButton/RedButton';
 
 const FollowersPage = () => {
     const [followers, setFollowers] = useState([]);
@@ -191,17 +192,17 @@ const FollowersPage = () => {
                                 requested={authUser && profile.requested && profile.requested.includes(authUser.uid)}
                             />
                             {authUser && (authUser.uid === userProfile.uid) && (
-                                <Button
+                                <RedButton
                                     ml="auto"
                                     onClick={() => handleRemoveFollower(userId)}
-                                    bg={"red.400"}
+                                    //bg={"red.400"}
                                     color={"white"}
                                     textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)"
-                                    _hover={{ bg: "#c75e1f" }}
+                                    //_hover={{ bg: "#c75e1f" }}
                                     size={{ base: "sm", md: "sm" }}
                                 >
                                     Remove
-                                </Button>
+                                </RedButton>
                             )}
                             
                             </Flex>

@@ -271,7 +271,15 @@ const CreatorSettings = ({ isOpen, onClose }) => {
 
 				<ModalContent bg={"black"} border={"1px solid gray"} maxW={{ base: "75vw", md: "300px" }}>
 					<ModalHeader>Creator Settings</ModalHeader>
-					<ModalCloseButton />
+					<ModalCloseButton 
+					sx={{
+						fontSize: '16px', // Adjust the font size to make the X larger
+						color: '#ec9bad', // Set the color to your desired one (e.g., a shade of red)
+						_hover: {
+						color: '#c85f6e', // Hover color (e.g., red when hovered)
+						},
+					}}
+					/>
 					<ModalBody pb={6}>
                         {/* Price buttons and custom input */}
                         <Heading as="h2" size="sm" mb={4}>
@@ -338,6 +346,7 @@ const CreatorSettings = ({ isOpen, onClose }) => {
                             value={price && !selectedPresetPrice ? price : ""}
                             onChange={handleCustomAmountChange}
                             size="sm"
+                            fontSize={16}
                             bg="white"
                             color="black"
                         />

@@ -1,6 +1,7 @@
 import { Alert, AlertIcon, Button, Input } from "@chakra-ui/react";
 import { useState } from "react";
 import useLogin from "../../hooks/useLogin";
+import GoldButton from "../GoldButton/GoldButton";
 
 const Login = () => {
 	const [inputs, setInputs] = useState({
@@ -46,18 +47,18 @@ const Login = () => {
 					{error.message}
 				</Alert>
 			)}
-			<Button
+			<GoldButton
 				w={"full"}
-				bg={"#eb7734"}
-				color={"white"}
-				_hover={{ bg: "#c75e1f" }}
-				textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)"
+				// bg={"#eb7734"}
+				// color={"white"}
+				// _hover={{ bg: "#c75e1f" }}
+				// textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)"
 				size={{ base: "sm", md: "sm" }}
 				isLoading={loading}
 				onClick={() => login(inputs)}
 			>
 				Log in
-			</Button>
+			</GoldButton>
 		</>
 	);
 };

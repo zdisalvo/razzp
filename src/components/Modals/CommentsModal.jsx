@@ -148,7 +148,15 @@ const CommentsModal = ({ isOpen, onClose, post }) => {
             <ModalOverlay />
             <ModalContent bg={"black"} border={"1px solid gray"} maxW={{ base: "90vw", md: "400px" }} px={0}>
                 <ModalHeader>Comments</ModalHeader>
-                <ModalCloseButton />
+                <ModalCloseButton 
+					sx={{
+						fontSize: '16px', // Adjust the font size to make the X larger
+						// color: '#FF5733', // Set the color to your desired one (e.g., a shade of red)
+						// _hover: {
+						// color: '#FF0000', // Hover color (e.g., red when hovered)
+						// },
+					}}
+					/>
                 <ModalBody pb={6}>
                     <Flex
                         mt={0}

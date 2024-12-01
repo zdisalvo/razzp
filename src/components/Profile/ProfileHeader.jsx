@@ -39,6 +39,10 @@ import SubscribeModal from "../Stripe/SubscribeModal";
 import CancelSubscription from "../Stripe/CancelSubscription";
 import useShowToast from "../../hooks/useShowToast";
 import dayjs from 'dayjs';
+import GoldButton from "../GoldButton/GoldButton";
+import RoseGoldButton from "../GoldButton/RoseGoldButton";
+import PurpleButton from "../GoldButton/PurpleButton";
+import PurpleIconButton from "../GoldButton/PurpleIconButton";
 
 const ProfileHeader = ({ username, page, isSubscribedCallback, activeSinceCallback, loading }) => {
 	//const { userProfile } = useUserProfileStore();
@@ -138,7 +142,7 @@ const ProfileHeader = ({ username, page, isSubscribedCallback, activeSinceCallba
 		//setIsInitialized(true);
 		
 		
-	}, [authUser.subscriptions.length]);
+	}, [authUser && authUser.subscriptions && authUser.subscriptions.length]);
 	//[authUser && authUser.subscriptions && authUser.subscriptions.length]
 
 	// useEffect (() => {
@@ -209,6 +213,8 @@ const ProfileHeader = ({ username, page, isSubscribedCallback, activeSinceCallba
 		  
 		  isSubscribedCallback(isSubscribed);
 		  setIsSubscribedToCreator(isSubscribed);
+		  setRequested(userProfile.requested.includes(authUser.uid));
+		  setIsFollowing(authUser.following.includes(userProfile.uid));
 		  //console.log(isSubscribed);
 		  //console.log(isSubscribedToCreator); 
 
@@ -325,20 +331,22 @@ const ProfileHeader = ({ username, page, isSubscribedCallback, activeSinceCallba
 	  };
 
 
-	  useEffect(() => {
-		if (userProfile && authUser && userProfile.requested) {
-		  setRequested(userProfile.requested.includes(authUser.uid)); // Ensure the user data is up-to-date
-		}
-	  }, [authUser.requested && authUser.requested.length]);
-	  //[authUser, fetchUserData]
+	  //11/30/24
 
-	  useEffect(() => {
-		if (userProfile && authUser) {
-		  setIsFollowing(authUser.following.includes(userProfile.uid)); // Ensure the user data is up-to-date
-		}
-		//console.log(isFollowing);
-	  }, [authUser.following.length]);
-	  //[authUser, fetchUserData]
+	//   useEffect(() => {
+	// 	if (userProfile && authUser && userProfile.requested) {
+	// 	  setRequested(userProfile.requested.includes(authUser.uid)); // Ensure the user data is up-to-date
+	// 	}
+	//   }, [authUser.requested && authUser.requested.length]);
+	//   //[authUser, fetchUserData]
+
+	//   useEffect(() => {
+	// 	if (userProfile && authUser) {
+	// 	  setIsFollowing(authUser.following.includes(userProfile.uid)); // Ensure the user data is up-to-date
+	// 	}
+	// 	//console.log(isFollowing);
+	//   }, [authUser.following.length]);
+	//   //[authUser, fetchUserData]
 	
 	// useEffect(() => {
 	// 	const fetchUserData = async () => {
@@ -1010,34 +1018,30 @@ const ProfileHeader = ({ username, page, isSubscribedCallback, activeSinceCallba
 							alignItems="baseline"
 							w={"full"}
 						>
-						<Box flex={"0 0 auto"} display="flex" alignItems="baseline" justifyContent="center">
-						<Text fontSize="lg" display="inline-block" mr={3}
-							//visibility={{ base: "hidden", sm: "visible" }}
-							>•</Text>
-							<Text fontWeight="bold" fontSize={{ base: "xl", md: "lg" }} display="inline-block">
+						<Box flex={"0 1 auto"} display="flex" alignItems="baseline" justifyContent="center">
+						
+							<Text fontWeight="bold" color={userProfile.creator ? "#f3a0b3" : "#ccb12e"}fontSize={{ base: "xl", md: "xl" }} display="inline-block">
 							{userProfile.username}
 							</Text>
-							<Text fontSize="lg" display="inline-block" ml={3}
-							//visibility={{ base: "hidden", sm: "visible" }}
-							>•</Text>
+							
 						</Box>
 						</Flex>
 						<Flex
-							align="center"
-							justify="center"
+							align={{ base: "center", md: "left" }}
+							justify={{ base: "center", md: "left" }}
 							alignItems="baseline"
 							w={"full"}
 						>
-						<Box flex={"1 0 auto"} justifyContent="center" alignItems="center" >
-							<Text textAlign="center" fontSize={"sm"} >{userProfile.fullName}</Text>
+						<Box flex={"0 1 auto"} justifyContent="center" alignItems="center" >
+							<Text fontWeight="bold" textAlign="center" fontSize={"sm"} >{userProfile.fullName}</Text>
 						</Box>
 						</Flex>
 						</Flex>
 
 				<Flex 
-				justifyContent={{ base: "center", sm: "flex-start" }}
+				justifyContent={{ base: "center", sm: "center" }}
 				alignItems={"center"} gap={{ base: 5, sm: 4 }} w={"full"}>
-					<Text color="#eb7734" fontSize={{ base: "md", md: "sm" }}>
+					<Text color="#D4AF37" fontWeight={"bold"} fontSize={{ base: "md", md: "md" }}>
 						<Text as='span' fontWeight={"bold"} mr={2}>
 							{userProfile.posts.length}
 						</Text>
@@ -1047,21 +1051,21 @@ const ProfileHeader = ({ username, page, isSubscribedCallback, activeSinceCallba
 					((userProfile.private && userProfile.followers.includes(authUser.uid)) || 
 					(userProfile.uid === authUser.uid) || 
 					(!userProfile.private)) ? (
-					<Text color="#eb7734" fontSize={{ base: "md", md: "sm" }}>
+					<Text color="#D4AF37" fontWeight={"bold"} fontSize={{ base: "md", md: "md" }}>
 					<Link to={`/${username}/followers`} style={{ textDecoration: 'none', color: 'inherit' }}>
                         <Text as='span' fontWeight={"bold"} mr={2}>
                             {userProfile.followers.length}
                         </Text>
-                        Followers
+                        {userProfile.followers.length === 1 ? "Follower" : "Followers"}
                     </Link>
 					</Text>
 					) : (
 					// {authUser && userProfile && ((userProfile.private && !userProfile.followers.includes(authUser.uid)) || (userProfile.private && !authUser)) && (userProfile.uid !== authUser.uid) && (
-					<Text color="#eb7734" fontSize={{ base: "md", md: "sm" }}>
+					<Text color="#D4AF37" fontWeight={"bold"} fontSize={{ base: "md", md: "md" }}>
                         <Text as='span' fontWeight={"bold"} mr={2}>
                             {userProfile.followers.length}
                         </Text>
-                        Followers
+                        {userProfile.followers.length === 1 ? "Follower" : "Followers"}
 					</Text>
 					)}
 					
@@ -1069,7 +1073,7 @@ const ProfileHeader = ({ username, page, isSubscribedCallback, activeSinceCallba
 					((userProfile.private && userProfile.followers.includes(authUser.uid)) || 
 					(userProfile.uid === authUser.uid) || 
 					(!userProfile.private)) ? (
-						<Text color="#eb7734" fontSize={{ base: "md", md: "sm" }}>
+						<Text color="#D4AF37" fontWeight={"bold"} fontSize={{ base: "md", md: "md" }}>
 						<Link to={`/${username}/following`} style={{ textDecoration: 'none', color: 'inherit' }}>
 							<Text as='span' fontWeight={"bold"} mr={2}>
 							{userProfile.following.length}
@@ -1078,7 +1082,7 @@ const ProfileHeader = ({ username, page, isSubscribedCallback, activeSinceCallba
 						</Link>
 						</Text>
 					) : (
-						<Text color="#eb7734" fontSize={{ base: "md", md: "sm" }}>
+						<Text color="#D4AF37" fontWeight={"bold"} fontSize={{ base: "md", md: "md" }}>
 						<Text as='span' fontWeight={"bold"} mr={2}>
 							{userProfile.following.length}
 						</Text>
@@ -1152,31 +1156,31 @@ const ProfileHeader = ({ username, page, isSubscribedCallback, activeSinceCallba
 					>
 				{visitingOwnProfileAndAuth && (
 						
-							<Button
+							<GoldButton
 							flex={{ base: "0 0 auto", sm: "0 0 auto" }}
-								bg={"white"}
-								color={"black"}
-								_hover={{ bg: "whiteAlpha.800" }}
+								//bg={"white"}
+								//color={"black"}
+								//_hover={{ bg: "whiteAlpha.800" }}
 								size={{ base: "sm", md: "sm" }}
 								onClick={onOpen}
-								textShadow="0 1px 1px rgba(0, 0, 0, 0.2)"
+								//textShadow="0 1px 1px rgba(0, 0, 0, 0.2)"
 							>
 								Edit Profile
-							</Button>
+							</GoldButton>
 						
 					)}
 					{visitingOwnProfileAndAuth && authUser.creator && (
 						
-							<Button
+							<PurpleButton
 							flex={{ base: "0 0 auto", sm: "0 0 auto" }}
-								bg={"#D8B7DD"}
-								color={"#722ABF"}
-								_hover={{ bg: "#B290B7" }}
+								//bg={"#D8B7DD"}
+								//color={"#722ABF"}
+								//_hover={{ bg: "#B290B7" }}
 								size={{ base: "sm", md: "sm" }}
 								onClick={handleCCClick}
 							>
 								Post Content
-							</Button>
+							</PurpleButton>
 						
 					)}
 					{visitingOwnProfileAndAuth && authUser.creator && (
@@ -1189,20 +1193,21 @@ const ProfileHeader = ({ username, page, isSubscribedCallback, activeSinceCallba
 						// 	size={{ base: "sm", md: "sm" }}
 						// 	onClick={handleCreatorSettingsClick}
 						// />
-						<IconButton
+						<PurpleIconButton
 						flex={{ base: "0 0 auto", sm: "0 0 auto" }}
-							icon={<FontAwesomeIcon icon={faGear} />}
+							//icon={<FontAwesomeIcon icon={faGear} />}
 							size={{ base: "sm", md: "sm" }}
 							onClick={handleCreatorSettingsClick}
-							backgroundColor="#D8B7DD"
-							color="#722ABF"
-							_hover={{ bg: "#B290B7" }}
+							//backgroundColor="#D8B7DD"
+							//color="#722ABF"
+							//borderRadius="25px"
+							//_hover={{ bg: "#B290B7" }}
 							aria-label="Settings"
 						/>
 					
 				)}
 					</Flex>
-					{visitingAnotherProfileAndAuth && (
+					{visitingAnotherProfileAndAuth && userProfile && userProfile.creator && (
 					<Flex	
 						gap={2}
 					direction={{ base: "row", sm: "row" }}
@@ -1210,11 +1215,11 @@ const ProfileHeader = ({ username, page, isSubscribedCallback, activeSinceCallba
 					alignItems="baseline"
 					w={"full"}	
 					>
-							<Button
+							<RoseGoldButton
 							flex={{ base: "0 0 auto", sm: "0 0 auto" }}
-								bg={"#eb7734"}
-								color={"white"}
-								_hover={{ bg: "#c75e1f" }}
+								// bg={"#D4AF37"}
+								// color={"white"}
+								// _hover={{ bg: "#c75e1f" }}
 								textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)"
 								size={{ base: "sm", md: "sm" }}
 								onClick={handleFollowClick} // Use the optimized handler
@@ -1222,34 +1227,82 @@ const ProfileHeader = ({ username, page, isSubscribedCallback, activeSinceCallba
 								
 							>
 								{isFollowing ? "Unfollow" : (requested ? "Requested" : "Follow")}
-							</Button>
-							<Button
+							</RoseGoldButton>
+							<RoseGoldButton
 							flex={{ base: "0 0 auto", sm: "0 0 auto" }}
-								bg={"#eb7734"}
-								color={"white"}
-								_hover={{ bg: "#c75e1f" }}
+								// bg={"#D4AF37"}
+								// color={"white"}
+								// _hover={{ bg: "#c75e1f" }}
 								size={{ base: "sm", md: "sm" }}
 								aria-label="Messages"
 								textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)"
 								onClick={handleMessageClick} 
 								mx={2} 
-								>Message</Button>
+								>Message</RoseGoldButton>
 							{userProfile.creator && (
-							<Button
+							<RoseGoldButton
 							flex={{ base: "0 0 auto", sm: "0 0 auto" }}
-							bg={"#eb7734"}
-							color={"white"}
-							_hover={{ bg: "#c75e1f" }}
+							// bg={"#D4AF37"}
+							// color={"white"}
+							// _hover={{ bg: "#c75e1f" }}
 							size={{ base: "sm", md: "sm" }}
 							aria-label="Messages"
 							textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)"
 							onClick={handleOpenSubscribeModal} 
 							mr={2} 
-							>{!isSubscribedToCreator ? "Subscribe" : "Subscribed"}</Button>
+							>{!isSubscribedToCreator ? "Subscribe" : "Subscribed"}</RoseGoldButton>
 							)}
 							
 						</Flex>
 						
+					)}
+					{visitingAnotherProfileAndAuth && userProfile && !userProfile.creator && (
+					<Flex	
+						gap={2}
+					direction={{ base: "row", sm: "row" }}
+					justifyContent={{ base: "center", sm: "flex-start" }}
+					alignItems="baseline"
+					w={"full"}	
+					>
+							<GoldButton
+							flex={{ base: "0 0 auto", sm: "0 0 auto" }}
+								// bg={"#D4AF37"}
+								// color={"white"}
+								// _hover={{ bg: "#c75e1f" }}
+								textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)"
+								size={{ base: "sm", md: "sm" }}
+								onClick={handleFollowClick} // Use the optimized handler
+								isDisabled={isOptimisticUpdate} // Disable button during optimistic update
+								
+							>
+								{isFollowing ? "Unfollow" : (requested ? "Requested" : "Follow")}
+							</GoldButton>
+							<GoldButton
+							flex={{ base: "0 0 auto", sm: "0 0 auto" }}
+								// bg={"#D4AF37"}
+								// color={"white"}
+								// _hover={{ bg: "#c75e1f" }}
+								size={{ base: "sm", md: "sm" }}
+								aria-label="Messages"
+								textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)"
+								onClick={handleMessageClick} 
+								mx={2} 
+								>Message</GoldButton>
+							{userProfile.creator && (
+							<GoldButton
+							flex={{ base: "0 0 auto", sm: "0 0 auto" }}
+							// bg={"#D4AF37"}
+							// color={"white"}
+							// _hover={{ bg: "#c75e1f" }}
+							size={{ base: "sm", md: "sm" }}
+							aria-label="Messages"
+							textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)"
+							onClick={handleOpenSubscribeModal} 
+							mr={2} 
+							>{!isSubscribedToCreator ? "Subscribe" : "Subscribed"}</GoldButton>
+							)}
+							
+						</Flex>
 					)}
 					{/* {subscribe && userProfile && authUser && !isSubscribedToCreator && (
 							<AddPaymentAndSubscribe userProfile={userProfile} authUser={authUser} />

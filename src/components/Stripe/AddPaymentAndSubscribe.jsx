@@ -6,6 +6,7 @@ import axios from "axios";
 import { firestore } from "../../firebase/firebase";
 import { doc, getDoc, arrayUnion, updateDoc } from "firebase/firestore";
 import dayjs from "dayjs";
+import GoldButton from "../GoldButton/GoldButton";
 
 // Load the Stripe publishable key
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
@@ -177,7 +178,7 @@ const AddPaymentAndSubscribe = ({ userProfile, authUser, onClose}) => {
               {paymentMethods[0].card.brand} ending in {paymentMethods[0].card.last4}
             </p> */}
             
-            <Button
+            <GoldButton
               size="sm"
               mt={3}
               type="button"
@@ -187,10 +188,10 @@ const AddPaymentAndSubscribe = ({ userProfile, authUser, onClose}) => {
               {loading 
             ? "Processing payment..."
             : `Subscribe with ${paymentMethods[0].card.brand} ...${paymentMethods[0].card.last4}`}
-            </Button>
-            <Button size="sm" mt={3} type="button" onClick={() => setShowAddPaymentForm(true)}>
+            </GoldButton>
+            <GoldButton size="sm" mt={3} type="button" onClick={() => setShowAddPaymentForm(true)}>
               Add New Payment Method
-            </Button>
+            </GoldButton>
           </div>
         ) : null }
 
@@ -265,9 +266,9 @@ const PaymentForm = ({ userId, creatorId, subscriptionPrice, loading, setLoading
     return (
       <form onSubmit={handleSubmit}>
         <PaymentElement />
-        <Button type="submit" disabled={!stripe || loading}>
+        <GoldButton type="submit" disabled={!stripe || loading}>
           {loading ? "Processing..." : "Subscribe"}
-        </Button>
+        </GoldButton>
         {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
       </form>
     );

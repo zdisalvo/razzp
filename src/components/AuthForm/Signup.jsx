@@ -2,6 +2,7 @@ import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { Alert, AlertIcon, Button, Input, InputGroup, InputRightElement, Text } from "@chakra-ui/react";
 import { useState } from "react";
 import useSignUpWithEmailAndPassword from "../../hooks/useSignUpWithEmailAndPassword";
+import GoldButton from "../GoldButton/GoldButton";
 
 const Signup = () => {
 	const [inputs, setInputs] = useState({
@@ -91,18 +92,18 @@ const Signup = () => {
 				</Alert>
 			)}
 
-			<Button
+			<GoldButton
 				w={"full"}
-				bg={"#eb7734"}
-				color={"white"}
-				_hover={{ bg: "#c75e1f" }}
-				textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)"
+				// bg={"#eb7734"}
+				// color={"white"}
+				// _hover={{ bg: "#c75e1f" }}
+				// textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)"
 				size={{ base: "sm", md: "sm" }}
 				isLoading={loading}
 				onClick={() => signup(inputs)}
 			>
 				Sign Up
-			</Button>
+			</GoldButton>
 			{referral && (
 			<>
 			<Text fontSize="sm" fontWeight="bold" mb={-2} textAlign="left">

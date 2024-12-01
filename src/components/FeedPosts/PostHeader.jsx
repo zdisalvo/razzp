@@ -18,7 +18,8 @@ import useSparkProfileStore from "../../store/sparkProfileStore";
 //import useDeleteSelectedImage from "../../hooks/useDeleteSelectedImage";
 import useUnrequestFollow from "../../hooks/useUnrequestFollow";
 import PostDate from "./PostDate";
-
+import GoldButton from "../GoldButton/GoldButton";
+import RoseGoldButton from "../GoldButton/RoseGoldButton";
 
 
 
@@ -168,13 +169,14 @@ const handleFollowClick = async () => {
         </Flex>
       </Flex>
       <Flex alignItems={"center"} gap={4} mr={1}>
-      {authUser && (
+      {authUser && userProfile && (
         <Box cursor={"pointer"}>
-        <Button
-								bg={"#eb7734"}
+          {userProfile.creator ?
+        <RoseGoldButton
+								// bg={"#eb7734"}
                 //background={isFollowing ? "url('/button-bg.png')" : "#eb7734"}
-								color={"white"}
-								_hover={{ bg: "#c75e1f" }}
+								// color={"white"}
+								// _hover={{ bg: "#c75e1f" }}
 								textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)"
 								size={{ base: "sm", md: "sm" }}
 								onClick={handleFollowClick} // Use the optimized handler
@@ -182,7 +184,22 @@ const handleFollowClick = async () => {
 								
 							>
 								{isFollowing ? "Unfollow" : (requested ? "Requested" : "Follow")}
-							</Button>
+							</RoseGoldButton> :
+              <GoldButton
+								// bg={"#eb7734"}
+                //background={isFollowing ? "url('/button-bg.png')" : "#eb7734"}
+								// color={"white"}
+								// _hover={{ bg: "#c75e1f" }}
+								textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)"
+								size={{ base: "sm", md: "sm" }}
+								onClick={handleFollowClick} // Use the optimized handler
+								isDisabled={isOptimisticUpdate} // Disable button during optimistic update
+								
+							>
+								{isFollowing ? "Unfollow" : (requested ? "Requested" : "Follow")}
+							</GoldButton>
+
+          }
         </Box>
       )}
         {authUser?.uid === userProfile?.uid && (

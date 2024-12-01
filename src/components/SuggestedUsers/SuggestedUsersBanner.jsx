@@ -34,10 +34,11 @@ const SuggestedUsersBanner = () => {
           >
             <Link to={`/${user.username}`}>
             <Avatar
-              boxSize="100px"
+              boxSize="60px"
               //borderRadius="full"
               src={user.profilePicURL}
               alt={user.username}
+              //size="sm"
             />
             <Text fontWeight="bold" mt={2}>{user.username}</Text>
             </Link>

@@ -3,6 +3,8 @@ import { Button } from "@chakra-ui/react";
 import useFollowUserFP from "../../hooks/useFollowUserFP";
 import useUnrequestFollow from "../../hooks/useUnrequestFollow";
 import useAuthStore from "../../store/authStore";
+import GoldButton from "../../components/GoldButton/GoldButton";
+import RoseGoldButton from "../../components/GoldButton/RoseGoldButton";
 
 const FollowButton = ({ userProfile, isFollowing: initialIsFollowing, requested: requestedVal }) => {
     const authUser = useAuthStore((state) => state.user);
@@ -44,18 +46,32 @@ const FollowButton = ({ userProfile, isFollowing: initialIsFollowing, requested:
     };
 
     return (
-        <Button
+        userProfile.creator ? 
+            <RoseGoldButton
             ml="auto"
-            bg={"#eb7734"}
-            color={"white"}
-            _hover={{ bg: "#c75e1f" }}
+            // bg={"#eb7734"}
+            // color={"white"}
+            // _hover={{ bg: "#c75e1f" }}
             textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)"
             size={{ base: "sm", md: "sm" }}
             onClick={handleFollowClick}
             isDisabled={isOptimisticUpdate}
         >
             {isFollowing ? "Unfollow" : (requested ? "Requested" : "Follow")}
-        </Button>
+        </RoseGoldButton> :
+        <GoldButton
+            ml="auto"
+            // bg={"#eb7734"}
+            // color={"white"}
+            // _hover={{ bg: "#c75e1f" }}
+            textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)"
+            size={{ base: "sm", md: "sm" }}
+            onClick={handleFollowClick}
+            isDisabled={isOptimisticUpdate}
+        >
+            {isFollowing ? "Unfollow" : (requested ? "Requested" : "Follow")}
+        </GoldButton>
+    
     );
 };
 

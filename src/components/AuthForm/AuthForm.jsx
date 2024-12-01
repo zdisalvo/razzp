@@ -24,7 +24,16 @@ const AuthForm = () => {
 					{isLogin ? <Login /> : <Signup />}
 
 					{/* ---------------- OR -------------- */}
-					<Flex alignItems={"center"} justifyContent={"center"} my={4} gap={1} w={"full"}>
+					<Flex alignItems={"center"} justifyContent={"center"}>
+					<Box mx={2} fontSize={14}>
+						{isLogin ? "Don't have an account?" : "Already have an account?"}
+					</Box>
+					<Box onClick={() => setIsLogin(!isLogin)} color={"blue.500"} cursor={"pointer"}>
+						{isLogin ? "Sign up" : "Log in"}
+					</Box>
+					
+				</Flex>
+					<Flex alignItems={"center"} justifyContent={"center"} my={0} gap={1} w={"full"}>
 						<Box flex={2} h={"1px"} bg={"gray.400"} />
 						<Text mx={1} color={"white"}>
 							OR
@@ -37,17 +46,9 @@ const AuthForm = () => {
 			</Box>
 
 			<Box border={"1px solid gray"} borderRadius={4} padding={5}>
+				
 				<Flex alignItems={"center"} justifyContent={"center"}>
-					<Box mx={2} fontSize={14}>
-						{isLogin ? "Don't have an account?" : "Already have an account?"}
-					</Box>
-					<Box onClick={() => setIsLogin(!isLogin)} color={"blue.500"} cursor={"pointer"}>
-						{isLogin ? "Sign up" : "Log in"}
-					</Box>
-					
-				</Flex>
-				<Flex alignItems={"center"} justifyContent={"center"}>
-					<Box mt={3}>
+					<Box my={1}>
 					{/* <Text onClick={onOpen} cursor="pointer" color="blue.500">
 						Forgot password?
 					</Text> */}

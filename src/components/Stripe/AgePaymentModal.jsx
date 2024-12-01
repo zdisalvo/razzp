@@ -35,7 +35,7 @@ const AgePaymentModal = ({ isOpen, onClose, post, authUser, creatorProfile }) =>
                     pb={{ base: 4, md: 5 }}
                 >
                     <></>
-                    <Text textAlign="center" color="red">This is age-restricted content</Text>
+                    <Text textAlign="center" color="red">This may be age-restricted content</Text>
                     
 
                     {/* Checkbox for age confirmation */}
