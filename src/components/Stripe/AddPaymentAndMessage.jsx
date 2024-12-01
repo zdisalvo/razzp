@@ -188,7 +188,7 @@ const AddPaymentAndMessage = ({ creatorProfile, authUser, onPurchaseStatus, onCl
             >
               {loading
             ? "Processing payment..."
-            : `Purchase Message with ${paymentMethods[0].card.brand} ending in ${paymentMethods[0].card.last4}`}
+            : `Unlock Message with ${paymentMethods[0].card.brand} ...${paymentMethods[0].card.last4}`}
             </Button>
             <Button size="sm" mt={3} type="button" onClick={() => setShowAddPaymentForm(true)}>
               Add New Payment Method

@@ -184,7 +184,7 @@ const AddPaymentAndPost = ({ creatorProfile, authUser, post, onClose}) => {
             >
               {loading
             ? "Processing payment..."
-            : `Purchase Post with ${paymentMethods[0].card.brand} ending in ${paymentMethods[0].card.last4}`}
+            : `Unlock Post with ${paymentMethods[0].card.brand} ...${paymentMethods[0].card.last4}`}
             </Button>
             <Button size="sm" mt={3} type="button" onClick={() => setShowAddPaymentForm(true)}>
               Add New Payment Method

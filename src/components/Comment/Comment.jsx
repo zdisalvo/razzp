@@ -19,7 +19,7 @@ const Comment = ({ comment, post, postUser }) => {
 	const [blocked, setBlocked] = useState(false);
 
 	//console.log(postUser);
-	//console.log(userProfile);
+	console.log(userProfile);
 
     useEffect(() => {
         const fetchUserCommentLikes = async () => {
@@ -130,6 +130,8 @@ const Comment = ({ comment, post, postUser }) => {
 	if (blocked) return null;
 
 	//console.log(post.imageURL);
+
+    
 
     return (
 		

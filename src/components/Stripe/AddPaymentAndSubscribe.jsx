@@ -186,7 +186,7 @@ const AddPaymentAndSubscribe = ({ userProfile, authUser, onClose}) => {
             >
               {loading 
             ? "Processing payment..."
-            : `Subscribe with ${paymentMethods[0].card.brand} ending in ${paymentMethods[0].card.last4}`}
+            : `Subscribe with ${paymentMethods[0].card.brand} ...${paymentMethods[0].card.last4}`}
             </Button>
             <Button size="sm" mt={3} type="button" onClick={() => setShowAddPaymentForm(true)}>
               Add New Payment Method
