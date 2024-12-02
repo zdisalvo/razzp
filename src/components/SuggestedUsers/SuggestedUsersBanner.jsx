@@ -15,7 +15,7 @@ const SuggestedUsersBanner = () => {
     
     <Container maxW={{base: "100vw", md: "672px"}} py={4} mx={0}>
       <HStack spacing={2} overflowX="scroll" py={3}>
-        {!isLoading && suggestedUsers.map((user) => (
+        {suggestedUsers.map((user) => (
           <VStack
             key={user.uid}
             spacing={2}

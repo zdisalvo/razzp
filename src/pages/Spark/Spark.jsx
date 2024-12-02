@@ -30,10 +30,22 @@ const Spark = () => {
       fetchSparkProfile: state.fetchSparkProfile,
     }));
     
-    useEffect(() => {
+    // useEffect(() => {
       
-      fetchSparkProfile();
-    }, [fetchSparkProfile]);
+    //   fetchSparkProfile();
+    // }, [fetchSparkProfile]);
+
+    const handleFetcSparkProfile = async () => {
+      try {
+        // Add a delay using setTimeout wrapped in a Promise
+        await new Promise((resolve) => setTimeout(resolve, 1500));
+      
+        // Now call fetchUserData
+        await fetchSparkProfile();
+      } catch (error) {
+        console.error("Error fetching Spark profile:", error);
+      }
+      };
 
     const { isLoading, sparkProfiles } = useGetSparkProfiles(sparkProfile, refreshKey);
     //console.log(sparkProfile);
@@ -92,8 +104,9 @@ const Spark = () => {
 
     // Callback to trigger refresh
     const handleFiltersApplied = useCallback(() => {
+        handleFetcSparkProfile();
         setRefreshKey(prevKey => prevKey + 1); // Update key to trigger re-fetch
-        window.location.reload();
+        //window.location.reload();
         //onClose();
     }, [onClose]);
 
@@ -138,7 +151,7 @@ const Spark = () => {
                 </Flex>
             </Box>
 
-            {isLoading &&
+            {/* {isLoading &&
                 [0, 1, 2].map((_, idx) => (
                     <VStack key={idx} gap={4} alignItems={"flex-start"} mb={10}>
                         <Flex gap='2'>
@@ -152,7 +165,7 @@ const Spark = () => {
                             <Box h={"400px"}>contents wrapped</Box>
                         </Skeleton>
                     </VStack>
-                ))}
+                ))} */}
 
             {!isLoading&& !profileLoading && sparkProfiles.length > 0 && sparkProfiles.map((profile) => (
                 <SparkProfile key={profile.uid} id={profile.uid} sparkProfile={profile} onViewed={handleViewed} sparkUser={sparkProfile} />

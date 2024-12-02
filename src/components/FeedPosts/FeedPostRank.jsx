@@ -68,12 +68,20 @@ const FeedPost = forwardRef(({ post, rank, isFollowing, requested, isPrivate, on
       const observer = new IntersectionObserver(
         ([entry]) => {
           if (entry.isIntersecting) {
+            // Play the video when it is in view
             videoElement.play();
           } else {
-            videoElement.pause();
+            if (entry.intersectionRatio > 0 && entry.intersectionRatio < 0.2) {
+              // Pause the video if it is partially visible but less than 20%
+              videoElement.pause();
+            } else if (entry.intersectionRatio === 0) {
+              // Restart the video when it is completely out of view
+              videoElement.pause();
+              videoElement.currentTime = 0;
+            }
           }
         },
-        { threshold: 0.2 } // Adjust this value to control how much of the video needs to be visible to trigger playback
+        { threshold: [0.2] } // Monitor transitions between 0 (out of view) and 0.1 (barely visible)
       );
 
       observer.observe(videoElement);

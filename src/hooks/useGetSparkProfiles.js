@@ -61,11 +61,11 @@ const queryNearbyUsers = async (latitude, longitude, radiusInMiles) => {
 	}
   };
 
-const useGetSparkProfiles = (refreshKey) => {
+const useGetSparkProfiles = (sparkProfile, refreshKey) => {
     const authUser = useAuthStore((state) => state.user);
     const [isLoading, setIsLoading] = useState(true);
     const showToast = useShowToast();
-    const { sparkProfile } = useGetSparkProfileById(authUser.uid);
+    //const { sparkProfile } = useGetSparkProfileById(authUser.uid);
 
     const { sparkProfiles, setSparkProfiles, isLoading: profilesLoading, error } = useSparkStore((state) => ({
         sparkProfiles: state.sparkProfiles,
@@ -82,6 +82,8 @@ const useGetSparkProfiles = (refreshKey) => {
         }
         return shuffledArray;
       };
+
+      console.log(sparkProfile);
 
     useEffect(() => {
         const getSparkProfiles = async () => {
@@ -328,7 +330,7 @@ const useGetSparkProfiles = (refreshKey) => {
         getSparkProfiles();
     }, [setSparkProfiles, sparkProfile, showToast, refreshKey]);
 
-    return { isLoading, sparkProfiles };
+    return { isLoading, sparkProfiles};
 };
 
 export default useGetSparkProfiles;

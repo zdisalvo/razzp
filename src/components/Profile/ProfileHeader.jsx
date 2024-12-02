@@ -113,7 +113,8 @@ const ProfileHeader = ({ username, page, isSubscribedCallback, activeSinceCallba
 		if (!authUser || !userProfile )
 			return;
 
-		fetchUserData(authUser.uid);
+		//fetchUserData(authUser.uid);
+		handleFetchUserData(authUser.uid);
 
 		  
 		  const isSubscribed = authUser.subscriptions && authUser.subscriptions.some((subscription) => {
