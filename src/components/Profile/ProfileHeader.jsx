@@ -890,7 +890,12 @@ const ProfileHeader = ({ username, page, isSubscribedCallback, activeSinceCallba
 			  whiteSpace="nowrap"
 			  color="#D8B7DD"
 			  onClick={handleUnsetCreator}
-			>Content Creator ✔️</MenuItem>
+			  display="flex"
+  			  
+			>
+				<Box as="span" >Content Creator</Box> 
+				<Box as="span" mb={1} 	ml={2} verticalAlign="top">📷</Box>
+			</MenuItem>
 			)}
           {authUser && authUser.blocked && (
             <MenuItem

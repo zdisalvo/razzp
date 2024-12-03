@@ -5,15 +5,15 @@ import { faGear } from '@fortawesome/free-solid-svg-icons';
 
 const PurpleIconButton = ({
   icon = <FontAwesomeIcon icon={faGear} />,
-  bg = 'linear-gradient(145deg, #6a0dad, #7f00ff, #551a8b)',
-  color = '#e6e6fa', // Light lavender for purple lettering
-  textShadow = '2px 2px 4px rgba(0, 0, 0, 0.5)',
+  bg = 'linear-gradient(145deg, #9b59b6, #b399d4, #916dd7)', // Lighter purples
+  color = '#f8f4fc', // Very light lavender for purple lettering
+  textShadow = '2px 2px 4px rgba(0, 0, 0, 0.4)',
   size = 'sm',
   _hover = {
-    bg: 'linear-gradient(145deg, #7b1fac, #8a2be2, #5a189a)',
+    bg: 'linear-gradient(145deg, #b58ecb, #d1aedf, #a787d8)', // Even lighter shades
   },
   _active = {
-    bg: 'linear-gradient(145deg, #5e0c94, #6800d3, #491578)',
+    bg: 'linear-gradient(145deg, #8d48a5, #a97bc9, #8054b2)', // Slightly darker than default bg
   },
   borderRadius = '25px',
   ...props

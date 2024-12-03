@@ -35,10 +35,10 @@ const Spark = () => {
     //   fetchSparkProfile();
     // }, [fetchSparkProfile]);
 
-    const handleFetcSparkProfile = async () => {
+    const handleFetchSparkProfile = async () => {
       try {
         // Add a delay using setTimeout wrapped in a Promise
-        await new Promise((resolve) => setTimeout(resolve, 1500));
+        await new Promise((resolve) => setTimeout(resolve, 500));
       
         // Now call fetchUserData
         await fetchSparkProfile();
@@ -104,7 +104,7 @@ const Spark = () => {
 
     // Callback to trigger refresh
     const handleFiltersApplied = useCallback(() => {
-        handleFetcSparkProfile();
+        handleFetchSparkProfile();
         setRefreshKey(prevKey => prevKey + 1); // Update key to trigger re-fetch
         //window.location.reload();
         //onClose();

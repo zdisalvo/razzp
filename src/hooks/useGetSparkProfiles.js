@@ -83,7 +83,7 @@ const useGetSparkProfiles = (sparkProfile, refreshKey) => {
         return shuffledArray;
       };
 
-      console.log(sparkProfile);
+      //console.log(sparkProfile);
 
     useEffect(() => {
         const getSparkProfiles = async () => {

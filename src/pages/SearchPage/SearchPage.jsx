@@ -97,7 +97,7 @@ import {
           keywords="Search for friends by location, Social network, Social media platform, Content creation, Online community, Connect with local friends, Share updates, Messaging, Social media, Profile creation, Social sharing, Friend network, Social interaction, Content sharing, User engagement, Social connections, Follow and unfollow, Online profiles, News feed, Social networking site"
         />
       
-        <Container py={6} px={0} w={['100vw', null, '80vh']}>
+        <Container py={6} px={0} w={['100vw', null, '80vh']} pb={{base: "7vh", md: "30px"}}>
           <Flex align="center" mb={4} justify="space-between">
             <Flex align="center">
               <IconButton

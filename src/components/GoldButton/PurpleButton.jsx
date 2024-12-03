@@ -3,15 +3,15 @@ import { Button } from '@chakra-ui/react';
 
 const PurpleButton = ({
   children,
-  bg = 'linear-gradient(145deg, #6a0dad, #7f00ff, #551a8b)',
-  color = '#e6e6fa', // Light lavender for purple lettering
-  textShadow = '2px 2px 4px rgba(0, 0, 0, 0.5)',
+  bg = 'linear-gradient(145deg, #9b59b6, #b399d4, #916dd7)', // Lighter purples
+  color = '#f8f4fc', // Very light lavender for purple lettering
+  textShadow = '2px 2px 4px rgba(0, 0, 0, 0.4)',
   size = 'sm',
   _hover = {
-    bg: 'linear-gradient(145deg, #7b1fac, #8a2be2, #5a189a)',
+    bg: 'linear-gradient(145deg, #b58ecb, #d1aedf, #a787d8)', // Even lighter shades
   },
   _active = {
-    bg: 'linear-gradient(145deg, #5e0c94, #6800d3, #491578)',
+    bg: 'linear-gradient(145deg, #8d48a5, #a97bc9, #8054b2)', // Slightly darker than default bg
   },
   ...props
 }) => {
@@ -21,10 +21,10 @@ const PurpleButton = ({
       color={color}
       fontSize="16px"
       fontWeight="bold"
-      border="1px solid #7f00ff"
+      border="1px solid #b399d4" // Matches lighter purple tones
       borderRadius="25px"
       height="auto"
-      lineHeight={{base: "2", md: "1.5"}}
+      lineHeight="1.5"
       p="4px 16px"
       textShadow={textShadow}
       boxShadow="0 4px 10px rgba(0, 0, 0, 0.2), inset 0 2px 5px rgba(255, 255, 255, 0.3)"
