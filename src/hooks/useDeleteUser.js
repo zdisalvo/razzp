@@ -31,8 +31,15 @@ const useDeleteUser = () => {
       const userDocRef = doc(firestore, 'users', authUser.uid);
       const userDoc = await getDoc(userDocRef);
 
+      const sparkDocRef = doc(firestore, 'spark', authUser.uid);
+      const sparkDoc = await getDoc(sparkDocRef);
+
       if (!userDoc.exists()) {
         throw new Error('User not found');
+      }
+
+      if (!sparkDoc.exists()) {
+        throw new Error('Spark User not found');
       }
 
       const userData = userDoc.data();
@@ -70,6 +77,8 @@ const useDeleteUser = () => {
       });
 
       await Promise.all(deletePostPromises);
+
+      await deleteDoc(sparkDocRef);
 
       // Delete the user profile document
       await deleteDoc(userDocRef);
