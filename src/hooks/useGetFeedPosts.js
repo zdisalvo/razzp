@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import usePostStore from "../store/postStore";
+import useFeedPostStore from "../store/feedPostStore";
 import useAuthStore from "../store/authStore";
 import useShowToast from "./useShowToast";
 import useUserProfileStore from "../store/userProfileStore";
@@ -9,7 +9,7 @@ import useGetTop5Posts from "./useGetTop5Posts";
 
 const useGetFeedPosts = () => {
 	const [isLoading, setIsLoading] = useState(true);
-	const { posts, setPosts } = usePostStore();
+	const { feedPosts, setFeedPosts } = useFeedPostStore();
 	const authUser = useAuthStore((state) => state.user);
 	const showToast = useShowToast();
 	const { setUserProfile } = useUserProfileStore();
@@ -118,8 +118,10 @@ const useGetFeedPosts = () => {
 					}
 
 					const shuffledPosts = shuffleArray(uniquePosts);
+
+					console.log("test");
 				  
-					setPosts(shuffledPosts);
+					setFeedPosts(shuffledPosts);
 
 
 				//feedPosts.sort((a, b) => b.createdAt - a.createdAt);
@@ -132,9 +134,9 @@ const useGetFeedPosts = () => {
 		};
 
 		if (authUser) getFeedPosts();
-	}, [authUser, showToast, setPosts, setUserProfile]);
+	}, [authUser, showToast, setFeedPosts, setUserProfile]);
 
-	return { isLoading, posts, setPosts };
+	return { isLoading, feedPosts, setFeedPosts };
 };
 
 export default useGetFeedPosts;
