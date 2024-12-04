@@ -39,22 +39,22 @@ const SuggestedUser = ({ user, setUser }) => {
 	// 	});
 	// };
 
-	const handleFollowClick = async (userId) => {
-        const isCurrentlyFollowing = isFollowingInit;
+	// const handleFollowClick = async (userId) => {
+    //     const isCurrentlyFollowing = isFollowingInit;
         
-        // Optimistically update the state
-        setIsFollowingInit(!isCurrentlyFollowing);
-        setIsOptimisticUpdate(true);
-        try {
-            await handleFollowUser(userId, isCurrentlyFollowing);
-        } catch (error) {
-            console.error('Error updating follow status:', error);
-            // Rollback optimistic update in case of error
-            setIsFollowingInit(isCurrentlyFollowing);
-        } finally {
-			setIsOptimisticUpdate(false);
-		}
-    };
+    //     // Optimistically update the state
+    //     setIsFollowingInit(!isCurrentlyFollowing);
+    //     setIsOptimisticUpdate(true);
+    //     try {
+    //         await handleFollowUser(userId, isCurrentlyFollowing);
+    //     } catch (error) {
+    //         console.error('Error updating follow status:', error);
+    //         // Rollback optimistic update in case of error
+    //         setIsFollowingInit(isCurrentlyFollowing);
+    //     } finally {
+	// 		setIsOptimisticUpdate(false);
+	// 	}
+    // };
 
 	return (
 		<Flex justifyContent={"space-between"} alignItems={"center"} w={"full"} >
@@ -98,10 +98,10 @@ const SuggestedUser = ({ user, setUser }) => {
 			// 	{isFollowingInit ? 'Unfollow' : 'Follow'}
 			// </Button>
 			<FollowButtonSuggested
-                                userProfile={user}
-                                isFollowing={isFollowing}
-                                requested={authUser && user.requested && user.requested.includes(authUser.uid)}
-                            />
+				userProfile={user}
+				isFollowing={isFollowing}
+				requested={authUser && user.requested && user.requested.includes(authUser.uid)}
+			/>
 			)}
 		</Flex>
 	);

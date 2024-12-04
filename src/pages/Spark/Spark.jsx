@@ -15,6 +15,7 @@ import useSparkProfileStore from "../../store/sparkProfileStore";
 import Meta from "../../components/SEO/Meta";
 import dayjs from "dayjs";
 import CancelSparkSubscription from "./CancelSparkSubscription";
+import useShowToast from "../../hooks/useShowToast";
 
 const Spark = () => {
   const { authUser, fetchUserData } = useAuthStore((state) => ({
@@ -41,11 +42,12 @@ const Spark = () => {
   const [subscriptionStatus, setSubscriptionStatus] = useState("");
   const [isInitialized, setIsInitialized] = useState(false);
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
+  const showToast = useShowToast();
 
   const handleFetchUserData = async (userId) => {
 		try {
 		  // Add a delay using setTimeout wrapped in a Promise
-		  await new Promise((resolve) => setTimeout(resolve, 2000));
+		  await new Promise((resolve) => setTimeout(resolve, 1000));
 	  
 		  // Now call fetchUserData
 		  await fetchUserData(userId);
@@ -67,9 +69,9 @@ const Spark = () => {
 		  
 		  const isSubscribed = authUser.subscriptions && authUser.subscriptions.some((subscription) => {
 			const isValidSubscription = subscription.creatorId === "spark" || false;
-			//console.log(isValidSubscription);
+			
 			if (!isValidSubscription) {
-				//console.log(isValidSubscription);
+				
 				return false;
 			} else {
 				const expirationDateInMillis = subscription.expirationDate.seconds * 1000;
@@ -83,30 +85,29 @@ const Spark = () => {
 			//return isValidSubscription && isExpirationValid
 		  });
 
-      //console.log(isSubscribed);
+      
 		  
 		  
 		  setUserSubscribed(isSubscribed);
-		  //console.log(isSubscribed);
-		  //console.log(isSubscribedToCreator); 
+		  
 
 		//setIsInitialized(true);
 		
 		
 	}, [authUser && authUser.subscriptions && authUser.subscriptions.length]);
 
-  //console.log(userSubscribed);
+  
 
 
   useEffect (() => {
 
-    //console.log(userSubscribed);
+    
 
 		if (!authUser || isInitialized)
 			return;
 
 
-			//console.log(isSubscribedToCreator);
+			
 
 		handleFetchUserData(authUser.uid);
 
@@ -114,9 +115,9 @@ const Spark = () => {
 		  
 		  const isSubscribed = authUser.subscriptions && authUser.subscriptions.some((subscription) => {
 			const isValidSubscription = subscription.creatorId === "spark";
-      //console.log(isValidSubscription);
+      
 			if (!isValidSubscription) {
-				//console.log(isValidSubscription);
+				
 				return false;
 			} else {
 				const expirationDateInMillis = subscription.expirationDate.seconds * 1000;
@@ -125,7 +126,7 @@ const Spark = () => {
 				setSubscriptionStatus(subscription.status);
 				return subscription.expirationDate.seconds * 1000 > Date.now(); // Check if expirationDate is in the future
 			}
-			//console.log(isExpirationValid);
+			
 			
 			//return isValidSubscription && isExpirationValid
 		  });
@@ -142,7 +143,14 @@ const Spark = () => {
 
   const handleOpenCancelModal = () => {
 
-    setIsCancelModalOpen(true);
+    if (userSubscribed && subscriptionStatus === "canceled") {
+      showToast("Your subscription is canceled but active until " + expDate);
+    } else {
+      setIsCancelModalOpen(true);
+    }
+    
+
+    
   }
 
   const handleCancelModalClose = () => {
@@ -172,7 +180,7 @@ const Spark = () => {
       };
 
     const { isLoading, sparkProfiles } = useGetSparkProfiles(sparkProfile, refreshKey);
-    //console.log(sparkProfile);
+    
 
     const navigate = useNavigate();
 
@@ -271,8 +279,9 @@ const Spark = () => {
                   aria-label="Filter users"
                   onClick={onOpen}
                   variant="outline"
+                  mr={2}
                 />
-                {userSubscribed && subscriptionStatus !== "canceled" &&
+                {userSubscribed &&
                 <IconButton
                   icon={<FontAwesomeIcon icon={faBan} />}
                   aria-label="Filter users"

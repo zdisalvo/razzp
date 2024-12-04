@@ -175,7 +175,7 @@ const handleFollowClick = async () => {
         <RoseGoldButton
 								// bg={"#eb7734"}
                 //background={isFollowing ? "url('/button-bg.png')" : "#eb7734"}
-								// color={"white"}
+								color={isFollowing || requested ? "#fa489e": "white"}
 								// _hover={{ bg: "#c75e1f" }}
 								textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)"
 								size={{ base: "sm", md: "sm" }}
@@ -188,7 +188,7 @@ const handleFollowClick = async () => {
               <GoldButton
 								// bg={"#eb7734"}
                 //background={isFollowing ? "url('/button-bg.png')" : "#eb7734"}
-								// color={"white"}
+								color={isFollowing || requested ? "#735D1B" : "white"}
 								// _hover={{ bg: "#c75e1f" }}
 								textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)"
 								size={{ base: "sm", md: "sm" }}

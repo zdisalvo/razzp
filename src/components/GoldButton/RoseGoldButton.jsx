@@ -3,7 +3,7 @@ import { Button } from '@chakra-ui/react';
 
 const RoseGoldButton = ({
   children,
-  bg = 'linear-gradient(145deg, #ec9bad, #d87b8f, #c85f6e)',
+  bg = 'linear-gradient(145deg, #ec9bad, #fbcdd8, #c85f6e)',
   color = 'white',
   textShadow = '2px 2px 4px rgba(0, 0, 0, 0.5)',
   size = 'sm',
@@ -24,7 +24,7 @@ const RoseGoldButton = ({
       border="1px solid #f3a0b3"
       borderRadius="25px"
       height="auto"
-      lineHeight="1.5"
+      lineHeight="1.2"
       p="4px 16px"
       textShadow={textShadow}
       boxShadow="0 4px 10px rgba(0, 0, 0, 0.2), inset 0 2px 5px rgba(255, 255, 255, 0.3)"

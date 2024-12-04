@@ -41,6 +41,7 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
     const [isSubscribedToCreator, setIsSubscribedToCreator] = useState(false);
 	const [isInitialized, setIsInitialized] = useState(false);
     const [ownProfile, setOwnProfile] = useState(false);
+
 	
 	useEffect (() => {
 		if (!authUser || !creatorProfile || isInitialized)
@@ -239,7 +240,7 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
                     <CommentLogo />
                 </Box >
                 )}
-                {creatorProfile && post && !post.paid && post.mediaType.startsWith("image/") && (
+                {creatorProfile && post && !post.paid && (!post.mediaType || post.mediaType.startsWith("image/")) && (
                 <Box cursor={"pointer"} fontSize={18}>
                     {/* <ShareButtonOverlay imageUrl={post.imageURL} overlayText={`@${creatorProfile.username}`} /> */}
                     <ShareButtonDL imageUrl={post.imageURL} overlayText={`${creatorProfile.username}`} />

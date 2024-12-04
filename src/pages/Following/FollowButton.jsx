@@ -50,7 +50,7 @@ const FollowButton = ({ userProfile, isFollowing: initialIsFollowing, requested:
             <RoseGoldButton
             ml="auto"
             // bg={"#eb7734"}
-            // color={"white"}
+            color={isFollowing || requested ? "#fa489e": "white"}
             // _hover={{ bg: "#c75e1f" }}
             textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)"
             size={{ base: "sm", md: "sm" }}
@@ -62,7 +62,7 @@ const FollowButton = ({ userProfile, isFollowing: initialIsFollowing, requested:
         <GoldButton
             ml="auto"
             // bg={"#eb7734"}
-            // color={"white"}
+            color={isFollowing || requested ? "#735D1B" : "white"}
             // _hover={{ bg: "#c75e1f" }}
             textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)"
             size={{ base: "sm", md: "sm" }}

@@ -3,7 +3,8 @@ import { Button } from '@chakra-ui/react';
 
 const GoldButton = ({
   children,
-  bg = 'linear-gradient(145deg, #fef6c8, #ccb12e, #e48704)',
+  bg = 'linear-gradient(145deg, #b09c27, #d6c890, #c47603)',
+  //bg = 'linear-gradient(145deg, #ccb12e, #fef6c8, #e48704)',
   color = 'white',
   textShadow = '2px 2px 4px rgba(0, 0, 0, 0.5)',
   size = 'sm',
@@ -24,7 +25,7 @@ const GoldButton = ({
       border="1px solid #ccb12e"
       borderRadius="25px"
       height="auto"
-      lineHeight="1.5"
+      lineHeight="1.2"
       p="4px 16px"
       textShadow={textShadow}
       boxShadow="0 4px 10px rgba(0, 0, 0, 0.2), inset 0 2px 5px rgba(255, 255, 255, 0.3)"

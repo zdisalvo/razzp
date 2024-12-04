@@ -1224,7 +1224,7 @@ const ProfileHeader = ({ username, page, isSubscribedCallback, activeSinceCallba
 							<RoseGoldButton
 							flex={{ base: "0 0 auto", sm: "0 0 auto" }}
 								// bg={"#D4AF37"}
-								// color={"white"}
+								color={isFollowing || requested ? "#fa489e": "white"}
 								// _hover={{ bg: "#c75e1f" }}
 								textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)"
 								size={{ base: "sm", md: "sm" }}
@@ -1249,7 +1249,7 @@ const ProfileHeader = ({ username, page, isSubscribedCallback, activeSinceCallba
 							<RoseGoldButton
 							flex={{ base: "0 0 auto", sm: "0 0 auto" }}
 							// bg={"#D4AF37"}
-							// color={"white"}
+							color={isSubscribedToCreator ? "#fa489e": "white"}
 							// _hover={{ bg: "#c75e1f" }}
 							size={{ base: "sm", md: "sm" }}
 							aria-label="Messages"
@@ -1273,7 +1273,7 @@ const ProfileHeader = ({ username, page, isSubscribedCallback, activeSinceCallba
 							<GoldButton
 							flex={{ base: "0 0 auto", sm: "0 0 auto" }}
 								// bg={"#D4AF37"}
-								// color={"white"}
+								color={isFollowing || requested ? "#735D1B" : "white"}
 								// _hover={{ bg: "#c75e1f" }}
 								textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)"
 								size={{ base: "sm", md: "sm" }}
