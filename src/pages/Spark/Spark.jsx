@@ -6,7 +6,7 @@ import useGetSparkProfileById from "../../hooks/useGetSparkProfileById";
 import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore";
 import { firestore } from "../../firebase/firebase";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faLocationDot, faSliders, faUserPen } from '@fortawesome/free-solid-svg-icons';
+import { faLocationDot, faSliders, faUserPen, faBan } from '@fortawesome/free-solid-svg-icons';
 import FilterUserModal from "./FilterUserModal";
 import { useState, useEffect, useCallback } from "react";
 import { storeSparkUserLocation } from "../../hooks/storeSparkUserLocation";
@@ -14,6 +14,7 @@ import { useNavigate } from 'react-router-dom';
 import useSparkProfileStore from "../../store/sparkProfileStore";
 import Meta from "../../components/SEO/Meta";
 import dayjs from "dayjs";
+import CancelSparkSubscription from "./CancelSparkSubscription";
 
 const Spark = () => {
   const { authUser, fetchUserData } = useAuthStore((state) => ({
@@ -39,6 +40,7 @@ const Spark = () => {
   
   const [subscriptionStatus, setSubscriptionStatus] = useState("");
   const [isInitialized, setIsInitialized] = useState(false);
+  const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
 
   const handleFetchUserData = async (userId) => {
 		try {
@@ -134,12 +136,21 @@ const Spark = () => {
       }
 
     );
-    //setUserSubscribed(isSubscribed)
-		  
-      //console.log(userSubscribed);
 
       
 	}, );
+
+  const handleOpenCancelModal = () => {
+
+    setIsCancelModalOpen(true);
+  }
+
+  const handleCancelModalClose = () => {
+
+		handleFetchUserData(authUser.uid);
+
+		setIsCancelModalOpen(false);
+	}
 
   
     
@@ -261,6 +272,14 @@ const Spark = () => {
                   onClick={onOpen}
                   variant="outline"
                 />
+                {userSubscribed && 
+                <IconButton
+                  icon={<FontAwesomeIcon icon={faBan} />}
+                  aria-label="Filter users"
+                  onClick={handleOpenCancelModal}
+                  variant="outline"
+                />
+                }
                 </Flex>
             </Box>
 
@@ -286,6 +305,7 @@ const Spark = () => {
             ))}
 
             <FilterUserModal isOpen={isOpen} onClose={onClose} onFiltersApplied={handleFiltersApplied} />
+            {isCancelModalOpen && <CancelSparkSubscription isOpen={isCancelModalOpen} onClose={handleCancelModalClose} authUser={authUser} isSubscribed={userSubscribed} />}
         </Container>
         </div>
     );
