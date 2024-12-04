@@ -270,7 +270,7 @@ const CreatorSettings = ({ isOpen, onClose }) => {
 				<ModalOverlay />
 
 				<ModalContent bg={"black"} border={"1px solid gray"} maxW={{ base: "75vw", md: "300px" }}>
-					<ModalHeader>Creator Settings</ModalHeader>
+					<ModalHeader color="#ec9bad">Creator Settings</ModalHeader>
 					<ModalCloseButton 
 					sx={{
 						fontSize: '16px', // Adjust the font size to make the X larger

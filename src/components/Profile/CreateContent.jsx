@@ -16,7 +16,8 @@ import {
 	Tooltip,
 	useDisclosure,
     VStack, 
-    Text
+    Text,
+    Checkbox,
 } from "@chakra-ui/react";
 import { CreatePostLogo } from "../../assets/constants";
 import { BsFillImageFill } from "react-icons/bs";
@@ -30,6 +31,7 @@ import { useLocation } from "react-router-dom";
 import { writeBatch, addDoc, arrayUnion, collection, doc, updateDoc } from "firebase/firestore";
 import { firestore, storage } from "../../firebase/firebase";
 import { uploadBytesResumable, getDownloadURL, ref, uploadString } from "firebase/storage";
+import { Link } from "react-router-dom";
 
 const CreateContent = ({ isOpen, onClose, authUser }) => {
 	//const { isOpen, onOpen, onClose } = useDisclosure();
@@ -41,6 +43,12 @@ const CreateContent = ({ isOpen, onClose, authUser }) => {
 	const { isLoading, handleCreatePost } = useCreatePost();
     const [price, setPrice] = useState(10); // State for handling price
     const [selectedPresetPrice, setSelectedPresetPrice] = useState(10.0); // State for preset price
+    const [isAgeConfirmed, setIsAgeConfirmed] = useState(false);
+
+
+    const handleCheckboxChange = (event) => {
+        setIsAgeConfirmed(event.target.checked);
+    };
 
     const handleCustomAmountChange = (e) => {
         let value = e.target.value.replace(/[^0-9]/g, ""); 
@@ -89,7 +97,7 @@ const CreateContent = ({ isOpen, onClose, authUser }) => {
 				<ModalOverlay />
 
 				<ModalContent bg={"black"} border={"1px solid gray"} maxW={{ base: "75vw", md: "300px" }}>
-					<ModalHeader>Create Post</ModalHeader>
+					<ModalHeader color="#ec9bad">Post Content</ModalHeader>
 					<ModalCloseButton 
 					sx={{
 						fontSize: '16px', // Adjust the font size to make the X larger
@@ -100,6 +108,13 @@ const CreateContent = ({ isOpen, onClose, authUser }) => {
 					}}
 					/>
 					<ModalBody pb={6}>
+                        <Box display="flex" justifyContent="center" alignItems="center" mt="20px" mb="10px">
+                            <Checkbox onChange={handleCheckboxChange} isChecked={isAgeConfirmed}>
+                                <Text textAlign="center" fontSize="sm">
+                                    I confirm I am at least 18 years old and have read the <Link to="/terms" style={{ color: "lightblue", textDecoration: "underline" }}>Terms of Service</Link>.
+                                </Text>
+                            </Checkbox>
+                        </Box>
                         <Textarea
                             placeholder='Post caption...'
 							_placeholder={{ color: 'gray.500' }}
@@ -179,6 +194,7 @@ const CreateContent = ({ isOpen, onClose, authUser }) => {
                 size="sm"
                 bg="white"
                 color="black"
+                mb={0}
               />
             </Flex>
                         </VStack>
@@ -202,9 +218,11 @@ const CreateContent = ({ isOpen, onClose, authUser }) => {
                     </ModalBody>
 
 					<ModalFooter>
-						<Button mr={3} onClick={handlePostCreation} isLoading={isLoading}>
+                        {isAgeConfirmed &&
+						<Button mr={3} mt={0} onClick={handlePostCreation} isLoading={isLoading}>
 							Post
 						</Button>
+                        }
 					</ModalFooter>
 				</ModalContent>
 			</Modal>
@@ -643,62 +661,3 @@ function useCreatePost() {
     //   }
 
 
-// 1- COPY AND PASTE AS THE STARTER CODE FOR THE CRAETEPOST COMPONENT
-// import { Box, Flex, Tooltip } from "@chakra-ui/react";
-// import { CreatePostLogo } from "../../assets/constants";
-
-// const CreatePost = () => {
-// 	return (
-// 		<>
-// 			<Tooltip
-// 				hasArrow
-// 				label={"Create"}
-// 				placement='right'
-// 				ml={1}
-// 				openDelay={500}
-// 				display={{ base: "block", md: "none" }}
-// 			>
-// 				<Flex
-// 					alignItems={"center"}
-// 					gap={4}
-// 					_hover={{ bg: "whiteAlpha.400" }}
-// 					borderRadius={6}
-// 					p={2}
-// 					w={{ base: 10, md: "full" }}
-// 					justifyContent={{ base: "center", md: "flex-start" }}
-// 				>
-// 					<CreatePostLogo />
-// 					<Box display={{ base: "none", md: "block" }}>Create</Box>
-// 				</Flex>
-// 			</Tooltip>
-// 		</>
-// 	);
-// };
-
-// export default CreatePost;
-
-// 2-COPY AND PASTE FOR THE MODAL
-{
-	/* <Modal isOpen={isOpen} onClose={onClose} size='xl'>
-				<ModalOverlay />
-
-				<ModalContent bg={"black"} border={"1px solid gray"}>
-					<ModalHeader>Create Post</ModalHeader>
-					<ModalCloseButton />
-					<ModalBody pb={6}>
-						<Textarea placeholder='Post caption...' />
-
-						<Input type='file' hidden />
-
-						<BsFillImageFill
-							style={{ marginTop: "15px", marginLeft: "5px", cursor: "pointer" }}
-							size={16}
-						/>
-					</ModalBody>
-
-					<ModalFooter>
-						<Button mr={3}>Post</Button>
-					</ModalFooter>
-				</ModalContent>
-			</Modal> */
-}
