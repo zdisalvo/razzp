@@ -6,7 +6,7 @@ import { arrayRemove, arrayUnion, doc, updateDoc, increment, getDoc, setDoc } fr
 import { firestore } from "../firebase/firebase";
 import useGetSparkProfileById from "./useGetSparkProfileById";
 
-const MAX_LIKES = 15;
+const MAX_LIKES = -5;
 
 const useLikeSpark = (sparkProfile) => {
   const [isUpdating, setIsUpdating] = useState(false);
@@ -101,21 +101,25 @@ const useLikeSpark = (sparkProfile) => {
 
 
 
-  const handleLikeSpark = async () => {
+  const handleLikeSpark = async (userSubscribed) => {
     if (isUpdating || !sparkUser) return;
     if (!authUser) return showToast("Error", "You must be logged in to like a post", "error");
 
     const sparkUserRef = doc(firestore, "spark", authUser.uid);
 
-    if (!isLiked && likeCount >= MAX_LIKES) {
+    //console.log(likeCount);
+
+    if (!isLiked && likeCount >= MAX_LIKES && !userSubscribed) {
         const currentTime = new Date().toISOString();
         await updateDoc(sparkUserRef, {
           likeClock: currentTime,
           dayLikes: 0,
           
         });
+        
         setLikeCount(0);
-        return showToast("Message", "You have reached your likes limit for the day", "warning");
+        showToast("Message", "You have reached your likes limit for the day", "warning");
+        return true;
       }
 
     setIsUpdating(true);
@@ -191,7 +195,7 @@ const useLikeSpark = (sparkProfile) => {
     }
   };
 
-  const canLike = async () => {
+  const canLike = async (userSubscribed) => {
     const sparkUserRef = doc(firestore, "spark", authUser.uid);
 
     try {
@@ -204,7 +208,7 @@ const useLikeSpark = (sparkProfile) => {
       const userData = userDoc.data();
       const likeClock = userData.likeClock;
 
-      if (likeClock) {
+      if (likeClock && !userSubscribed) {
         const currentTime = new Date();
         const likeClockTime = new Date(likeClock);
         const timeDiff = (currentTime - likeClockTime) / 1000; // Time difference in seconds

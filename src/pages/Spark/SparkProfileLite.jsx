@@ -221,7 +221,7 @@ const SparkProfileLite = ({ sparkProfile, sparkUser }) => {
 
     const openToData = looking_for && looking_for.map((looking, index) => ({ value: looking }));
 
-    const filteredOpenToData = openToData.filter(item => isNotEmpty(item.value));
+    const filteredOpenToData = openToData && openToData.filter(item => isNotEmpty(item.value));
   
     //LANGUAGES
 

@@ -46,7 +46,7 @@ import { useNavigate, useParams, Link } from 'react-router-dom';
 const categoryColors = {
     Posts: "#32CD32",       // Lime
     Messages: "#D5006D",    // Pink
-    Subscriptions: "#3357FF", // Blue
+    Subscriptions: "#FFD700", // Blue
     Referrals: "#3357FF",
 };
 

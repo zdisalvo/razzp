@@ -13,9 +13,13 @@ import { storeSparkUserLocation } from "../../hooks/storeSparkUserLocation";
 import { useNavigate } from 'react-router-dom';
 import useSparkProfileStore from "../../store/sparkProfileStore";
 import Meta from "../../components/SEO/Meta";
+import dayjs from "dayjs";
 
 const Spark = () => {
-    const authUser = useAuthStore((state) => state.user);
+  const { authUser, fetchUserData } = useAuthStore((state) => ({
+		authUser: state.user,
+		fetchUserData: state.fetchUserData,
+	  }));
     
 
     //const { isLoading: profileLoading, sparkProfile } = useGetSparkProfileById(authUser?.uid);
@@ -29,6 +33,115 @@ const Spark = () => {
       error: state.error,
       fetchSparkProfile: state.fetchSparkProfile,
     }));
+    const [userSubscribed, setUserSubscribed] = useState(false);
+	//const [subscriptionStatus, setSubscriptionStatus] = useState("");
+	const [expDate, setExpDate] = useState("");
+  
+  const [subscriptionStatus, setSubscriptionStatus] = useState("");
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  const handleFetchUserData = async (userId) => {
+		try {
+		  // Add a delay using setTimeout wrapped in a Promise
+		  await new Promise((resolve) => setTimeout(resolve, 2000));
+	  
+		  // Now call fetchUserData
+		  await fetchUserData(userId);
+		} catch (error) {
+		  console.error("Error fetching user data:", error);
+		}
+
+    
+	  };
+
+  useEffect (() => {
+
+		if (!authUser)
+			return;
+
+		//fetchUserData(authUser.uid);
+		handleFetchUserData(authUser.uid);
+
+		  
+		  const isSubscribed = authUser.subscriptions && authUser.subscriptions.some((subscription) => {
+			const isValidSubscription = subscription.creatorId === "spark" || false;
+			//console.log(isValidSubscription);
+			if (!isValidSubscription) {
+				//console.log(isValidSubscription);
+				return false;
+			} else {
+				const expirationDateInMillis = subscription.expirationDate.seconds * 1000;
+				setExpDate(dayjs(expirationDateInMillis).format("MMMM DD, YYYY"));
+				setSubscriptionStatus(subscription.status);
+				
+				return subscription.expirationDate.seconds * 1000 > Date.now(); // Check if expirationDate is in the future
+			}
+			
+			
+			//return isValidSubscription && isExpirationValid
+		  });
+
+      //console.log(isSubscribed);
+		  
+		  
+		  setUserSubscribed(isSubscribed);
+		  //console.log(isSubscribed);
+		  //console.log(isSubscribedToCreator); 
+
+		//setIsInitialized(true);
+		
+		
+	}, [authUser && authUser.subscriptions && authUser.subscriptions.length]);
+
+  //console.log(userSubscribed);
+
+
+  useEffect (() => {
+
+    //console.log(userSubscribed);
+
+		if (!authUser || isInitialized)
+			return;
+
+
+			//console.log(isSubscribedToCreator);
+
+		handleFetchUserData(authUser.uid);
+
+    
+		  
+		  const isSubscribed = authUser.subscriptions && authUser.subscriptions.some((subscription) => {
+			const isValidSubscription = subscription.creatorId === "spark";
+      //console.log(isValidSubscription);
+			if (!isValidSubscription) {
+				//console.log(isValidSubscription);
+				return false;
+			} else {
+				const expirationDateInMillis = subscription.expirationDate.seconds * 1000;
+				setExpDate(dayjs(expirationDateInMillis).format("MMMM DD, YYYY"));
+				
+				setSubscriptionStatus(subscription.status);
+				return subscription.expirationDate.seconds * 1000 > Date.now(); // Check if expirationDate is in the future
+			}
+			//console.log(isExpirationValid);
+			
+			//return isValidSubscription && isExpirationValid
+		  });
+		  
+		  setTimeout (() => {
+		  setUserSubscribed(isSubscribed), 2500
+      setIsInitialized(true)
+      }
+
+    );
+    //setUserSubscribed(isSubscribed)
+		  
+      //console.log(userSubscribed);
+
+      
+	}, );
+
+  
     
     // useEffect(() => {
       
@@ -168,7 +281,8 @@ const Spark = () => {
                 ))} */}
 
             {!isLoading&& !profileLoading && sparkProfiles.length > 0 && sparkProfiles.map((profile) => (
-                <SparkProfile key={profile.uid} id={profile.uid} sparkProfile={profile} onViewed={handleViewed} sparkUser={sparkProfile} />
+                <SparkProfile key={profile.uid} id={profile.uid} sparkProfile={profile} onViewed={handleViewed} sparkUser={sparkProfile} 
+                userSubscribed={userSubscribed} expDate={expDate} subscriptionStatus={subscriptionStatus} />
             ))}
 
             <FilterUserModal isOpen={isOpen} onClose={onClose} onFiltersApplied={handleFiltersApplied} />

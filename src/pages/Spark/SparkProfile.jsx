@@ -44,7 +44,7 @@ const calculateAge = (birthday) => {
   };
 
 
-const SparkProfile = ({ sparkProfile, onViewed, sparkUser }) => {
+const SparkProfile = ({ sparkProfile, onViewed, sparkUser, userSubscribed, expDate, subscriptionStatus }) => {
 
 
 
@@ -559,7 +559,7 @@ const SparkProfile = ({ sparkProfile, onViewed, sparkUser }) => {
         <Flex align="center" justify="center" direction="row" wrap="nowrap" >
           
           
-          <SparkLike sparkProfile={sparkProfile} onMatchChange={handleSparkLikeMatchChange} />
+          <SparkLike sparkProfile={sparkProfile} onMatchChange={handleSparkLikeMatchChange} userSubscribed={userSubscribed} expDate={expDate} subscriptionStatus={subscriptionStatus} />
           <SparkCrown sparkProfile={sparkProfile} onMatchChange={handleSparkCrownMatchChange}/>
           <Box width="80%" display="flex" justifyContent="center">
           <Flex alignItems="center" justify="center" direction="row" wrap="nowrap" textAlign="center">
