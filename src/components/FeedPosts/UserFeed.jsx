@@ -37,15 +37,19 @@ const UserFeed = () => {
   const userNotFound = !isLoading && !userProfile;
   let timeOut;
 
-  //console.log(isLoading);
+  
 
-  useEffect(() => {
-    //console.log("Updated loadedPosts:", loadedPosts);
-    // console.log("isLoading: " + isLoading);
-    //   console.log("should scroll: " + shouldScroll);
-    //   console.log("is initialized: " + isInitialized);
-    //   console.log("is scrolled: " + isScrolled);
-  }, [loadedPosts]);
+  // useEffect(() => {
+  //   //console.log("Updated loadedPosts:", loadedPosts);
+  //   // console.log("isLoading: " + isLoading);
+  //   //   console.log("should scroll: " + shouldScroll);
+  //   //   console.log("is initialized: " + isInitialized);
+  //   //   console.log("is scrolled: " + isScrolled);
+  //   //console.log(loadedPosts);
+  //   //privateStates[posts[0].createdBy]
+  //   //console.log(postId);
+  //   //console.log(isVisible);
+  // }, [loadedPosts]);
 
   const addElementsToObserve = useIntersectionObserver(
     (postElement) => {
@@ -57,6 +61,8 @@ const UserFeed = () => {
       // setTimeout(() => {
       //   postRefs.current[postId].scrollIntoView({ block: 'center' });
       // }, 300); //400
+
+      
 
       //console.log(index);
       if (index !== -1 ) {
@@ -73,6 +79,7 @@ const UserFeed = () => {
                 surroundingPosts.forEach((post) => {
                   updatedPosts[post.id] = true;
                 });
+                
                 return updatedPosts;
               });
               //setIsScrolled(false);
@@ -88,7 +95,7 @@ const UserFeed = () => {
               // setTimeout(() => {
               //   postRefs.current[postId].scrollIntoView({ block: 'center' });
               // }, 300); //200 //800
-            }
+            } 
       //setLoadedPosts((prev) => ({ ...prev, [postId]: true }));
     },
     //{ threshold: 0.99 }
@@ -96,11 +103,14 @@ const UserFeed = () => {
   );
 
   useEffect(() => {
+    
     if (!isLoading && postId && postRefs.current[postId] && shouldScroll && timeOut !== 0) {
       setIsInitialized(true);
   
       // Initial scroll to the post center
       postRefs.current[postId].scrollIntoView({ block: 'center' });
+
+      //console.log(postId);
 
       setIsScrolled(true);
   
@@ -116,67 +126,24 @@ const UserFeed = () => {
       }, 700 ); // Adjust timing based on need
   
       return () => clearTimeout(scrollTimeout); // Clear timeout if dependencies change
+    } 
+    else if (!isLoading && postId === undefined) {
+      window.scrollTo({
+        top: 0,        // Scroll to the top
+      });
+      setIsVisible(true);
+      setShouldScroll(false);
+      setIsScrolled(true);
+      setIsInitialized(true);
+      
+      
     }
   }, [isLoading, postId, shouldScroll, postRefs]);
 
 
-  // useEffect(() => {
-  //   // if (!shouldScroll)
-  //   //   setIsVisible(true);
-  //   if (!isLoading && postId && postRefs.current[postId] && shouldScroll) {
-      
-  //     setIsInitialized(true);
-  //     setTimeout(() => {
-  //       postRefs.current[postId].scrollIntoView({ block: 'center' });
-  //     }, 50); //100 //600
-  //     // setTimeout(() => {
-  //     //   postRefs.current[postId].scrollIntoView({ block: 'start' });
-  //     // }, 150);
-      
-      
-      
-  //     setIsScrolled(true);
-  //     setTimeout(() => {
-  //       postRefs.current[postId].scrollIntoView({ block: 'start' });
-  //     }, 50); //100
-      
-    
-
-  //     setTimeout(() => {
-  //       setShouldScroll(false);
-        
-  //     }, 250); //300 //500
-
-  //     setTimeout(() => {
-  //       postRefs.current[postId].scrollIntoView({ block: 'start' });
-  //       setTimeout(() => {
-  //         setIsVisible(true);
-  //       }, 100); //150
-  //     }, 1100); //950
-  //      //500
-      
-
-      
-      
-      
-  //   }
-  // }, [isLoading, postId, posts]);
-
-  // useEffect(() => {
-  //   if (!isLoading && postId && postRefs.current[postId] && shouldScroll) {
-  //     setIsInitialized(true);
-  //     setTimeout(() => {
-  //       postRefs.current[postId].scrollIntoView();
-  //     }, 500);
-  //     setIsScrolled(true);
-  //     setShouldScroll(false);
-      
-  //   }
-  // }, [isLoading, postId, posts]);
-
 
   useEffect(() => {
-    if (posts.length > 0) {
+    if (posts.length > 0 ) {
       const elementsToObserve = posts.map((post) => postRefs.current[post.id]);
       addElementsToObserve(elementsToObserve);
     }
@@ -283,6 +250,9 @@ const UserFeed = () => {
 
 
   useEffect(() => {
+    if (posts.length === 0)
+      return;
+    
     const fetchStates = async () => {
       const pStates = {};
       const fStates = {};
@@ -293,8 +263,8 @@ const UserFeed = () => {
           const userSnap = await getDoc(userDoc);
           const userData = userSnap.data();
           pStates[post.createdBy] = userData.private || false;
-          fStates[post.createdBy] = userData.followers.includes(authUser.uid) || false;
-          rStates[post.createdBy] = userData.requested.includes(authUser.uid) || false;
+          fStates[post.createdBy] = userData.followers.includes(authUser?.uid) || false;
+          rStates[post.createdBy] = userData.requested.includes(authUser?.uid) || false;
         } catch (error) {
           console.error(`Error fetching follow state for user ${post.createdBy}:`, error);
         }
@@ -304,11 +274,12 @@ const UserFeed = () => {
       setRequestedStates(rStates);
       //setPageLoaded(true);
     };
-
-    if (authUser && posts.length > 0) {
+//12/3
+    if (posts.length > 0) {
       fetchStates();
+      
     }
-  }, [posts, authUser]);
+  }, [posts]);
 
 
   const handleFollowClick = async (userId) => {

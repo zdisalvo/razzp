@@ -18,6 +18,8 @@ const useGetUserFeed = (username) => {
 	// if (!userProfile)
 	// 	return;
 	useEffect(() => {
+		if (userProfileLoading)
+			return;
 		const getFeedPosts = async () => {
             //if (!userProfile) return;
 			setIsLoading(true);
@@ -45,6 +47,7 @@ const useGetUserFeed = (username) => {
 		};
 
 		getFeedPosts();
+		
 	}, [authUser, showToast, setPosts, setUserProfile, userProfileLoading]);
 
 	return { isLoading, posts };

@@ -478,7 +478,7 @@ const ProfileHeader = ({ username, page, isSubscribedCallback, activeSinceCallba
 	  //11/29/2024
 
 	  useEffect(() => {
-		if (authUser.uid !== userProfile.uid)
+		if (authUser && authUser.uid !== userProfile.uid)
 			return;
 
 		if (locationStatusRecorded)
@@ -499,13 +499,13 @@ const ProfileHeader = ({ username, page, isSubscribedCallback, activeSinceCallba
 		} else {
 			setLocationStatusRecorded(false);
 		}
-	  }, [authUser.location, isToggled]);
+	  }, [authUser && authUser.location, isToggled]);
 
 
 
 	useEffect(() => {
 		//console.log(isToggled);
-		if (authUser.uid !== userProfile.uid)
+		if (authUser && authUser.uid !== userProfile.uid)
 			return;
 
 		if (((authUser && authUser.location && authUser.location.length > 0 && authUser.city.length > 0 && isToggled && city.length > 0 && state.length > 0) ||
@@ -583,7 +583,7 @@ const ProfileHeader = ({ username, page, isSubscribedCallback, activeSinceCallba
 			setState('');
 		}
 	}, 250);
-	}, [isToggled, authUser.location]);
+	}, [isToggled, authUser && authUser.location]);
 	//[isToggled, visitingOwnProfileAndAuth, authUser, userProfile]
 
 	////
