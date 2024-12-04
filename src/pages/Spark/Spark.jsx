@@ -272,7 +272,7 @@ const Spark = () => {
                   onClick={onOpen}
                   variant="outline"
                 />
-                {userSubscribed && 
+                {userSubscribed && subscriptionStatus !== "canceled" &&
                 <IconButton
                   icon={<FontAwesomeIcon icon={faBan} />}
                   aria-label="Filter users"
