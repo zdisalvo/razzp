@@ -10,12 +10,12 @@ const ProfilePosts = ({ authUser, username, isSubscribedToCreator, ownProfile, a
   const navigate = useNavigate();
   //const { userPosts, setUserPosts } = useState({});
 
-  //console.log(authUser);
+  //console.log(isLoading);
 
   useEffect(() => {
     if (!isLoading && fetchedPosts.length > 0) {
       setPosts(fetchedPosts); // Store fetched posts in local state
-      //console.log("test");
+      
     }
   }, [isLoading, fetchedPosts]);
 

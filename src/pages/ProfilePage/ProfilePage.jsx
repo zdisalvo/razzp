@@ -154,7 +154,7 @@ const ProfilePage = () => {
           {authUser && userProfile && ((!userProfile.private) || (authUser.uid === userProfile.uid)|| (userProfile.private && userProfile.followers.includes(authUser.uid))) ? (
           <ProfilePosts authUser={authUser} username={username} isSubscribedToCreator={isSubscribedCallback} ownProfile={ownProfile} activeSince={activeSince}/>
           ) : 
-          ((authUser && userProfile && !userProfile.private) &&
+          ((userProfile && !userProfile.private) &&
           <ProfilePosts authUser={authUser} username={username} isSubscribedToCreator={isSubscribedCallback} ownProfile={ownProfile} activeSince={activeSince}/>
         )}
           {/* : (authUser && <ProfilePosts authUser={authUser} username={username} isSubscribedToCreator={isSubscribedCallback} ownProfile={ownProfile} activeSince={activeSince}/>
