@@ -139,7 +139,7 @@ const handleFollowClick = async () => {
   };
 
   return (
-    <Flex justifyContent={"space-between"} alignItems={"center"} px={0} mx={0} maxWidth={"100vw"} my={2}>
+    <Flex justifyContent={"space-between"} alignItems={"center"} px={0} mx={0} maxWidth={"100vw"} mt={-2} mb={-2}>
       <Flex alignItems={"center"} gap={2} m='3'>
         {userProfile ? (
           <Link to={`/${userProfile.username}`}>

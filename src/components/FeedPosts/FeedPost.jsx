@@ -133,12 +133,12 @@ const FeedPost = forwardRef(({ post, isFollowing, requested, isPrivate, onFollow
       isPrivate={isPrivate}
       onFollowClick={onFollowClick}
       />
-      <Box my={2} borderRadius={4} overflow={"hidden"} px={0} maxHeight="450px" objectFit="cover" height="auto" width="100%" display="flex" 
+      <Box my={2} borderRadius={4} overflow={"hidden"} px={0} maxHeight="500px" objectFit="cover" height="auto" width="100%" display="flex" 
   justifyContent="center" 
   alignItems="center">
       {((!post.mediaType) || (post.mediaType.startsWith("image/")) && (!post.paid || post.paid && isPurchased || post.paid && isSubscribedToCreator || post.paid && ownProfile)) && (
         
-        <Image src={post.imageURL} alt={"FEED POST IMG"} width="100%" objectFit="cover" maxHeight="450px" height="auto"
+        <Image src={post.imageURL} alt={"FEED POST IMG"} width="100%" objectFit="cover" maxHeight="500px" height="auto"
         style={{ pointerEvents: 'none', userSelect: 'none' }}
           onTouchStart={(e) => e.preventDefault()} 
           onContextMenu={(e) => e.preventDefault()} 
@@ -148,7 +148,7 @@ const FeedPost = forwardRef(({ post, isFollowing, requested, isPrivate, onFollow
       )}
       {(!post.mediaType || post.mediaType.startsWith("image/")) && (post.paid && !isPurchased && !isSubscribedToCreator && !ownProfile) && (
         
-        <Image src={post.imageURL} style={{ filter: 'blur(11px)', pointerEvents: 'none', userSelect: 'none' }} alt={"FEED POST IMG"} width="100%" objectFit="cover" maxHeight="450px" height="auto"
+        <Image src={post.imageURL} style={{ filter: 'blur(11px)', pointerEvents: 'none', userSelect: 'none' }} alt={"FEED POST IMG"} width="100%" objectFit="cover" maxHeight="500px" height="auto"
           onTouchStart={(e) => e.preventDefault()} 
           onContextMenu={(e) => e.preventDefault()} 
           onTouchMove={(e) => e.preventDefault()} 

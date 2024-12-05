@@ -227,8 +227,8 @@ const PostFooter = ({ post, isProfilePage, creatorProfile }) => {
     };
 
     return (
-        <Box mb={3} marginTop={"auto"} px={0} mx={3}>
-            <Flex alignItems={"center"} gap={4} px={0} pt={0} mb={1} mt={4}>
+        <Box mb={2} marginTop={"auto"} px={0} mx={3} >
+            <Flex alignItems={"center"} gap={4} px={0} pt={0} mb={1} mt={1}>
                 <Box onClick={handleLikeClick} cursor={"pointer"} fontSize={18}>
                     {!isLiked ? <NotificationsLogo /> : <UnlikeLogo />}
                 </Box>

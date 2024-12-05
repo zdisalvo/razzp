@@ -61,7 +61,7 @@ const useInstagramDataFetcher = () => {
                 username
             ],
             //"onlyPostsNewerThan": "2024-10-05",
-            "resultsLimit": 100
+            "resultsLimit": 60
             
         };
 
@@ -77,7 +77,7 @@ const useInstagramDataFetcher = () => {
                     clearInterval(progressInterval);
                     return 100;
                 });
-            }, 3000);
+            }, 4000);
 
             //post scraper
             //"nH2AHrwxeTRJoN5hX"
@@ -92,16 +92,30 @@ const useInstagramDataFetcher = () => {
             setItems(items);
 
             for (const item of items) {
-                if (item.type === "Sidecar")
-                    continue;
+                    let postSrc;
+                    let caption;
+                    let likes;
+                    let score;
+                    let createdAt;
+                    let mediaType;
+
+                if (item.type === "Sidecar") {
+                    postSrc = item.childPosts[0].type === "Image" ? item.displayUrl : item.videoUrl;
+                    caption = item.caption;
+                    likes = Math.max(item.likesCount, 0) || 0;
+                    score = likes;
+                    createdAt = (new Date(item.timestamp)).getTime() || Date.now();
+                    mediaType = item.childPosts[0].type === "Image" ? "image/jpeg" : "video/mp4";
+                } else {
                 // Ensure selectedFile is in the expected format
-                const postSrc = item.type === "Image" ? item.displayUrl : item.videoUrl;
-                const caption = item.caption;
-                const likes = item.likesCount || 0;
-                const score = likes;
-                const createdAt = (new Date(item.timestamp)).getTime() || Date.now();
-                const mediaType = item.type === "Image" ? "image/jpeg" : "video/mp4";
+                    postSrc = item.type === "Image" ? item.displayUrl : item.videoUrl;
+                    caption = item.caption;
+                    likes = Math.max(item.likesCount, 0) || 0;
+                    score = likes;
+                    createdAt = (new Date(item.timestamp)).getTime() || Date.now();
+                    mediaType = item.type === "Image" ? "image/jpeg" : "video/mp4";
                 //await handleCreatePost(postSrc, caption, score, createdAt, mediaType);
+                }
 
                 try {
                     await handleCreatePost(postSrc, caption, score, createdAt, mediaType, username);
