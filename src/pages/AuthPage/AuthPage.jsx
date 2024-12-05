@@ -10,7 +10,7 @@ const AuthPage = () => {
 			description="The ultimate platform for creating and sharing content. Connect with local users, increase your popularity, and maximize your brand on Razzp. No download required." 
 			ogTitle="Razzp - Reimagined Content | Retain 80% Earnings | 10% Lifetime Referrals"
 			ogDescription="Maximize your brand. No download required."
-			ogImage="https://razz-p.web.app/blue-crown-small.png"
+			ogImage="https://razz-p.web.app/razzp-og.png"
 			
 			/>
 		
