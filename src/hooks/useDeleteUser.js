@@ -1,5 +1,15 @@
 import { useState } from 'react';
-import { doc, deleteDoc, getDoc, updateDoc, arrayRemove } from 'firebase/firestore';
+import {
+  doc,
+  deleteDoc,
+  getDoc,
+  updateDoc,
+  query,
+  where,
+  collection,
+  getDocs,
+  arrayRemove,
+} from 'firebase/firestore';
 import { ref, deleteObject } from 'firebase/storage';
 import { firestore, storage } from '../firebase/firebase';
 import { auth } from '../firebase/firebase'; // Import the Firebase auth instance
@@ -79,6 +89,17 @@ const useDeleteUser = () => {
       await Promise.all(deletePostPromises);
 
       await deleteDoc(sparkDocRef);
+
+      // Query and update all users with "referral" == "authUser.uid"
+      const referralQuery = query(
+        collection(firestore, 'users'),
+        where('referral', '==', authUser.uid)
+      );
+      const referralSnapshot = await getDocs(referralQuery);
+      const updateReferralPromises = referralSnapshot.docs.map((docRef) =>
+        updateDoc(docRef.ref, { referral: '' })
+      );
+      await Promise.all(updateReferralPromises);
 
       // Delete the user profile document
       await deleteDoc(userDocRef);

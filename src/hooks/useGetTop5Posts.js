@@ -40,6 +40,7 @@ const useGetTop5Posts = () => {
                 const postsArray = [];
                 querySnapshot.forEach((doc) => {
                   postsArray.push({ id: doc.id, ...doc.data() });
+                  //console.log(doc.id);
                 });
 
                 // Calculate the ranking score for each post

@@ -1102,17 +1102,32 @@ const ProfileHeader = ({ username, page, isSubscribedCallback, activeSinceCallba
 				justifyContent={{ base: "center", sm: "flex-start" }}
 				alignItems={"center"} gap={{ base: 5, sm: 4 }} w={"full"}>
 					{(authUser && userProfile) && userProfile.creatorGross && (
-					<Text color="white" fontSize={{ base: "md", md: "sm" }}
-					as='span' 
-    				onClick={handleCreatorModalClick}
-					style={{ cursor: 'pointer', color: 'inherit' }}
-					>
-                        Earnings Balance: 
-						<Text as='span' fontWeight={"bold"} ml={2}>
-                            ${userProfile.creatorPayments ? (userProfile.creatorNet - userProfile.creatorPayments).toFixed(2) : userProfile.creatorNet.toFixed(2) }
-                        </Text>
-                    
+					<Button
+					color="white"
+					fontSize={{ base: "sm", md: "sm" }}
+					onClick={handleCreatorModalClick}
+					//style={{ cursor: "pointer", background: "inherit" }}
+				  >
+					Earnings Balance:{" "}
+					<Text as="span" fontWeight="bold" ml={2}>
+					  $
+					  {userProfile.creatorPayments
+						? (userProfile.creatorNet - userProfile.creatorPayments).toFixed(2)
+						: userProfile.creatorNet.toFixed(2)}
 					</Text>
+				  </Button>
+					// <Text color="white" fontSize={{ base: "md", md: "sm" }}
+					// as='span' 
+    				// onClick={handleCreatorModalClick}
+					// style={{ cursor: 'pointer', color: 'inherit' }}
+					// >
+                    //     Earnings Balance: 
+					// 	<Text as='span' fontWeight={"bold"} ml={2}>
+                    //         ${userProfile.creatorPayments ? (userProfile.creatorNet - userProfile.creatorPayments).toFixed(2) : userProfile.creatorNet.toFixed(2) }
+                    //     </Text>
+                    
+					// </Text>
+					
 					)}
 					</Flex>
 					{/* <Flex 

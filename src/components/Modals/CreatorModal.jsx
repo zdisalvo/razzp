@@ -312,6 +312,7 @@ const CreatorModal = ({ isOpen, onClose }) => {
                 //px={{ base: "4px", md: "4px" }} 
                 pt={3} 
                 pb={4}
+                bg={"black"}
             >
                 <ModalHeader>Creator Earnings Summary</ModalHeader>
                 <ModalCloseButton />
@@ -491,7 +492,7 @@ const CreatorModal = ({ isOpen, onClose }) => {
                         <Table variant="simple" size="sm">
                             <Thead>
                                 <Tr>
-                                    <Th textAlign="center">User</Th>
+                                    <Th >User</Th>
                                     <Th isNumeric>Gross</Th>
                                     <Th isNumeric>Net</Th>
                                 </Tr>
@@ -538,7 +539,7 @@ const CreatorModal = ({ isOpen, onClose }) => {
                     {/* <ACHPaymentForm /> */}
                 </ModalBody>
                 <ModalFooter>
-                    <Button onClick={onClose} colorScheme="blue">Close</Button>
+                    <Button onClick={onClose} >Close</Button>
                 </ModalFooter>
             </ModalContent>
         </Modal>

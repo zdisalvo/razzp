@@ -46,18 +46,20 @@ const useInstagramDataFetcher = () => {
         //         `https://www.instagram.com/${username}/`
         //     ],
         //     "resultsType": "posts",
-        //     "resultsLimit": 80,
+        //     "resultsLimit": 100,
         //     "searchType": "hashtag",
         //     "searchLimit": 1,
         //     "addParentData": false
         // };
 
+        //post scraper
+
         const input = {
             "username": [
                 username
-            ]
-            // "onlyPostsNewerThan": "2024-10-05",
-            // "resultsLimit": 30
+            ],
+            //"onlyPostsNewerThan": "2024-10-05",
+            "resultsLimit": 60
             
         };
 
@@ -73,7 +75,14 @@ const useInstagramDataFetcher = () => {
                     clearInterval(progressInterval);
                     return 100;
                 });
-            }, 4500);
+            }, 2300);
+
+            //post scraper
+            //"nH2AHrwxeTRJoN5hX"
+
+            //instagram scraper
+            //"shu8hvrXbJbY3Eb9W"
+
 
             const run = await client.actor("nH2AHrwxeTRJoN5hX").call(input);
             const { items } = await client.dataset(run.defaultDatasetId).listItems();
