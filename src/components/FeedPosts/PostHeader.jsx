@@ -143,13 +143,13 @@ const handleFollowClick = async () => {
       <Flex alignItems={"center"} gap={2} m='3'>
         {userProfile ? (
           <Link to={`/${userProfile.username}`}>
-            <Avatar src={userProfile.profilePicURL} alt='user profile pic' size={"sm"} />
+            <Avatar src={userProfile.profilePicURL} alt='user profile pic' size="md" />
           </Link>
         ) : (
           <SkeletonCircle size='10' />
         )}
 
-        <Flex  gap='3' alignItems="baseline">
+        <Flex  direction="column" gap={0}>
           <Box fontSize={14} fontWeight={"bold"}>
           {/* {creatorProfile && userProfile ? (
             <Link to={`/${userProfile.username || ""}`} >{userProfile.username || "Deleted User"}</Link>
@@ -162,6 +162,7 @@ const handleFollowClick = async () => {
             <Skeleton w={"100px"} h={"10px"} />
           )}
           </Box>
+          
           {/* <Box fontSize={12} fontWeight={"regular"} color={"gray.300"}>{post.createdAt < Date.now() + timeAgo(post.createdAt)}</Box> */}
           <Box fontSize={12} fontWeight={"regular"} color={"gray.300"}>
           <PostDate createdAt={post.createdAt} />
