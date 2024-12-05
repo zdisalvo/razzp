@@ -233,7 +233,7 @@ const PaymentForm = ({ userId, creatorId, subscriptionPrice, loading, setLoading
         const { setupIntent, error } = await stripe.confirmSetup({
           elements,
           confirmParams: {
-            return_url: window.location.origin, // Optional, redirects after setup
+            return_url: "https://razzp.com", // Optional, redirects after setup
           },
           redirect: "if_required", // Avoid redirection when unnecessary
         });
