@@ -8,7 +8,10 @@ const Navbar = () => {
 		<Container maxW={"container.lg"} mb={4} mt={"40px"}>
 			<Flex w={"full"} justifyContent={{ base: "space-between", sm: "space-between" }} alignItems={"center"}>
 				<Link to='/top5'>
-				<Image src='/razzp-new-logo.png' h={{base: 9, md: 20}} display={{ base: "block", sm: "block" }} cursor={"pointer"} />
+				<Box w="120px" h="120px">
+				<Image src='/razzp-logo-matte.png' h="auto" 
+    			w="auto" display={{ base: "block", sm: "block" }} cursor={"pointer"} />
+				</Box>
 				</Link>
 				<Flex gap={4}>
 					<Link to='/auth?mode=login'>
