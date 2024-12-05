@@ -41,6 +41,8 @@ const useInstagramDataFetcher = () => {
             token: 'apify_api_UceiCMkSoRcXxDjyK0X9ENtt7trEs933AJsl', // Replace with your actual API token
         });
 
+        //instagram scraper
+
         // const input = {
         //     "directUrls": [
         //         `https://www.instagram.com/${username}/`
@@ -59,7 +61,7 @@ const useInstagramDataFetcher = () => {
                 username
             ],
             //"onlyPostsNewerThan": "2024-10-05",
-            "resultsLimit": 60
+            "resultsLimit": 100
             
         };
 
@@ -75,7 +77,7 @@ const useInstagramDataFetcher = () => {
                     clearInterval(progressInterval);
                     return 100;
                 });
-            }, 2300);
+            }, 3000);
 
             //post scraper
             //"nH2AHrwxeTRJoN5hX"

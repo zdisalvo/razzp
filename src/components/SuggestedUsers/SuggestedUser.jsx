@@ -64,11 +64,12 @@ const SuggestedUser = ({ user, setUser }) => {
 				</Link>
 				<VStack spacing={2} alignItems={"flex-start"}>
 				<Link to={`/${user.username}`}>
-					<Flex justifyContent="center" alignItems="baseline">
+					<Flex>
 						<Box fontSize={15} fontWeight={"bold"}>
 							{user.username}
 						</Box>
-						
+					</Flex>
+					<Flex>
 						<Box fontSize={13} color={"gray.500"} ml={2}>
 							{user.fullName}
 						</Box>

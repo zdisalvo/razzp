@@ -108,14 +108,14 @@ const ProfileHeader = ({ username, page, isSubscribedCallback, activeSinceCallba
 	// if (!userProfile)
 	// 	return
 
-	// if (!(localStorage.getItem("referral"))) {
-	// 	localStorage.setItem("referral", username);
-	// 	localStorage.setItem("referralId", userProfile.uid);
-	// }
-
-	
+	if (!(localStorage.getItem("referral"))) {
 		localStorage.setItem("referral", username);
 		localStorage.setItem("referralId", userProfile.uid);
+	}
+
+	
+		// localStorage.setItem("referral", username);
+		// localStorage.setItem("referralId", userProfile.uid);
 	
 
 	useEffect (() => {
