@@ -91,7 +91,7 @@ const AddPaymentAndSubscribe = ({ userProfile, authUser, onClose}) => {
             email,
            }
         );
-        console.log("SetupIntent clientSecret:", response.data.clientSecret);
+        
         setClientSecret(response.data.clientSecret);
       } catch (error) {
         console.error("Failed to create SetupIntent:", error.message);
