@@ -27,6 +27,7 @@ const AddPaymentAndSubscribe = ({ userProfile, authUser, onClose}) => {
   
 
   const userId = authUser.uid;
+  const email = authUser.email;
   const creatorId = userProfile.uid;
 
   const addSubscriptionToFirestore = async () => {
@@ -86,7 +87,9 @@ const AddPaymentAndSubscribe = ({ userProfile, authUser, onClose}) => {
       try {
         const response = await axios.post(
           "https://razzp-subscribe-56142959b61f.herokuapp.com/create-setup-intent",
-          { userId }
+          { userId,
+            email,
+           }
         );
         console.log("SetupIntent clientSecret:", response.data.clientSecret);
         setClientSecret(response.data.clientSecret);
