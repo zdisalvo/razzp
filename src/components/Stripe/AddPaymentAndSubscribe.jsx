@@ -11,6 +11,8 @@ import GoldButton from "../GoldButton/GoldButton";
 // Load the Stripe publishable key
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
+
+
 const AddPaymentAndSubscribe = ({ userProfile, authUser, onClose}) => {
   const stripe = useStripe();
   const elements = useElements();
@@ -86,6 +88,7 @@ const AddPaymentAndSubscribe = ({ userProfile, authUser, onClose}) => {
           "https://razzp-subscribe-56142959b61f.herokuapp.com/create-setup-intent",
           { userId }
         );
+        console.log("SetupIntent clientSecret:", response.data.clientSecret);
         setClientSecret(response.data.clientSecret);
       } catch (error) {
         console.error("Failed to create SetupIntent:", error.message);
@@ -164,6 +167,8 @@ const AddPaymentAndSubscribe = ({ userProfile, authUser, onClose}) => {
     }
   };
 
+  
+
   if (!clientSecret) {
     return <div>Loading...</div>;
   }
@@ -220,6 +225,8 @@ const PaymentForm = ({ userId, creatorId, subscriptionPrice, loading, setLoading
     const handleSubmit = async (e) => {
       e.preventDefault();
       setLoading(true);
+
+      //console.log(elements);
     
       try {
         // Confirm the setup of the payment method
@@ -264,6 +271,7 @@ const PaymentForm = ({ userId, creatorId, subscriptionPrice, loading, setLoading
     };
   
     return (
+        
       <form onSubmit={handleSubmit}>
         <PaymentElement />
         <GoldButton type="submit" disabled={!stripe || loading}>

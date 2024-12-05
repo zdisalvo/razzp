@@ -108,6 +108,16 @@ const ProfileHeader = ({ username, page, isSubscribedCallback, activeSinceCallba
 	// if (!userProfile)
 	// 	return
 
+	// if (!(localStorage.getItem("referral"))) {
+	// 	localStorage.setItem("referral", username);
+	// 	localStorage.setItem("referralId", userProfile.uid);
+	// }
+
+	
+		localStorage.setItem("referral", username);
+		localStorage.setItem("referralId", userProfile.uid);
+	
+
 	useEffect (() => {
 
 		if (!authUser || !userProfile )
@@ -235,10 +245,7 @@ const ProfileHeader = ({ username, page, isSubscribedCallback, activeSinceCallba
 	  };
 		
 
-	if (!(localStorage.getItem("referral"))) {
-		localStorage.setItem("referral", username);
-		localStorage.setItem("referralId", userProfile.uid);
-	}
+	
 
 	const handleOpenSubscribeModal = () => {
 		if (!isSubscribedToCreator)
