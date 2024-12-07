@@ -100,7 +100,7 @@ const useInstagramDataFetcher = () => {
                     let mediaType;
 
                 if (item.type === "Sidecar") {
-                    postSrc = item.childPosts[0].type === "Image" ? item.displayUrl : item.videoUrl;
+                    postSrc = item.childPosts[0].type === "Image" ? item.childPosts[0].displayUrl : item.childPosts[0].videoUrl;
                     caption = item.caption;
                     likes = Math.max(item.likesCount, 0) || 0;
                     score = likes;

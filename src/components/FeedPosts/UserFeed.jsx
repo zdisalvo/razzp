@@ -123,7 +123,8 @@ const UserFeed = () => {
           
         }, 50); //300 //500
         setIsVisible(true);
-      }, 700 ); // Adjust timing based on need
+      }, 1400 ); // Adjust timing based on need
+      //700 before 12/7/24
   
       return () => clearTimeout(scrollTimeout); // Clear timeout if dependencies change
     } 

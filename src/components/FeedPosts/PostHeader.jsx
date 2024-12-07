@@ -178,7 +178,7 @@ const handleFollowClick = async () => {
                 //background={isFollowing ? "url('/button-bg.png')" : "#eb7734"}
 								color={isFollowing || requested ? "#fa489e": "white"}
 								// _hover={{ bg: "#c75e1f" }}
-								textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)"
+								textShadow={isFollowing || requested ? "none" : "2px 2px 4px rgba(0, 0, 0, 0.5)"}
 								size={{ base: "sm", md: "sm" }}
 								onClick={handleFollowClick} // Use the optimized handler
 								isDisabled={isOptimisticUpdate} // Disable button during optimistic update
@@ -191,7 +191,7 @@ const handleFollowClick = async () => {
                 //background={isFollowing ? "url('/button-bg.png')" : "#eb7734"}
 								color={isFollowing || requested ? "#735D1B" : "white"}
 								// _hover={{ bg: "#c75e1f" }}
-								textShadow="2px 2px 4px rgba(0, 0, 0, 0.5)"
+								textShadow={isFollowing || requested ? "none" : "2px 2px 4px rgba(0, 0, 0, 0.5)"}
 								size={{ base: "sm", md: "sm" }}
 								onClick={handleFollowClick} // Use the optimized handler
 								isDisabled={isOptimisticUpdate} // Disable button during optimistic update
