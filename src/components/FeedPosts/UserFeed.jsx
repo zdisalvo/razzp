@@ -66,14 +66,18 @@ const UserFeed = () => {
 
       //console.log(index);
       if (index !== -1 ) {
-              const start = Math.max(0, index - 2); //-2
-              const end = Math.min(posts.length, index + 2); // 5 before and 5 after, including the current post
+              //12/7/24
+              // const start = Math.max(0, index - 2); //-2
+              // const end = Math.min(posts.length, index + 2); // 5 before and 5 after, including the current post
+
+              const start = Math.max(0, index - 1); //-2
+              const end = Math.min(posts.length, index + 1);
               
                 // timeOut = 400.0 * end / 10.0;
                 // console.log(timeOut);
               
 
-              const surroundingPosts = posts.slice(0, end);
+              const surroundingPosts = posts.slice(start, end);
               setLoadedPosts((prev) => {
                 const updatedPosts = { ...prev };
                 surroundingPosts.forEach((post) => {
@@ -119,11 +123,24 @@ const UserFeed = () => {
         postRefs.current[postId].scrollIntoView({ block: 'start' });
         //setShouldScroll(false);
         setTimeout(() => {
-          setShouldScroll(false);
+          //12/7/24
+          //postRefs.current[postId].scrollIntoView({ block: 'start' }); 
+          //
+          setShouldScroll(false); 
           
-        }, 50); //300 //500
+          
+        }, 50); //50 //300 //500
+        //12/7/24
+        setShouldScroll(true);
+        
+        postRefs.current[postId].scrollIntoView({ block: 'start' });
+
+        setTimeout(() => {
+          setShouldScroll(false);
+          }, 100);
+        //
         setIsVisible(true);
-      }, 1400 ); // Adjust timing based on need
+      }, 700 ); //900 works! Adjust timing based on need
       //700 before 12/7/24
   
       return () => clearTimeout(scrollTimeout); // Clear timeout if dependencies change

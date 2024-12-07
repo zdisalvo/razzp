@@ -139,7 +139,7 @@ const FeedPostUser = forwardRef(({ post, isFollowing, requested, isPrivate, onFo
       isPrivate={isPrivate}
       onFollowClick={onFollowClick}
       />
-      <Box my={2} borderRadius={4} overflow={"hidden"} px={0} objectFit="cover" maxHeight="500px" height="auto" width="100%" display="flex" 
+      <Box my={2} borderRadius={4} overflow={"hidden"} px={0} objectFit="cover" minHeight="450px" maxHeight="500px" height="auto" width="100%" display="flex" 
         justifyContent="center" 
         alignItems="center"
         //transition="height 2.0s ease-in-out"
@@ -147,7 +147,7 @@ const FeedPostUser = forwardRef(({ post, isFollowing, requested, isPrivate, onFo
       {((!post.mediaType) || (post.mediaType.startsWith("image/")) && (!post.paid || post.paid && isPurchased || post.paid && isSubscribedToCreator || post.paid && ownProfile)) && (
         
         
-        <Image src={post.imageURL} alt={"FEED POST IMG"} width="100%" objectFit="cover" maxHeight="500px" height="auto"
+        <Image src={post.imageURL} alt={"FEED POST IMG"} width="100%" objectFit="cover" minHeight="450px" maxHeight="500px" height="auto"
         style={{ pointerEvents: 'none', userSelect: 'none' }}
           onTouchStart={(e) => e.preventDefault()} 
           onContextMenu={(e) => e.preventDefault()} 
@@ -160,7 +160,7 @@ const FeedPostUser = forwardRef(({ post, isFollowing, requested, isPrivate, onFo
       {(!post.mediaType || post.mediaType.startsWith("image/")) && (post.paid && !isPurchased && !isSubscribedToCreator && !ownProfile) && (
         
         
-        <Image src={post.imageURL} style={{ filter: 'blur(11px)', pointerEvents: 'none', userSelect: 'none' }} alt={"FEED POST IMG"} width="100%" objectFit="cover" maxHeight="500px" height="auto"
+        <Image src={post.imageURL} style={{ filter: 'blur(11px)', pointerEvents: 'none', userSelect: 'none' }} alt={"FEED POST IMG"} width="100%" objectFit="cover" minHeight="450px" maxHeight="500px" height="auto"
           onTouchStart={(e) => e.preventDefault()} 
           onContextMenu={(e) => e.preventDefault()} 
           onTouchMove={(e) => e.preventDefault()} 
