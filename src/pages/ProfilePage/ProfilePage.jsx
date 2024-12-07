@@ -107,7 +107,7 @@ const ProfilePage = () => {
       description={userProfile.bio ? userProfile.bio : "The ultimate platform for creating and sharing content. Connect with local users, increase your popularity, and maximize your brand on Razzp. No download required."} 
       ogTitle={`${userProfile.username} on Razzp - Social Networking Reinvented`}
       ogDescription="Maximize your brand. No download required."
-      ogImage={userProfile.profilePicURL}
+      ogImage="/razzp-og.png"
       />
       )}
     <Container top={0} p={0} maxW={{base: "100vw", md: "100vw"}} pb={{base: "15vh", md: "60px"}} mb={{base: "15vh", md: "60px"}}  m={0}>

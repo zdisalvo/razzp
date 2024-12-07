@@ -192,9 +192,11 @@ const CreateContent = ({ isOpen, onClose, authUser }) => {
                 value={price && !selectedPresetPrice ? price : ""}
                 onChange={handleCustomAmountChange}
                 size="sm"
+                fontSize={16}
                 bg="white"
                 color="black"
                 mb={0}
+                width="180px"
               />
             </Flex>
                         </VStack>

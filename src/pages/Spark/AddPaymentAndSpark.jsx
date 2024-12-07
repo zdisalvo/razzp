@@ -21,7 +21,7 @@ const AddPaymentAndSpark = ({ authUser, onClose}) => {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
   const [clientSecret, setClientSecret] = useState(null);
-  const [subscriptionPrice, setSubscriptionPrice] = useState("price_1QS5EKF8INFI9spHimwxHBzI");
+  const [subscriptionPrice, setSubscriptionPrice] = useState("price_1QTGnuF8INFI9spHCqWQUzXd");
   
 
   const userId = authUser.uid;

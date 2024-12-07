@@ -351,6 +351,7 @@ const CreatorSettings = ({ isOpen, onClose }) => {
                             fontSize={16}
                             bg="white"
                             color="black"
+                            width="180px"
                         />
                         </Flex>
                         </VStack>
@@ -417,8 +418,10 @@ const CreatorSettings = ({ isOpen, onClose }) => {
                             value={subscriptionPrice && !selectedPresetSubscription ? subscriptionPrice : ""}
                             onChange={handleCustomSubscriptionAmountChange}
                             size="sm"
+                            fontSize={16}
                             bg="white"
                             color="black"
+                            width="180px"
                         />
                         </Flex>
                         {/* <CreateSubscription creator={authUser}/> */}
