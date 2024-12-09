@@ -58,7 +58,7 @@ const ImportInstagramModal = ({ isOpen, onClose }) => {
                             <Input 
                                 type="text" 
                                 value={username} 
-                                onChange={(e) => setUsername(e.target.value.toLowerCase())} 
+                                onChange={(e) => setUsername(e.target.value.toLowerCase().trim())} 
                                 placeholder="Enter Instagram username"
                                 fontSize={16}
                             />

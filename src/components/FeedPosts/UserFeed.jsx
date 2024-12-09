@@ -121,26 +121,21 @@ const UserFeed = () => {
       // Wait and then fine-tune scroll, resetting scroll flags only once
       const scrollTimeout = setTimeout(() => {
         postRefs.current[postId].scrollIntoView({ block: 'start' });
-        //setShouldScroll(false);
-        setTimeout(() => {
-          //12/7/24
-          //postRefs.current[postId].scrollIntoView({ block: 'start' }); 
-          //
-          setShouldScroll(false); 
-          
-          
-        }, 50); //50 //300 //500
-        //12/7/24
-        setShouldScroll(true);
-        
-        postRefs.current[postId].scrollIntoView({ block: 'start' });
 
         setTimeout(() => {
-          setShouldScroll(false);
-          }, 100);
-        //
-        setIsVisible(true);
-      }, 700 ); //900 works! Adjust timing based on need
+          postRefs.current[postId].scrollIntoView({ block: 'start' });
+          
+          setTimeout(() => {
+            setShouldScroll(false);
+          }, 50); //50
+
+          setTimeout(() => {
+            setIsVisible(true);
+          }, 20); //50
+          
+          }, 700); //600
+        
+      }, 170 ); //200 
       //700 before 12/7/24
   
       return () => clearTimeout(scrollTimeout); // Clear timeout if dependencies change
